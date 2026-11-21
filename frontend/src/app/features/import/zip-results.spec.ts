@@ -26,4 +26,10 @@ describe('buildResultsZip', () => {
     const files = await unzip(buildResultsZip(items));
     expect(Object.keys(files).sort()).toEqual(['wniosek (2).json', 'wniosek (3).json', 'wniosek.json']);
   });
+
+  it('dedupes names case-insensitively', async () => {
+    const items = ['A.pdf', 'a.pdf'].map((name) => ({ name, result: {} }));
+    const files = await unzip(buildResultsZip(items));
+    expect(Object.keys(files).sort()).toEqual(['A.json', 'a (2).json']);
+  });
 });
