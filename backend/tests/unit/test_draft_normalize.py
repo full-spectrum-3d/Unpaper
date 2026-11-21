@@ -329,3 +329,12 @@ def test_variant_text_field_becomes_choice() -> None:
     assert _field(out, "f1").kind == "single_choice"
     assert len(list(out.iter_fields())) == 4
     assert "W27_VARIANT_CHOICE" in _codes(warnings)
+
+
+def test_purpose_field_mentioning_variants_not_converted() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d)[0]["label"] = "Cel hodowania/utrzymywania psa"
+
+    out, _ = normalize_draft(_make(mutate), PSY_DOC)
+    assert _field(out, "f1").kind == "short_text"
+    assert out.subject_pages[0].sections[0].fields[0].label == "Hodowanie lub utrzymywanie"

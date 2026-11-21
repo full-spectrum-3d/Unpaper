@@ -256,3 +256,8 @@ def test_short_repeats_kept() -> None:
         [_p("Imię ………"), _p("Nazwisko ………"), _h("Kandydat"), _p("Imię ………"), _p("Nazwisko ………")]
     )
     assert doc.to_prompt_text().count("Imię [POLE]") == 2
+
+
+def test_fraction_in_table_cell_is_not_a_page_number() -> None:
+    doc = _doc([_b("table", ""), _cell(0, 0, "Udział"), _cell(0, 1, "1/2")])
+    assert "Udział | 1/2" in doc.to_prompt_text()

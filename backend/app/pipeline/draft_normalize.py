@@ -28,6 +28,7 @@ STATEMENT_FIELD_COVERAGE = 0.8
 MIN_STATEMENT_LABEL_CHARS = 25
 VARIANT_PAGE_TITLE = "Przedmiot wniosku"
 VARIANT_SECTION_TITLE = "Rodzaj sprawy"
+VARIANT_LABEL_WORDS = frozenset({"rodzaj", "lub", "albo", "wybór", "wniosku", "sprawy"})
 LABEL_MATCH_THRESHOLD = 0.6
 UPPERCASE_TITLE_RATIO = 0.8
 ABBREVIATIONS = frozenset({"NIP", "PESEL", "REGON", "KRS", "RODO", "CEIDG", "VAT"})
@@ -254,7 +255,11 @@ def _add_variant_choices(
             continue
         label = " lub ".join([options[0], *variants[1:]])
         text_field = next(
-            ((path, f) for path, f in fields if f["kind"] != "info" and mentions(f["label"])),
+            (
+                (path, f)
+                for path, f in fields
+                if f["kind"] != "info" and mentions(f["label"]) and _only_variants(f, variants)
+            ),
             None,
         )
         if text_field is not None:
@@ -282,6 +287,13 @@ def _add_variant_choices(
             fields = iter_field_dicts(data)
             message = f"Dodano pole wyboru „{label}” z wariantów do skreślenia na blankiecie."
         warnings.append(ConversionWarning(code="W27_VARIANT_CHOICE", message=message, path=path))
+
+
+def _only_variants(field: dict[str, Any], variants: list[str]) -> bool:
+    """Etykieta to same warianty (+ słowo „rodzaj”), a nie np. „Cel wynajęcia/użyczenia”."""
+    words = [w for w in _WORD.findall(field["label"]) if len(w) >= 3]
+    rest = [w for w in words if not any(same_stem(v, w) for v in variants)]
+    return all(w.casefold() in VARIANT_LABEL_WORDS for w in rest)
 
 
 def _next_id(data: dict[str, Any]) -> str:

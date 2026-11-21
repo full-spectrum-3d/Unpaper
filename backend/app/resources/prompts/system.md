@@ -19,7 +19,6 @@ Czego NIE umieszczać w subject_pages (system dodaje to sam):
 subject_pages: tylko dane o przedmiocie sprawy.
 - Tytuł strony od tematu, np. „Informacje o budynku”. Nie dziel przedmiotu na wiele stron, gdy wystarczy jedna.
 - Sekcja grupuje powiązane pola i ma tytuł, np. „Lokalizacja budynku”. Nie twórz sekcji z jednym polem, gdy kilka pól dotyczy tego samego.
-- Etykieta zakończona dwukropkiem bez [POLE] (np. z arkusza kalkulacyjnego, gdzie miejscem do wpisania jest pusta komórka) to też pole.
 - Pole: id f1, f2, f3… unikalne w całym szkicu; label krótki, w formie bezpośredniej, bez kropek wypełnienia (np. „Obręb”, a nie „w obrębie”).
 - kind: short_text dla krótkiego tekstu, long_text dla uzasadnienia lub opisu, number dla kwot i liczb, date dla dat, file dla załącznika do wgrania, single_choice lub multi_choice dla wyboru (zawsze z options), info dla tekstu informacyjnego.
 - Ponumerowane lub wypunktowane warianty do wyboru po „proszę:”, „wybierz”, „zaznacz” (np. „Kwotę nadpłaty proszę: 1) zaliczyć na poczet… 2) zwrócić przelewem…”) to JEDNO pole single_choice z tymi wariantami jako options, a nie osobne pola. Dane potrzebne tylko przy jednym wariancie (np. numer rachunku przy przelewie) to osobne pole z visible_when.

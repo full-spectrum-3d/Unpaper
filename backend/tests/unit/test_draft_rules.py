@@ -168,3 +168,8 @@ def test_variant_choices() -> None:
         ("paragraph", "metryka**, zapoznałem/am się, imię/nazwisko*"),
     )
     assert variant_choices(doc) == [["wynajęcie", "użyczenie"], ["hodowanie", "utrzymywanie"]]
+
+
+def test_subject_section_title_wins_over_applicant_words() -> None:
+    assert applicant_field_reason("Miejscowość", ["Dane identyfikacyjne nieruchomości"]) is None
+    assert applicant_field_reason("Ulica", ["Adres zamieszkania", "Informacje o budynku"])

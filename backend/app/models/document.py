@@ -111,7 +111,7 @@ class DocumentModel(_DocModel):
         for page in self.pages:
             for block in page.blocks:
                 if exclude_boilerplate:
-                    if _PAGE_NUMBER.match(block.text):
+                    if block.kind != "table_cell" and _PAGE_NUMBER.match(block.text):
                         continue
                     if _starts_boilerplate(block):
                         skipping = True

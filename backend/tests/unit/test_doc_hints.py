@@ -139,3 +139,7 @@ def test_ocr_brackets_as_boxes() -> None:
         "[OPCJA] tak",
         "[OPCJA] nie",
     ]
+
+
+def test_short_list_of_field_labels_is_not_a_choice() -> None:
+    _unchanged(_p("Wnioskodawca:"), _p("Imię i nazwisko"), _p("Adres"), _p("Nr telefonu"))

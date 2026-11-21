@@ -196,7 +196,10 @@ def _add_choice(blocks: list[Block], i: int, state: _State) -> int:
         if option and option not in options:
             options.append(option)
         i += 1
-    label = _clean_label(_PARENS.sub("", state.previous_text)) or DEFAULT_CHOICE_LABEL
+    label = _clean_label(_PARENS.sub("", state.previous_text))
+    if not label:  # lista zaraz pod nagłówkiem („Dyscypliny sportowe:”)
+        label = state.section_title if state.section_title != DEFAULT_SECTION else ""
+    label = label or DEFAULT_CHOICE_LABEL
     state.previous_text = ""
     if options:
         kind = "single_choice" if len(options) >= 2 else "multi_choice"

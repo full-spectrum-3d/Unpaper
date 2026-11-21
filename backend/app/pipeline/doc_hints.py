@@ -29,7 +29,7 @@ MIN_SHORT_OPTIONS = 3
 MAX_OTHER_PREFIX_CHARS = 40  # „inne ……” jako ostatnia opcja z polem do wpisania
 
 # Kratki: znaki Unicode, znaki Wingdings z DOCX/PDF (obszar prywatny U+F0xx) i „[ ]” z OCR.
-_BOX = re.compile(r"[□☐■◻❑❒▢⬜\uf06f\uf0a8\uf071\uf072\uf0fe]|\[ ?\]")
+_BOX = re.compile(r"[□☐◻❑❒▢⬜\uf06f\uf0a8\uf071\uf072\uf0fe]|\[ ?\]")
 _YES_NO = re.compile(r"^(?P<prefix>.*?)\s*\bTAK\s*/?\s*NIE\s*$")
 # Wstęp, który jednoznacznie zapowiada wybór.
 _STRONG_CUE = re.compile(
@@ -44,6 +44,12 @@ _ITEM_STOP = re.compile(r"(?i)^(jeśli|jeżeli|w przypadku|uwaga|należy|do wnio
 _NUMBER_PREFIX = re.compile(r"^\s*(\d{1,2})[.)]\s*")
 _INLINE_NUMBER = re.compile(r"(?:^|\s)(\d{1,2})[.)]\s+")
 _OPTION_KINDS = frozenset({"paragraph", "label", "checkbox_option"})
+# Krótka lista samych etykiet pól („Wnioskodawca:” + „Imię”, „Adres”) to nie wybór,
+# szczególnie w arkuszach, gdzie miejscem do wpisania jest pusta komórka, a nie kropki.
+_FIELD_LABEL = re.compile(
+    r"(?i)\b(imię|nazwisko|nazwa|adres|pesel|nip|regon|telefon|e-mail|data|numer|nr|"
+    r"miejscowość|ulica|kod|kwota|podpis)\b"
+)
 
 
 def annotate_choices(doc: DocumentModel) -> DocumentModel:
@@ -150,7 +156,11 @@ def _as_options(intro: Block, items: list[Block]) -> list[Block] | None:
     intro_text = clean_text(intro.text)
     colon = bool(_COLON_END.search(intro_text))
     numbered = all(_NUMBER_PREFIX.match(text) for text in texts)
-    short_list = count >= MIN_SHORT_OPTIONS and all(len(t) <= MAX_SHORT_OPTION_CHARS for t in texts)
+    short_list = (
+        count >= MIN_SHORT_OPTIONS
+        and all(len(t) <= MAX_SHORT_OPTION_CHARS for t in texts)
+        and not any(_FIELD_LABEL.search(t) for t in texts)
+    )
     choice = (
         bool(_STRONG_CUE.search(intro_text))
         or (bool(_WEAK_CUE.search(intro_text)) and (colon or numbered))

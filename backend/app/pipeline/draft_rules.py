@@ -62,6 +62,11 @@ _APPLICANT_CONTEXT = re.compile(
     r"|dane do kontaktu|adres\w*\W+(\w+\W+){0,3}?(zamieszkania|siedziby|do korespondencji)"
     r"|korespondencyjn"
 )
+# ...chyba że sekcja dotyczy przedmiotu sprawy: „Dane identyfikacyjne nieruchomości”.
+_SUBJECT_CONTEXT = re.compile(
+    r"(?i)nieruchomoś|działk|budyn|lokal\w* (mieszk|użytk)|obiekt|pojazd|zwierz|\bps(a|ów|y)\b"
+    r"|drog|teren|inwestycj|robót|świetlic|imprez|zgromadz"
+)
 # Numer pozycji przed oświadczeniem („35.”) w deklaracjach: to pole do zaznaczenia.
 _POSITION_NUMBER = re.compile(r"^\s*\d{1,3}\.?\s*$")
 # Warianty do skreślenia: „wynajęcie/użyczenie*”, „hodowanie/utrzymywanie*”.
@@ -146,13 +151,19 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
         if not words & {"wnioskodawcy", "wnioskodawca"} and other_person:
             return None
         return "dane wnioskodawcy są w sekcjach predefiniowanych"
-    if (
-        words <= _ADDRESS_WORDS | _PERSONAL_WORDS
-        and not other_person
-        and any(_APPLICANT_CONTEXT.search(title) for title in titles)
-    ):
+    if words <= _ADDRESS_WORDS | _PERSONAL_WORDS and not other_person and _applicant_titled(titles):
         return "adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych"
     return None
+
+
+def _applicant_titled(titles: list[str]) -> bool:
+    """Czy najbliższy tytuł (sekcja, potem strona) mówi o adresie lub danych wnioskodawcy."""
+    for title in titles:
+        if _SUBJECT_CONTEXT.search(title):
+            return False
+        if _APPLICANT_CONTEXT.search(title):
+            return True
+    return False
 
 
 def is_statement(text: str) -> bool:
