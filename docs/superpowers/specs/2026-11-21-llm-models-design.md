@@ -421,7 +421,7 @@ Przygotowanie demo: pobrać 2–3 blankiety z pkt 1–5 z BIP różnych gmin (r�
 
 ## Pomiar 2026-11-21: stan wyjściowy
 
-Przypadki zestawu `cases` są teraz budowane produkcyjnym ekstraktorem (Task 1). Zestaw `holdout` ma 7 dokumentów bez skanu (lokalnie nie ma Tesseracta). Metryki to średnia z 3 przebiegów, w nawiasie min–max. Surowe wiersze: `backend/llm_eval/baseline_rows.json`, agregat: `backend/llm_eval/baseline.json`.
+9 przypadków zestawu `cases` jest teraz budowanych produkcyjnym ekstraktorem (`app/pipeline/extract`). Zestaw `holdout` ma 7 dokumentów bez skanu (lokalnie nie ma Tesseracta). Metryki to średnia z 3 przebiegów, w nawiasie min–max. Surowe wiersze: `backend/llm_eval/baseline_rows.json`, agregat: `backend/llm_eval/baseline.json`.
 
 ### Zestaw cases, qwen3.5:35b-a3b
 
@@ -452,3 +452,29 @@ Przypadki zestawu `cases` są teraz budowane produkcyjnym ekstraktorem (Task 1).
 | zaswiadczenie | 50% (50%–50%) | 67% (67%–67%) |
 | zwrot-oplaty | 0% (0%–0%) | 60% (60%–60%) |
 | **średnia** (9) | **58%** | **70%** |
+
+### Zestaw holdout, qwen3.5:35b-a3b
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| alkohol | 86% (86%–86%) | 86% (73%–92%) |
+| deklaracja-dochody | 43% (43%–43%) | 75% (75%–75%) |
+| dodatek-mieszkaniowy | 100% (100%–100%) | 80% (80%–80%) |
+| karta-duzej-rodziny | 93% (93%–93%) | 67% (67%–67%) |
+| podatek-in1 | 77% (77%–77%) | 50% (50%–50%) |
+| wycinka-drzew | 83% (83%–83%) | 60% (60%–60%) |
+| zwrot-akcyzy | 81% (81%–81%) | 47% (47%–47%) |
+| **średnia** (7) | **80%** | **66%** |
+
+### Zestaw holdout, rules
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| alkohol | 14% (14%–14%) | 33% (33%–33%) |
+| deklaracja-dochody | 43% (43%–43%) | 80% (80%–80%) |
+| dodatek-mieszkaniowy | 0% (0%–0%) | 0% (0%–0%) |
+| karta-duzej-rodziny | 50% (50%–50%) | 75% (75%–75%) |
+| podatek-in1 | 0% (0%–0%) | 0% (0%–0%) |
+| wycinka-drzew | 17% (17%–17%) | 29% (29%–29%) |
+| zwrot-akcyzy | 19% (19%–19%) | 43% (43%–43%) |
+| **średnia** (7) | **20%** | **37%** |
