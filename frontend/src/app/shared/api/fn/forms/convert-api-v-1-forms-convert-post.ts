@@ -10,7 +10,6 @@ import { RequestBuilder } from '../../request-builder';
 
 export interface ConvertApiV1FormsConvertPost$Params {
   report?: boolean;
-  mode?: ('accurate' | 'fast' | null);
 }
 
 export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, params?: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
@@ -19,7 +18,6 @@ export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, 
   const rb = new RequestBuilder(rootUrl, convertApiV1FormsConvertPost.PATH, 'post');
   if (params) {
     rb.query('report', params.report, {});
-    rb.query('mode', params.mode, {});
   }
 
   return http.request(

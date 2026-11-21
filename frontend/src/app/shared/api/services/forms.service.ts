@@ -29,8 +29,6 @@ export class FormsService extends BaseService {
    *
    * Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).
    *
-   * `mode`: tryb analizy LLM (`accurate`/`fast`), domyślnie `LLM_DEFAULT_MODE`.
-   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `convertApiV1FormsConvertPost()` instead.
    *
@@ -47,8 +45,6 @@ export class FormsService extends BaseService {
    * Convert.
    *
    * Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).
-   *
-   * `mode`: tryb analizy LLM (`accurate`/`fast`), domyślnie `LLM_DEFAULT_MODE`.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `convertApiV1FormsConvertPost$Response()` instead.

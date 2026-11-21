@@ -29,7 +29,7 @@ class UploadLimits:
     """Maksymalna liczba wpisów w kontenerze ZIP."""
     max_pdf_pages: int = 30
     """MAX_PDF_PAGES."""
-    max_image_pixels: int = 60_000_000
+    max_image_pixels: int = 100_000_000
     """MAX_IMAGE_PIXELS."""
 
     @classmethod

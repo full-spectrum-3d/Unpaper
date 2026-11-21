@@ -19,6 +19,9 @@ FROM python:3.14-alpine3.22 AS runtime
 RUN apk add --no-cache tesseract-ocr tesseract-ocr-data-pol libmagic \
         libreoffice-writer libreoffice-calc \
  && adduser -D -H -u 10001 -s /sbin/nologin app
+# Osobna warstwa, żeby nie unieważniać cache'u z LibreOffice powyżej: dane OSD do korekty
+# orientacji skanów (Tesseract).
+RUN apk add --no-cache tesseract-ocr-data-osd
 WORKDIR /srv
 COPY --from=builder /srv/.venv /srv/.venv
 COPY app ./app
