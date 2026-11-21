@@ -27,7 +27,8 @@ Rozwiązanie nie korzysta z żadnych zewnętrznych API, a pliki istnieją tylko 
 i katalogu tymczasowym na czas żądania.
 
 Do usługi dołączona jest aplikacja webowa: import wielu plików naraz, podgląd
-wygenerowanego formularza tak, jak zobaczy go obywatel, podgląd i pobranie JSON-a.
+wygenerowanego formularza tak, jak zobaczy go obywatel (z walidacją pól i zależnościami
+między nimi), podgląd i pobranie JSON-a.
 
 ## Spis treści
 
@@ -73,9 +74,9 @@ wygenerowanego formularza tak, jak zobaczy go obywatel, podgląd i pobranie JSON
 | I. Słowniki i dane inicjalne | pola adresu, kraju, numerów kierunkowych dostają `dictionaryName` z bazy słowników; dane wnioskodawcy `defaultValueType: EXTERNAL_SYSTEM` z PESEL / MLPZ (`GET /dictionaries`, `GET /initial-data-sources`) |
 | II. Propozycje nowych słowników | listy zamknięte bez słownika w bazie (np. rodzaj podatku) trafiają jako propozycja do raportu konwersji (`report.dictionaryProposals`) |
 | III. Zależności pól, sekcji i stron | warunki „pokaż, gdy…” jako zapytania JSONata w `states` (`SHOW`, `READ_ONLY`), przepływ stron w `flow.links` |
-| IV. Frontend do ładowania plików i przeglądania JSON | aplikacja Angular na :8080: logowanie, przeciąganie wielu plików, kolejka ze statusami, podgląd i pobranie JSON |
-| V. Wizualizacja formularza e-usługi | podgląd formularza z JSON-a w aplikacji webowej: strony, sekcje, pola, słowniki z kaskadą TERYT, pokazywanie i ukrywanie elementów według warunków JSONata |
-| VI. Walidacja danych i UX | w JSON-ie walidatory dobrane do pól (`PESEL`, `NIP`, `REGON`, `ZIP_CODE`, `EMAIL`, `EPUAP`, `ADE`, `SERIAL_NUMBER_ID_CARD`) i obligatoryjność (`REQUIRED`); import wsadowy (batch) z pobraniem wszystkich wyników jako ZIP; `POST /forms/validate` |
+| IV. Frontend do ładowania plików i przeglądania JSON | aplikacja Angular na :8080: logowanie, przeciąganie wielu plików, kolejka ze statusami, pytanie o hasło dokumentu chronionego hasłem, podgląd i pobranie JSON |
+| V. Wizualizacja formularza e-usługi | podgląd formularza z JSON-a w aplikacji webowej: strony, sekcje, pola z podpowiedziami, słowniki z kaskadą TERYT, stany `SHOW` i `READ_ONLY` liczone z warunków JSONata, oznaczenie pól z rejestru |
+| VI. Walidacja danych i UX | w JSON-ie walidatory dobrane do pól (`PESEL`, `NIP`, `REGON`, `ZIP_CODE`, `EMAIL`, `EPUAP`, `ADE`, `SERIAL_NUMBER_ID_CARD`) i obligatoryjność (`REQUIRED`); podgląd sprawdza te walidatory, pokazuje błędy przy polach i blokuje „Dalej” na stronie z błędami; import wsadowy (batch) z pobraniem wszystkich wyników jako ZIP; `POST /forms/validate` |
 
 ## Architektura
 
