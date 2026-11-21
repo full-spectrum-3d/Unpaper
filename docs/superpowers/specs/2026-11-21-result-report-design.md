@@ -126,3 +126,17 @@ Brak raportu (`report = null` albo nie obiekt): panel pokazuje „Raport niedost
 
 - Dokładne klasy Tailwind i odstępy (zgodnie z istniejącymi kartami).
 - Czy formatter liczy linie rekurencyjnie, czy przez tokenizację (byle wynik był identyczny ze `stringify`).
+
+## Doprecyzowania po przeglądzie buildera (moje decyzje)
+
+1. **Kiedy link.** „Pokaż w JSON” pojawia się tylko wtedy, gdy spełnione są trzy warunki:
+   - ścieżka zaczyna się od `tabs[` (przestrzeń wynikowego JSON-a),
+   - ścieżka istnieje dokładnie w `ranges`,
+   - kod nie oznacza usunięcia elementu: `R03_EMPTY_PAGE` nigdy nie dostaje linku.
+
+   Dotyczy to ostrzeżeń i poprawek. Ścieżki szkicu (`subject_pages…`, `chunk…`, `title`, `authority_name`, `attachments…`) są wypisywane tekstem z dopiskiem „(miejsce w szkicu, nie w wyniku)”. Dzięki temu ostrzeżenie o `title` ze szkicu nie linkuje do tytułu formularza. Pozostałe ścieżki spoza `tabs[`, których nie ma w JSON-ie, dostają dopisek „(element nie występuje w wyniku)”.
+2. **Znane ograniczenie.** Backend zapisuje ścieżkę poprawki w chwili jej wykonania. Późniejsza poprawka strukturalna (opakowanie pola w sekcję, usunięcie pustej strony) może przesunąć indeksy, więc link może wskazać sąsiedni fragment. Akceptujemy to w podglądzie. Właściwa naprawa to ścieżki stanu końcowego po stronie backendu (zgłoszenie do zespołu backendu, poza zakresem).
+3. **Słowniki.** `usedBy` to lista `techName` pól (jak w spec §6.2), a liczba pozycji to `items.length`. Pole `description` pokazujemy pod tytułem, gdy jest. `itemStructure` pomijamy.
+4. **Trwałość.** Kolejka nie jest zapisywana (do `sessionStorage` trafia tylko slice `auth`), więc raport żyje tyle co wynik. Nie trzeba migracji starych wierszy.
+5. **Typ klienta.** Wygenerowana funkcja zwraca `{ [key: string]: any }`. Rozpakowanie `{form, report}` robi `convert-file.http.ts` z kontrolą `'form' in body` i bez rzutowań na typ formularza.
+6. **Wynik niebędący formularzem.** Zakładka Podgląd jest ukryta, domyślna jest JSON, a Raport pozostaje dostępny.
