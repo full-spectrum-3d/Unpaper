@@ -32,8 +32,10 @@ SEGMENT_GAP_FACTOR = 2.0
 WRAP_GAP_FACTOR = 0.8
 WRAP_WIDTH_RATIO = 0.85
 LINE_OVERLAP_RATIO = 0.5
-LINE_HEIGHT_RATIO = 2.5
-"""Element ponad 2,5 raza wyższy od linii (np. duże pole tekstowe) tworzy własną linię."""
+LINE_HEIGHT_RATIO = 3.0
+"""Element ponad 3 razy wyższy od linii (np. duże pole tekstowe) tworzy własną linię."""
+TALL_SHIFT_FACTOR = 1.5
+"""Wysoka ramka w kolejności czytania idzie za tekstem zaczynającym się do 1,5 linii niżej."""
 FRAME_TOUCH_PT = 2.0
 FRAME_MIN_PT = 2.0
 LABEL_MAX_CHARS = 80
@@ -200,7 +202,7 @@ def _group_lines(items: list[_Item]) -> list[list[_Item]]:
 
     def key(item: _Item) -> tuple[float, float]:
         tall = item.kind != "text" and item.height > LINE_HEIGHT_RATIO * typical
-        return (item.bbox.y0 + (typical if tall else 0.0), item.bbox.x0)
+        return (item.bbox.y0 + (TALL_SHIFT_FACTOR * typical if tall else 0.0), item.bbox.x0)
 
     items = sorted(items, key=key)
     lines: list[list[_Item]] = []
