@@ -1,0 +1,1842 @@
+{
+ "name": "Deklaracja o wysokości opłaty",
+ "source": "Deklaracja o wysokości opłaty.pdf",
+ "document": {
+  "source": {
+   "method": "pdf_text",
+   "pages": 6
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "1/6"
+     },
+     {
+      "id": "b2",
+      "kind": "heading",
+      "text": "DEKLARACJA O WYSOKOŚCI MIESIĘCZNEJ OPŁATY"
+     },
+     {
+      "id": "b3",
+      "kind": "heading",
+      "text": "ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI"
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "Podstawa prawna: art. 6n ust. 1 i 2 i art. 6m ust. 1a i 1b ustawy o utrzymaniu czystości i porządku w gminach (t.j. Dz.U. z 2025r. poz.733)"
+     },
+     {
+      "id": "b5",
+      "kind": "paragraph",
+      "text": "Składający: właściciel nieruchomości w rozumieniu art. 2 ust. 1 pkt 4 ustawy o utrzymaniu czystości i porządku w gminach, tj. także"
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "współwłaściciel, użytkownik wieczysty oraz jednostka organizacyjna i osoba posiadająca nieruchomości w zarządzie lub"
+     },
+     {
+      "id": "b7",
+      "kind": "paragraph",
+      "text": "użytkowaniu, a także inny podmiot władający nieruchomością."
+     },
+     {
+      "id": "b8",
+      "kind": "paragraph",
+      "text": "Termin składania: w terminie 14 dni od dnia zamieszkania na danej nieruchomości pierwszego mieszkańca,"
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "w terminie 14 dni od dnia powstania na nieruchomości odpadów komunalnych lub"
+     },
+     {
+      "id": "b10",
+      "kind": "paragraph",
+      "text": "w terminie do 10 dnia miesiąca następującego po miesiącu, w którym nastąpiła zmiana danych stanowiących podstawę"
+     },
+     {
+      "id": "b11",
+      "kind": "paragraph",
+      "text": "ustalenia opłaty."
+     },
+     {
+      "id": "b12",
+      "kind": "heading",
+      "text": "A. ORGAN, DO KTÓREGO SKŁADANA JEST DEKLARACJA"
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "Prezydent Miasta Gdyni"
+     },
+     {
+      "id": "b14",
+      "kind": "paragraph",
+      "text": "Al. Marszałka Piłsudskiego 52/54"
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "81-382 Gdynia"
+     },
+     {
+      "id": "b16",
+      "kind": "heading",
+      "text": "B. DANE PODMIOTU ZOBOWIĄZANEGO DO ZŁOŻENIA DEKLARACJI"
+     },
+     {
+      "id": "b17",
+      "kind": "heading",
+      "text": "B.1 DANE IDENTYFIKACYJNE"
+     },
+     {
+      "id": "b18",
+      "kind": "paragraph",
+      "text": "1. Składający deklarację (zaznaczyć właściwą kratkę)"
+     },
+     {
+      "id": "b19",
+      "kind": "paragraph",
+      "text": "1. właściciel/współwłaściciel 2. współwłaściciel (wspólność majątkowa ) 3. najemca/dzierżawca"
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "4. wspólnota mieszkaniowa 5. spółdzielnia mieszkaniowa 6. inny podmiot posiadający nieruchomość"
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "w zarządzie lub użytkowaniu (należy podać jaki oraz dokładne dane)……………………………………………………………………………."
+     },
+     {
+      "id": "b22",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………….……………………………………….………"
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "2. Nazwisko, imię / Nazwa pełna"
+     },
+     {
+      "id": "b24",
+      "kind": "paragraph",
+      "text": "3. PESEL 4. NIP/REGON (dot. tylko osób prawnych)"
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "B.2 DANE IDENTYFIKACYJNE WSPÓŁMAŁŻONKA (wypełnić tylko w przypadku zaznaczenia kratki w poz. B 1.1.2)"
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "5. Nazwisko, imię"
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "6. Adres zamieszkania"
+     },
+     {
+      "id": "b28",
+      "kind": "heading",
+      "text": "7. PESEL"
+     },
+     {
+      "id": "b29",
+      "kind": "heading",
+      "text": "B.3 ADRES ZAMIESZKANIA / SIEDZIBY"
+     },
+     {
+      "id": "b30",
+      "kind": "paragraph",
+      "text": "8. Kraj 9. Województwo 10. Gmina"
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "11. Miejscowość 12. Ulica"
+     },
+     {
+      "id": "b32",
+      "kind": "paragraph",
+      "text": "13. Numer"
+     },
+     {
+      "id": "b33",
+      "kind": "paragraph",
+      "text": "nieruchomości/domu"
+     },
+     {
+      "id": "b34",
+      "kind": "paragraph",
+      "text": "14. Numer lokalu 15. Kod pocztowy"
+     },
+     {
+      "id": "b35",
+      "kind": "paragraph",
+      "text": "16. Numer/y działki/działek (wypełnić jeżeli nieruchomość nie ma urzędowo nadanego adresu)"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "blocks": [
+     {
+      "id": "b36",
+      "kind": "paragraph",
+      "text": "2/6"
+     },
+     {
+      "id": "b37",
+      "kind": "paragraph",
+      "text": "B.4 ADRES DO KORESPONDENCJI (wypełnić tylko w przypadku kiedy jest inny niż w poz. B.3)"
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "17. Kraj 18. Województwo 19. Gmina"
+     },
+     {
+      "id": "b39",
+      "kind": "paragraph",
+      "text": "20. Miejscowość 21. Ulica"
+     },
+     {
+      "id": "b40",
+      "kind": "paragraph",
+      "text": "22. Numer nieruchomości/domu 23. Numer lokalu 24. Kod pocztowy"
+     },
+     {
+      "id": "b41",
+      "kind": "heading",
+      "text": "C. OKOLICZNOŚCI UZASADNIAJĄCE ZŁOŻENIE DEKLARACJI"
+     },
+     {
+      "id": "b42",
+      "kind": "paragraph",
+      "text": "25. Okoliczności"
+     },
+     {
+      "id": "b43",
+      "kind": "paragraph",
+      "text": "1. pierwsza deklaracja - data zdarzenia powodującego"
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "powstanie obowiązku opłaty:"
+     },
+     {
+      "id": "b45",
+      "kind": "heading",
+      "text": "D D - M M - R R R R"
+     },
+     {
+      "id": "b46",
+      "kind": "paragraph",
+      "text": "3. ustanie obowiązku uiszczania opłaty – data zdarzenia"
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "powodującego ustanie obowiązku opłaty:"
+     },
+     {
+      "id": "b48",
+      "kind": "heading",
+      "text": "D D - M M - R R R R"
+     },
+     {
+      "id": "b49",
+      "kind": "paragraph",
+      "text": "2. nowa deklaracja składana ze względu na zmianę"
+     },
+     {
+      "id": "b50",
+      "kind": "paragraph",
+      "text": "danych będących podstawą ustalenia wysokości"
+     },
+     {
+      "id": "b51",
+      "kind": "paragraph",
+      "text": "należnej opłaty za gospodarowanie odpadami"
+     },
+     {
+      "id": "b52",
+      "kind": "paragraph",
+      "text": "komunalnymi - data wystąpienia zmiany danych:"
+     },
+     {
+      "id": "b53",
+      "kind": "heading",
+      "text": "D D - M M - R R R R"
+     },
+     {
+      "id": "b54",
+      "kind": "paragraph",
+      "text": "4. korekta złożonej, obowiązującej deklaracji - data"
+     },
+     {
+      "id": "b55",
+      "kind": "paragraph",
+      "text": "wystąpienia zmiany danych:"
+     },
+     {
+      "id": "b56",
+      "kind": "heading",
+      "text": "D D - M M - R R R R"
+     },
+     {
+      "id": "b57",
+      "kind": "heading",
+      "text": "D. DANE ADRESOWE NIERUCHOMOŚCI, NA KTÓREJ POWSTAJĄ I SĄ GROMADZONE ODPADY"
+     },
+     {
+      "id": "b58",
+      "kind": "heading",
+      "text": "D.1 ADRES NIERUCHOMOŚCI"
+     },
+     {
+      "id": "b59",
+      "kind": "paragraph",
+      "text": "26. Miejscowość"
+     },
+     {
+      "id": "b60",
+      "kind": "heading",
+      "text": "GDYNIA"
+     },
+     {
+      "id": "b61",
+      "kind": "paragraph",
+      "text": "27. Kod pocztowy 28. Ulica"
+     },
+     {
+      "id": "b62",
+      "kind": "paragraph",
+      "text": "29. Numer nieruchomości/domu 30. Numer lokalu"
+     },
+     {
+      "id": "b63",
+      "kind": "paragraph",
+      "text": "D.2 MIEJSCE GROMADZENIA ODPADÓW (W PRZYPADKU NIERUCHOMOŚCI ZABUDOWANEJ BUDYNKIEM"
+     },
+     {
+      "id": "b64",
+      "kind": "paragraph",
+      "text": "WIELOLOKALOWYM LUB BUDYNKAMI WIELOLOKALOWYMI, JEŻELI POSZCZEGÓLNE BUDYNKI LUB ICH CZĘŚCI"
+     },
+     {
+      "id": "b65",
+      "kind": "paragraph",
+      "text": "POSIADAJĄ PRZYPORZĄDKOWANE IM ODDZIELNE MIEJSCA GROMADZENIA ODPADÓW KOMUNALNYCH)"
+     },
+     {
+      "id": "b66",
+      "kind": "paragraph",
+      "text": "31. Adres lub opis miejsca lokalizacji pojemników 32. Numer/y działki/działek"
+     },
+     {
+      "id": "b67",
+      "kind": "paragraph",
+      "text": "geodezyjnych"
+     },
+     {
+      "id": "b68",
+      "kind": "heading",
+      "text": "D.3 DANE IDENTYFIKACYJNE"
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "33. Rodzaj nieruchomości"
+     },
+     {
+      "id": "b70",
+      "kind": "paragraph",
+      "text": "1. Nieruchomość zabudowana budynkiem mieszkalnym jednorodzinnym"
+     },
+     {
+      "id": "b71",
+      "kind": "paragraph",
+      "text": "2. Nieruchomość zabudowana budynkiem mieszkalnym wielolokalowym"
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "34. Nieruchomość zaznaczona w poz. 33 jest nieruchomością, która w części stanowi nieruchomość na której zamieszkują"
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "mieszkańcy, a w części nieruchomość na której nie zamieszkują mieszkańcy, a powstają na niej odpady komunalne"
+     },
+     {
+      "id": "b74",
+      "kind": "heading",
+      "text": "TAK NIE"
+     },
+     {
+      "id": "b75",
+      "kind": "paragraph",
+      "text": "Składający deklarację, który zaznaczył kratkę TAK w poz. 34 zobowiązany jest do wypełnienia załącznika do deklaracji: A (w"
+     },
+     {
+      "id": "b76",
+      "kind": "paragraph",
+      "text": "przypadku zaznaczenia D.3.33.1) lub B (w przypadku zaznaczenia D.3.33.2)."
+     },
+     {
+      "id": "b77",
+      "kind": "paragraph",
+      "text": "D.4 OŚWIADCZENIE (DOTYCZY WYŁACZNIE WŁAŚCICIELI NIERUCHOMOŚCI ZABUDOWANYCH BUDYNKAMI"
+     },
+     {
+      "id": "b78",
+      "kind": "heading",
+      "text": "MIESZKALNYMI JEDNORODZINNYMI)"
+     },
+     {
+      "id": "b79",
+      "kind": "paragraph",
+      "text": "35."
+     },
+     {
+      "id": "b80",
+      "kind": "paragraph",
+      "text": "Oświadczam, że nieruchomość wyposażona jest w przydomowy kompostownik, w którym kompostowane są"
+     },
+     {
+      "id": "b81",
+      "kind": "paragraph",
+      "text": "wytworzone na jej terenie bioodpady stanowiące odpady komunalne."
+     },
+     {
+      "id": "b82",
+      "kind": "heading",
+      "text": "E. OŚWIADCZENIE O WYSOKOŚCI OPŁATY ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI"
+     },
+     {
+      "id": "b83",
+      "kind": "paragraph",
+      "text": "Opłata stanowi sumę iloczynów ilości gospodarstw domowych dla których składana jest deklaracja oraz stawki opłaty"
+     },
+     {
+      "id": "b84",
+      "kind": "paragraph",
+      "text": "ustalonej uchwałą Rady Miasta Gdyni podjętej na podstawie art. 6k ustawy o utrzymaniu czystości i porządku w gminach"
+     },
+     {
+      "id": "b85",
+      "kind": "heading",
+      "text": "E.1 OBLICZENIE WYSOKOŚCI OPŁATY DLA NIERUCHOMOŚCI"
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "blocks": [
+     {
+      "id": "b86",
+      "kind": "paragraph",
+      "text": "3/6"
+     },
+     {
+      "id": "b87",
+      "kind": "paragraph",
+      "text": "36. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b88",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b89",
+      "kind": "paragraph",
+      "text": "nie przekraczającej 45 m² X"
+     },
+     {
+      "id": "b90",
+      "kind": "paragraph",
+      "text": "37. Stawka opłaty od"
+     },
+     {
+      "id": "b91",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b92",
+      "kind": "paragraph",
+      "text": "38 zł ="
+     },
+     {
+      "id": "b93",
+      "kind": "paragraph",
+      "text": "38. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b94",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b95",
+      "kind": "paragraph",
+      "text": "39. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b96",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b97",
+      "kind": "paragraph",
+      "text": "przekraczającej 45 m² jednak nie większej"
+     },
+     {
+      "id": "b98",
+      "kind": "paragraph",
+      "text": "niż 60 m² X"
+     },
+     {
+      "id": "b99",
+      "kind": "paragraph",
+      "text": "40. Stawka opłaty od"
+     },
+     {
+      "id": "b100",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b101",
+      "kind": "paragraph",
+      "text": "69 zł ="
+     },
+     {
+      "id": "b102",
+      "kind": "paragraph",
+      "text": "41. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b103",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b104",
+      "kind": "paragraph",
+      "text": "42. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b105",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b106",
+      "kind": "paragraph",
+      "text": "przekraczającej 60 m² jednak nie większej"
+     },
+     {
+      "id": "b107",
+      "kind": "paragraph",
+      "text": "niż 80 m² X"
+     },
+     {
+      "id": "b108",
+      "kind": "paragraph",
+      "text": "43. Stawka opłaty od"
+     },
+     {
+      "id": "b109",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b110",
+      "kind": "paragraph",
+      "text": "81 zł ="
+     },
+     {
+      "id": "b111",
+      "kind": "paragraph",
+      "text": "44. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b112",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b113",
+      "kind": "paragraph",
+      "text": "45. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b114",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b115",
+      "kind": "paragraph",
+      "text": "przekraczającej 80 m² X"
+     },
+     {
+      "id": "b116",
+      "kind": "paragraph",
+      "text": "46. Stawka opłaty od"
+     },
+     {
+      "id": "b117",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b118",
+      "kind": "paragraph",
+      "text": "101 zł ="
+     },
+     {
+      "id": "b119",
+      "kind": "paragraph",
+      "text": "47. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b120",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b121",
+      "kind": "paragraph",
+      "text": "48. Liczba gospodarstw domowych objętych"
+     },
+     {
+      "id": "b122",
+      "kind": "paragraph",
+      "text": "zwolnieniem dochodowym"
+     },
+     {
+      "id": "b123",
+      "kind": "heading",
+      "text": "X"
+     },
+     {
+      "id": "b124",
+      "kind": "paragraph",
+      "text": "49. Stawka zwolnienia od"
+     },
+     {
+      "id": "b125",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b126",
+      "kind": "paragraph",
+      "text": "- 15 zł 00 gr ="
+     },
+     {
+      "id": "b127",
+      "kind": "paragraph",
+      "text": "50. Wysokość miesięcznego"
+     },
+     {
+      "id": "b128",
+      "kind": "paragraph",
+      "text": "zwolnienia"
+     },
+     {
+      "id": "b129",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b130",
+      "kind": "paragraph",
+      "text": "51. SUMA poz. 38, 41, 44 i 47"
+     },
+     {
+      "id": "b131",
+      "kind": "paragraph",
+      "text": "pomniejszona o kwotę z poz."
+     },
+     {
+      "id": "b132",
+      "kind": "paragraph",
+      "text": "50"
+     },
+     {
+      "id": "b133",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b134",
+      "kind": "paragraph",
+      "text": "E.2 OBLICZENIE WYSOKOŚCI OPŁATY DLA WŁAŚCICIELI NIERUCHOMOŚCI ZABUDOWANYCH BUDYNKAMI"
+     },
+     {
+      "id": "b135",
+      "kind": "heading",
+      "text": "MIESZKALNYMI JEDNORODZINNYMI ZWOLNIONYCH Z CZĘŚCI OPŁATY"
+     },
+     {
+      "id": "b136",
+      "kind": "label",
+      "text": "(na podstawie oświadczenia zawartego w poz. 35 deklaracji)"
+     },
+     {
+      "id": "b137",
+      "kind": "paragraph",
+      "text": "52. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b138",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b139",
+      "kind": "paragraph",
+      "text": "nie przekraczającej 45 m² X"
+     },
+     {
+      "id": "b140",
+      "kind": "paragraph",
+      "text": "53. Stawka opłaty od"
+     },
+     {
+      "id": "b141",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b142",
+      "kind": "paragraph",
+      "text": "28 zł ="
+     },
+     {
+      "id": "b143",
+      "kind": "paragraph",
+      "text": "54. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b144",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b145",
+      "kind": "paragraph",
+      "text": "55. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b146",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b147",
+      "kind": "paragraph",
+      "text": "przekraczającej 45 m² jednak nie większej"
+     },
+     {
+      "id": "b148",
+      "kind": "paragraph",
+      "text": "niż 60 m² X"
+     },
+     {
+      "id": "b149",
+      "kind": "paragraph",
+      "text": "56. Stawka opłaty od"
+     },
+     {
+      "id": "b150",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b151",
+      "kind": "paragraph",
+      "text": "59 zł ="
+     },
+     {
+      "id": "b152",
+      "kind": "paragraph",
+      "text": "57. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b153",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b154",
+      "kind": "paragraph",
+      "text": "58. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b155",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b156",
+      "kind": "paragraph",
+      "text": "przekraczającej 60 m² jednak nie większej"
+     },
+     {
+      "id": "b157",
+      "kind": "paragraph",
+      "text": "niż 80 m² X"
+     },
+     {
+      "id": "b158",
+      "kind": "paragraph",
+      "text": "59. Stawka opłaty od"
+     },
+     {
+      "id": "b159",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b160",
+      "kind": "paragraph",
+      "text": "71 zł ="
+     },
+     {
+      "id": "b161",
+      "kind": "paragraph",
+      "text": "60. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b162",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b163",
+      "kind": "paragraph",
+      "text": "61. Liczba gospodarstw domowych zajmujących"
+     },
+     {
+      "id": "b164",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej"
+     },
+     {
+      "id": "b165",
+      "kind": "paragraph",
+      "text": "przekraczającej 80 m² X"
+     },
+     {
+      "id": "b166",
+      "kind": "paragraph",
+      "text": "62. Stawka opłaty od"
+     },
+     {
+      "id": "b167",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b168",
+      "kind": "paragraph",
+      "text": "91 zł ="
+     },
+     {
+      "id": "b169",
+      "kind": "paragraph",
+      "text": "63. Wysokość miesięcznej opłaty"
+     },
+     {
+      "id": "b170",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b171",
+      "kind": "paragraph",
+      "text": "64. Liczba gospodarstw domowych objętych"
+     },
+     {
+      "id": "b172",
+      "kind": "paragraph",
+      "text": "zwolnieniem dochodowym"
+     },
+     {
+      "id": "b173",
+      "kind": "heading",
+      "text": "X"
+     },
+     {
+      "id": "b174",
+      "kind": "paragraph",
+      "text": "65. Stawka zwolnienia od"
+     },
+     {
+      "id": "b175",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego"
+     },
+     {
+      "id": "b176",
+      "kind": "paragraph",
+      "text": "- 15 zł 00 gr ="
+     },
+     {
+      "id": "b177",
+      "kind": "paragraph",
+      "text": "66. Wysokość miesięcznego"
+     },
+     {
+      "id": "b178",
+      "kind": "paragraph",
+      "text": "zwolnienia"
+     },
+     {
+      "id": "b179",
+      "kind": "paragraph",
+      "text": "zł"
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "blocks": [
+     {
+      "id": "b180",
+      "kind": "paragraph",
+      "text": "4/6"
+     },
+     {
+      "id": "b181",
+      "kind": "paragraph",
+      "text": "67. SUMA poz. 54, 57, 60 i 63"
+     },
+     {
+      "id": "b182",
+      "kind": "paragraph",
+      "text": "pomniejszona o kwotę z poz."
+     },
+     {
+      "id": "b183",
+      "kind": "paragraph",
+      "text": "66"
+     },
+     {
+      "id": "b184",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b185",
+      "kind": "heading",
+      "text": "E.3 WYSOKOŚĆ OPŁATY DLA CZĘŚCI NIERUCHOMOŚCI NA KTÓREJ NIE"
+     },
+     {
+      "id": "b186",
+      "kind": "heading",
+      "text": "ZAMIESZKUJĄ MIESZKAŃCY, A POWSTAJĄ ODPADY KOMUNALNE"
+     },
+     {
+      "id": "b187",
+      "kind": "paragraph",
+      "text": "68. KWOTA z poz. 29 załącznika A"
+     },
+     {
+      "id": "b188",
+      "kind": "paragraph",
+      "text": "lub B do deklaracji"
+     },
+     {
+      "id": "b189",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b190",
+      "kind": "paragraph",
+      "text": "E.4 RAZEM WYSOKOŚĆ MIESIĘCZNEJ OPŁATY 69. SUMA poz. 51 lub 67 oraz 68"
+     },
+     {
+      "id": "b191",
+      "kind": "paragraph",
+      "text": "zł"
+     },
+     {
+      "id": "b192",
+      "kind": "paragraph",
+      "text": "F. DANE DO KONTAKTU (pola nieobowiązkowe)"
+     },
+     {
+      "id": "b193",
+      "kind": "paragraph",
+      "text": "70. Nr tel./fax 71. Adres e-mail"
+     },
+     {
+      "id": "b194",
+      "kind": "paragraph",
+      "text": "72. Wyrażam zgodę na otrzymywanie korespondencji za pośrednictwem adresu poczty elektronicznej wskazanego w poz."
+     },
+     {
+      "id": "b195",
+      "kind": "paragraph",
+      "text": "71"
+     },
+     {
+      "id": "b196",
+      "kind": "heading",
+      "text": "G. INFORMACJA O ZAŁĄCZNIKACH"
+     },
+     {
+      "id": "b197",
+      "kind": "paragraph",
+      "text": "73. Rodzaje załączników"
+     },
+     {
+      "id": "b198",
+      "kind": "paragraph",
+      "text": "1. Załącznik A TAK NIE"
+     },
+     {
+      "id": "b199",
+      "kind": "paragraph",
+      "text": "2. Załącznik B TAK NIE"
+     },
+     {
+      "id": "b200",
+      "kind": "paragraph",
+      "text": "3. Dokumenty upoważniające do złożenia deklaracji TAK NIE"
+     },
+     {
+      "id": "b201",
+      "kind": "paragraph",
+      "text": "4. Inne: (podać jakie) ……………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b202",
+      "kind": "heading",
+      "text": "H. PODPIS SKŁADAJĄCEGO DEKLARACJĘ / OSOBY REPREZENTUJĄCEJ"
+     },
+     {
+      "id": "b203",
+      "kind": "paragraph",
+      "text": "74. Imię 75. Nazwisko"
+     },
+     {
+      "id": "b204",
+      "kind": "paragraph",
+      "text": "76. Data wypełnienia 77. Podpis składającego deklarację / osoby reprezentującej"
+     },
+     {
+      "id": "b205",
+      "kind": "paragraph",
+      "text": "78. Podpis współmałżonka (wypełnić tylko w przypadku zaznaczenia poz. B 1.1.2)"
+     },
+     {
+      "id": "b206",
+      "kind": "heading",
+      "text": "I. ADNOTACJA ORGANU"
+     },
+     {
+      "id": "b207",
+      "kind": "paragraph",
+      "text": "79. Data wpływu do organu 80. Uwagi"
+     },
+     {
+      "id": "b208",
+      "kind": "paragraph",
+      "text": "81. Podpis i pieczęć przyjmującego deklarację"
+     },
+     {
+      "id": "b209",
+      "kind": "paragraph",
+      "text": "Pouczenie:"
+     },
+     {
+      "id": "b210",
+      "kind": "paragraph",
+      "text": "1) W przypadku niewykonania w całości lub w części zadeklarowanego zobowiązania, niniejsza deklaracja"
+     },
+     {
+      "id": "b211",
+      "kind": "paragraph",
+      "text": "stanowi podstawę do wystawienia tytułu wykonawczego (art. 3a § 1 i 2 – ustawy z dnia 17 czerwca 1966 r."
+     },
+     {
+      "id": "b212",
+      "kind": "paragraph",
+      "text": "o postępowaniu egzekucyjnym w administracji – tekst jedn. Dz. U. z 2025r., poz. 132 ze zm.)."
+     },
+     {
+      "id": "b213",
+      "kind": "paragraph",
+      "text": "Objaśnienia dotyczące sposobu wypełniania deklaracji"
+     },
+     {
+      "id": "b214",
+      "kind": "paragraph",
+      "text": "1. Deklarację należy wypełnić czytelnie; komputerowo lub ręcznie, drukowanymi literami."
+     },
+     {
+      "id": "b215",
+      "kind": "paragraph",
+      "text": "2. Obowiązek złożenia deklaracji spoczywa na każdym faktycznie władającym nieruchomością lub jej częścią na"
+     },
+     {
+      "id": "b216",
+      "kind": "paragraph",
+      "text": "której zamieszkują mieszkańcy lub nieruchomością na której w części zamieszkują, a w części nie"
+     },
+     {
+      "id": "b217",
+      "kind": "paragraph",
+      "text": "zamieszkują mieszkańcy."
+     },
+     {
+      "id": "b218",
+      "kind": "paragraph",
+      "text": "3. Jeżeli nieruchomość jest zabudowana budynkiem wielolokalowym, w którym ustanowiono odrębną własność"
+     },
+     {
+      "id": "b219",
+      "kind": "paragraph",
+      "text": "lokalu, obowiązek złożenia deklaracji spoczywający na właścicielach nieruchomości wspólnej oraz"
+     },
+     {
+      "id": "b220",
+      "kind": "paragraph",
+      "text": "właścicielach lokali obciąża wspólnotę mieszkaniową albo spółdzielnię mieszkaniową."
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "blocks": [
+     {
+      "id": "b221",
+      "kind": "paragraph",
+      "text": "5/6"
+     },
+     {
+      "id": "b222",
+      "kind": "paragraph",
+      "text": "4. Objaśnienie dotyczące punktu B.1.2: Imię i nazwisko podają składający deklarację będący osobami"
+     },
+     {
+      "id": "b223",
+      "kind": "paragraph",
+      "text": "fizycznymi. Pełną nazwę podają składający deklarację nie będący osobami fizycznymi."
+     },
+     {
+      "id": "b224",
+      "kind": "paragraph",
+      "text": "5. Objaśnienie dotyczące punktu B.1.3 i 4: W pozycji PESEL oraz NIP/REGON:"
+     },
+     {
+      "id": "b225",
+      "kind": "paragraph",
+      "text": "a) osoby fizyczne nieprowadzące działalności gospodarczej figurujące w rejestrze PESEL wpisują numer"
+     },
+     {
+      "id": "b226",
+      "kind": "heading",
+      "text": "PESEL;"
+     },
+     {
+      "id": "b227",
+      "kind": "paragraph",
+      "text": "b) osoby fizyczne nieprowadzące działalności gospodarczej i nie posiadające numeru PESEL wpisują numer"
+     },
+     {
+      "id": "b228",
+      "kind": "paragraph",
+      "text": "dokumentu tożsamości i jego rodzaj;"
+     },
+     {
+      "id": "b229",
+      "kind": "paragraph",
+      "text": "c) osoba fizyczna prowadząca działalność gospodarczą jest OSOBĄ FIZYCZNĄ i musi wpisać PESEL"
+     },
+     {
+      "id": "b230",
+      "kind": "paragraph",
+      "text": "d) pozostałe podmioty wpisują numer NIP lub REGON."
+     },
+     {
+      "id": "b231",
+      "kind": "paragraph",
+      "text": "6. Objaśnienie dot. części C.25.1: Obowiązek podatkowy powstaje w dniu zamieszkania na nieruchomości"
+     },
+     {
+      "id": "b232",
+      "kind": "paragraph",
+      "text": "pierwszego mieszkańca lub powstania na nieruchomości pierwszego odpadu komunalnego."
+     },
+     {
+      "id": "b233",
+      "kind": "paragraph",
+      "text": "7. Objaśnienie dotyczące części D.1: Składający wypełnia odrębną deklarację dla każdej nieruchomości którą"
+     },
+     {
+      "id": "b234",
+      "kind": "paragraph",
+      "text": "włada."
+     },
+     {
+      "id": "b235",
+      "kind": "paragraph",
+      "text": "8. Objaśnienie dotyczące punktu D.2: Wypełniamy wyłącznie w przypadku, w którym właściciel nieruchomości"
+     },
+     {
+      "id": "b236",
+      "kind": "paragraph",
+      "text": "zabudowanej budynkiem lub budynkami wielolokalowymi składa deklarację odrębnie na daną część budynku"
+     },
+     {
+      "id": "b237",
+      "kind": "paragraph",
+      "text": "lub odrębnie na dany budynek, stosownie do przepisu art. 6m ust. 1ca ustawy o utrzymaniu czystości i"
+     },
+     {
+      "id": "b238",
+      "kind": "paragraph",
+      "text": "porządku w gminach."
+     },
+     {
+      "id": "b239",
+      "kind": "paragraph",
+      "text": "9. Objaśnienie dotyczące punktu D.4.35: Składający deklarację zaznaczają w poz. D.4.35 kratkę jeżeli"
+     },
+     {
+      "id": "b240",
+      "kind": "paragraph",
+      "text": "nieruchomość wyposażona jest w przydomowy kompostownik, w którym kompostowane są bioodpady"
+     },
+     {
+      "id": "b241",
+      "kind": "paragraph",
+      "text": "stanowiące odpady komunalne. Właściciele takich nieruchomość są bowiem zwolnione z części opłaty za"
+     },
+     {
+      "id": "b242",
+      "kind": "paragraph",
+      "text": "gospodarowanie odpadami komunalnymi."
+     },
+     {
+      "id": "b243",
+      "kind": "paragraph",
+      "text": "10. Objaśnienie dotyczące części E.1 oraz E.2: Przez gospodarstwo domowe należy rozumieć gospodarstwo"
+     },
+     {
+      "id": "b244",
+      "kind": "paragraph",
+      "text": "prowadzone przez osobę samodzielnie zajmującą lokal albo gospodarstwo prowadzone przez tę osobę"
+     },
+     {
+      "id": "b245",
+      "kind": "paragraph",
+      "text": "wspólnie z małżonkiem i innymi osobami stale z nią zamieszkującymi i gospodarującymi, które swoje prawa"
+     },
+     {
+      "id": "b246",
+      "kind": "paragraph",
+      "text": "do zamieszkiwania w lokalu wywodzą z prawa tej osoby."
+     },
+     {
+      "id": "b247",
+      "kind": "paragraph",
+      "text": "11. Objaśnienie dotyczące części E.1 oraz E.2: Powierzchnię użytkową lokalu mieszkalnego ustala się na"
+     },
+     {
+      "id": "b248",
+      "kind": "paragraph",
+      "text": "zasadach określonych w ustawie z dnia 7 lipca 1994r. – Prawo budowlane (t.j. Dz.U. z 2025r. poz. 418) oraz w"
+     },
+     {
+      "id": "b249",
+      "kind": "paragraph",
+      "text": "aktach wykonawczych do tej ustawy."
+     },
+     {
+      "id": "b250",
+      "kind": "paragraph",
+      "text": "12. Objaśnienie dotyczące punktu E.3.68: Wypełnić tylko w przypadku złożenia załącznika A lub B do deklaracji."
+     },
+     {
+      "id": "b251",
+      "kind": "paragraph",
+      "text": "13. Objaśnienie dotyczące punktu G.74.4: W przypadku składania deklaracji przez pełnomocnika – należy"
+     },
+     {
+      "id": "b252",
+      "kind": "paragraph",
+      "text": "dołączyć pełnomocnictwo na piśmie i złożyć z deklaracją w oryginale lub formie uwierzytelnionego odpisu"
+     },
+     {
+      "id": "b253",
+      "kind": "paragraph",
+      "text": "wraz z uiszczoną opłatą skarbową (17 zł) na rachunek nr 73 1440 1026 6153 0410 0000 0065."
+     },
+     {
+      "id": "b254",
+      "kind": "paragraph",
+      "text": "Informacja o przetwarzaniu danych osobowych"
+     },
+     {
+      "id": "b255",
+      "kind": "paragraph",
+      "text": "Stosownie do art. 13 i 14 Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27"
+     },
+     {
+      "id": "b256",
+      "kind": "paragraph",
+      "text": "kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w"
+     },
+     {
+      "id": "b257",
+      "kind": "paragraph",
+      "text": "sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE, dalej RODO,"
+     },
+     {
+      "id": "b258",
+      "kind": "paragraph",
+      "text": "informujemy, że:"
+     },
+     {
+      "id": "b259",
+      "kind": "paragraph",
+      "text": "1. Administratorem Pani/Pana danych osobowych jest Prezydent Miasta Gdyni z siedzibą przy al. Marsz."
+     },
+     {
+      "id": "b260",
+      "kind": "paragraph",
+      "text": "Piłsudskiego 52/54, 81-382 Gdynia."
+     },
+     {
+      "id": "b261",
+      "kind": "paragraph",
+      "text": "Z administratorem, w związku ze złożoną Deklaracją, można się kontaktować w następujący sposób:"
+     },
+     {
+      "id": "b262",
+      "kind": "paragraph",
+      "text": "a) listownie: Al. Marsz. Piłsudskiego 52/54, 81-382 Gdynia"
+     },
+     {
+      "id": "b263",
+      "kind": "paragraph",
+      "text": "b) za pośrednictwem poczty elektronicznej: wydz.podatkow@gdynia.pl"
+     },
+     {
+      "id": "b264",
+      "kind": "paragraph",
+      "text": "c) telefonicznie: +48 58 527 28 00"
+     },
+     {
+      "id": "b265",
+      "kind": "paragraph",
+      "text": "2. Administrator powołał inspektora ochrony danych, z którym kontakt jest możliwy poprzez e￾mail: iod@gdynia.pl lub adres pocztowy: Al. Marsz. Piłsudskiego 52/54, 81-382 Gdynia."
+     },
+     {
+      "id": "b266",
+      "kind": "paragraph",
+      "text": "3. Będziemy przetwarzać Pani/Pana dane osobowe w celu weryfikacji prawidłowości wysokości"
+     },
+     {
+      "id": "b267",
+      "kind": "paragraph",
+      "text": "miesięcznej opłaty za gospodarowanie odpadami komunalnymi na podstawie art. 6 ust. 1 lit. c RODO w"
+     },
+     {
+      "id": "b268",
+      "kind": "paragraph",
+      "text": "związku z przepisami ustawy z dnia 13 września 1996r. o utrzymaniu czystości i porządku w gminach,"
+     },
+     {
+      "id": "b269",
+      "kind": "paragraph",
+      "text": "ustawy z dnia 8 marca 1990r. o samorządzie gminnym oraz uchwały nr XIV/478/19 Rady Miasta Gdyni z"
+     },
+     {
+      "id": "b270",
+      "kind": "paragraph",
+      "text": "dnia 27 listopada 2019 roku w sprawie wzoru deklaracji o wysokości opłaty za gospodarowanie odpadami"
+     },
+     {
+      "id": "b271",
+      "kind": "paragraph",
+      "text": "komunalnymi ze zmianami."
+     },
+     {
+      "id": "b272",
+      "kind": "paragraph",
+      "text": "W przypadku przekazania niniejszej deklaracji za pomocą środków komunikacji elektronicznej (ePUAP)"
+     },
+     {
+      "id": "b273",
+      "kind": "paragraph",
+      "text": "Pani/Pana dane będą przetwarzane zgodnie z przepisami ustawy z dnia 18 lipca 2002 r. o świadczeniu"
+     },
+     {
+      "id": "b274",
+      "kind": "paragraph",
+      "text": "usług drogą elektroniczną oraz przepisami ustawy z dnia 18 listopada 2020 r. o doręczeniach"
+     },
+     {
+      "id": "b275",
+      "kind": "paragraph",
+      "text": "elektronicznych."
+     },
+     {
+      "id": "b276",
+      "kind": "paragraph",
+      "text": "W przypadku dobrowolnego podania danych kontaktowych, dane te będą przetwarzane w celu ułatwienia"
+     },
+     {
+      "id": "b277",
+      "kind": "paragraph",
+      "text": "kontaktu w związku ze złożoną deklaracją na podstawie Pani/Pana zgody (art. 6 ust. 1 lit. a RODO)."
+     },
+     {
+      "id": "b278",
+      "kind": "paragraph",
+      "text": "4. Odbiorcami Pana/Pani danych osobowych mogą być:"
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "blocks": [
+     {
+      "id": "b279",
+      "kind": "paragraph",
+      "text": "6/6"
+     },
+     {
+      "id": "b280",
+      "kind": "paragraph",
+      "text": "a) podmioty upoważnione na podstawie przepisów prawa;"
+     },
+     {
+      "id": "b281",
+      "kind": "paragraph",
+      "text": "b) podmioty świadczące usługi z zakresu utrzymania, serwisu i i asysty technicznej narzędzi i systemów"
+     },
+     {
+      "id": "b282",
+      "kind": "paragraph",
+      "text": "informatycznych wykorzystywanych przy przetwarzaniu danych;"
+     },
+     {
+      "id": "b283",
+      "kind": "paragraph",
+      "text": "c) operator pocztowy, z którym Urząd Miasta Gdyni zawarł umowę na świadczenie usług pocztowych i"
+     },
+     {
+      "id": "b284",
+      "kind": "paragraph",
+      "text": "kurierskich."
+     },
+     {
+      "id": "b285",
+      "kind": "paragraph",
+      "text": "5. Administrator nie przewiduje przekazania uzyskanych danych osobowych do państwa trzeciego lub"
+     },
+     {
+      "id": "b286",
+      "kind": "paragraph",
+      "text": "organizacji międzynarodowej."
+     },
+     {
+      "id": "b287",
+      "kind": "paragraph",
+      "text": "6. Administrator nie przewiduje zautomatyzowanego podejmowania decyzji ani profilowania w oparciu o"
+     },
+     {
+      "id": "b288",
+      "kind": "paragraph",
+      "text": "otrzymane dane osobowe."
+     },
+     {
+      "id": "b289",
+      "kind": "paragraph",
+      "text": "7. Czas przetwarzania danych osobowych obejmować będzie okres wynikający z przepisów prawa"
+     },
+     {
+      "id": "b290",
+      "kind": "paragraph",
+      "text": "upoważniających do zachowania i archiwizacji pozyskanych danych osobowych, w szczególności okres"
+     },
+     {
+      "id": "b291",
+      "kind": "paragraph",
+      "text": "wynikający z przepisów ustawy z dnia 14 lipca 1983 r. o narodowym zasobie archiwalnym i archiwach tj."
+     },
+     {
+      "id": "b292",
+      "kind": "paragraph",
+      "text": "aktualnie 10 lat."
+     },
+     {
+      "id": "b293",
+      "kind": "paragraph",
+      "text": "8. Ma Pani/Pan prawo do:"
+     },
+     {
+      "id": "b294",
+      "kind": "paragraph",
+      "text": "a) żądania uzyskania kopii danych osobowych, lub ich udostępnienia w siedzibie administratora (art. 15"
+     },
+     {
+      "id": "b295",
+      "kind": "heading",
+      "text": "RODO),"
+     },
+     {
+      "id": "b296",
+      "kind": "paragraph",
+      "text": "b) żądania sprostowania danych osobowych (art. 16 RODO),"
+     },
+     {
+      "id": "b297",
+      "kind": "paragraph",
+      "text": "c) żądania usunięcia swoich danych osobowych lub ograniczenia ich przetwarzania w przypadkach"
+     },
+     {
+      "id": "b298",
+      "kind": "paragraph",
+      "text": "przewidzianych prawem (art. 17 i 18 RODO),"
+     },
+     {
+      "id": "b299",
+      "kind": "paragraph",
+      "text": "d) wycofania zgody na przetwarzanie danych osobowych w zakresie, w jakim taka zgoda została"
+     },
+     {
+      "id": "b300",
+      "kind": "paragraph",
+      "text": "udzielona. Cofnięcie zgody nie wpływa na zgodność z prawem przetwarzania danych, którego dokonano na"
+     },
+     {
+      "id": "b301",
+      "kind": "paragraph",
+      "text": "podstawie zgody przed jej cofnięciem."
+     },
+     {
+      "id": "b302",
+      "kind": "paragraph",
+      "text": "9. Administrator informuje jednocześnie, iż na podstawie art. 77 RODO ma Pani/Pan prawo wniesienia"
+     },
+     {
+      "id": "b303",
+      "kind": "paragraph",
+      "text": "skargi do Prezesa Urzędu Ochrony Danych Osobowych, 00-193 Warszawa, ul. Stawki 2, w przypadku"
+     },
+     {
+      "id": "b304",
+      "kind": "paragraph",
+      "text": "uznania, iż przetwarzanie danych narusza przepisy RODO."
+     },
+     {
+      "id": "b305",
+      "kind": "paragraph",
+      "text": "10. Podanie przez Panią /Pana danych osobowych jest obligatoryjne i wynika z przepisów prawa."
+     },
+     {
+      "id": "b306",
+      "kind": "paragraph",
+      "text": "Niepodanie danych wiązać się będzie z konsekwencjami przewidzianymi prawem."
+     },
+     {
+      "id": "b307",
+      "kind": "paragraph",
+      "text": "11. W przypadku pozyskania danych osobowych z innych źródeł niż bezpośrednio od osoby, której dane"
+     },
+     {
+      "id": "b308",
+      "kind": "paragraph",
+      "text": "dotyczą, Administrator będzie przetwarzał następujące kategorie danych osobowych:"
+     },
+     {
+      "id": "b309",
+      "kind": "paragraph",
+      "text": "a) dane identyfikacyjne,"
+     },
+     {
+      "id": "b310",
+      "kind": "paragraph",
+      "text": "b) dane adresowe,"
+     },
+     {
+      "id": "b311",
+      "kind": "paragraph",
+      "text": "c) dane kontaktowe,"
+     },
+     {
+      "id": "b312",
+      "kind": "paragraph",
+      "text": "d) informacje o posiadanej nieruchomości oraz wysokości opłaty,"
+     },
+     {
+      "id": "b313",
+      "kind": "paragraph",
+      "text": "e) inne dane niezbędne do rozpatrzenia sprawy."
+     },
+     {
+      "id": "b314",
+      "kind": "paragraph",
+      "text": "Źródłem pozyskania danych osobowych będzie niniejszy wniosek złożony przez osobę reprezentującą."
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Deklaracja o wysokości miesięcznej opłaty za gospodarowanie odpadami komunalnymi",
+  "authority_kind": "ORGAN",
+  "authority_name": "Prezydent Miasta Gdyni",
+  "fields": [
+   {
+    "label": "Składający deklarację",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "rodzaj składającego"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Okoliczności złożenia deklaracji",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "okoliczności"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Data zdarzenia",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "data zdarzenia powodującego powstanie obowiązku",
+     "data wystąpienia zmiany danych"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Miejscowość nieruchomości",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "miejscowość"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Kod pocztowy nieruchomości",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "kod pocztowy"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Ulica nieruchomości",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "ulica"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer nieruchomości",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer nieruchomości/domu",
+     "numer domu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer lokalu",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Miejsce gromadzenia odpadów",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "adres lub opis miejsca lokalizacji pojemników"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Rodzaj nieruchomości",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Nieruchomość w części niezamieszkała",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "nieruchomość mieszana",
+     "nieruchomość zaznaczona w poz. 33"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Przydomowy kompostownik",
+    "kind": [
+     "single_choice",
+     "multi_choice",
+     "info"
+    ],
+    "aliases": [
+     "kompostownik"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba gospodarstw domowych do 45 m²",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba gospodarstw domowych"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba gospodarstw domowych od 45 do 60 m²",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Liczba gospodarstw domowych od 60 do 80 m²",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Liczba gospodarstw domowych powyżej 80 m²",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Liczba gospodarstw objętych zwolnieniem dochodowym",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "zwolnienie dochodowe"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Wysokość miesięcznej opłaty",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "razem wysokość miesięcznej opłaty",
+     "suma"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer działki",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer/y działki/działek"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Imię i nazwisko współmałżonka",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwisko, imię"
+    ],
+    "optional": true
+   },
+   {
+    "label": "PESEL współmałżonka",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Stawka opłaty",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Załączniki",
+    "kind": [
+     "multi_choice",
+     "single_choice",
+     "file"
+    ],
+    "aliases": [],
+    "optional": true
+   }
+  ]
+ }
+}

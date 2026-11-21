@@ -1,0 +1,1632 @@
+{
+ "name": "Wniosek o przyznanie stypendium",
+ "source": "Wniosek o przyznanie stypendium.docx",
+ "document": {
+  "source": {
+   "method": "docx",
+   "pages": 1
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "Załącznik Nr 3 do zarządzenia"
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "Nr 245/IX/2024"
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "Prezydenta Miasta Zgierza"
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "z dnia 26 listopada 2024 r."
+     },
+     {
+      "id": "b5",
+      "kind": "heading",
+      "text": "Rodzaje wniosków:"
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "Wniosek o przyznanie stypendium sportowego Rady Miasta Zgierza"
+     },
+     {
+      "id": "b7",
+      "kind": "paragraph",
+      "text": "Wniosek o przyznanie nagrody sportowej Rady Miasta Zgierza"
+     },
+     {
+      "id": "b8",
+      "kind": "paragraph",
+      "text": "Wniosek o przyznanie wyróżnienia sportowego Rady Miasta Zgierza"
+     },
+     {
+      "id": "b9",
+      "kind": "heading",
+      "text": "Wniosek o przyznanie stypendium sportowego Rady Miasta Zgierza"
+     },
+     {
+      "id": "b10",
+      "kind": "heading",
+      "text": "1. Wnioskodawca"
+     },
+     {
+      "id": "b11",
+      "kind": "paragraph",
+      "text": "Prezydent Miasta Zgierza"
+     },
+     {
+      "id": "b12",
+      "kind": "paragraph",
+      "text": "Klub sportowy"
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "Należy wypełnić w przypadku Wnioskodawcy – Klubu sportowego."
+     },
+     {
+      "id": "b14",
+      "kind": "checkbox_option",
+      "text": "Dane reprezentanta klubu sportowego z KRS lub innego właściwego rejestru"
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "Imię ………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b16",
+      "kind": "paragraph",
+      "text": "Nazwisko ………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "Numer telefonu (opcjonalnie) …………………………………………………………………………………………….…"
+     },
+     {
+      "id": "b18",
+      "kind": "checkbox_option",
+      "text": "Dane pełnomocnika klubu sportowego"
+     },
+     {
+      "id": "b19",
+      "kind": "paragraph",
+      "text": "Imię …………………………………………………………………………………………………………………………………….…"
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "Nazwisko ………………………………………………………………………………………………………………………..………"
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "Seria i numer dowodu osobistego …………………………………………………………………………………….….…"
+     },
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "Numer telefonu (opcjonalnie) …………………………………………………………………………………………………"
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "Do wniosku należy dołączyć pełnomocnictwo potwierdzające uprawnienia do działania w imieniu klubu wraz z potwierdzeniem uiszczenia opłaty skarbowej (opłata skarbowa jest niezbędna w związku z udzielonym pełnomocnictwem)."
+     },
+     {
+      "id": "b24",
+      "kind": "heading",
+      "text": "Dane klubu sportowego"
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "Nazwa klubu sportowego ………………………………………………………………………………………………….……"
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "Telefon kontaktowy (opcjonalnie) ………………………………………………………………………………………….."
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "Adres siedziby …………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b28",
+      "kind": "paragraph",
+      "text": "Korespondencja z urzędem (wybierz preferowany sposób korespondencji z urzędem)"
+     },
+     {
+      "id": "b29",
+      "kind": "checkbox_option",
+      "text": "Poczta tradycyjna - na który adres kierować korespondencję"
+     },
+     {
+      "id": "b30",
+      "kind": "checkbox_option",
+      "text": "adres siedziby klubu"
+     },
+     {
+      "id": "b31",
+      "kind": "checkbox_option",
+      "text": "inny adres korespondencyjny …………………………………………………………………………………………."
+     },
+     {
+      "id": "b32",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b33",
+      "kind": "paragraph",
+      "text": "Skrzynka ePUAP - adres skrzynki: ……………………………………………………………………………………."
+     },
+     {
+      "id": "b34",
+      "kind": "paragraph",
+      "text": "eDoręczenia - adres skrzynki: ……………………………………………………………………………………….…."
+     },
+     {
+      "id": "b35",
+      "kind": "heading",
+      "text": "Odpis danych z KRS lub innego właściwego rejestru"
+     },
+     {
+      "id": "b36",
+      "kind": "paragraph",
+      "text": "Do wniosku należy dołączyć aktualny odpis danych o klubie z Krajowego Rejestru Sądowego lub innego właściwego rejestru, zgodny z bieżącym stanem faktycznym i prawnym."
+     },
+     {
+      "id": "b37",
+      "kind": "heading",
+      "text": "2. Dane sportowca"
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "Dane kandydatki/kandydata do stypendium:"
+     },
+     {
+      "id": "b39",
+      "kind": "paragraph",
+      "text": "Imię ……………………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b40",
+      "kind": "paragraph",
+      "text": "Nazwisko ……………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b41",
+      "kind": "paragraph",
+      "text": "Data urodzenia ………………………………………………………………………………………………………………………."
+     },
+     {
+      "id": "b42",
+      "kind": "paragraph",
+      "text": "Adres zameldowania (adres zameldowania może być inny niż adres zamieszkania)"
+     },
+     {
+      "id": "b43",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………….…."
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "Adres do korespondencji (jeśli różni się od adresu zameldowania)"
+     },
+     {
+      "id": "b45",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b46",
+      "kind": "heading",
+      "text": "Dyscypliny sportowe"
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "Wskaż rodzaje dyscyplin sportowych, w których bierze udział osoba objęta wnioskiem, a  następnie wybierz konkretne dyscypliny z listy:"
+     },
+     {
+      "id": "b48",
+      "kind": "paragraph",
+      "text": "zespołowa"
+     },
+     {
+      "id": "b49",
+      "kind": "paragraph",
+      "text": "indywidualna – inna"
+     },
+     {
+      "id": "b50",
+      "kind": "paragraph",
+      "text": "indywidualna – lekkoatletyka"
+     },
+     {
+      "id": "b51",
+      "kind": "heading",
+      "text": "Dyscypliny sportowe:"
+     },
+     {
+      "id": "b52",
+      "kind": "paragraph",
+      "text": "gimnastyka artystyczna"
+     },
+     {
+      "id": "b53",
+      "kind": "paragraph",
+      "text": "hokej"
+     },
+     {
+      "id": "b54",
+      "kind": "paragraph",
+      "text": "karate"
+     },
+     {
+      "id": "b55",
+      "kind": "paragraph",
+      "text": "kolarstwo"
+     },
+     {
+      "id": "b56",
+      "kind": "paragraph",
+      "text": "koszykówka"
+     },
+     {
+      "id": "b57",
+      "kind": "paragraph",
+      "text": "lekkoatletyka"
+     },
+     {
+      "id": "b58",
+      "kind": "paragraph",
+      "text": "łucznictwo"
+     },
+     {
+      "id": "b59",
+      "kind": "paragraph",
+      "text": "łyżwiarstwo"
+     },
+     {
+      "id": "b60",
+      "kind": "paragraph",
+      "text": "narciarstwo klasyczne"
+     },
+     {
+      "id": "b61",
+      "kind": "paragraph",
+      "text": "piłka nożna"
+     },
+     {
+      "id": "b62",
+      "kind": "paragraph",
+      "text": "piłka ręczna"
+     },
+     {
+      "id": "b63",
+      "kind": "paragraph",
+      "text": "piłka siatkowa"
+     },
+     {
+      "id": "b64",
+      "kind": "paragraph",
+      "text": "piłka wodna"
+     },
+     {
+      "id": "b65",
+      "kind": "paragraph",
+      "text": "sport motocyklowy"
+     },
+     {
+      "id": "b66",
+      "kind": "paragraph",
+      "text": "sporty walki"
+     },
+     {
+      "id": "b67",
+      "kind": "paragraph",
+      "text": "sporty wodne"
+     },
+     {
+      "id": "b68",
+      "kind": "paragraph",
+      "text": "tenis stołowy"
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "tenis ziemny"
+     },
+     {
+      "id": "b70",
+      "kind": "paragraph",
+      "text": "unihokej"
+     },
+     {
+      "id": "b71",
+      "kind": "paragraph",
+      "text": "zapasy"
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "Inna dyscyplina………………………………………………………………………………………………………………………….…"
+     },
+     {
+      "id": "b73",
+      "kind": "heading",
+      "text": "3. Osiągnięcia sportowe"
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "Opisz najważniejsze osiągnięcia sportowe kandydata, które będą brane pod uwagę przy ocenie wniosku"
+     },
+     {
+      "id": "b75",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….……………………………………………………………………………………………………………………………………………………….……………."
+     },
+     {
+      "id": "b76",
+      "kind": "paragraph",
+      "text": "Do wniosku można dołączyć dyplomy lub inne dokumenty potwierdzające opisane osiągnięcia sportowe."
+     },
+     {
+      "id": "b77",
+      "kind": "heading",
+      "text": "Opinia macierzystego klubu sportowego"
+     },
+     {
+      "id": "b78",
+      "kind": "paragraph",
+      "text": "Opinia macierzystego klubu sportowego, potwierdzająca nienaganną postawę etyczną i  moralną sportowca"
+     },
+     {
+      "id": "b79",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….…………………………………………………………………………………………………………………………………………………………………………………………………………………………………..………"
+     },
+     {
+      "id": "b80",
+      "kind": "paragraph",
+      "text": "Do wniosku można dołączyć dokument z opinią klubu."
+     },
+     {
+      "id": "b81",
+      "kind": "heading",
+      "text": "Wymagane zaświadczenia"
+     },
+     {
+      "id": "b82",
+      "kind": "paragraph",
+      "text": "Do wniosku należy załączyć zaświadczenia wydane przez Polski Związek Sportowy odpowiedni dla danej dyscypliny sportowej lub inne oficjalne dokumenty (np. komunikaty z zawodów), które potwierdzają osiągnięcia sportowe."
+     },
+     {
+      "id": "b83",
+      "kind": "paragraph",
+      "text": "Dodatkowe informacje o osiągnieciach sportowych"
+     },
+     {
+      "id": "b84",
+      "kind": "paragraph",
+      "text": "Ewentualne dodatkowe informacje o kandydatce/kandydacie do stypendium"
+     },
+     {
+      "id": "b85",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………..……….."
+     },
+     {
+      "id": "b86",
+      "kind": "input_placeholder",
+      "text": "………………………………………..…………………………………………………"
+     },
+     {
+      "id": "b87",
+      "kind": "paragraph",
+      "text": "Data sporządzenia wniosku Podpis i pieczątka wnioskodawcy"
+     },
+     {
+      "id": "b88",
+      "kind": "heading",
+      "text": "4. Klauzula informacyjna"
+     },
+     {
+      "id": "b89",
+      "kind": "heading",
+      "text": "Informacje na temat ochrony danych osobowych stosowanych przez administratora danych, którymi są wnioskujący:"
+     },
+     {
+      "id": "b90",
+      "kind": "paragraph",
+      "text": "a) klub sportowy – znajdują się na jego stronie internetowej lub w wersji papierowej w jego siedzibie oraz wymagane zgody z pkt. 5;"
+     },
+     {
+      "id": "b91",
+      "kind": "paragraph",
+      "text": "b) Prezydent Miasta Zgierza – znajdują się na stronie podmiotowej BIP Urzędu Miasta Zgierza pod adresem: www.bip.zgierz.pl lub w siedzibie Urzędu Miasta Zgierza oraz wymagane zgody z pkt. 5."
+     },
+     {
+      "id": "b92",
+      "kind": "heading",
+      "text": "5. Zgody"
+     },
+     {
+      "id": "b93",
+      "kind": "heading",
+      "text": "5.1. Zgoda kandydata pełnoletniego do stypendium"
+     },
+     {
+      "id": "b94",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko kandydata ……………………………………………………………………………………………………"
+     },
+     {
+      "id": "b95",
+      "kind": "paragraph",
+      "text": "1) Wyrażam zgodę na przetwarzanie moich danych osobowych zwartych we wniosku w celu przekazania go do dalszego procedowania przez Komisję stypendialną ds. stypendiów sportowych Rady Miasta Zgierza."
+     },
+     {
+      "id": "b96",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania stypendiów sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b97",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b98",
+      "kind": "paragraph",
+      "text": "Data Podpis kandydata"
+     },
+     {
+      "id": "b99",
+      "kind": "heading",
+      "text": "5.2. Zgoda w imieniu kandydata nieletniego do stypendium"
+     },
+     {
+      "id": "b100",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko kandydata ……………………………………………………………………………………………………."
+     },
+     {
+      "id": "b101",
+      "kind": "paragraph",
+      "text": "1) Ja niżej podpisany …………………………………………….………………………… (rodzic/opiekun prawny) wyrażam zgodę na przetwarzanie danych osobowych mojego dziecka/podopiecznego zawartych we wniosku w celu przekazania go do dalszego procedowania przez Komisję stypendialną ds. stypendiów sportowych Rady Miasta Zgierza."
+     },
+     {
+      "id": "b102",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania stypendiów sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b103",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b104",
+      "kind": "paragraph",
+      "text": "DataPodpis rodzica/opiekuna prawnego"
+     },
+     {
+      "id": "b105",
+      "kind": "paragraph",
+      "text": "Wypełniony formularz zgody przechowuje właściwy administrator danych osobowych."
+     },
+     {
+      "id": "b106",
+      "kind": "heading",
+      "text": "Wniosek o przyznanie nagrody sportowej Rady Miasta Zgierza"
+     },
+     {
+      "id": "b107",
+      "kind": "heading",
+      "text": "1. Wnioskodawca"
+     },
+     {
+      "id": "b108",
+      "kind": "paragraph",
+      "text": "Prezydent Miasta Zgierza"
+     },
+     {
+      "id": "b109",
+      "kind": "paragraph",
+      "text": "Klub sportowy"
+     },
+     {
+      "id": "b110",
+      "kind": "paragraph",
+      "text": "Należy wypełnić w przypadku Wnioskodawcy – Klubu sportowego."
+     },
+     {
+      "id": "b111",
+      "kind": "checkbox_option",
+      "text": "Dane reprezentanta klubu sportowego z KRS lub innego właściwego rejestru"
+     },
+     {
+      "id": "b112",
+      "kind": "paragraph",
+      "text": "Imię ………………………………………………………………………………………………………………………………..………"
+     },
+     {
+      "id": "b113",
+      "kind": "paragraph",
+      "text": "Nazwisko …………………………………………………………………………………………………………………..……………"
+     },
+     {
+      "id": "b114",
+      "kind": "paragraph",
+      "text": "Numer telefonu (opcjonalnie) …………………………………………………………………………………………………"
+     },
+     {
+      "id": "b115",
+      "kind": "checkbox_option",
+      "text": "Dane pełnomocnika klubu sportowego"
+     },
+     {
+      "id": "b116",
+      "kind": "paragraph",
+      "text": "Imię ……………………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b117",
+      "kind": "paragraph",
+      "text": "Nazwisko ……………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b118",
+      "kind": "paragraph",
+      "text": "Seria i numer dowodu osobistego …………………………………………………….……………………………………."
+     },
+     {
+      "id": "b119",
+      "kind": "paragraph",
+      "text": "Numer telefonu (opcjonalnie) …………………………………………………………………………………………………"
+     },
+     {
+      "id": "b120",
+      "kind": "paragraph",
+      "text": "Do wniosku należy dołączyć pełnomocnictwo potwierdzające uprawnienia do działania w imieniu klubu wraz z potwierdzeniem uiszczenia opłaty skarbowej (opłata skarbowa jest niezbędna w związku z udzielonym pełnomocnictwem)."
+     },
+     {
+      "id": "b121",
+      "kind": "heading",
+      "text": "Dane klubu sportowego"
+     },
+     {
+      "id": "b122",
+      "kind": "paragraph",
+      "text": "Nazwa klubu sportowego ………………………………………………………………………………………………………."
+     },
+     {
+      "id": "b123",
+      "kind": "paragraph",
+      "text": "Telefon kontaktowy (opcjonalnie) ………………………………………………………………………………………….."
+     },
+     {
+      "id": "b124",
+      "kind": "paragraph",
+      "text": "Adres siedziby …………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b125",
+      "kind": "paragraph",
+      "text": "Korespondencja z urzędem (wybierz preferowany sposób korespondencji z urzędem)"
+     },
+     {
+      "id": "b126",
+      "kind": "checkbox_option",
+      "text": "Poczta tradycyjna - na który adres kierować korespondencję"
+     },
+     {
+      "id": "b127",
+      "kind": "checkbox_option",
+      "text": "adres siedziby klubu"
+     },
+     {
+      "id": "b128",
+      "kind": "checkbox_option",
+      "text": "inny adres korespondencyjny …………………………………………………………………………………………."
+     },
+     {
+      "id": "b129",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b130",
+      "kind": "paragraph",
+      "text": "Skrzynka ePUAP - adres skrzynki: …………………………………………………………………………………….."
+     },
+     {
+      "id": "b131",
+      "kind": "paragraph",
+      "text": "eDoręczenia - adres skrzynki: ……………………………………………………………………..…………..………."
+     },
+     {
+      "id": "b132",
+      "kind": "heading",
+      "text": "Odpis danych z KRS lub innego właściwego rejestru"
+     },
+     {
+      "id": "b133",
+      "kind": "paragraph",
+      "text": "Do wniosku należy dołączyć aktualny odpis danych o klubie z Krajowego Rejestru Sądowego lub innego właściwego rejestru, zgodny z bieżącym stanem faktycznym i prawnym."
+     },
+     {
+      "id": "b134",
+      "kind": "heading",
+      "text": "2. Dane sportowca"
+     },
+     {
+      "id": "b135",
+      "kind": "paragraph",
+      "text": "Dane kandydatki/kandydata do nagrody:"
+     },
+     {
+      "id": "b136",
+      "kind": "paragraph",
+      "text": "Imię ……………………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b137",
+      "kind": "paragraph",
+      "text": "Nazwisko ……………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b138",
+      "kind": "paragraph",
+      "text": "Data urodzenia ………………………………………………………………………………………………………………………."
+     },
+     {
+      "id": "b139",
+      "kind": "paragraph",
+      "text": "Adres zameldowania (adres zameldowania może być inny niż adres zamieszkania)"
+     },
+     {
+      "id": "b140",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………….…."
+     },
+     {
+      "id": "b141",
+      "kind": "paragraph",
+      "text": "Adres do korespondencji (jeśli różni się od adresu zameldowania)"
+     },
+     {
+      "id": "b142",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b143",
+      "kind": "heading",
+      "text": "3. Osiągnięcia sportowe"
+     },
+     {
+      "id": "b144",
+      "kind": "paragraph",
+      "text": "Opisz najważniejsze osiągnięcia sportowe kandydata, które będą brane pod uwagę przy ocenie wniosku"
+     },
+     {
+      "id": "b145",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….……………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….………………."
+     },
+     {
+      "id": "b146",
+      "kind": "paragraph",
+      "text": "Do wniosku można dołączyć dyplomy lub inne dokumenty potwierdzające opisane osiągnięcia sportowe."
+     },
+     {
+      "id": "b147",
+      "kind": "heading",
+      "text": "Opinia macierzystego klubu sportowego"
+     },
+     {
+      "id": "b148",
+      "kind": "paragraph",
+      "text": "Opinia macierzystego klubu sportowego, potwierdzająca nienaganną postawę etyczną i  moralną sportowca"
+     },
+     {
+      "id": "b149",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b150",
+      "kind": "paragraph",
+      "text": "Do wniosku można dołączyć dokument z opinią klubu."
+     },
+     {
+      "id": "b151",
+      "kind": "heading",
+      "text": "Wymagane zaświadczenia"
+     },
+     {
+      "id": "b152",
+      "kind": "paragraph",
+      "text": "Do wniosku należy załączyć zaświadczenia wydane przez Polski Związek Sportowy odpowiedni dla danej dyscypliny sportowej lub inne oficjalne dokumenty (np. komunikaty z zawodów), które potwierdzają osiągnięcia sportowe."
+     },
+     {
+      "id": "b153",
+      "kind": "heading",
+      "text": "Dodatkowe informacje o osiągnieciach sportowych"
+     },
+     {
+      "id": "b154",
+      "kind": "paragraph",
+      "text": "Ewentualne dodatkowe informacje o kandydatce/kandydacie do nagrody"
+     },
+     {
+      "id": "b155",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………..……………………………………………………………………………………………………………………………………………..………………………………………………………………………………………………………………………………………………..…………………………………………………………………………………………………………………………………………..………………………………………………………………………………………………………………………………………………………….……"
+     },
+     {
+      "id": "b156",
+      "kind": "input_placeholder",
+      "text": "………………………………………..…………………………………………………"
+     },
+     {
+      "id": "b157",
+      "kind": "paragraph",
+      "text": "Data sporządzenia wniosku Podpis i pieczątka wnioskodawcy"
+     },
+     {
+      "id": "b158",
+      "kind": "heading",
+      "text": "4. Klauzula informacyjna"
+     },
+     {
+      "id": "b159",
+      "kind": "heading",
+      "text": "Informacje na temat ochrony danych osobowych stosowanych przez administratora danych, którymi są wnioskujący:"
+     },
+     {
+      "id": "b160",
+      "kind": "paragraph",
+      "text": "a) klub sportowy – znajdują się na jego stronie internetowej lub w wersji papierowej w jego siedzibie oraz wymagane zgody z pkt. 5;"
+     },
+     {
+      "id": "b161",
+      "kind": "paragraph",
+      "text": "b) Prezydent Miasta Zgierza – znajdują się na stronie podmiotowej BIP Urzędu Miasta Zgierza pod adresem: www.bip.zgierz.pl lub w siedzibie Urzędu Miasta Zgierza oraz wymagane zgody z pkt. 5."
+     },
+     {
+      "id": "b162",
+      "kind": "heading",
+      "text": "5. Zgody"
+     },
+     {
+      "id": "b163",
+      "kind": "heading",
+      "text": "5.1. Zgoda kandydata pełnoletniego do nagrody"
+     },
+     {
+      "id": "b164",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko kandydata ……………………………………………………………………………………………………"
+     },
+     {
+      "id": "b165",
+      "kind": "paragraph",
+      "text": "1) Wyrażam zgodę na przetwarzanie moich danych osobowych zwartych we wniosku w celu przekazania go do dalszego procedowania."
+     },
+     {
+      "id": "b166",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania nagród sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b167",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b168",
+      "kind": "paragraph",
+      "text": "Data Podpis kandydata"
+     },
+     {
+      "id": "b169",
+      "kind": "heading",
+      "text": "5.2. Zgoda w imieniu kandydata nieletniego do nagrody"
+     },
+     {
+      "id": "b170",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko kandydata ……………………………………………………………………………………………………"
+     },
+     {
+      "id": "b171",
+      "kind": "paragraph",
+      "text": "1) Ja niżej podpisany …………………………………………….………………………. (rodzic/opiekun prawny) wyrażam zgodę na przetwarzanie danych osobowych mojego dziecka/podopiecznego zawartych we wniosku w celu przekazania go do dalszego procedowania."
+     },
+     {
+      "id": "b172",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania nagród sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b173",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b174",
+      "kind": "paragraph",
+      "text": "DataPodpis rodzica/opiekuna prawnego"
+     },
+     {
+      "id": "b175",
+      "kind": "paragraph",
+      "text": "Wypełniony formularz zgody przechowuje właściwy administrator danych osobowych."
+     },
+     {
+      "id": "b176",
+      "kind": "heading",
+      "text": "Wniosek o przyznanie wyróżnienia sportowego Rady Miasta Zgierza"
+     },
+     {
+      "id": "b177",
+      "kind": "heading",
+      "text": "1. Wnioskodawca"
+     },
+     {
+      "id": "b178",
+      "kind": "paragraph",
+      "text": "Prezydent Miasta Zgierza"
+     },
+     {
+      "id": "b179",
+      "kind": "paragraph",
+      "text": "Klub sportowy"
+     },
+     {
+      "id": "b180",
+      "kind": "paragraph",
+      "text": "Należy wypełnić w przypadku Wnioskodawcy – Klubu sportowego."
+     },
+     {
+      "id": "b181",
+      "kind": "checkbox_option",
+      "text": "Dane reprezentanta klubu sportowego z KRS lub innego właściwego rejestru"
+     },
+     {
+      "id": "b182",
+      "kind": "paragraph",
+      "text": "Imię …………………………………………………………………………………………………………………..……………………"
+     },
+     {
+      "id": "b183",
+      "kind": "paragraph",
+      "text": "Nazwisko ……………………………………………………………………………………………………..…………………………"
+     },
+     {
+      "id": "b184",
+      "kind": "paragraph",
+      "text": "Numer telefonu (opcjonalnie) …………………………………………………………………………………………………"
+     },
+     {
+      "id": "b185",
+      "kind": "checkbox_option",
+      "text": "Dane pełnomocnika klubu sportowego"
+     },
+     {
+      "id": "b186",
+      "kind": "paragraph",
+      "text": "Imię ……………………………………………………………………………………………………………………………………..…"
+     },
+     {
+      "id": "b187",
+      "kind": "paragraph",
+      "text": "Nazwisko ………………………………………………………………………………………………………………………..………"
+     },
+     {
+      "id": "b188",
+      "kind": "paragraph",
+      "text": "Seria i numer dowodu osobistego ……………………………………………………………………………………..……"
+     },
+     {
+      "id": "b189",
+      "kind": "paragraph",
+      "text": "Numer telefonu (opcjonalnie) …………………………………………………………………………………………………"
+     },
+     {
+      "id": "b190",
+      "kind": "paragraph",
+      "text": "Do wniosku należy dołączyć pełnomocnictwo potwierdzające uprawnienia do działania w imieniu klubu wraz z potwierdzeniem uiszczenia opłaty skarbowej (opłata skarbowa jest niezbędna w związku z udzielonym pełnomocnictwem)."
+     },
+     {
+      "id": "b191",
+      "kind": "heading",
+      "text": "Dane klubu sportowego"
+     },
+     {
+      "id": "b192",
+      "kind": "paragraph",
+      "text": "Nazwa klubu sportowego …………………………………………………………………………………….…………………"
+     },
+     {
+      "id": "b193",
+      "kind": "paragraph",
+      "text": "Telefon kontaktowy (opcjonalnie) ………………………………………………………………………………………….."
+     },
+     {
+      "id": "b194",
+      "kind": "paragraph",
+      "text": "Adres siedziby …………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b195",
+      "kind": "paragraph",
+      "text": "Korespondencja z urzędem (wybierz preferowany sposób korespondencji z urzędem)"
+     },
+     {
+      "id": "b196",
+      "kind": "checkbox_option",
+      "text": "Poczta tradycyjna - na który adres kierować korespondencję"
+     },
+     {
+      "id": "b197",
+      "kind": "checkbox_option",
+      "text": "adres siedziby klubu"
+     },
+     {
+      "id": "b198",
+      "kind": "checkbox_option",
+      "text": "inny adres korespondencyjny …………………………………………………………………………………………."
+     },
+     {
+      "id": "b199",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b200",
+      "kind": "paragraph",
+      "text": "Skrzynka ePUAP - adres skrzynki: …………………………………………………………………………………….…"
+     },
+     {
+      "id": "b201",
+      "kind": "paragraph",
+      "text": "eDoręczenia - adres skrzynki: …………………………………………………………………………………….…..…."
+     },
+     {
+      "id": "b202",
+      "kind": "heading",
+      "text": "Odpis danych z KRS lub innego właściwego rejestru"
+     },
+     {
+      "id": "b203",
+      "kind": "paragraph",
+      "text": "Do wniosku należy dołączyć aktualny odpis danych o klubie z Krajowego Rejestru Sądowego lub innego właściwego rejestru, zgodny z bieżącym stanem faktycznym i prawnym."
+     },
+     {
+      "id": "b204",
+      "kind": "heading",
+      "text": "2. Dane trenera"
+     },
+     {
+      "id": "b205",
+      "kind": "paragraph",
+      "text": "Dane osobowe kandydatki/kandydata do wyróżnienia"
+     },
+     {
+      "id": "b206",
+      "kind": "paragraph",
+      "text": "Imię ………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b207",
+      "kind": "paragraph",
+      "text": "Nazwisko ………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b208",
+      "kind": "paragraph",
+      "text": "Data urodzenia ………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b209",
+      "kind": "paragraph",
+      "text": "Adres zameldowania (adres zameldowania może być inny niż adres zamieszkania)"
+     },
+     {
+      "id": "b210",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………….…."
+     },
+     {
+      "id": "b211",
+      "kind": "paragraph",
+      "text": "Adres do korespondencji (jeśli różni się od adresu zameldowania)"
+     },
+     {
+      "id": "b212",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b213",
+      "kind": "heading",
+      "text": "Opinia macierzystego klubu sportowego"
+     },
+     {
+      "id": "b214",
+      "kind": "paragraph",
+      "text": "Opinia macierzystego klubu sportowego, potwierdzająca nienaganną postawę etyczną i  moralną opiekuna sportowego."
+     },
+     {
+      "id": "b215",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………."
+     },
+     {
+      "id": "b216",
+      "kind": "paragraph",
+      "text": "Do wniosku można dołączyć dokument z opinią klubu"
+     },
+     {
+      "id": "b217",
+      "kind": "heading",
+      "text": "Dodatkowe informacje o osiągnieciach sportowych"
+     },
+     {
+      "id": "b218",
+      "kind": "paragraph",
+      "text": "Ewentualne dodatkowe informacje o kandydatce/kandydacie do wyróżnienia"
+     },
+     {
+      "id": "b219",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………..……………"
+     },
+     {
+      "id": "b220",
+      "kind": "heading",
+      "text": "3. Dane podopiecznych trenera"
+     },
+     {
+      "id": "b221",
+      "kind": "paragraph",
+      "text": "Poniżej należy dodać dane poszczególnych podopiecznych opiekuna sportowego, dla którego składany jest wniosek o wyróżnienie sportowe. Do wniosku można dołączyć dyplomy lub inne dokumenty potwierdzające opisane osiągnięcia sportowe."
+     },
+     {
+      "id": "b222",
+      "kind": "heading",
+      "text": "1. Dane osobowe podopiecznego trenera"
+     },
+     {
+      "id": "b223",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko zawodniczki/zawodnika"
+     },
+     {
+      "id": "b224",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b225",
+      "kind": "heading",
+      "text": "Osiągnięcia sportowe podopiecznego"
+     },
+     {
+      "id": "b226",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….……………………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b227",
+      "kind": "heading",
+      "text": "2. Dane osobowe podopiecznego trenera"
+     },
+     {
+      "id": "b228",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko zawodniczki/zawodnika"
+     },
+     {
+      "id": "b229",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b230",
+      "kind": "heading",
+      "text": "Osiągnięcia sportowe podopiecznego"
+     },
+     {
+      "id": "b231",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….……………………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b232",
+      "kind": "heading",
+      "text": "3. Dane osobowe podopiecznego trenera"
+     },
+     {
+      "id": "b233",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko zawodniczki/zawodnika"
+     },
+     {
+      "id": "b234",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b235",
+      "kind": "heading",
+      "text": "Osiągnięcia sportowe podopiecznego"
+     },
+     {
+      "id": "b236",
+      "kind": "paragraph",
+      "text": "Osiągnięcia sportowe podopiecznego kandydata, które będą brane pod uwagę przy ocenie wniosku"
+     },
+     {
+      "id": "b237",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………….…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b238",
+      "kind": "heading",
+      "text": "4. Dane osobowe podopiecznego trenera"
+     },
+     {
+      "id": "b239",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko zawodniczki/zawodnika"
+     },
+     {
+      "id": "b240",
+      "kind": "input_placeholder",
+      "text": "………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b241",
+      "kind": "heading",
+      "text": "Osiągnięcia sportowe podopiecznego"
+     },
+     {
+      "id": "b242",
+      "kind": "paragraph",
+      "text": "Osiągnięcia sportowe podopiecznego kandydata, które będą brane pod uwagę przy ocenie wniosku"
+     },
+     {
+      "id": "b243",
+      "kind": "input_placeholder",
+      "text": "…………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………………..…………………………….……………………………………………………………………………………………………………………………………………………………"
+     },
+     {
+      "id": "b244",
+      "kind": "heading",
+      "text": "Wymagane zaświadczenia wymienionych podopiecznych trenera"
+     },
+     {
+      "id": "b245",
+      "kind": "paragraph",
+      "text": "Do wniosku należy załączyć zaświadczenia wydane przez Polski Związek Sportowy odpowiedni dla danej dyscypliny sportowej lub inne oficjalne dokumenty (np. komunikaty z  zawodów), które potwierdzają osiągnięcia sportowe zawodniczek/zawodników."
+     },
+     {
+      "id": "b246",
+      "kind": "input_placeholder",
+      "text": "………………………………………..…………………………………………………"
+     },
+     {
+      "id": "b247",
+      "kind": "paragraph",
+      "text": "Data sporządzenia wniosku Podpis i pieczątka wnioskodawcy"
+     },
+     {
+      "id": "b248",
+      "kind": "heading",
+      "text": "4. Klauzula informacyjna"
+     },
+     {
+      "id": "b249",
+      "kind": "heading",
+      "text": "Informacje na temat ochrony danych osobowych stosowanych przez administratora danych, którymi są wnioskujący:"
+     },
+     {
+      "id": "b250",
+      "kind": "paragraph",
+      "text": "a) klub sportowy – znajdują się na jego stronie internetowej lub w wersji papierowej w jego siedzibie oraz wymagane zgody z pkt. 5 i 6;"
+     },
+     {
+      "id": "b251",
+      "kind": "paragraph",
+      "text": "b) Prezydent Miasta Zgierza – znajdują się na stronie podmiotowej BIP Urzędu Miasta Zgierza pod adresem: www.bip.zgierz.pl lub w siedzibie Urzędu Miasta Zgierza oraz wymagane zgody z pkt. 5 i 6."
+     },
+     {
+      "id": "b252",
+      "kind": "paragraph",
+      "text": "5. Zgoda"
+     },
+     {
+      "id": "b253",
+      "kind": "heading",
+      "text": "5.1. Zgoda kandydata do wyróżnienia"
+     },
+     {
+      "id": "b254",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko kandydata ……………………………………………………………………………………………………"
+     },
+     {
+      "id": "b255",
+      "kind": "paragraph",
+      "text": "1) Wyrażam zgodę na przetwarzanie moich danych osobowych zwartych we wniosku w celu przekazania go do dalszego procedowania."
+     },
+     {
+      "id": "b256",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania wyróżnień sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b257",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b258",
+      "kind": "paragraph",
+      "text": "Data Podpis kandydata"
+     },
+     {
+      "id": "b259",
+      "kind": "heading",
+      "text": "6. Zgoda podopiecznego trenera"
+     },
+     {
+      "id": "b260",
+      "kind": "paragraph",
+      "text": "Dokument należy wypełnić odrębnie dla każdego podopiecznego trenera, który został wskazany w  pkt. 3 wniosku."
+     },
+     {
+      "id": "b261",
+      "kind": "heading",
+      "text": "6.1. Zgoda podopiecznego pełnoletniego"
+     },
+     {
+      "id": "b262",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko podopiecznego ………………………………………………………………………………………………"
+     },
+     {
+      "id": "b263",
+      "kind": "paragraph",
+      "text": "1) Wyrażam zgodę na przetwarzanie moich danych osobowych zwartych we wniosku w celu przekazania go do dalszego procedowania."
+     },
+     {
+      "id": "b264",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania wyróżnień sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b265",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b266",
+      "kind": "paragraph",
+      "text": "Data Podpis kandydata"
+     },
+     {
+      "id": "b267",
+      "kind": "heading",
+      "text": "6.2. Zgoda w imieniu podopiecznego nieletniego"
+     },
+     {
+      "id": "b268",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko podopiecznego ………………………………………………………………………………………………"
+     },
+     {
+      "id": "b269",
+      "kind": "paragraph",
+      "text": "1) Ja niżej podpisany …………………………………………….………………………. (rodzic/opiekun prawny) wyrażam zgodę na przetwarzanie danych osobowych mojego dziecka/podopiecznego zawartych we wniosku w celu przekazania go do dalszego procedowania."
+     },
+     {
+      "id": "b270",
+      "kind": "paragraph",
+      "text": "2) Oświadczam, że zapoznałem się z regulaminem przyznawania wyróżnień sportowych Rady Miasta Zgierza i akceptuję wszystkie jego postanowienia."
+     },
+     {
+      "id": "b271",
+      "kind": "input_placeholder",
+      "text": "………………………………………….………………………………………………….."
+     },
+     {
+      "id": "b272",
+      "kind": "paragraph",
+      "text": "DataPodpis rodzica/opiekuna prawnego"
+     },
+     {
+      "id": "b273",
+      "kind": "paragraph",
+      "text": "Wypełniony formularz zgody przechowuje właściwy administrator danych osobowych."
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o przyznanie stypendium, nagrody lub wyróżnienia sportowego Rady Miasta Zgierza",
+  "authority_kind": "ORGAN",
+  "authority_name": "Prezydent Miasta Zgierza",
+  "fields": [
+   {
+    "label": "Rodzaj wniosku",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "rodzaje wniosków",
+     "wniosek o przyznanie"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwa klubu sportowego",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwa klubu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię sportowca",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "imię"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwisko sportowca",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwisko"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Data urodzenia",
+    "kind": [
+     "date"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Adres zameldowania",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Adres do korespondencji",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Rodzaj dyscypliny",
+    "kind": [
+     "single_choice",
+     "multi_choice"
+    ],
+    "aliases": [
+     "rodzaje dyscyplin"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Dyscyplina sportowa",
+    "kind": [
+     "single_choice",
+     "multi_choice"
+    ],
+    "aliases": [
+     "dyscypliny sportowe"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Inna dyscyplina",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Osiągnięcia sportowe",
+    "kind": [
+     "long_text"
+    ],
+    "aliases": [
+     "najważniejsze osiągnięcia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Opinia macierzystego klubu sportowego",
+    "kind": [
+     "long_text",
+     "file"
+    ],
+    "aliases": [
+     "opinia klubu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Dodatkowe informacje",
+    "kind": [
+     "long_text"
+    ],
+    "aliases": [
+     "dodatkowe informacje o osiągnięciach"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię i nazwisko zawodnika",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "imię i nazwisko zawodniczki/zawodnika",
+     "podopieczny"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Osiągnięcia sportowe podopiecznego",
+    "kind": [
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Imię reprezentanta",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Nazwisko reprezentanta",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Seria i numer dowodu osobistego",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Numer telefonu",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Telefon kontaktowy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Adres siedziby",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Sposób korespondencji",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "korespondencja z urzędem"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Adres skrzynki ePUAP",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "skrzynka epuap"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Adres eDoręczeń",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "edoręczenia"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Zaświadczenia",
+    "kind": [
+     "file"
+    ],
+    "aliases": [
+     "wymagane zaświadczenia"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Imię i nazwisko kandydata",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   }
+  ]
+ }
+}

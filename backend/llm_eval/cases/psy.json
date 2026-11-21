@@ -1,0 +1,631 @@
+{
+ "name": "Wniosek o wydanie zezwolenia na hodowanie lub utrzymywanie psów ras uznawanychza agresywne",
+ "source": "Wniosek o wydanie zezwolenia na hodowanie lub utrzymywanie psów ras uznawanychza agresywne.PDF",
+ "document": {
+  "source": {
+   "method": "pdf_text",
+   "pages": 2
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "Opłata skarbowa – 82 zł."
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "Numer konta: 12 1223 1232 1233 2312 2342 2342"
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "Wersja styczeń 2026 r. | Strona 1 z 2"
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "Nr sprawy ......................................................."
+     },
+     {
+      "id": "b5",
+      "kind": "label",
+      "text": "/wypełnia organ/"
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "Wrocław, dnia .................................."
+     },
+     {
+      "id": "b7",
+      "kind": "paragraph",
+      "text": "Urząd Miejski Wrocławia"
+     },
+     {
+      "id": "b8",
+      "kind": "paragraph",
+      "text": "Wydział Środowiska"
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "Wniosek o wydanie zezwolenia na hodowanie lub utrzymywanie psów ras uznawanych"
+     },
+     {
+      "id": "b10",
+      "kind": "paragraph",
+      "text": "za agresywne"
+     },
+     {
+      "id": "b11",
+      "kind": "paragraph",
+      "text": "Zgodnie z ustawą z dnia 13 października 1995 r. Prawo Łowieckie oraz Rozporządzeniem Ministra Rolnictwa"
+     },
+     {
+      "id": "b12",
+      "kind": "paragraph",
+      "text": "i Rozwoju Wsi z dnia 5 lipca 2010 r. w sprawie warunków i sposobu hodowania i utrzymywania chartów"
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "rasowych oraz ich mieszańców proszę o wydanie zezwolenia na hodowanie/utrzymywanie* charta/chartów*"
+     },
+     {
+      "id": "b14",
+      "kind": "paragraph",
+      "text": "lub mieszańca charta/mieszańców chartów*"
+     },
+     {
+      "id": "b15",
+      "kind": "heading",
+      "text": "B"
+     },
+     {
+      "id": "b16",
+      "kind": "paragraph",
+      "text": "INFORMACJA O POSIADANYM PSIE (w przypadku więcej niż jednego psa pobrać odpowiednią liczbę"
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "załączników z tabelą B z urzędu bądź ze strony BIP)."
+     },
+     {
+      "id": "b18",
+      "kind": "paragraph",
+      "text": "Pochodzenie psa (metryka**, numer rodowodu**, imię, nazwisko i adres poprzedniego właściciela):"
+     },
+     {
+      "id": "b19",
+      "kind": "input_placeholder",
+      "text": ".................................................................................................................................................."
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "Rasa psa: ....................................."
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "Data urodzenia psa: ....................................."
+     },
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "Data szczepienia (w przypadku jego braku) ....................................."
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "Płeć: ❑ pies ❑ suka"
+     },
+     {
+      "id": "b24",
+      "kind": "paragraph",
+      "text": "Sposób oznakowania psa / nr ident.:"
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "❑ mikroprocesor ......................................................."
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "❑ tatuaż .................................................................."
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "❑ brak"
+     },
+     {
+      "id": "b28",
+      "kind": "paragraph",
+      "text": "Adres miejsca utrzymywania psa/psów:"
+     },
+     {
+      "id": "b29",
+      "kind": "input_placeholder",
+      "text": "................................................................................................................................................................."
+     },
+     {
+      "id": "b30",
+      "kind": "input_placeholder",
+      "text": "................................................................................................................................................................."
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "Opis miejsca i warunków w jakich wnioskodawca zamierza utrzymywać psa/psy:"
+     },
+     {
+      "id": "b32",
+      "kind": "input_placeholder",
+      "text": "................................................................................................................................................................."
+     },
+     {
+      "id": "b33",
+      "kind": "input_placeholder",
+      "text": "................................................................................................................................................................."
+     },
+     {
+      "id": "b34",
+      "kind": "input_placeholder",
+      "text": "................................................................................................................................................................."
+     },
+     {
+      "id": "b35",
+      "kind": "label",
+      "text": "/* niepotrzebne skreślić/"
+     },
+     {
+      "id": "b36",
+      "kind": "label",
+      "text": "/**Opcjonalnie/"
+     },
+     {
+      "id": "b37",
+      "kind": "paragraph",
+      "text": "Oświadczenia :"
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "1. Oświadczam, że psy nie będą wykorzystywane do polowań."
+     },
+     {
+      "id": "b39",
+      "kind": "paragraph",
+      "text": "2. Oświadczam, że zaszczepiono psa/psy przeciwko wściekliźnie – w załączeniu kopia dla każdego psa."
+     },
+     {
+      "id": "b40",
+      "kind": "paragraph",
+      "text": "3. Oświadczam, że zapewniam warunki utrzymywania psa, zgodnie z rozporządzeniem Ministra"
+     },
+     {
+      "id": "b41",
+      "kind": "paragraph",
+      "text": "Rolnictwa i Rozwoju Wsi z dnia 5 lipca 2010r."
+     },
+     {
+      "id": "b42",
+      "kind": "heading",
+      "text": "A DANE IDENTYFIKACYJNE WNIOSKODAWCY"
+     },
+     {
+      "id": "b43",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko"
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "Ulica: Nr domu: Nr lokalu:"
+     },
+     {
+      "id": "b45",
+      "kind": "paragraph",
+      "text": "Miejscowość: Kod pocztowy:"
+     },
+     {
+      "id": "b46",
+      "kind": "paragraph",
+      "text": "Telefon:"
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "Miejsce na pieczęć Urzędu"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "blocks": [
+     {
+      "id": "b48",
+      "kind": "input_placeholder",
+      "text": "....................................................."
+     },
+     {
+      "id": "b49",
+      "kind": "label",
+      "text": "/podpis wnioskodawcy/"
+     },
+     {
+      "id": "b50",
+      "kind": "heading",
+      "text": "INFORMACJE DOTYCZĄCE PRZETWARZANIA TWOICH DANYCH OSOBOWYCH"
+     },
+     {
+      "id": "b51",
+      "kind": "paragraph",
+      "text": "Niniejszą informację otrzymuje Pani/Pan w związku z obowiązkami określonymi w art. 13 rozporządzenia"
+     },
+     {
+      "id": "b52",
+      "kind": "paragraph",
+      "text": "Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób"
+     },
+     {
+      "id": "b53",
+      "kind": "paragraph",
+      "text": "fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich"
+     },
+     {
+      "id": "b54",
+      "kind": "paragraph",
+      "text": "danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych) (Dziennik Urzędowy"
+     },
+     {
+      "id": "b55",
+      "kind": "paragraph",
+      "text": "Unii Europejskiej z dnia 4 maja 2016 r. L 119/1)."
+     },
+     {
+      "id": "b56",
+      "kind": "paragraph",
+      "text": "Administrator danych"
+     },
+     {
+      "id": "b57",
+      "kind": "paragraph",
+      "text": "Administratorem Pani/Pana danych osobowych jest Prezydent Wrocławia. Możesz się z nami skontaktować w"
+     },
+     {
+      "id": "b58",
+      "kind": "paragraph",
+      "text": "następujący sposób:"
+     },
+     {
+      "id": "b59",
+      "kind": "paragraph",
+      "text": "• listownie na adres: Prezydent Wrocławia, Urząd Miejski Wrocławia, pl. Nowy Targ 1-8, 50-141 Wrocław,"
+     },
+     {
+      "id": "b60",
+      "kind": "paragraph",
+      "text": "• za pośrednictwem poczty elektronicznej na adres: wsr@um.wroc.pl"
+     },
+     {
+      "id": "b61",
+      "kind": "paragraph",
+      "text": "• telefonicznie: +48 71 799 67 00."
+     },
+     {
+      "id": "b62",
+      "kind": "paragraph",
+      "text": "Cele przetwarzania danych"
+     },
+     {
+      "id": "b63",
+      "kind": "paragraph",
+      "text": "Pani/Pana dane osobowe będą przetwarzane w celu"
+     },
+     {
+      "id": "b64",
+      "kind": "paragraph",
+      "text": "• wydania zezwolenia na hodowanie/utrzymywanie* charta/chartów*"
+     },
+     {
+      "id": "b65",
+      "kind": "paragraph",
+      "text": "lub mieszańca charta/mieszańców"
+     },
+     {
+      "id": "b66",
+      "kind": "paragraph",
+      "text": "chartów,"
+     },
+     {
+      "id": "b67",
+      "kind": "paragraph",
+      "text": "• zaksięgowania i rozliczenia zapłaconej opłaty skarbowej."
+     },
+     {
+      "id": "b68",
+      "kind": "paragraph",
+      "text": "Podstawy prawne przetwarzania"
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "Będziemy przetwarzać Pani/Pana dane osobowe na podstawie art. 6 ust. 1 lit. c) RODO oraz ustawy kodeks"
+     },
+     {
+      "id": "b70",
+      "kind": "paragraph",
+      "text": "postępowania administracyjnego i ustawy Prawo łowieckie."
+     },
+     {
+      "id": "b71",
+      "kind": "paragraph",
+      "text": "Obligatoryjność/fakultatywność podania danych osobowych"
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "Podanie przez Panią/Pana danych osobowych jest wymogiem wynikającym z ustawy Prawo łowieckie oraz"
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "kodeksu postepowania administracyjnego."
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "Okres retencji"
+     },
+     {
+      "id": "b75",
+      "kind": "paragraph",
+      "text": "Pani/Pana dane osobowe będą przechowywane przez okres 5 lat, następnie Archiwum Państwowe po"
+     },
+     {
+      "id": "b76",
+      "kind": "paragraph",
+      "text": "ekspertyzie dokumentów może podjąć decyzję o ich zniszczeniu lub przekwalifikować na kategorię A i"
+     },
+     {
+      "id": "b77",
+      "kind": "paragraph",
+      "text": "wtedy Pani/Pana dane osobowe będą przetwarzane przez Administratora przez 25 lat od stycznia kolejnego"
+     },
+     {
+      "id": "b78",
+      "kind": "paragraph",
+      "text": "roku po zakończeniu Pani/Pana sprawy a następnie zostaną przekazane do Archiwum Państwowego we"
+     },
+     {
+      "id": "b79",
+      "kind": "paragraph",
+      "text": "Wrocławiu, gdzie będą przetwarzane wieczyście."
+     },
+     {
+      "id": "b80",
+      "kind": "paragraph",
+      "text": "Odbiorcy danych"
+     },
+     {
+      "id": "b81",
+      "kind": "paragraph",
+      "text": "Odbiorcami Pani/Pana danych osobowych mogą być:"
+     },
+     {
+      "id": "b82",
+      "kind": "paragraph",
+      "text": "• dostawcy usług IT"
+     },
+     {
+      "id": "b83",
+      "kind": "paragraph",
+      "text": "• podmioty upoważnione na podstawie przepisów prawa"
+     },
+     {
+      "id": "b84",
+      "kind": "paragraph",
+      "text": "Takie podmioty przetwarzają dane na podstawie umowy z nami i tylko zgodnie z naszymi poleceniami."
+     },
+     {
+      "id": "b85",
+      "kind": "paragraph",
+      "text": "Przysługujące prawa"
+     },
+     {
+      "id": "b86",
+      "kind": "paragraph",
+      "text": "Przysługują Pani/Panu:"
+     },
+     {
+      "id": "b87",
+      "kind": "paragraph",
+      "text": "• prawo dostępu do swoich danych oraz otrzymania ich kopii,"
+     },
+     {
+      "id": "b88",
+      "kind": "paragraph",
+      "text": "• prawo do sprostowania (poprawiania) swoich danych,"
+     },
+     {
+      "id": "b89",
+      "kind": "paragraph",
+      "text": "• prawo do ograniczenia przetwarzania danych,"
+     },
+     {
+      "id": "b90",
+      "kind": "paragraph",
+      "text": "• prawo wniesienia skargi do organu nadzorczego - tj. Prezesa Urzędu Ochrony Danych Osobowych"
+     },
+     {
+      "id": "b91",
+      "kind": "paragraph",
+      "text": "Inspektor Ochrony Danych"
+     },
+     {
+      "id": "b92",
+      "kind": "paragraph",
+      "text": "W Urzędzie wyznaczony został Inspektor Ochrony Danych – Sebastian Sobecki. Jest to osoba, z którą"
+     },
+     {
+      "id": "b93",
+      "kind": "paragraph",
+      "text": "można się kontaktować w sprawach dotyczących przetwarzania Twoich danych osobowych oraz korzystania"
+     },
+     {
+      "id": "b94",
+      "kind": "paragraph",
+      "text": "z przysługujących Ci praw związanych z przetwarzaniem danych."
+     },
+     {
+      "id": "b95",
+      "kind": "paragraph",
+      "text": "Z Inspektorem można kontaktować się w następujący sposób:"
+     },
+     {
+      "id": "b96",
+      "kind": "paragraph",
+      "text": "• listownie na adres: al. M. Kromera 44, 51-163 Wrocław"
+     },
+     {
+      "id": "b97",
+      "kind": "paragraph",
+      "text": "• przez e-mail: iod@um.wroc.pl"
+     },
+     {
+      "id": "b98",
+      "kind": "paragraph",
+      "text": "• telefonicznie: 71 777 77 24."
+     },
+     {
+      "id": "b99",
+      "kind": "paragraph",
+      "text": "Zautomatyzowane podejmowanie decyzji"
+     },
+     {
+      "id": "b100",
+      "kind": "paragraph",
+      "text": "Pani/Pana dane nie będą podlegały profilowaniu lub zautomatyzowanemu podejmowaniu decyzji"
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o wydanie zezwolenia na hodowanie lub utrzymywanie psów ras uznawanych za agresywne",
+  "authority_kind": "URZAD",
+  "authority_name": "Urząd Miejski Wrocławia",
+  "fields": [
+   {
+    "label": "Hodowanie lub utrzymywanie",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "rodzaj zezwolenia",
+     "hodowanie/utrzymywanie"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Pochodzenie psa",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Rasa psa",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "rasa"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Data urodzenia psa",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "data urodzenia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Data szczepienia",
+    "kind": [
+     "date"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Płeć",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "płeć psa"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Sposób oznakowania psa",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "oznakowanie"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer identyfikacyjny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nr ident",
+     "numer mikroprocesora",
+     "numer tatuażu"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Adres miejsca utrzymywania psa",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "adres miejsca utrzymywania"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Opis miejsca i warunków utrzymywania psa",
+    "kind": [
+     "long_text"
+    ],
+    "aliases": [
+     "opis miejsca",
+     "warunki utrzymywania"
+    ],
+    "optional": false
+   }
+  ]
+ }
+}

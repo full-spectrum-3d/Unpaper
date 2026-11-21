@@ -1,0 +1,445 @@
+{
+ "name": "Wniosek o wydanie zezwolenia na zajęcie pasa drogowego",
+ "source": "Wniosek o wydanie zezwolenia na zajęcie pasa drogowego.docx",
+ "document": {
+  "source": {
+   "method": "docx",
+   "pages": 1
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "……………………….dnia………………………"
+     },
+     {
+      "id": "b2",
+      "kind": "input_placeholder",
+      "text": "…………………………….."
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "Wnioskodawca"
+     },
+     {
+      "id": "b4",
+      "kind": "label",
+      "text": "(Imię i nazwisko lub nazwa firmy)"
+     },
+     {
+      "id": "b5",
+      "kind": "input_placeholder",
+      "text": "……………………………………."
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "Adres zamieszkania/siedziby"
+     },
+     {
+      "id": "b7",
+      "kind": "input_placeholder",
+      "text": "……….……………………………."
+     },
+     {
+      "id": "b8",
+      "kind": "paragraph",
+      "text": "nr telefonu i e-mail"
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "Urząd Miasta i Gminy Miasteczko"
+     },
+     {
+      "id": "b10",
+      "kind": "heading",
+      "text": "WNIOSEK"
+     },
+     {
+      "id": "b11",
+      "kind": "paragraph",
+      "text": "o wydanie zezwolenia na zajęcie pasa drogowego"
+     },
+     {
+      "id": "b12",
+      "kind": "paragraph",
+      "text": "w celu prowadzenia robót"
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "Proszę o wydanie zezwolenia na zajęcie terenu pasa drogowego drogi gminnej ……………….. Mui"
+     },
+     {
+      "id": "b14",
+      "kind": "input_placeholder",
+      "text": ".…………………………………………………………………………………………………………….."
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "nazwa drogi oraz jej nr"
+     },
+     {
+      "id": "b16",
+      "kind": "paragraph",
+      "text": "w miejscowości  ………………………………………………… działka nr ewid."
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "w celu wykonania"
+     },
+     {
+      "id": "b18",
+      "kind": "input_placeholder",
+      "text": "……………………………………………………….…………………………………………………….."
+     },
+     {
+      "id": "b19",
+      "kind": "label",
+      "text": "/ rodzaj robót i sposób wykonania /"
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "1. Powierzchnia pasa drogowego potrzebna do zajęcia w celu realizacji w/w zakresu robót:"
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "a/ jezdnia (przy zajęciu do 20% szerokości)"
+     },
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b24",
+      "kind": "paragraph",
+      "text": "b/ jezdnia (przy zajęciu powyżej 20% do 50% szerokości)"
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "c/ jezdnia (przy zajęciu powyżej 50% szerokości)"
+     },
+     {
+      "id": "b28",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b29",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b30",
+      "kind": "paragraph",
+      "text": "d/ chodnik"
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b32",
+      "kind": "paragraph",
+      "text": "długośćszerokośćrazemm2"
+     },
+     {
+      "id": "b33",
+      "kind": "paragraph",
+      "text": "Całkowita powierzchnia zajęcia: ………………………m2"
+     },
+     {
+      "id": "b34",
+      "kind": "paragraph",
+      "text": "2.Roboty będą realizowane w terminie od dniado dnia"
+     },
+     {
+      "id": "b35",
+      "kind": "paragraph",
+      "text": "tj. …………dni, zgodnie z załączonym harmonogramem."
+     },
+     {
+      "id": "b36",
+      "kind": "paragraph",
+      "text": "3.Wykonawcą Robót będzie"
+     },
+     {
+      "id": "b37",
+      "kind": "paragraph",
+      "text": "nazwa przedsiębiorstwa lub osoby fizycznej"
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "a osobą odpowiedzialną za wykonanie robót zgodnie z projektem i odtworzenie pasa drogowego zgodnie z warunkami określonymi w wydanej decyzji będzie ………………...."
+     },
+     {
+      "id": "b39",
+      "kind": "paragraph",
+      "text": "……………………………………………..zam. …………………………………………………….. tel. …………………………………………………………."
+     },
+     {
+      "id": "b40",
+      "kind": "paragraph",
+      "text": "4.Załączniki do wniosku:"
+     },
+     {
+      "id": "b41",
+      "kind": "paragraph",
+      "text": "Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego."
+     },
+     {
+      "id": "b42",
+      "kind": "paragraph",
+      "text": "Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego."
+     },
+     {
+      "id": "b43",
+      "kind": "paragraph",
+      "text": "Szczegółowy harmonogram robót."
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazdów lub pieszych."
+     },
+     {
+      "id": "b45",
+      "kind": "paragraph",
+      "text": "Informację o sposobie zabezpieczenia robót, jeżeli nie jest wymagany projekt organizacji ruchu."
+     },
+     {
+      "id": "b46",
+      "kind": "paragraph",
+      "text": "Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł  w przypadku, gdy w sprawie występuje pełnomocnik"
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "Zgodnie z art. 13 ust. 1 i 2 rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych, dalej: RODO) (Dz. Urz. UE L119/1) informujemy, że:Administratorem Pana/Pani danych osobowych jest Urząd Miasta i Gminy w Daleszycach z siedzibą                        w Daleszycach, Plac Staszica 9, 26-021 Daleszyce, kontakt e-mail pod adresem: gmina@daleszyce.pl"
+     },
+     {
+      "id": "b48",
+      "kind": "paragraph",
+      "text": "Pani/Pana dane osobowe przetwarzane będą w celu wydania zezwolenia na zajęcie pasa drogowego/ prowadzenie robót/ przez Burmistrza Miasta i Gminy w Daleszycach."
+     },
+     {
+      "id": "b49",
+      "kind": "paragraph",
+      "text": "Przysługuje Panu/Pani prawo żądania od administratora dostępu do danych osobowych Pana/Pani dotyczących, ich sprostowania, usunięcia, ograniczenia przetwarzania oraz przenoszenia danych.Przysługuje Panu/Pani prawo do cofnięcia zgody w każdym czasie."
+     },
+     {
+      "id": "b50",
+      "kind": "paragraph",
+      "text": "Na działania Administratora przysługuje Panu/Pani skarga do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa."
+     },
+     {
+      "id": "b51",
+      "kind": "paragraph",
+      "text": "Wyrażam zgodę na przetwarzanie przez Urząd Miasta i Gminy w Daleszycach, moich danych osobowych."
+     },
+     {
+      "id": "b52",
+      "kind": "input_placeholder",
+      "text": "…………………………………………."
+     },
+     {
+      "id": "b53",
+      "kind": "label",
+      "text": "/ podpis Wnioskodawcy/"
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o wydanie zezwolenia na zajęcie pasa drogowego w celu prowadzenia robót",
+  "authority_kind": "URZAD",
+  "authority_name": "Urząd Miasta i Gminy Miasteczko",
+  "fields": [
+   {
+    "label": "Nazwa drogi oraz jej numer",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "droga gminna",
+     "nazwa i numer drogi"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Miejscowość",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "w miejscowości"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer działki ewidencyjnej",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "działka nr ewid",
+     "nr działki"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Rodzaj robót i sposób wykonania",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "cel wykonania",
+     "rodzaj robót"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Całkowita powierzchnia zajęcia",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "powierzchnia zajęcia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Termin od",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "od dnia",
+     "data rozpoczęcia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Termin do",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "do dnia",
+     "data zakończenia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba dni",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "tj. dni",
+     "ilość dni"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Wykonawca robót",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwa przedsiębiorstwa lub osoby fizycznej",
+     "wykonawca"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Osoba odpowiedzialna za wykonanie robót",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "osoba odpowiedzialna"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Adres osoby odpowiedzialnej",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "zam",
+     "adres zamieszkania osoby odpowiedzialnej"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Telefon osoby odpowiedzialnej",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "tel",
+     "telefon"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Długość",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Szerokość",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Powierzchnia",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "razem"
+    ],
+    "optional": true
+   }
+  ]
+ }
+}

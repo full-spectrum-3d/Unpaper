@@ -1,0 +1,387 @@
+{
+ "name": "Wniosek o zwrot opłaty skarbowej",
+ "source": "Wniosek o zwrot opłaty skarbowej.pdf",
+ "document": {
+  "source": {
+   "method": "pdf_text",
+   "pages": 2
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "strona 1/2"
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "Urząd Gminy Stawiguda"
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "Wniosek o zwrot opłaty skarbowej"
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "1. Instrukcja wypełnienia dokumentu"
+     },
+     {
+      "id": "b5",
+      "kind": "heading",
+      "text": "1. WYPEŁNIJ WIELKIMI LITERAMI."
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "2. Pola wyboru oznaczaj lub ."
+     },
+     {
+      "id": "b7",
+      "kind": "paragraph",
+      "text": "3. Wypełniaj kolorem czarnym lub niebieskim."
+     },
+     {
+      "id": "b8",
+      "kind": "paragraph",
+      "text": "2. Dane wnioskodawcy"
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "2.1. Dane identyfikacyjne"
+     },
+     {
+      "id": "b10",
+      "kind": "paragraph",
+      "text": "Nazwa /Imię i nazwisko"
+     },
+     {
+      "id": "b11",
+      "kind": "heading",
+      "text": "NIP"
+     },
+     {
+      "id": "b12",
+      "kind": "paragraph",
+      "text": "2.2. Adres siedziby lub miejsca zamieszkania wnioskodawcy"
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "Miejscowość"
+     },
+     {
+      "id": "b14",
+      "kind": "paragraph",
+      "text": "Ulica"
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "Nr domu Nr lokalu Kod pocztowy -"
+     },
+     {
+      "id": "b16",
+      "kind": "paragraph",
+      "text": "2.3. Dane kontaktowe wnioskodawcy (dane kontaktowe nie są obowiązkowe,"
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "ale ułatwią kontakt w sprawie wniosku)"
+     },
+     {
+      "id": "b18",
+      "kind": "paragraph",
+      "text": "Numer telefonu"
+     },
+     {
+      "id": "b19",
+      "kind": "paragraph",
+      "text": "Adres poczty elektronicznej"
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "2.4. Dane pełnomocnika"
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "Imię i nazwisko"
+     },
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "Miejscowość"
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "Ulica"
+     },
+     {
+      "id": "b24",
+      "kind": "paragraph",
+      "text": "Nr domu Nr lokalu Kod pocztowy -"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "blocks": [
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "strona 2/2"
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "3. Informacje o opłacie skarbowej"
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "Data uiszczenia opłaty - -"
+     },
+     {
+      "id": "b28",
+      "kind": "heading",
+      "text": "DD-MM-RRRR"
+     },
+     {
+      "id": "b29",
+      "kind": "paragraph",
+      "text": "Wysokość opłaty"
+     },
+     {
+      "id": "b30",
+      "kind": "paragraph",
+      "text": "Nazwa organu, `"
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "w którym zapłacono opłatę"
+     },
+     {
+      "id": "b32",
+      "kind": "paragraph",
+      "text": "4. Uzasadnienie wniosku (opisz w polu poniżej dlaczego opłata skarbowa, której dotyczy wniosek została błędnie uiszczona"
+     },
+     {
+      "id": "b33",
+      "kind": "paragraph",
+      "text": "5. Informacje dotyczące sposobu zwrotu opłaty skarbowej (postaw „x” w wybranym polu)"
+     },
+     {
+      "id": "b34",
+      "kind": "paragraph",
+      "text": "Gotówką w kasie organu"
+     },
+     {
+      "id": "b35",
+      "kind": "paragraph",
+      "text": "Przelewem na rachunek w banku"
+     },
+     {
+      "id": "b36",
+      "kind": "paragraph",
+      "text": "Jeśli wybierzesz tę formę, wpisz poniżej nr rachunku i dane jego właściciela"
+     },
+     {
+      "id": "b37",
+      "kind": "paragraph",
+      "text": "Nr rachunku"
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "6. Podstawa prawna"
+     },
+     {
+      "id": "b39",
+      "kind": "paragraph",
+      "text": "Art. 9 ustawy z dnia 16 listopada 2006 r. o opłacie skarbowej"
+     },
+     {
+      "id": "b40",
+      "kind": "paragraph",
+      "text": "7. Załączniki (postaw „x” w wybranym polu)"
+     },
+     {
+      "id": "b41",
+      "kind": "paragraph",
+      "text": "1. Dokument stwierdzający udzielenie pełnomocnictwa"
+     },
+     {
+      "id": "b42",
+      "kind": "paragraph",
+      "text": "2. Dowód uiszczenia opłaty skarbowej za pełnomocnictwo"
+     },
+     {
+      "id": "b43",
+      "kind": "paragraph",
+      "text": "8. Data i podpis wnioskodawcy"
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "Data - -"
+     },
+     {
+      "id": "b45",
+      "kind": "heading",
+      "text": "DD-MM-RRRR"
+     },
+     {
+      "id": "b46",
+      "kind": "paragraph",
+      "text": "Podpis"
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "Dane właściciela"
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o zwrot opłaty skarbowej",
+  "authority_kind": "URZAD",
+  "authority_name": "Urząd Gminy Stawiguda",
+  "fields": [
+   {
+    "label": "Data uiszczenia opłaty",
+    "kind": [
+     "date"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Wysokość opłaty",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "kwota opłaty"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwa organu, w którym zapłacono opłatę",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "organ"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Uzasadnienie wniosku",
+    "kind": [
+     "long_text"
+    ],
+    "aliases": [
+     "uzasadnienie"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Sposób zwrotu opłaty",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "forma zwrotu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer rachunku",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nr rachunku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Dane właściciela rachunku",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "właściciel rachunku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię i nazwisko pełnomocnika",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "imię i nazwisko"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Miejscowość",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Ulica",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Nr domu",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer domu"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Nr lokalu",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer lokalu"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Kod pocztowy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   }
+  ]
+ }
+}
