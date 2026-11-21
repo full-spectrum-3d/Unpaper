@@ -35,7 +35,7 @@ describe('ReportView', () => {
     const btn = el.querySelector<HTMLButtonElement>('button[aria-label="Pokaż w JSON: W07_CHOICE_OPTIONS"]')!;
     expect(btn.textContent!.trim()).toBe('Pokaż w JSON');
     btn.click();
-    expect(paths).toEqual(['tabs[0].questions[1]']);
+    expect(paths).toEqual(['tabs[0].questions[1].field.repeatingSectionGrid[0]']);
   });
 
   it('marks draft paths without a button', () => {
@@ -54,7 +54,7 @@ describe('ReportView', () => {
     const { text } = render(mockReport(nadplata));
     expect(text()).toContain('rodzaj_podmiotu');
     expect(text()).toContain('Rodzaj podmiotu');
-    expect(text()).toContain('Używa: tabs[0].questions[1]');
+    expect(text()).toContain('Używa: wybierz_jako_kto_wnioskujesz');
     expect(text()).toContain('2 pozycje');
     expect(text()).toContain('Lista rodzajów podmiotów składających wniosek.');
   });

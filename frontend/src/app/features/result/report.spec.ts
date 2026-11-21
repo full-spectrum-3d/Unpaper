@@ -31,6 +31,8 @@ describe('pathTarget', () => {
     expect(pathTarget(issue(), ranges)).toEqual({ kind: 'none' });
     expect(pathTarget(issue('subject_pages[0].sections[0].fields[0]'), ranges)).toEqual({ kind: 'draft' });
     expect(pathTarget(issue('title'), ranges)).toEqual({ kind: 'draft' });
+    expect(pathTarget(issue('chunk[3]'), ranges)).toEqual({ kind: 'draft' });
+    expect(pathTarget(issue('flow.links[0]'), ranges)).toEqual({ kind: 'missing' });
     expect(pathTarget(issue('tabs[0]'), ranges)).toEqual({ kind: 'link' });
     expect(pathTarget(issue('tabs[9]'), ranges)).toEqual({ kind: 'missing' });
     expect(pathTarget(issue('tabs[0]', 'R03_EMPTY_PAGE'), ranges)).toEqual({ kind: 'missing' });

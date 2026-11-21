@@ -39,10 +39,14 @@ export function asReport(value: unknown): ConversionReport | null {
 
 export type PathTarget = { kind: 'link' } | { kind: 'draft' } | { kind: 'missing' } | { kind: 'none' };
 
+// First path segment of the draft (FormDraft), as opposed to the result form.
+const DRAFT_PREFIX = /^(subject_pages|chunk|title|authority_name|attachments)(?![\w])/;
+
 export function pathTarget(issue: ReportIssue, ranges: ReadonlyMap<string, LineRange>): PathTarget {
   const { path, code } = issue;
   if (typeof path !== 'string' || !path) return { kind: 'none' };
-  if (!path.startsWith('tabs[')) return { kind: 'draft' };
+  if (DRAFT_PREFIX.test(path)) return { kind: 'draft' };
+  if (!path.startsWith('tabs[')) return { kind: 'missing' };
   return ranges.has(path) && code !== 'R03_EMPTY_PAGE' ? { kind: 'link' } : { kind: 'missing' };
 }
 

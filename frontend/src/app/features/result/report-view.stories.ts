@@ -22,7 +22,7 @@ export const ZRaportem: Story = {
     const c = within(canvasElement);
     expect(c.getAllByRole('heading', { level: 2 })).toHaveLength(5);
     await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W07_CHOICE_OPTIONS' }));
-    expect(args.showInJson).toHaveBeenCalledWith('tabs[0].questions[1]');
+    expect(args.showInJson).toHaveBeenCalledWith('tabs[0].questions[1].field.repeatingSectionGrid[0]');
     expect(c.getByText(/miejsce w szkicu, nie w wyniku/)).toBeVisible();
     expect(c.getByText('tekst z PDF')).toBeVisible();
   },
