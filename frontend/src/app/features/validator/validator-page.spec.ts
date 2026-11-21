@@ -89,6 +89,22 @@ describe('ValidatorPage', () => {
     expect(document.activeElement).toBe(field());
   });
 
+  it('has the error and aria attributes in place when the field receives focus', () => {
+    const { el, field, type, check } = setup();
+    let seen: { invalid: string | null; text?: string } | undefined;
+    field().addEventListener('focus', () => {
+      const id = field().getAttribute('aria-describedby');
+      seen = {
+        invalid: field().getAttribute('aria-invalid'),
+        text: id ? el.querySelector(`#${id}`)?.textContent ?? undefined : undefined,
+      };
+    });
+    type('{"a":');
+    check();
+    expect(seen?.invalid).toBe('true');
+    expect(seen?.text).toMatch(/^Niepoprawny JSON/);
+  });
+
   it('posts the parsed object once and shows the pending state', () => {
     const { http, checkButton, type, check } = setup();
     type(JSON.stringify(FORM));
@@ -187,15 +203,54 @@ describe('ValidatorPage', () => {
   });
 
   it('loads and checks the queue item from ?item, following item changes', () => {
-    const { fixture, http, field } = setup();
+    const { fixture, el, http, field, role } = setup();
     fixture.componentRef.setInput('item', 'd1');
     fixture.detectChanges();
     expect(field().value).toBe(JSON.stringify(d1.result, null, 2));
-    expect(http.expectOne(URL).request.body).toEqual(d1.result);
+    const first = http.expectOne(URL);
+    expect(first.request.body).toEqual(d1.result);
+    first.flush({ valid: false, errors: [], warnings: [] });
+    fixture.detectChanges();
+    expect(el.querySelector('h2')).not.toBeNull();
     fixture.componentRef.setInput('item', 'd2');
     fixture.detectChanges();
+    expect(el.querySelector('h2')).toBeNull();
+    expect(role('alert')).toBeNull();
     expect(field().value).toBe(JSON.stringify(d2.result, null, 2));
     expect(http.expectOne(URL).request.body).toEqual(d2.result);
+  });
+
+  it('clears the previous http error when switching items', () => {
+    const { fixture, http, role } = setup();
+    fixture.componentRef.setInput('item', 'd1');
+    fixture.detectChanges();
+    http.expectOne(URL).flush('x', { status: 500, statusText: 'Err' });
+    fixture.detectChanges();
+    expect(role('alert')).not.toBeNull();
+    fixture.componentRef.setInput('item', 'd2');
+    fixture.detectChanges();
+    expect(role('alert')).toBeNull();
+    http.expectOne(URL);
+  });
+
+  it('does not throw for a done row without a result', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideApiConfiguration(''),
+        provideRouter([]),
+        provideMockStore({
+          initialState: {
+            [importQueueFeatureKey]: { ids: ['u'], entities: { u: row('u', undefined) } },
+          },
+        }),
+      ],
+    });
+    const fixture = TestBed.createComponent(ValidatorPage);
+    fixture.componentRef.setInput('item', 'u');
+    expect(() => fixture.detectChanges()).not.toThrow();
+    expect(fixture.nativeElement.querySelector('textarea').value).toBe('');
   });
 
   it('explains a missing queue item without a request', () => {
@@ -267,5 +322,7 @@ describe('ValidatorPage', () => {
       fixture.detectChanges();
       expect(text()).toContain('Wgraj plik .json do 5 MB.');
     });
+    expect(document.activeElement).toBe(field());
+    expect(field().getAttribute('aria-describedby')).toBe('validator-input-error');
   });
 });

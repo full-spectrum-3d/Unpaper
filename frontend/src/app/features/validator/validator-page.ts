@@ -115,7 +115,11 @@ export class ValidatorPage {
         this.checking.set(false);
         this.missingItem.set(!found);
         if (found) {
-          this.text.set(JSON.stringify(row.result, null, 2));
+          this.text.set(JSON.stringify(row.result, null, 2) ?? '');
+          this.result.set(null);
+          this.checkedText.set(null);
+          this.checkedLines.set(null);
+          this.httpError.set(null);
           this.check();
         } else {
           this.text.set('');
@@ -146,6 +150,7 @@ export class ValidatorPage {
       this.inputError.set(null);
     } else {
       this.inputError.set(read.message);
+      this.focusField();
     }
   }
 
@@ -155,7 +160,7 @@ export class ValidatorPage {
     const parsed = parseJsonInput(text);
     if (!parsed.ok) {
       this.inputError.set(parsed.message);
-      this.field().nativeElement.focus();
+      this.focusField();
       return;
     }
     this.inputError.set(null);
@@ -184,6 +189,11 @@ export class ValidatorPage {
         this.checking.set(false);
       },
     });
+  }
+
+  /** Focus after render, so the error and aria-describedby exist when the field is announced. */
+  private focusField(): void {
+    afterNextRender(() => this.field().nativeElement.focus(), { injector: this.injector });
   }
 
   protected showInJson(path: string): void {
