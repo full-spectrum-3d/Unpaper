@@ -14,7 +14,8 @@ from PIL import Image, ImageOps
 
 from app.models.document import BBox, DocumentModel
 from app.pipeline.extract.builder import DocumentBuilder
-from app.pipeline.extract.layout import Span, layout_page
+from app.pipeline.extract.layout import Frame, Span, layout_page
+from app.pipeline.extract.raster import frames_from_image
 
 OCR_PAGE_TIMEOUT_S = 60
 DEFAULT_IMAGE_DPI = 200.0
@@ -155,7 +156,10 @@ def image_dpi(image: Image.Image) -> float:
 def ocr_page(
     builder: DocumentBuilder, image: Image.Image, engine: OcrEngine, dpi: float
 ) -> float | None:
-    """OCR jednej strony do bieżącej strony buildera; zwraca średnią pewność."""
+    """OCR jednej strony do bieżącej strony buildera; zwraca średnią pewność.
+
+    Ramki i podkreślenia wykrywamy z pikseli - OCR ich nie zwraca.
+    """
     scale = 72.0 / dpi
     spans = [
         Span(
@@ -167,11 +171,13 @@ def ocr_page(
                 y1=(word.top + word.height) * scale,
             ),
             confidence=word.confidence,
-            size=(word.line_height or word.height) * scale,
+            # Wysokość z OCR jest zbyt szumna na regułę rozmiaru nagłówka - zostają wersaliki.
+            size=None,
         )
         for word in engine.recognize(image)
     ]
-    layout_page(builder, spans)
+    frames = [Frame(box) for box in frames_from_image(image, dpi)]
+    layout_page(builder, spans, frames)
     if not spans:
         return None
     return sum(s.confidence or 0.0 for s in spans) / len(spans)

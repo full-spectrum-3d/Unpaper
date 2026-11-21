@@ -43,6 +43,7 @@ pipeline/extract/
   text_rules.py    # glify checkboxów, wykropkowania, reguły nagłówka/etykiety
   layout.py        # Span / Frame / TableGrid → linie → bloki (format-agnostyczne)
   grid.py          # odcinki linii → komórki (funkcje tabel pdfplumber) - ramki rysowane kreskami
+  raster.py        # linie, kratki, podkreślenia i wykropkowania z pikseli skanu (OCR ich nie widzi)
   pdf.py           # pdfplumber: słowa, ramki z linii, tabele, AcroForm; skan → OCR
   docx.py          # python-docx: akapity, tabele, listy, pola tekstowe, page breaki
   xlsx.py          # openpyxl: komórki, scalenia, obramowania → geometria
@@ -95,7 +96,7 @@ Wejście jednej strony: `Span(text, bbox, confidence, bold, size)`, `Frame(bbox)
 
 **XLSX** (`xlsx.py`): każdy widoczny arkusz = strona; ukryte wiersze i kolumny pomijane; `data_only=True` (wartości formuł). Geometria: szerokość kolumny × 5,6 pt (domyślnie 8,43), wysokość wiersza w pt (domyślnie 15). Komórka (albo zakres scalony) z wartością → `Span` (pogrubienie i rozmiar z czcionki); pusta komórka obramowana z ≥ 3 stron albo podkreślona (dolna krawędź) → `Frame`. Gdy większość tekstu strony jest pogrubiona, pogrubienie nie wyznacza nagłówków. Arkusz bez treści jest pomijany; skoroszyt bez treści → jedna pusta strona.
 
-**JPEG/PNG** (`image.py`): `ImageOps.exif_transpose`, skala szarości, autokontrast; obraz wyższy niż 1,6× szerokość dzielimy na `round(h / (w·√2))` stron (≤ `MAX_PDF_PAGES`). Orientacja z Tesseract OSD (błąd OSD = brak obrotu). `TesseractOcr.recognize(image) -> list[OcrWord]` z `image_to_data` (`--psm 3`), słowa z `conf < 0` pomijane, `conf/100` → `confidence`, rozmiar pisma = wysokość linii Tesseracta (stabilniejsza niż wysokość słowa). Piksele → punkty: `72 / DPI` (DPI z metadanych, bez nich - szerokość obrazu = szerokość A4).
+**JPEG/PNG** (`image.py`): `ImageOps.exif_transpose`, skala szarości, autokontrast; obraz wyższy niż 1,6× szerokość dzielimy na `round(h / (w·√2))` stron (≤ `MAX_PDF_PAGES`). Orientacja z Tesseract OSD (błąd OSD = brak obrotu). `TesseractOcr.recognize(image) -> list[OcrWord]` z `image_to_data` (`--psm 3`), słowa z `conf < 0` pomijane, `conf/100` → `confidence`; rozmiaru pisma z OCR nie używamy (za duży szum), nagłówki tylko z wersalików. Ramki i pola z pikseli (`raster.py`): poziome/pionowe ciągi ciemnych pikseli ≥ 0,12 cala → `grid.py` → komórki; linie 30 pt – 60% szerokości strony, które nie są krawędzią komórki, oraz wykropkowania (obraz ściśnięty w poziomie, pusto 0,03 cala nad i pod) → pole nad linią. Piksele → punkty: `72 / DPI` (DPI z metadanych, bez nich - szerokość obrazu = szerokość A4).
 
 ### 4.6. Ostrzeżenia
 

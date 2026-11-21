@@ -69,3 +69,64 @@ def test_failed_page_recorded() -> None:
     doc, stats = extract_image(png(100, 141), FakeOcr(fail=True), max_pages=30, check=no_check)
     assert stats.failed == [1]
     assert doc.pages[0].blocks == []
+
+
+def drawn_page() -> io.BytesIO:
+    """A4 w 200 DPI: ramka pola obok etykiety, kratka checkboxa, podkreślenie."""
+    from PIL import ImageDraw
+
+    image = Image.new("L", (1654, 2339), 255)
+    draw = ImageDraw.Draw(image)
+    draw.rectangle((500, 200, 1400, 260), outline=0, width=3)  # pole obok „Miejscowość”
+    draw.rectangle((150, 400, 185, 435), outline=0, width=3)  # kratka
+    draw.line((500, 640, 1000, 640), fill=0, width=3)  # podkreślenie
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG")
+    buffer.seek(0)
+    return buffer
+
+
+def test_frames_and_underlines_detected_from_pixels() -> None:
+    engine = FakeOcr(
+        [
+            [
+                word("Miejscowość", 150, 215, 300),
+                word("Gotówką", 210, 405, 200),
+                word("Ulica", 150, 605, 150),
+            ]
+        ]
+    )
+    doc, _ = extract_image(drawn_page(), engine, max_pages=30, check=no_check)
+    assert kinds(doc) == [
+        ("label", "Miejscowość"),
+        ("input_placeholder", ""),
+        ("checkbox_option", "Gotówką"),
+        ("label", "Ulica"),
+        ("input_placeholder", ""),
+    ]
+
+
+def test_text_strokes_are_not_lines() -> None:
+    from PIL import ImageDraw, ImageFont
+
+    image = Image.new("L", (1654, 400), 255)
+    ImageDraw.Draw(image).text(
+        (50, 50), "Wniosek o zwrot opłaty TTTT mmmm", fill=0, font=ImageFont.load_default(40)
+    )
+    from app.pipeline.extract.raster import frames_from_image
+
+    assert frames_from_image(image, 200) == []
+
+
+def test_dotted_leader_detected() -> None:
+    from PIL import ImageDraw
+
+    from app.pipeline.extract.raster import frames_from_image
+
+    image = Image.new("L", (1654, 400), 255)
+    draw = ImageDraw.Draw(image)
+    for x in range(600, 1200, 9):
+        draw.rectangle((x, 200, x + 2, 202), fill=0)
+    frames = frames_from_image(image, 200)
+    assert len(frames) == 1
+    assert 600 * 72 / 200 - 5 < frames[0].x0 < 600 * 72 / 200 + 5
