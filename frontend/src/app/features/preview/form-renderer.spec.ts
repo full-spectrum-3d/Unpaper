@@ -2,14 +2,14 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
 import { FormDefinition } from './form-definition';
-import { FormRenderer, VISIBILITY_EVALUATOR } from './form-renderer';
-import { evaluateVisibility } from './visibility';
+import { FormRenderer, STATES_EVALUATOR } from './form-renderer';
+import { FieldStates, evaluateStates } from './visibility';
 
-let impl: undefined | ((call: number) => Promise<ReadonlySet<string>> | undefined);
+let impl: undefined | ((call: number) => Promise<FieldStates> | undefined);
 let calls = 0;
 let settled = 0;
-const evaluator: typeof evaluateVisibility = async (...args) => {
-  const result = await (impl?.(++calls) ?? evaluateVisibility(...args));
+const evaluator: typeof evaluateStates = async (...args) => {
+  const result = await (impl?.(++calls) ?? evaluateStates(...args));
   settled++;
   return result;
 };
@@ -28,7 +28,7 @@ describe('FormRenderer visibility', () => {
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
-        { provide: VISIBILITY_EVALUATOR, useValue: evaluator },
+        { provide: STATES_EVALUATOR, useValue: evaluator },
       ],
     });
     fixture = TestBed.createComponent(FormRenderer);
@@ -55,7 +55,7 @@ describe('FormRenderer visibility', () => {
   });
 
   it('latest answers win: a slower, older evaluation never overwrites a newer one', async () => {
-    let releaseStale!: (hidden: ReadonlySet<string>) => void;
+    let releaseStale!: (states: FieldStates) => void;
     // Call 1 is the initial evaluation, call 2 the stale one (held back), later calls are real.
     impl = (call) => (call === 2 ? new Promise((resolve) => (releaseStale = resolve)) : undefined);
     await create();
@@ -69,7 +69,7 @@ describe('FormRenderer visibility', () => {
     fixture.detectChanges();
     expect(hasHeading('Dane innej osoby')).toBe(false);
 
-    releaseStale(new Set()); // stale result would show "Dane innej osoby"
+    releaseStale({ hidden: new Set(), readOnly: new Set() }); // stale result would show "Dane innej osoby"
     await new Promise((resolve) => setTimeout(resolve)); // let the stale evaluation settle
     fixture.detectChanges();
     expect(hasHeading('Dane innej osoby')).toBe(false);

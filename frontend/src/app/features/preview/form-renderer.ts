@@ -19,7 +19,7 @@ import { AnswersStore } from './answers-store';
 import { FormDefinition, Question } from './form-definition';
 import { orderTabs } from './page-order';
 import { RendererGrid } from './renderer-grid';
-import { evaluateVisibility } from './visibility';
+import { FieldStates, evaluateStates } from './visibility';
 
 /** Ids of all fields (nested too) that have a SHOW state: hidden until the first evaluation completes. */
 function fieldsWithShow(def: FormDefinition): ReadonlySet<string> {
@@ -34,14 +34,16 @@ function fieldsWithShow(def: FormDefinition): ReadonlySet<string> {
 }
 
 /** Identical results must not re-render the grid. */
-const sameSet = (a: ReadonlySet<string> | null, b: ReadonlySet<string> | null) =>
-  a === b || (!!a && !!b && a.size === b.size && [...a].every((x) => b.has(x)));
+const sameSet = (a: ReadonlySet<string>, b: ReadonlySet<string>) =>
+  a === b || (a.size === b.size && [...a].every((x) => b.has(x)));
+const sameStates = (a: FieldStates | null, b: FieldStates | null) =>
+  a === b || (!!a && !!b && sameSet(a.hidden, b.hidden) && sameSet(a.readOnly, b.readOnly));
+const EMPTY: ReadonlySet<string> = new Set();
 
 /** Seam so tests can slow down or break the evaluation. */
-export const VISIBILITY_EVALUATOR = new InjectionToken<typeof evaluateVisibility>(
-  'VISIBILITY_EVALUATOR',
-  { factory: () => evaluateVisibility },
-);
+export const STATES_EVALUATOR = new InjectionToken<typeof evaluateStates>('STATES_EVALUATOR', {
+  factory: () => evaluateStates,
+});
 
 @Component({
   selector: 'app-form-renderer',
@@ -55,7 +57,7 @@ export class FormRenderer {
 
   private readonly store = inject(AnswersStore);
   private readonly injector = inject(Injector);
-  private readonly evaluate = inject(VISIBILITY_EVALUATOR);
+  private readonly evaluate = inject(STATES_EVALUATOR);
   private readonly pending = inject(PendingTasks);
   private readonly heading = viewChild<ElementRef<HTMLElement>>('stepHeading');
 
@@ -72,9 +74,10 @@ export class FormRenderer {
   });
 
   /** null = not evaluated yet. */
-  private readonly evaluated = signal<ReadonlySet<string> | null>(null, { equal: sameSet });
+  private readonly evaluated = signal<FieldStates | null>(null, { equal: sameStates });
   private readonly initiallyHidden = computed(() => fieldsWithShow(this.definition()));
-  protected readonly hidden = computed(() => this.evaluated() ?? this.initiallyHidden());
+  protected readonly hidden = computed(() => this.evaluated()?.hidden ?? this.initiallyHidden());
+  readonly readOnlyIds = computed(() => this.evaluated()?.readOnly ?? EMPTY);
 
   private request = 0;
 
@@ -105,7 +108,7 @@ export class FormRenderer {
         } catch (e) {
           // Fail-open like visibility.ts: better to show every field than to hide them forever.
           console.warn('Visibility evaluation failed', e);
-          if (id === this.request) this.evaluated.set(new Set());
+          if (id === this.request) this.evaluated.set({ hidden: new Set(), readOnly: new Set() });
         } finally {
           done();
         }

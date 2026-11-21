@@ -39,13 +39,25 @@ async function isVisible(field: FormField, input: unknown): Promise<boolean> {
   return shown && !hides.some((r) => r === true);
 }
 
-/** Ids of hidden fields; hiding a section hides all its descendants. */
-export async function evaluateVisibility(
+async function isReadOnly(field: FormField, input: unknown): Promise<boolean> {
+  const queries = (field.states ?? []).filter((s) => s.type === 'READ_ONLY');
+  const results = await Promise.all(queries.map((s) => run(field, s.query, input)));
+  return results.some((r) => r === true);
+}
+
+export interface FieldStates {
+  hidden: ReadonlySet<string>;
+  readOnly: ReadonlySet<string>;
+}
+
+/** Hidden and read-only field ids; hiding a section hides all its descendants, hidden fields are never read-only. */
+export async function evaluateStates(
   def: FormDefinition,
   answers: ReadonlyMap<string, unknown>,
-): Promise<ReadonlySet<string>> {
+): Promise<FieldStates> {
   const input = withUserAnswers(def, answers);
   const hidden = new Set<string>();
+  const readOnly = new Set<string>();
   const collect = (field: FormField) => {
     hidden.add(field.id);
     (field.repeatingSectionGrid ?? []).forEach((q) => collect(q.field));
@@ -54,10 +66,13 @@ export async function evaluateVisibility(
     await Promise.all(
       qs.map(async ({ field }) => {
         if (!(await isVisible(field, input))) collect(field);
-        else await visit(field.repeatingSectionGrid ?? []);
+        else {
+          if (await isReadOnly(field, input)) readOnly.add(field.id);
+          await visit(field.repeatingSectionGrid ?? []);
+        }
       }),
     );
   };
   await Promise.all(def.tabs.map((t) => visit(t.questions)));
-  return hidden;
+  return { hidden, readOnly };
 }
