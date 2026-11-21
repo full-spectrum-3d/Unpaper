@@ -1,16 +1,26 @@
 import { Component, computed, input, model } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
+import { FieldTooltip } from '../field-tooltip/field-tooltip';
 
 let nextId = 0;
 
 @Component({
   selector: 'app-text-field',
+  imports: [FieldTooltip],
   template: `
-    <label
-      [for]="inputId"
-      [class]="labelHidden() ? 'sr-only' : 'block text-label font-label mb-1.5'"
-      >{{ label() }}</label
-    >
+    <div [class]="labelHidden() ? 'contents' : 'flex flex-wrap items-center gap-x-2 mb-1.5'">
+      <label [for]="inputId" [class]="labelHidden() ? 'sr-only' : 'text-label font-label'"
+        >{{ label() }}<span class="sr-only">{{ tag() ? ', ' + tag() : '' }}</span>
+      </label>
+      @if (tooltip(); as text) {
+        <app-field-tooltip [text]="text" [label]="label()" />
+      }
+      @if (tag(); as text) {
+        <span class="ml-auto text-fg-muted text-label font-normal" aria-hidden="true">{{
+          text
+        }}</span>
+      }
+    </div>
     @if (description(); as text) {
       <small [id]="descriptionId" class="block text-fg-muted">{{ text }}</small>
     }
@@ -51,6 +61,8 @@ export class TextField implements FormValueControl<string> {
   readonly readonly = input(false);
   readonly labelHidden = input(false);
   readonly inputmode = input<string>();
+  readonly tooltip = input<string>();
+  readonly tag = input<string>();
 
   private static readonly prefix = 'app-text-field-';
   protected readonly inputId = `${TextField.prefix}${nextId++}`;

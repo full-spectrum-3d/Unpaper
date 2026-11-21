@@ -63,6 +63,20 @@ export const ReadOnly: StoryObj<TextFieldHarness> = {
   },
 };
 
+export const ZRejestru: StoryObj<TextFieldHarness> = {
+  render: () => ({
+    template:
+      '<app-text-field label="Numer PESEL" tag="dane z rejestru" tooltip="Jedenaście cyfr" />',
+    moduleMetadata: { imports: [TextField] },
+  }),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    expect(c.getByLabelText('Numer PESEL, dane z rejestru')).toBeInTheDocument();
+    await userEvent.click(c.getByRole('button', { name: 'Więcej informacji: Numer PESEL' }));
+    expect(c.getByText('Jedenaście cyfr')).toBeVisible();
+  },
+};
+
 export const SignalForm: StoryObj<SignalFormHarness> = {
   render: () => ({
     template: '<app-text-field-form-harness />',
