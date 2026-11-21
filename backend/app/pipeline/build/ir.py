@@ -20,6 +20,9 @@ class Semantic(StrEnum):
     ID_CARD = "ID_CARD"
     COUNTRY = "COUNTRY"
     PHONE_PREFIX = "PHONE_PREFIX"
+    VOIVODESHIP = "VOIVODESHIP"
+    COUNTY = "COUNTY"
+    COMMUNE = "COMMUNE"
 
 
 @dataclass(frozen=True)

@@ -78,9 +78,6 @@ markers = [
     "converter: wymaga LibreOffice (soffice)",
 ]
 addopts = "-m 'not llm and not converter'"
-=======
-markers = ["llm: wymaga działającej Ollamy"]
-addopts = "-m 'not llm'"
 # Domyślne norecursedirs pomija katalogi `build` (tests/unit/build).
 norecursedirs = [".*", "dist", "CVS", "_darcs", "{arch}", "*.egg", "venv", "node_modules"]
 

@@ -6,6 +6,17 @@
   "descriptionHtml": "<p>Wpisanie danych do kontaktu może przyspieszyć załatwienie sprawy. Urzędnik będzie mógł skontaktować się z Tobą w przypadku pytań lub wątpliwości.</p><p>Jeśli widzisz uzupełnione dane, sprawdź, czy są poprawne. Możesz je zmienić lub usunąć.</p>",
   "fields": [
     {
+      "key": "numer_kierunkowy",
+      "type": "SELECT",
+      "title": "Numer kierunkowy",
+      "techName": "numer_kierunkowy",
+      "dictionaryName": "NUMERY_KIERUNKOWE",
+      "searchEnabled": true,
+      "defaultValue": [
+        "+48"
+      ]
+    },
+    {
       "key": "numer_telefonu",
       "type": "TEXT_FIELD",
       "title": "Numer telefonu",

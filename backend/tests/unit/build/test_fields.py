@@ -243,7 +243,12 @@ def test_label_regex_validators(label: str, expected: Validator) -> None:
         ("Numer kierunkowy", Semantic.PHONE_PREFIX),
         ("Numer kierunkowy kraju", Semantic.PHONE_PREFIX),
         ("Kod pocztowy", Semantic.ZIP_CODE),
-        ("Powiat", None),
+        ("Województwo", Semantic.VOIVODESHIP),
+        ("Powiat:", Semantic.COUNTY),
+        ("Gmina", Semantic.COMMUNE),
+        ("Miejscowość", None),
+        ("Miejscowość i data", None),
+        ("Powiat grodzki lub ziemski", None),
         ("Ulica", None),
     ],
 )
