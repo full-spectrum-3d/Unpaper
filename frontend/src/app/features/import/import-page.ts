@@ -96,6 +96,7 @@ export class ImportPage {
         error,
         retryable: false,
         result: null,
+        report: null,
         startedAt: null,
         durationMs: null,
       };

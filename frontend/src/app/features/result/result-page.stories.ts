@@ -14,6 +14,7 @@ const done: QueueItem = {
   error: null,
   retryable: false,
   result: nadplata,
+  report: null,
   startedAt: 0,
   durationMs: 12000,
 };

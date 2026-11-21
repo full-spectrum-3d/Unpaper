@@ -29,6 +29,7 @@ const item = (p: Partial<QueueItem> & Pick<QueueItem, 'id' | 'name'>): QueueItem
   error: null,
   retryable: false,
   result: null,
+  report: null,
   startedAt: null,
   durationMs: null,
   ...p,

@@ -20,6 +20,7 @@ const item = (id: string, status: QueueItem['status']): QueueItem => ({
   error: null,
   retryable: true,
   result: null,
+  report: null,
   startedAt: null,
   durationMs: null,
 });
@@ -35,7 +36,7 @@ const stateOf = (items: QueueItem[], token: string | null = 't') => ({
   },
 });
 
-function setup(items: QueueItem[], convert: ConvertFileFn = () => of({ ok: 1 }), token: string | null = 't') {
+function setup(items: QueueItem[], convert: ConvertFileFn = () => of({ form: { ok: 1 }, report: { durationMs: 7 } }), token: string | null = 't') {
   const actions$ = new Subject<Action>();
   TestBed.configureTestingModule({
     providers: [
@@ -68,7 +69,7 @@ describe('ImportQueueEffects', () => {
 
   it('schedule starts next after success', async () => {
     const { actions$, out } = setup([item('1', 'processing'), item('2', 'pending'), item('3', 'pending')]);
-    actions$.next(A.convertSucceeded({ id: '0', result: {}, durationMs: 1 }));
+    actions$.next(A.convertSucceeded({ id: '0', result: {}, report: null, durationMs: 1 }));
     await tick();
     const started = out.filter((a) => a.type === A.convertStarted.type) as ReturnType<
       typeof A.convertStarted
@@ -97,6 +98,7 @@ describe('ImportQueueEffects', () => {
     const done = out[0] as ReturnType<typeof A.convertSucceeded>;
     expect(done.type).toBe(A.convertSucceeded.type);
     expect(done.result).toEqual({ ok: 1 });
+    expect(done.report).toEqual({ durationMs: 7 });
     expect(done.durationMs).toBeGreaterThanOrEqual(0);
   });
 
@@ -115,7 +117,7 @@ describe('ImportQueueEffects', () => {
   });
 
   it('sends the stored password and forgets it after success', () => {
-    const convert = vi.fn<ConvertFileFn>(() => of({ ok: 1 }));
+    const convert = vi.fn<ConvertFileFn>(() => of({ form: { ok: 1 }, report: null }));
     const { actions$, registry } = setup([running('1')], convert);
     registry.add('1', new File(['x'], '1.pdf'));
     registry.setPassword('1', 'tajne');
@@ -162,7 +164,7 @@ describe('ImportQueueEffects', () => {
   });
 
   it('ignores a start that did not move the item to processing', () => {
-    const convert = vi.fn(() => of({}));
+    const convert = vi.fn<ConvertFileFn>(() => of({ form: {}, report: null }));
     const { actions$, out, registry } = setup([item('1', 'done')], convert);
     registry.add('1', new File(['x'], '1.pdf'));
     actions$.next(A.convertStarted({ id: '1', startedAt: 0 }));
