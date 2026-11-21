@@ -1,0 +1,75 @@
+import { Component, forwardRef, input } from '@angular/core';
+import { FormField } from './form-definition';
+import { CheckboxField } from './fields/checkbox';
+import { ConsentSectionField } from './fields/consent-section';
+import { DateField } from './fields/date';
+import { FileUploaderField } from './fields/file-uploader';
+import { RadioField } from './fields/radio';
+import { SectionField } from './fields/section';
+import { SelectField } from './fields/select';
+import { TextBlockField } from './fields/text-block';
+import { TextFieldType } from './fields/text';
+import { TextareaField } from './fields/textarea';
+import { UnknownField } from './fields/unknown';
+
+@Component({
+  selector: 'app-field-host',
+  imports: [
+    forwardRef(() => SectionField),
+    TextFieldType,
+    TextareaField,
+    RadioField,
+    SelectField,
+    CheckboxField,
+    DateField,
+    FileUploaderField,
+    TextBlockField,
+    ConsentSectionField,
+    UnknownField,
+  ],
+  template: `
+    @switch (field().type) {
+      @case ('SECTION') {
+        <app-section-field [field]="field()" [hidden]="hidden()" />
+      }
+      @case ('TEXT_FIELD') {
+        <app-text-field-type [field]="field()" />
+      }
+      @case ('NUMBER') {
+        <app-text-field-type [field]="field()" />
+      }
+      @case ('TEXTAREA') {
+        <app-textarea-field [field]="field()" />
+      }
+      @case ('RADIO') {
+        <app-radio-field [field]="field()" />
+      }
+      @case ('SELECT') {
+        <app-select-field [field]="field()" />
+      }
+      @case ('CHECKBOX') {
+        <app-checkbox-field [field]="field()" />
+      }
+      @case ('DATEPICKER') {
+        <app-date-field [field]="field()" />
+      }
+      @case ('FILE_UPLOADER') {
+        <app-file-uploader-field [field]="field()" />
+      }
+      @case ('TEXT_BLOCK') {
+        <app-text-block-field [field]="field()" />
+      }
+      @case ('CONSENT_SECTION') {
+        <app-consent-section-field [field]="field()" />
+      }
+      @default {
+        <app-unknown-field [field]="field()" />
+      }
+    }
+  `,
+  host: { class: 'block' },
+})
+export class FieldHost {
+  readonly field = input.required<FormField>();
+  readonly hidden = input<ReadonlySet<string>>(new Set());
+}

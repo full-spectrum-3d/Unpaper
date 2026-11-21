@@ -11,12 +11,14 @@ let nextId = 0;
       <small [id]="descriptionId" class="block text-fg-muted">{{ text }}</small>
     }
     <input
-      class="block w-full bg-surface text-fg text-body border rounded-field px-field-x py-field-y focus-ring"
-      [class]="error() ? 'border-danger' : 'border-border-input'"
+      class="block w-full text-fg text-body border rounded-field px-field-x py-field-y focus-ring"
+      [class]="(error() ? 'border-danger' : 'border-border-input') + (readonly() ? ' bg-surface-readonly' : ' bg-surface')"
+      [readOnly]="readonly()"
       [id]="inputId"
       [type]="type()"
       [value]="value()"
       [attr.autocomplete]="autocomplete()"
+      [attr.inputmode]="inputmode()"
       [attr.aria-describedby]="describedBy()"
       [attr.aria-required]="required() || null"
       [attr.aria-invalid]="error() ? 'true' : null"
@@ -38,6 +40,8 @@ export class TextField implements FormValueControl<string> {
   readonly required = input(false);
   readonly error = input<string>();
   readonly autocomplete = input<string>();
+  readonly readonly = input(false);
+  readonly inputmode = input<string>();
 
   private static readonly prefix = 'app-text-field-';
   protected readonly inputId = `${TextField.prefix}${nextId++}`;
