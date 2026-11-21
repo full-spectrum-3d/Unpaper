@@ -25,18 +25,29 @@ export function extractPosition(message: string, text: string): number | null {
     const lines = text.split('\n');
     const line = Number(lc[1]);
     if (line > lines.length) return null;
-    return lines.slice(0, line - 1).reduce((sum, l) => sum + l.length + 1, 0) + Number(lc[2]) - 1;
+    const offset = lines.slice(0, line - 1).reduce((sum, l) => sum + l.length + 1, 0);
+    return offset + Math.min(Number(lc[2]) - 1, lines[line - 1].length);
   }
 
-  // shortcut: Node prints only a snippet, so the token is located heuristically; upgrade if V8 changes the format.
-  const snip = /^Unexpected token '(.)', (\.\.\.)?"([\s\S]*?)"(?:\.\.\.)? is not valid JSON$/.exec(
+  // Node prints only a snippet of the source; V8 shows [pos-10, pos+10) around the error.
+  // Every branch returns null unless the position is unambiguous: a wrong location is worse than none.
+  const snip = /^Unexpected token '(.)', (\.\.\.)?"([\s\S]*?)"(\.\.\.)? is not valid JSON$/.exec(
     message,
   );
   if (!snip) return null;
-  const [, token, ellipsis, snippet] = snip;
-  const start = text.indexOf(snippet);
-  if (start < 0) return null;
-  const pos = ellipsis ? start + V8_CONTEXT : start + snippet.indexOf(token);
+  const [, token, head, snippet, tail] = snip;
+  let pos: number;
+  if (head) {
+    const start = text.indexOf(snippet);
+    if (start < 0 || start !== text.lastIndexOf(snippet)) return null;
+    pos = start + V8_CONTEXT;
+  } else if (tail) {
+    if (!text.startsWith(snippet)) return null;
+    pos = snippet.length - V8_CONTEXT;
+  } else {
+    if (snippet !== text || snippet.indexOf(token) !== snippet.lastIndexOf(token)) return null;
+    pos = snippet.indexOf(token);
+  }
   return text[pos] === token ? pos : null;
 }
 

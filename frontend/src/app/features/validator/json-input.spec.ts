@@ -70,6 +70,51 @@ describe('extractPosition', () => {
     expect(extractPosition(message, BROKEN)).toBe(BROKEN.length - 1);
   });
 
+  it('clamps a Firefox column to the line length', () => {
+    expect(extractPosition('(line 1 column 99)', 'ab\ncd')).toBe(2);
+  });
+
+  it('snippet with leading ellipsis: unique snippet only', () => {
+    const text = '{"a":1,"b":2,"c":,"d":4,"e":5}';
+    const snippet = text.slice(7, 27);
+    const msg = `Unexpected token ',', ..."${snippet}"... is not valid JSON`;
+    expect(extractPosition(msg, text)).toBe(17);
+    expect(extractPosition(msg, text + snippet)).toBeNull();
+  });
+
+  it('snippet with trailing ellipsis only: position is length - 10', () => {
+    const text = '{"a":,"b":2,"c":3,"d":4,"e":5}';
+    const msg = `Unexpected token ',', "${text.slice(0, 15)}"... is not valid JSON`;
+    expect(extractPosition(msg, text)).toBe(5);
+    expect(extractPosition(msg, 'x' + text)).toBeNull();
+  });
+
+  it('whole text shown: ambiguous token gives null', () => {
+    const text = '{"a":1,"b":,"c":2}';
+    const msg = `Unexpected token ',', "${text}" is not valid JSON`;
+    expect(extractPosition(msg, text)).toBeNull();
+    expect(
+      extractPosition(
+        `Unexpected token '}', "{\"a\":}" is not valid JSON`.replace(/\\/g, ''),
+        '{"a":}',
+      ),
+    ).toBe(5);
+  });
+
+  it('never reports a wrong location for real engine errors', () => {
+    for (const [text, column] of [
+      ['{"a":1,"b":,"c":2}', 12],
+      ['{"t":"}","x":}', 14],
+    ] as const) {
+      const r = parseJsonInput(text);
+      expect(r.ok).toBe(false);
+      if (!r.ok)
+        expect([`Niepoprawny JSON: linia 1, kolumna ${column}.`, 'Niepoprawny JSON.']).toContain(
+          r.message,
+        );
+    }
+  });
+
   it('returns null when there is no position', () => {
     expect(extractPosition('Unexpected end of JSON input', '{')).toBeNull();
   });
@@ -79,6 +124,11 @@ describe('readJsonFile', () => {
   it('reads a .JSON file', async () => {
     const file = new File(['{"a":1}'], 'a.JSON');
     expect(await readJsonFile(file)).toEqual({ ok: true, text: '{"a":1}' });
+  });
+
+  it('accepts a file of exactly the limit', async () => {
+    const file = new File([new Uint8Array(MAX_JSON_FILE_BYTES)], 'a.json');
+    expect((await readJsonFile(file)).ok).toBe(true);
   });
 
   it('rejects another extension', async () => {
