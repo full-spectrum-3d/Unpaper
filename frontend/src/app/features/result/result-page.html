@@ -25,6 +25,18 @@
           </span>
           <button appButton type="button" variant="secondary" (click)="download()">Pobierz .json</button>
         </span>
+        @if (summary(); as s) {
+          <p class="flex flex-wrap items-center gap-2">
+            <span>Pewność konwersji: <strong>{{ s.score }}</strong>.</span>
+            @if (s.toReview) {
+              <button type="button" class="text-primary underline focus-ring rounded-field" (click)="selectTab('report')">
+                Do sprawdzenia: {{ s.toReview }}
+              </button>
+            } @else {
+              <span class="text-fg-muted">Nic do sprawdzenia.</span>
+            }
+          </p>
+        }
         @if (!form()) {
           <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
         }
@@ -38,6 +50,13 @@
           >@for (seg of segments(); track $index) {@if (seg.highlight) {<span #fragment role="group" tabindex="-1" class="block bg-warning-subtle focus-ring" [attr.aria-label]="'Fragment JSON: ' + highlightPath()">@for (l of seg.lines; track l.n) {<span [attr.data-line]="l.n">{{ l.text }}</span>}</span>} @else {@for (l of seg.lines; track l.n) {<span [attr.data-line]="l.n">{{ l.text }}</span>}}}</pre>
         </div>
         <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
+          <app-review-panel
+            class="mb-section"
+            [report]="report()"
+            [ranges]="json().ranges"
+            [paths]="fieldPaths()"
+            (showInJson)="onShowInJson($event)"
+          />
           <app-report-view [report]="report()" [ranges]="json().ranges" (showInJson)="onShowInJson($event)" />
         </div>
       </app-card>

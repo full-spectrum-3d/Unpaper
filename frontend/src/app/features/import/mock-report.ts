@@ -70,5 +70,52 @@ export function mockReport(form: unknown): unknown {
     ],
     timings: { normalizeMs: 410, extractMs: 6230, analyzeMs: 15840, buildMs: 2620 },
     durationMs: 25100,
+    confidence: { score: 0.78, level: 'medium', fieldsTotal: 31, fieldsFromDocument: 2, toReview: 2 },
+    fields: [
+      {
+        techName: techAt(form, GRID_FIELD),
+        title: gridField,
+        tab: titleAt(form, 'tabs[1]'),
+        section: titleAt(form, 'tabs[1].questions[0]'),
+        origin: 'document',
+        confidence: 0.96,
+        level: 'high',
+        reasons: [],
+        source: {
+          page: 1,
+          blockId: 'b14',
+          text: `${gridField}: …`,
+          box: { x: 0.12, y: 0.31, width: 0.52, height: 0.03 },
+          pageAspect: 0.707,
+        },
+      },
+      {
+        techName: techAt(form, choice),
+        title: titleAt(form, choice),
+        tab: titleAt(form, 'tabs[0]'),
+        section: '',
+        origin: 'document',
+        confidence: 0.35,
+        level: 'low',
+        reasons: [{ code: 'LABEL_NOT_IN_DOCUMENT', message: 'Etykiety nie ma w treści dokumentu.' }],
+      },
+    ],
+    review: [
+      {
+        kind: 'field',
+        level: 'low',
+        techName: techAt(form, choice),
+        title: titleAt(form, choice),
+        tab: titleAt(form, 'tabs[0]'),
+        messages: ['Etykiety nie ma w treści dokumentu - pole mogło zostać dopisane.'],
+      },
+      {
+        kind: 'form',
+        level: 'medium',
+        code: 'W12_LOW_OCR_CONFIDENCE',
+        title: 'Cały formularz',
+        messages: ['Skan odczytano ze średnią pewnością 68% - sprawdź pisownię etykiet.'],
+      },
+    ],
   };
 }

@@ -62,6 +62,9 @@ class Block(_DocModel):
 class Page(_DocModel):
     number: Annotated[int, Field(ge=1)]
     blocks: list[Block]
+    # Rozmiar strony w jednostkach `bbox` (punkty); brak, gdy format nie ma stałych stron.
+    width: Annotated[float, Field(gt=0)] | None = None
+    height: Annotated[float, Field(gt=0)] | None = None
 
 
 class SourceInfo(_DocModel):

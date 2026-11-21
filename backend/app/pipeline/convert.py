@@ -35,6 +35,7 @@ from app.pipeline.converter import Converter
 from app.pipeline.extract import ExtractionResult, OcrEngine, extract
 from app.pipeline.llm_client import LlmClient
 from app.pipeline.normalize import normalize
+from app.pipeline.review import build_review
 from app.pipeline.upload_validation import UploadLimits, ValidatedUpload
 from app.pipeline.verify import VerifyResult, verify_form
 
@@ -113,6 +114,16 @@ async def convert_upload(
     duration_ms = int((clock() - started) * 1000)
     report = _report(
         upload, extraction.document, converted, analysis, built, checked, warnings, timings
+    )
+    report |= await anyio.to_thread.run_sync(
+        partial(
+            build_review,
+            extraction.document,
+            None if rebuilt else analysis.draft,
+            checked.form,
+            built.field_keys,
+            warnings,
+        )
     )
     report["durationMs"] = duration_ms
     logger.info(

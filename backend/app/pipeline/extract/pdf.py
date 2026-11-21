@@ -54,7 +54,7 @@ def extract_pdf(
     with pdfplumber.open(io.BytesIO(data)) as pdf:
         for number, page in enumerate(pdf.pages, start=1):
             check()
-            builder.new_page()
+            builder.new_page((float(page.width), float(page.height)))
             if _text_chars(page) >= MIN_TEXT_CHARS:
                 _text_page(builder, page)
                 continue

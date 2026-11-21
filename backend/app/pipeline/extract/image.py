@@ -205,7 +205,8 @@ def extract_image(
     del prepared
     for number, page in enumerate(pages, start=1):
         check()
-        builder.new_page()
+        scale = 72.0 / dpi
+        builder.new_page((page.size[0] * scale, page.size[1] * scale))
         run_ocr(builder, page, engine, dpi, number, stats)
     return builder.build(), stats
 

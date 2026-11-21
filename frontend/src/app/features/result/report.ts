@@ -5,7 +5,50 @@ export interface ReportIssue {
   message: string;
   path?: string;
 }
+export type ConfidenceLevel = 'high' | 'medium' | 'low';
+
+/** Where a field came from in the source document; `box` is in page fractions (0-1). */
+export interface FieldSource {
+  page: number;
+  text: string;
+  blockId?: string;
+  box?: { x: number; y: number; width: number; height: number };
+  /** Page width divided by height; present together with `box`. */
+  pageAspect?: number;
+  ocrConfidence?: number;
+}
+export interface ReportField {
+  techName: string;
+  title: string;
+  tab: string;
+  section: string;
+  origin: 'document' | 'template';
+  confidence: number;
+  level: ConfidenceLevel;
+  reasons: { code: string; message: string }[];
+  source?: FieldSource;
+}
+export interface ReviewItem {
+  kind: 'field' | 'form';
+  level: ConfidenceLevel;
+  title: string;
+  messages: string[];
+  techName?: string;
+  tab?: string;
+  code?: string;
+}
+export interface ReportConfidence {
+  score: number;
+  level: ConfidenceLevel;
+  fieldsTotal: number;
+  fieldsFromDocument: number;
+  toReview: number;
+}
+
 export interface ConversionReport {
+  confidence?: ReportConfidence;
+  fields?: ReportField[];
+  review?: ReviewItem[];
   sourceFile?: { name?: string; mime?: string; sizeBytes?: number; pages?: number | null; decrypted?: boolean };
   extraction?: { method?: string; convertedToOpenXml?: boolean; ocrMeanConfidence?: number | null; blocks?: number };
   llm?: {
@@ -52,4 +95,30 @@ export function pathTarget(issue: ReportIssue, ranges: ReadonlyMap<string, LineR
 
 export function formatSeconds(ms: number): string {
   return `${(ms / 1000).toFixed(1).replace('.', ',')} s`;
+}
+
+type FormNode = { field?: { techName?: unknown; repeatingSectionGrid?: unknown } };
+
+/** JSON path of every field by `techName`, in the syntax of `formatJson` ranges. */
+export function fieldPaths(form: unknown): ReadonlyMap<string, string> {
+  const paths = new Map<string, string>();
+  const tabs = isObject(form) && Array.isArray(form['tabs']) ? form['tabs'] : [];
+  tabs.forEach((tab, i) => {
+    const questions = isObject(tab) && Array.isArray(tab['questions']) ? (tab['questions'] as FormNode[]) : [];
+    questions.forEach((question, j) => {
+      const base = `tabs[${i}].questions[${j}]`;
+      const name = question?.field?.techName;
+      if (typeof name === 'string') paths.set(name, base);
+      const grid = question?.field?.repeatingSectionGrid;
+      (Array.isArray(grid) ? (grid as FormNode[]) : []).forEach((child, k) => {
+        const childName = child?.field?.techName;
+        if (typeof childName === 'string') paths.set(childName, `${base}.field.repeatingSectionGrid[${k}]`);
+      });
+    });
+  });
+  return paths;
+}
+
+export function formatPercent(value: number): string {
+  return `${Math.round(value * 100)}%`;
 }

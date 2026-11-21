@@ -1,7 +1,7 @@
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
 import { mockReport } from '../import/mock-report';
 import { formatJson } from './json-lines';
-import { asReport, formatSeconds, pathTarget } from './report';
+import { asReport, fieldPaths, formatSeconds, pathTarget } from './report';
 
 describe('asReport', () => {
   it('returns the same object when it is already fine', () => {
@@ -49,5 +49,27 @@ describe('formatSeconds', () => {
     expect(formatSeconds(25110)).toBe('25,1 s');
     expect(formatSeconds(140)).toBe('0,1 s');
     expect(formatSeconds(0)).toBe('0,0 s');
+  });
+});
+
+describe('fieldPaths', () => {
+  it('maps section and nested field names to JSON paths', () => {
+    const form = {
+      tabs: [
+        { questions: [{ field: { techName: 'sekcja', repeatingSectionGrid: [{ field: { techName: 'a' } }, { field: { techName: 'b' } }] } }] },
+        { questions: [{}, { field: { techName: 'luzem' } }] },
+      ],
+    };
+    expect([...fieldPaths(form)]).toEqual([
+      ['sekcja', 'tabs[0].questions[0]'],
+      ['a', 'tabs[0].questions[0].field.repeatingSectionGrid[0]'],
+      ['b', 'tabs[0].questions[0].field.repeatingSectionGrid[1]'],
+      ['luzem', 'tabs[1].questions[1]'],
+    ]);
+  });
+
+  it('returns an empty map for a non-form value', () => {
+    expect(fieldPaths(null).size).toBe(0);
+    expect(fieldPaths({ tabs: 'x' }).size).toBe(0);
   });
 });
