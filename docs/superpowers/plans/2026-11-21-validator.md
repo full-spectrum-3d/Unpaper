@@ -88,13 +88,16 @@
   export type ParseResult = { ok: true; value: Record<string, unknown> } | { ok: false; message: string };
   export function parseJsonInput(text: string): ParseResult;
   export const MAX_JSON_FILE_BYTES = 5 * 1024 * 1024;
+  export function positionToLineColumn(text: string, pos: number): { line: number; column: number };
+  export function extractPosition(message: string, text: string): number | null; // "at position N" albo "line L column K"
   export function readJsonFile(file: File): Promise<{ ok: true; text: string } | { ok: false; message: string }>;
   ```
 
 - [ ] **Step 1: Write failing tests**
   - `parseJsonInput('{"a":1}')` → ok z `{a:1}`; `'﻿  {"a":1}\n'` → ok.
   - `'[1]'`, `'"x"'`, `'null'`, `'5'` → `{ ok:false, message:'JSON musi być obiektem formularza (zaczynać się od {).' }`.
-  - `'{\n  "a": 1,\n  "b": \n}'` → `Niepoprawny JSON: linia 3, kolumna 8.` (policz kolumnę od 1 w miejscu błędu zgłoszonym przez silnik; test ma użyć pozycji z `JSON.parse` i sprawdzić zgodność linii; kolumnę asercją na wyliczonej z pozycji wartości). Wariant z `\r\n` daje tę samą linię.
+  - `'{\n  "a": 1,\n  "b": \n}'` → komunikat `Niepoprawny JSON: linia 4, kolumna 1.` (błąd na `}` w 4. linii; linie i kolumny liczone od 1). Ten sam tekst z `\r\n` zamiast `\n` → ta sama linia 4.
+  - `positionToLineColumn('ab\ncd', 4)` → `{ line: 2, column: 2 }`; `positionToLineColumn('x', 0)` → `{ line: 1, column: 1 }`.
   - Gdy komunikat błędu nie zawiera pozycji (zasymuluj przez wydzieloną funkcję `positionToLineColumn(text, pos)` i `extractPosition(message)` zwracającą `null`) → `Niepoprawny JSON.`
   - `extractPosition` rozpoznaje `"... at position 17"` oraz `"... (line 3 column 8)"`.
   - `readJsonFile`: plik `a.JSON` z treścią → ok z tekstem; `a.txt` → `Wgraj plik .json do 5 MB.`; plik > 5 MB (np. `new File([new Uint8Array(MAX_JSON_FILE_BYTES + 1)], 'a.json')`) → ten sam komunikat.
