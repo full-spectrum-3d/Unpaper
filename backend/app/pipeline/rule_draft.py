@@ -1,7 +1,9 @@
 """Szkic formularza z reguł, bez LLM: zapasowy wynik, gdy model zawiedzie.
 
 Pole to miejsce wykropkowane w dokumencie, a etykieta to tekst przed nim albo opis
-w nawiasie pod nim. Typ wynika z etykiety, sekcja z ostatniego nagłówka. Nagłówek
+w nawiasie pod nim. Kolejne opcje (`checkbox_option`, także te oznaczone przez
+`doc_hints`) to jedno pole wyboru z etykietą z tekstu przed nimi. Typ wynika
+z etykiety, sekcja z ostatniego nagłówka. Nagłówek
 blankietu (wszystko przed tytułem „WNIOSEK…”) pomijamy: są tam dane wnioskodawcy,
 data i adresat, które dają sekcje predefiniowane. Wynik przechodzi tę samą
 normalizację co szkic modelu (usuwa m.in. pola wnioskodawcy i podpis).
@@ -20,6 +22,7 @@ from app.pipeline.draft_rules import clean_text, has_fill
 
 PAGE_TITLE = "Przedmiot wniosku"
 DEFAULT_SECTION = "Dane wniosku"
+DEFAULT_CHOICE_LABEL = "Wybór"
 MAX_LABEL_WORDS = 6
 MAX_LABEL_BLOCK_CHARS = 120
 MAX_TITLE_PARTS = 3
@@ -29,6 +32,7 @@ _FILL_SPLIT = re.compile(r"[.…_]{3,}|\[POLE\]")
 _PAREN_LABEL = re.compile(r"^\s*[(/]\s*([^()/]{2,}?)\s*[)/]{1,2}")
 _NUMBERING = re.compile(r"^\s*(\d{1,2}(\.\d{1,2})*[.)]|[a-z][.)/])(\s+|$)")
 _FOOTNOTE = re.compile(r"(?<=\w)\d\)|\*+")
+_PARENS = re.compile(r"\([^()]*\)")
 _TITLE = re.compile(r"(?i)^(wniosek|zgłoszenie|deklaracja|oświadczenie)\b")
 _ORGAN = re.compile(
     r"\b(Wójt|Burmistrz|Prezydent|Starosta|Marszałek)(\s+[A-ZĄĆĘŁŃÓŚŹŻ][\w-]*){1,4}"
@@ -55,6 +59,7 @@ class _Field:
     label: str
     kind: str = "short_text"
     lines: int = 1
+    options: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -94,6 +99,9 @@ def rule_draft(doc: DocumentModel) -> FormDraft | None:
             state.section_title = _section_title(text) or state.section_title
             state.previous_text = ""
             continue
+        if block.kind == "checkbox_option":
+            i = _add_choice(blocks, i - 1, state)
+            continue
         if not has_fill(block):
             state.previous_text = text
             continue
@@ -119,7 +127,13 @@ def rule_draft(doc: DocumentModel) -> FormDraft | None:
             counter += 1
             kind = "long_text" if item.lines > 1 and item.kind == "short_text" else item.kind
             fields.append(
-                {"id": f"f{counter}", "label": item.label, "kind": kind, "required": True}
+                {
+                    "id": f"f{counter}",
+                    "label": item.label,
+                    "kind": kind,
+                    "required": True,
+                    "options": item.options,
+                }
             )
         page_sections.append({"title": section.title, "repeating": False, "fields": fields})
     return FormDraft.model_validate(
@@ -170,6 +184,23 @@ def _add_fields(block: Block, blocks: list[Block], i: int, state: _State) -> int
         last = state.sections[-1].fields[-1]
         last.label, last.kind = f"{last.label} ({unit})", "number"
     state.previous_text = ""
+    return i
+
+
+def _add_choice(blocks: list[Block], i: int, state: _State) -> int:
+    """Pole wyboru z kolejnych opcji; zwraca indeks pierwszego bloku po nich."""
+    options: list[str] = []
+    while i < len(blocks) and blocks[i].kind == "checkbox_option":
+        option = _NUMBERING.sub("", clean_text(blocks[i].text)).strip(" :;,.")
+        option = option[:1].upper() + option[1:]
+        if option and option not in options:
+            options.append(option)
+        i += 1
+    label = _clean_label(_PARENS.sub("", state.previous_text)) or DEFAULT_CHOICE_LABEL
+    state.previous_text = ""
+    if options:
+        kind = "single_choice" if len(options) >= 2 else "multi_choice"
+        state.add(_Field(label, kind, options=options))
     return i
 
 

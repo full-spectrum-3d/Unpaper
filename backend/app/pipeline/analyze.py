@@ -21,6 +21,7 @@ from app.core.config import Settings
 from app.models.document import DocumentModel
 from app.models.draft import FormDraft, LlmDraft, llm_schema
 from app.models.warning import ConversionWarning
+from app.pipeline.doc_hints import annotate_choices
 from app.pipeline.draft_merge import merge_drafts, split_prompt_text
 from app.pipeline.draft_normalize import normalize_draft
 from app.pipeline.draft_repair import repair_draft
@@ -139,6 +140,7 @@ async def analyze(
 ) -> AnalysisResult:
     """Szkic formularza z dokumentu. `deadline` to `clock()` końca budżetu żądania."""
     result = AnalysisResult(draft=None, model=settings.llm_model)
+    doc = annotate_choices(doc)
     try:
         result = await _analyze(doc, settings, client, result, deadline, clock)
         if result.fallback and result.fallback_reason != "empty_document":

@@ -25,6 +25,7 @@ from app.models.draft import FormDraft
 from app.models.warning import ConversionWarning
 from app.pipeline.analyze import analyze, prompt_messages
 from app.pipeline.build import build_form
+from app.pipeline.doc_hints import annotate_choices
 from app.pipeline.draft_normalize import normalize_draft
 from app.pipeline.llm_client import OllamaClient
 from app.pipeline.rule_draft import rule_draft
@@ -58,6 +59,7 @@ async def run_case(
     started = time.monotonic()
     row: dict[str, Any] = {"case": case["slug"], "model": model}
     if model == RULES:
+        doc = annotate_choices(doc)  # jak w `analyze` przed szkicem z reguł
         draft = rule_draft(doc)
         warnings: list[ConversionWarning] = []
         if draft is not None:
