@@ -42,7 +42,9 @@ export const Nadplata: Story = {
 
     await userEvent.click(c.getByRole('button', { name: 'Przerwij wypełnianie' }));
     await heading(3, 'Krok 1 z 3: Dane');
-    await waitFor(() => expect(c.getAllByRole('textbox', { name: 'Numer budynku' })[0]).toHaveValue(initial));
+    await waitFor(() =>
+      expect(c.getAllByRole('textbox', { name: 'Numer budynku' })[0]).toHaveValue(initial),
+    );
 
     for (let i = 0; i < 3; i++) await userEvent.click(c.getByRole('button', { name: 'Dalej' }));
     await heading(3, 'Podsumowanie');

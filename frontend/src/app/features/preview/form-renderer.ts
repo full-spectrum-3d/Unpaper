@@ -1,5 +1,7 @@
 import {
   Component,
+  DestroyRef,
+  InjectionToken,
   Injector,
   PendingTasks,
   afterNextRender,
@@ -31,6 +33,12 @@ function fieldsWithShow(def: FormDefinition): ReadonlySet<string> {
   return ids;
 }
 
+/** Seam so tests can slow down or break the evaluation. */
+export const VISIBILITY_EVALUATOR = new InjectionToken<typeof evaluateVisibility>(
+  'VISIBILITY_EVALUATOR',
+  { factory: () => evaluateVisibility },
+);
+
 @Component({
   selector: 'app-form-renderer',
   imports: [RendererGrid, Button],
@@ -43,6 +51,7 @@ export class FormRenderer {
 
   private readonly store = inject(AnswersStore);
   private readonly injector = inject(Injector);
+  private readonly evaluate = inject(VISIBILITY_EVALUATOR);
   private readonly pending = inject(PendingTasks);
   private readonly heading = viewChild<ElementRef<HTMLElement>>('stepHeading');
 
@@ -66,6 +75,8 @@ export class FormRenderer {
   private request = 0;
 
   constructor() {
+    // Invalidate in-flight evaluations so none writes after destroy.
+    inject(DestroyRef).onDestroy(() => this.request++);
     // Component effects run before this view's template, so fields never see a stale store.
     effect(() => {
       const def = this.definition();
@@ -85,8 +96,12 @@ export class FormRenderer {
         try {
           // A newer change superseded this request before it started: skip the work.
           if (id !== this.request) return;
-          const result = await evaluateVisibility(def, this.store.snapshot());
+          const result = await this.evaluate(def, this.store.snapshot());
           if (id === this.request) this.evaluated.set(result);
+        } catch (e) {
+          // Fail-open like visibility.ts: better to show every field than to hide them forever.
+          console.warn('Visibility evaluation failed', e);
+          if (id === this.request) this.evaluated.set(new Set());
         } finally {
           done();
         }
@@ -107,6 +122,6 @@ export class FormRenderer {
 
   protected abort() {
     this.store.reset();
-    this.go(0);
+    if (this.index() !== 0) this.go(0);
   }
 }
