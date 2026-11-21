@@ -1,0 +1,35 @@
+[
+  {
+    "name": "RODZAJE_PODATKOW_LOKALNYCH",
+    "title": "Rodzaje podatków lokalnych",
+    "description": "Podatki pobierane przez gminę. Np. wniosek o stwierdzenie nadpłaty, pole „Nazwa podatku”.",
+    "fieldTypes": ["SELECT", "RADIO"],
+    "itemStructure": ["code", "name", "techName", "validFrom", "validTo"],
+    "labelPatterns": ["^(nazwa|rodzaj) podatku$", "^podatek$"],
+    "items": [
+      {"code": "PN", "name": "Podatek od nieruchomości"},
+      {"code": "PR", "name": "Podatek rolny"},
+      {"code": "PL", "name": "Podatek leśny"},
+      {"code": "PST", "name": "Podatek od środków transportowych"},
+      {"code": "LZP", "name": "Łączne zobowiązanie pieniężne"}
+    ]
+  },
+  {
+    "name": "RODZAJE_DOKUMENTOW_TOZSAMOSCI",
+    "title": "Rodzaje dokumentów tożsamości",
+    "description": "Dokumenty potwierdzające tożsamość. Pola typu „Rodzaj dokumentu tożsamości”.",
+    "fieldTypes": ["SELECT", "RADIO"],
+    "itemStructure": ["code", "name", "techName"],
+    "labelPatterns": [
+      "^rodzaj dokumentu( tożsamości| potwierdzającego tożsamość)?$",
+      "^dokument tożsamości$"
+    ],
+    "items": [
+      {"code": "DO", "name": "Dowód osobisty"},
+      {"code": "PA", "name": "Paszport"},
+      {"code": "KP", "name": "Karta pobytu"},
+      {"code": "PDTC", "name": "Polski dokument tożsamości cudzoziemca"},
+      {"code": "DP", "name": "Dokument podróży"}
+    ]
+  }
+]
