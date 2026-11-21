@@ -72,6 +72,9 @@ export class HealthService extends BaseService {
    *
    * Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.
    *
+   * `degraded` wymienia brakujące tryby LLM oraz `converter`, gdy w obrazie nie ma
+   * LibreOffice (wtedy DOC/ODS dostają 415, reszta formatów działa).
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `readyApiV1HealthReadyGet()` instead.
    *
@@ -88,6 +91,9 @@ export class HealthService extends BaseService {
    * Ready.
    *
    * Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.
+   *
+   * `degraded` wymienia brakujące tryby LLM oraz `converter`, gdy w obrazie nie ma
+   * LibreOffice (wtedy DOC/ODS dostają 415, reszta formatów działa).
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `readyApiV1HealthReadyGet$Response()` instead.

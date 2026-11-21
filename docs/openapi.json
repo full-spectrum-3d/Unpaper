@@ -286,6 +286,7 @@
     },
     "/api/v1/dictionaries": {
       "get": {
+        "description": "Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami).",
         "operationId": "list_dictionaries_api_v1_dictionaries_get",
         "responses": {
           "200": {
@@ -502,7 +503,7 @@
     },
     "/api/v1/health/ready": {
       "get": {
-        "description": "Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.",
+        "description": "Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.\n\n`degraded` wymienia brakujące tryby LLM oraz `converter`, gdy w obrazie nie ma\nLibreOffice (wtedy DOC/ODS dostają 415, reszta formatów działa).",
         "operationId": "ready_api_v1_health_ready_get",
         "responses": {
           "200": {
