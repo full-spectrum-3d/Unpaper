@@ -75,6 +75,23 @@ async def test_convert_seeds_macro_lockdown(tmp_path: Path) -> None:
     assert "DisableMacrosExecution" in _MACRO_LOCKDOWN_XCU
 
 
+@pytest.mark.parametrize(
+    "setting",
+    [
+        '<item oor:path="/org.openoffice.Office.Writer/Content/Update">'
+        '<prop oor:name="Link" oor:op="fuse"><value>0</value></prop></item>',
+        '<item oor:path="/org.openoffice.Office.Calc/Content/Update">'
+        '<prop oor:name="Link" oor:op="fuse"><value>0</value></prop></item>',
+        '<item oor:path="/org.openoffice.Office.Common/Security/Scripting">'
+        '<prop oor:name="BlockUntrustedRefererLinks" oor:op="fuse">'
+        "<value>true</value></prop></item>",
+    ],
+)
+def test_profile_blocks_external_links(setting: str) -> None:
+    """Pola INCLUDETEXT, sekcje i arkusze połączone nie mogą wczytać lokalnych plików."""
+    assert setting in _MACRO_LOCKDOWN_XCU
+
+
 @pytest.mark.parametrize("behavior", ["no_output", "exit1"])
 async def test_convert_failure(tmp_path: Path, behavior: RunnerBehavior) -> None:
     with pytest.raises(ConversionError) as info:

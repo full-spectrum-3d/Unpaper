@@ -35,11 +35,17 @@ _FILTERS = {
     FileKind.XLSX: "xlsx:Calc MS Excel 2007 XML",
 }
 
-# LibreOffice headless nie uruchamia makr przy konwersji; to drugi bezpiecznik w profilu.
+# Profil zasiewany w każdym katalogu roboczym. LibreOffice headless nie uruchamia makr przy
+# konwersji; blokada makr to drugi bezpiecznik. Aktualizacja łączy wyłączona (0 = nigdy):
+# pola INCLUDETEXT/INCLUDEPICTURE, sekcje i arkusze połączone z dokumentu niezaufanego mogłyby
+# inaczej wczytać do wyniku lokalne pliki (np. /proc/self/environ).
 _MACRO_LOCKDOWN_XCU = """<?xml version="1.0" encoding="UTF-8"?>
 <oor:items xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="MacroSecurityLevel" oor:op="fuse"><value>3</value></prop></item>
 <item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="DisableMacrosExecution" oor:op="fuse"><value>true</value></prop></item>
+<item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="BlockUntrustedRefererLinks" oor:op="fuse"><value>true</value></prop></item>
+<item oor:path="/org.openoffice.Office.Writer/Content/Update"><prop oor:name="Link" oor:op="fuse"><value>0</value></prop></item>
+<item oor:path="/org.openoffice.Office.Calc/Content/Update"><prop oor:name="Link" oor:op="fuse"><value>0</value></prop></item>
 </oor:items>
 """  # noqa: E501
 
