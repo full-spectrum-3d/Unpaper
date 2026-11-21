@@ -19,7 +19,10 @@ FIELD_MARKER = "[POLE]"
 _FILL_RUN = re.compile(r"[.…_]{3,}")
 _WHITESPACE = re.compile(r"\s+")
 _BOILERPLATE = re.compile(r"(?i)klauzula informacyjna|\bRODO\b|ochron\w* danych osobowych")
-_BOILERPLATE_PARAGRAPH = re.compile(r"(?i)^\s*klauzula informacyjna")
+_BOILERPLATE_PARAGRAPH = re.compile(
+    r"(?i)^\s*(klauzula informacyjna"
+    r"|zgodnie z art\. ?13 ust\. ?1( i 2)? (rozporządzenia|RODO|ogólnego))"
+)
 
 
 class _DocModel(BaseModel):
@@ -85,13 +88,10 @@ class DocumentModel(_DocModel):
         values = [b.ocr_confidence for b in self.iter_blocks() if b.ocr_confidence is not None]
         return sum(values) / len(values) if values else None
 
-    def to_prompt_text(self, exclude_boilerplate: bool = True) -> str:
-        """Zwięzły tekst dokumentu z markerami `[NAGŁÓWEK]`, `[POLE]`, `[OPCJA]`, `[TABELA]`."""
-        lines: list[str] = []
+    def iter_content_blocks(self, exclude_boilerplate: bool = True) -> Iterator[tuple[int, Block]]:
+        """Bloki z numerem strony, z pominięciem klauzuli RODO (gdy `exclude_boilerplate`)."""
         skipping = False
         for page in self.pages:
-            page_lines: list[str] = []
-            table_rows: dict[int, list[tuple[int, str]]] | None = None
             for block in page.blocks:
                 if exclude_boilerplate:
                     if _starts_boilerplate(block):
@@ -101,6 +101,18 @@ class DocumentModel(_DocModel):
                         if not _ends_boilerplate(block):
                             continue
                         skipping = False
+                yield page.number, block
+
+    def to_prompt_text(self, exclude_boilerplate: bool = True) -> str:
+        """Zwięzły tekst dokumentu z markerami `[NAGŁÓWEK]`, `[POLE]`, `[OPCJA]`, `[TABELA]`."""
+        by_page: dict[int, list[Block]] = {}
+        for number, block in self.iter_content_blocks(exclude_boilerplate):
+            by_page.setdefault(number, []).append(block)
+        lines: list[str] = []
+        for number, blocks in by_page.items():
+            page_lines: list[str] = []
+            table_rows: dict[int, list[tuple[int, str]]] | None = None
+            for block in blocks:
                 if block.kind == "table_cell" and table_rows is not None and block.table:
                     table_rows.setdefault(block.table.row, []).append(
                         (block.table.col, _clean(block.text))
@@ -117,13 +129,13 @@ class DocumentModel(_DocModel):
                 page_lines.extend(_render_table(table_rows))
             page_lines = [line for line in page_lines if line.strip()]
             if page_lines:
-                lines.append(f"=== strona {page.number}")
+                lines.append(f"=== strona {number}")
                 lines.extend(page_lines)
         return "\n".join(lines)
 
 
 def _starts_boilerplate(block: Block) -> bool:
-    """Klauzulę zaczyna nagłówek o RODO albo akapit zaczynający się od „Klauzula informacyjna”."""
+    """Początek klauzuli RODO: nagłówek albo akapit „Klauzula…” lub „Zgodnie z art. 13…”."""
     if block.kind == "heading":
         return bool(_BOILERPLATE.search(block.text))
     return block.kind == "paragraph" and bool(_BOILERPLATE_PARAGRAPH.match(block.text))

@@ -138,3 +138,29 @@ def test_field_placeholder_ends_boilerplate_skip() -> None:
     doc = _doc([_p("KLAUZULA INFORMACYJNA"), _p("Administratorem…"), _p("Podpis ………")])
     text = doc.to_prompt_text()
     assert "Administratorem" not in text and "Podpis [POLE]" in text
+
+
+def test_rodo_clause_starting_with_article_13_skipped() -> None:
+    doc = DocumentModel.model_validate(
+        {
+            "source": {"method": "docx", "pages": 1},
+            "pages": [
+                {
+                    "number": 1,
+                    "blocks": [
+                        {"id": "b1", "kind": "paragraph", "text": "Cel: ………"},
+                        {
+                            "id": "b2",
+                            "kind": "paragraph",
+                            "text": "Zgodnie z art. 13 ust. 1 i 2 rozporządzenia Parlamentu "
+                            "Europejskiego i Rady (UE) 2016/679 informujemy, że:",
+                        },
+                        {"id": "b3", "kind": "paragraph", "text": "Administratorem jest Wójt."},
+                        {"id": "b4", "kind": "input_placeholder", "text": "……"},
+                        {"id": "b5", "kind": "label", "text": "(podpis)"},
+                    ],
+                }
+            ],
+        }
+    )
+    assert doc.to_prompt_text() == "=== strona 1\nCel: [POLE]\n[POLE]\n(podpis)"

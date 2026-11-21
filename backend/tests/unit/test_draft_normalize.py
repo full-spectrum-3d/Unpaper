@@ -75,27 +75,95 @@ def test_single_checkbox_kept() -> None:
     assert _field(out, "f4").kind == "multi_choice" and warnings == []
 
 
-def test_statement_with_fill_dots_removed() -> None:
-    stmt = "Budynek zlokalizowany w miejscowości……………….……………… przy ulicy1)……………….…………………"
-    out, warnings = normalize_draft(_make(lambda d: d.update(statements=[stmt])), DOC)
-    assert out.statements == [] and _codes(warnings) == ["W17_STATEMENT_REMOVED"]
-
-
-def test_statement_not_in_document_removed() -> None:
-    stmt = "Oświadczam, że dane są prawdziwe"
-    out, warnings = normalize_draft(_make(lambda d: d.update(statements=[stmt])), DOC)
-    assert out.statements == [] and _codes(warnings) == ["W17_STATEMENT_REMOVED"]
-
-
-def test_statement_from_document_kept() -> None:
-    stmt = "Oświadczam, że jestem właścicielem działki."
-    doc = _doc_with(
-        "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb. Oświadczam, że "
-        "jestem właścicielem"
-        " działki."
+def _doc_blocks(*blocks: tuple[str, str]) -> DocumentModel:
+    return DocumentModel.model_validate(
+        {
+            "source": {"method": "docx", "pages": 1},
+            "pages": [
+                {
+                    "number": 1,
+                    "blocks": [
+                        {"id": f"b{n}", "kind": kind, "text": text}
+                        for n, (kind, text) in enumerate(blocks, 1)
+                    ],
+                }
+            ],
+        }
     )
-    out, warnings = normalize_draft(_make(lambda d: d.update(statements=[stmt])), doc)
-    assert out.statements == [stmt] and warnings == []
+
+
+STATEMENT_DOC = _doc_blocks(
+    ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+    ("paragraph", "Oświadczam, że jestem właścicielem działki."),
+)
+
+
+def test_statements_come_from_document_not_model() -> None:
+    stmt = "Oświadczam, że dane są prawdziwe"
+    out, warnings = normalize_draft(_make(lambda d: d.update(statements=[stmt])), STATEMENT_DOC)
+    assert out.statements == ["Oświadczam, że jestem właścicielem działki."] and warnings == []
+
+
+def test_statement_info_field_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {"id": "f5", "label": "Jestem właścicielem działki", "kind": "info", "required": True}
+        )
+
+    out, warnings = normalize_draft(_make(mutate), STATEMENT_DOC)
+    assert _codes(warnings) == ["W17_STATEMENT_REMOVED"]
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4"]
+
+
+def test_applicant_fields_removed_with_their_conditions() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).extend(
+            [
+                {
+                    "id": "f5",
+                    "label": "Imię i nazwisko wnioskodawcy",
+                    "kind": "single_choice",
+                    "required": True,
+                    "options": ["A", "B"],
+                },
+                {"id": "f6", "label": "Nr telefonu", "kind": "short_text", "required": True},
+                {"id": "f7", "label": "Miejscowość i data", "kind": "short_text", "required": True},
+            ]
+        )
+        _fields(d)[0]["visible_when"] = [{"field_id": "f5", "op": "equals", "value": "A"}]
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert _codes(warnings) == ["W20_APPLICANT_FIELD_REMOVED"] * 3 + ["W21_CONDITION_REMOVED"]
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4"]
+    assert out.subject_pages[0].sections[0].fields[0].visible_when == []
+
+
+def test_section_of_only_applicant_fields_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        d["subject_pages"].insert(
+            0,
+            {
+                "title": "Informacje o wniosku",
+                "sections": [
+                    {
+                        "title": "Podstawowe dane",
+                        "repeating": False,
+                        "fields": [
+                            {
+                                "id": "f8",
+                                "label": "Adres zamieszkania",
+                                "kind": "short_text",
+                                "required": True,
+                            },
+                        ],
+                    }
+                ],
+            },
+        )
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert _codes(warnings) == ["W20_APPLICANT_FIELD_REMOVED"] + ["W18_EMPTY_CONTAINER_REMOVED"] * 2
+    assert [p.title for p in out.subject_pages] == ["Informacje o budynku"]
 
 
 def _title(value: str) -> tuple[str, list[str]]:
