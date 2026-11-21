@@ -59,7 +59,7 @@ const TERYT: Dictionary = {
     node(
       'małopolskie',
       city('Kraków'),
-      place('wielicki', 'Wieliczka', 'Wieliczka', 'Mierzączka'),
+      place('wielicki', 'Wieliczka', 'Wieliczka', 'Kokotów'),
       place('tatrzański', 'Zakopane', 'Zakopane'),
     ),
     node(
