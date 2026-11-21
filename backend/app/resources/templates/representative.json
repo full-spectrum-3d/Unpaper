@@ -1,0 +1,19 @@
+{
+  "key": "potwierdzenie_ze_jestes_reprezentantem",
+  "type": "SECTION",
+  "title": "Potwierdzenie, że jesteś reprezentantem",
+  "techName": "potwierdzenie_ze_jestes_reprezentantem",
+  "descriptionHtml": "<p>Dołącz aktualny odpis danych z Krajowego Rejestru Sądowego lub innego rejestru. Odpis powinien potwierdzać, że jesteś reprezentantem podmiotu lub instytucji.</p>",
+  "fields": [
+    {
+      "key": "plik_z_odpisem_danych",
+      "type": "FILE_UPLOADER",
+      "title": "Plik z odpisem danych",
+      "techName": "plik_z_odpisem_danych",
+      "validation": [
+        "REQUIRED"
+      ],
+      "descriptionHtml": "<p>Dopuszczalny format pliku: .jpg, .pdf, .png, .jpeg. Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 3.</p>"
+    }
+  ]
+}

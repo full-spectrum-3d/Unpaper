@@ -1,0 +1,25 @@
+{
+  "key": "oplata_skarbowa_pelnomocnictwo_2",
+  "type": "SECTION",
+  "title": "Opłata skarbowa za pełnomocnictwo",
+  "techName": "oplata_skarbowa_pelnomocnictwo_2",
+  "fields": [
+    {
+      "key": "oplata_info",
+      "type": "TEXT_BLOCK",
+      "title": "",
+      "techName": "oplata_info",
+      "descriptionHtml": "<p>Opłata skarbowa za pełnomocnictwo wynosi <strong>17 zł</strong>.</p><p>Przelej ją na konto urzędu miasta lub gminy właściwego dla adresu siedziby podmiotu, który udzielił pełnomocnictwa. Jeśli adres nie jest w Polsce, opłatę przelej na konto <a href=\"https://warszawa19115.pl/-/oplata-skarbowa\" rel=\"noopener noreferrer\" target=\"_blank\" aria-label=\"Link otwiera się w nowej karcie\" title=\"Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika\">Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika</a></p><p>W tytule przelewu wpisz „{form_title} – opłata skarbowa za pełnomocnictwo”.</p><p>Więcej informacji o opłacie skarbowej za pełnomocnictwo znajdziesz na stronie <a href=\"https://www.biznes.gov.pl/pl/portal/0089#9\" rel=\"noopener noreferrer\" target=\"_blank\" aria-label=\"Link otwiera się w nowej karcie\" title=\"biznes.gov.pl\">biznes.gov.pl</a></p>"
+    },
+    {
+      "key": "plik_z_potwierdzeniem_przelewu_2",
+      "type": "FILE_UPLOADER",
+      "title": "Plik z potwierdzeniem przelewu",
+      "techName": "plik_z_potwierdzeniem_przelewu_2",
+      "validation": [
+        "REQUIRED"
+      ],
+      "descriptionHtml": "<p>Dopuszczalny format pliku: .jpg, .pdf, .png, .jpeg. Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1.</p>"
+    }
+  ]
+}

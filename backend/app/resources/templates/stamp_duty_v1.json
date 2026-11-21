@@ -1,0 +1,51 @@
+{
+  "key": "oplata_skarbowa_pelnomocnictwo_1",
+  "type": "SECTION",
+  "title": "Opłata skarbowa",
+  "techName": "oplata_skarbowa_pelnomocnictwo_1",
+  "descriptionHtml": "<p>Nie musisz płacić za złożenie pełnomocnictwa wystawionego przez najbliższą rodzinę: małżonka, dzieci, rodziców, dziadków, wnuków, rodzeństwo. Więcej informacji na stronie <strong><a href=\"https://www.biznes.gov.pl/pl/portal/0089#8\" rel=\"noopener noreferrer\" target=\"_blank\" aria-label=\"Link otwiera się w nowej karcie\" title=\"biznes.gov.pl\">biznes.gov.pl</a></strong></p>",
+  "fields": [
+    {
+      "key": "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+      "type": "RADIO",
+      "title": "Czy złożenie pełnomocnictwa wymaga opłaty skarbowej?",
+      "techName": "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+      "options": [
+        "Tak",
+        "Nie"
+      ],
+      "validation": [
+        "REQUIRED"
+      ]
+    },
+    {
+      "key": "oplata_info_1",
+      "type": "TEXT_BLOCK",
+      "title": "",
+      "techName": "oplata_info_1",
+      "descriptionHtml": "<p>Opłata skarbowa za pełnomocnictwo wynosi <strong>17 zł</strong>.</p><p>Przelej ją na konto urzędu miasta lub gminy właściwego dla adresu zamieszkania osoby, która udzieliła pełnomocnictwa. Jeśli adres nie jest w Polsce, opłatę przelej na konto <a href=\"https://warszawa19115.pl/-/oplata-skarbowa\" rel=\"noopener noreferrer\" target=\"_blank\" aria-label=\"Link otwiera się w nowej karcie\" title=\"Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika\">Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika</a></p><p>W tytule przelewu wpisz „{form_title} – opłata skarbowa za pełnomocnictwo”.</p>",
+      "showWhen": {
+        "eq": [
+          "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+          "Tak"
+        ]
+      }
+    },
+    {
+      "key": "plik_z_potwierdzeniem_przelewu",
+      "type": "FILE_UPLOADER",
+      "title": "Plik z potwierdzeniem przelewu",
+      "techName": "plik_z_potwierdzeniem_przelewu",
+      "validation": [
+        "REQUIRED"
+      ],
+      "descriptionHtml": "<p>Dopuszczalny format pliku: .jpg, .pdf, .png, .jpeg. Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1.</p>",
+      "showWhen": {
+        "eq": [
+          "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+          "Tak"
+        ]
+      }
+    }
+  ]
+}

@@ -56,12 +56,15 @@ plugins = ["pydantic.mypy"]
 # Biblioteki bez typów (brak py.typed i stubów).
 module = [
     "olefile",
+    "jsonschema",
     "defusedxml",
     "defusedxml.*",
     "pypdfium2",
     "pypdfium2.*",
     "msoffcrypto",
     "msoffcrypto.*",
+    "jsonata",
+    "jsonata.*",
 ]
 ignore_missing_imports = true
 
@@ -71,3 +74,5 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 markers = ["llm: wymaga działającej Ollamy"]
 addopts = "-m 'not llm'"
+# Domyślne norecursedirs pomija katalogi `build` (tests/unit/build).
+norecursedirs = [".*", "dist", "CVS", "_darcs", "{arch}", "*.egg", "venv", "node_modules"]

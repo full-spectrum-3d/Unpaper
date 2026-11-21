@@ -1,0 +1,15 @@
+{
+  "key": "podglad_uzupelnionego_wniosku",
+  "type": "SECTION",
+  "title": "Podgląd uzupełnionego wniosku",
+  "techName": "podglad_uzupelnionego_wniosku",
+  "fields": [
+    {
+      "key": "podglad_1",
+      "type": "TEXT_BLOCK",
+      "title": "",
+      "techName": "podglad_1",
+      "descriptionHtml": "<p>{text}</p>"
+    }
+  ]
+}

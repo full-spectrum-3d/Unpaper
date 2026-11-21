@@ -94,6 +94,7 @@ class Settings(BaseSettings):
     initial_data_identity_source: Literal["MLPZ", "PESEL"] = "MLPZ"
     finish_page_style: Literal["sample", "info_section"] = "sample"
     max_sections_per_page: PositiveInt = 8
+    rodo_clause_url: str | None = None
 
     @field_validator("cors_origins", mode="before")
     @classmethod
