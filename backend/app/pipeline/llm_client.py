@@ -129,6 +129,17 @@ class OllamaClient:
             "num_ctx": self._settings.llm_num_ctx,
         }
 
+    async def loaded_models(self) -> set[str]:
+        """Modele, które Ollama trzyma teraz w pamięci (`/api/ps`)."""
+        data = await self._request("GET", "/api/ps", TAGS_TIMEOUT_S)
+        models = data.get("models", [])
+        return {m["name"] for m in models if isinstance(m, dict) and "name" in m}
+
+    async def unload(self, model: str) -> None:
+        """Zwalnia model z pamięci (`keep_alive: 0`)."""
+        body = {"model": model, "keep_alive": 0}
+        await self._request("POST", "/api/generate", self._settings.llm_timeout_s, json=body)
+
     async def aclose(self) -> None:
         await self._http.aclose()
 

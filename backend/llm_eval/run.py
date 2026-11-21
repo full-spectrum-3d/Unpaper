@@ -22,7 +22,7 @@ from typing import Any
 from app.core.config import Settings
 from app.models.document import DocumentModel
 from app.models.warning import ConversionWarning
-from app.pipeline.analyze import analyze
+from app.pipeline.analyze import analyze, prompt_messages
 from app.pipeline.build import build_form
 from app.pipeline.draft_normalize import normalize_draft
 from app.pipeline.llm_client import OllamaClient
@@ -156,7 +156,12 @@ async def main() -> None:
     try:
         for model in args.model:
             if client is not None and model != RULES:
-                await client.warm_up(model)
+                # Jak w produkcji: jeden model w RAM, rozgrzany razem z prefiksem promptu.
+                for loaded in await client.loaded_models() - {model}:
+                    await client.unload(loaded)
+                started = time.monotonic()
+                await client.warm_up(model, prompt_messages(""))
+                print(f"{model}: rozgrzanie {time.monotonic() - started:.0f} s", flush=True)
             for case in cases:
                 row = await run_case(case, model, client, settings, args.budget)
                 rows.append(row)

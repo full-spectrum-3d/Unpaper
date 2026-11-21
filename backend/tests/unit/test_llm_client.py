@@ -140,3 +140,16 @@ async def test_warm_up_prefills_system_prompt() -> None:
     assert seen[0]["messages"] == MESSAGES
     assert seen[0]["options"]["num_predict"] == 1
     assert seen[0]["options"]["num_ctx"] == 8192
+
+
+async def test_loaded_models_and_unload() -> None:
+    seen: list[tuple[str, Any]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append((request.url.path, json.loads(request.content) if request.content else None))
+        return httpx.Response(200, json={"models": [{"name": "qwen3:8b"}]})
+
+    client = _client(handler)
+    assert await client.loaded_models() == {"qwen3:8b"}
+    await client.unload("qwen3:8b")
+    assert seen[1] == ("/api/generate", {"model": "qwen3:8b", "keep_alive": 0})
