@@ -35,7 +35,9 @@
       "SELECT"
     ],
     "multiLevelTree": false,
-    "semantics": []
+    "semantics": [
+      "VOIVODESHIP"
+    ]
   },
   {
     "name": "Powiat",
@@ -44,7 +46,9 @@
       "SELECT"
     ],
     "multiLevelTree": false,
-    "semantics": []
+    "semantics": [
+      "COUNTY"
+    ]
   },
   {
     "name": "Gmina",
@@ -53,7 +57,9 @@
       "SELECT"
     ],
     "multiLevelTree": false,
-    "semantics": []
+    "semantics": [
+      "COMMUNE"
+    ]
   },
   {
     "name": "Miejscowość",

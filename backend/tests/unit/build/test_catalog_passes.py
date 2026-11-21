@@ -36,6 +36,23 @@ def test_phone_prefix_semantic_gets_dictionary() -> None:
     assert node.type == FieldType.SELECT
 
 
+@pytest.mark.parametrize(
+    ("semantic", "name"),
+    [
+        (Semantic.VOIVODESHIP, "Województwo"),
+        (Semantic.COUNTY, "Powiat"),
+        (Semantic.COMMUNE, "Gmina"),
+    ],
+)
+def test_address_unit_semantic_gets_dictionary(semantic: Semantic, name: str) -> None:
+    node = _node(semantic=semantic, validation=[Validator.REQUIRED])
+    apply_dictionaries(_pages(node))
+    assert node.dictionary_name == name
+    assert node.type == FieldType.SELECT
+    assert node.validation == [Validator.REQUIRED]
+    assert node.search_enabled is True
+
+
 def test_no_semantic_no_dictionary() -> None:
     node = _node("wojewodztwo")
     apply_dictionaries(_pages(node))

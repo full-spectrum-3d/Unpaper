@@ -248,7 +248,11 @@ def test_contact_and_attachments() -> None:
     sections = contact_page_sections(make_draft(), BuildOptions(), ["Kopia decyzji", "Umowa"])
     assert [s.tech_name for s in sections][:2] == ["dane_do_kontaktu", "zalaczniki"]
     contact = sections[0]
-    assert [f.tech_name for f in contact.fields] == ["numer_telefonu", "adres_e_mail"]
+    assert [f.tech_name for f in contact.fields] == [
+        "numer_kierunkowy",
+        "numer_telefonu",
+        "adres_e_mail",
+    ]
     assert all(f.validation in ([], [Validator.EMAIL]) for f in contact.fields)
     files = sections[1].fields
     assert [f.tech_name for f in files] == ["kopia_decyzji", "umowa"]
