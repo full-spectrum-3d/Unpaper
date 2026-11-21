@@ -10,7 +10,6 @@ dependencies = [
     "pydantic>=2",
     "pydantic-settings",
     "python-multipart",
-    "pyjwt",
     "argon2-cffi",
     "python-magic",
     "pdfplumber",
@@ -23,6 +22,7 @@ dependencies = [
     "httpx",
     "jsonschema",
     "jsonata-python",
+    "pyjwt[crypto]>=2.15.1",
 ]
 
 [dependency-groups]
