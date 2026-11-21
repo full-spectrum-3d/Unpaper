@@ -1287,15 +1287,6 @@
     "optional": false
    },
    {
-    "label": "Adres zarządcy",
-    "kind": [
-     "short_text",
-     "long_text"
-    ],
-    "aliases": [],
-    "optional": true
-   },
-   {
     "label": "Inny tytuł prawny",
     "kind": [
      "short_text"
