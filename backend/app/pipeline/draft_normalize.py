@@ -270,7 +270,7 @@ def _normalize_labels(data: dict[str, Any], warnings: list[ConversionWarning]) -
         if fixed and fixed != field["label"]:
             warnings.append(
                 ConversionWarning(
-                    code="W28_LABEL_NORMALIZED",
+                    code="W32_LABEL_NORMALIZED",
                     message=f"Etykietę „{field['label']}” poprawiono na „{fixed}”.",
                     path=path,
                 )

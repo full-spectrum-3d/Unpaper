@@ -43,4 +43,4 @@ def test_labels_are_normalized_with_warning() -> None:
 
     out, warnings = normalize_draft(_make(mutate), DOC)
     assert _field(out, "f1").label == "Miejscowość"
-    assert "W28_LABEL_NORMALIZED" in _codes(warnings)
+    assert "W32_LABEL_NORMALIZED" in _codes(warnings)
