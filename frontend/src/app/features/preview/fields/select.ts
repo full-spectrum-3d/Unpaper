@@ -4,9 +4,9 @@ import { FieldBase } from './field-base';
 @Component({
   selector: 'app-select-field',
   template: `
-    <label [for]="id()" class="block text-label font-semibold">{{ label() }}</label>
-    @if (hasText(field().description)) {
-      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
+    <label [for]="id()" [class]="labelClass()">{{ label() }}</label>
+    @if (hasDescription()) {
+      <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
     }
     <select
       class="block w-full bg-surface text-fg text-body border border-border-input rounded-field px-field-x py-field-y focus-ring"
@@ -25,5 +25,4 @@ import { FieldBase } from './field-base';
   `,
   host: { class: 'block' },
 })
-export class SelectField extends FieldBase {
-}
+export class SelectField extends FieldBase {}

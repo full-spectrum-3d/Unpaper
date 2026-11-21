@@ -5,10 +5,10 @@ import { FieldBase } from './field-base';
   selector: 'app-radio-field',
   template: `
     <fieldset class="m-0 p-0 border-0" [attr.aria-describedby]="describedBy()">
-      <legend class="block text-label font-semibold">{{ label() }}</legend>
-      @if (hasText(field().description)) {
-      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
-    }
+      <legend [class]="labelClass()">{{ label() }}</legend>
+      @if (hasDescription()) {
+        <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
+      }
       @for (o of field().options ?? []; track o.id) {
         <label class="flex items-center gap-2 py-1">
           <input

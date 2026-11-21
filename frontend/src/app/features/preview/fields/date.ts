@@ -4,9 +4,9 @@ import { FieldBase } from './field-base';
 @Component({
   selector: 'app-date-field',
   template: `
-    <label [for]="id()" class="block text-label font-semibold">{{ label() }}</label>
-    @if (hasText(field().description)) {
-      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
+    <label [for]="id()" [class]="labelClass()">{{ label() }}</label>
+    @if (hasDescription()) {
+      <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
     }
     <input
       type="date"
@@ -19,5 +19,4 @@ import { FieldBase } from './field-base';
   `,
   host: { class: 'block' },
 })
-export class DateField extends FieldBase {
-}
+export class DateField extends FieldBase {}

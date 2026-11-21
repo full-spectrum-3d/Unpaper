@@ -7,10 +7,10 @@ import { RendererGrid } from '../renderer-grid';
   imports: [forwardRef(() => RendererGrid)],
   template: `
     <section class="bg-surface rounded-card p-section">
-      <h4 class="m-0 mb-2 text-title font-bold">{{ label() }}</h4>
-      @if (hasText(field().description)) {
-      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
-    }
+      <h4 class="m-0 mb-2 text-section-title font-bold">{{ label() }}</h4>
+      @if (hasDescription()) {
+        <div class="text-fg-muted mb-2" [id]="descId()" [innerHTML]="field().description"></div>
+      }
       <app-renderer-grid [questions]="field().repeatingSectionGrid ?? []" [hidden]="hidden()" />
     </section>
   `,

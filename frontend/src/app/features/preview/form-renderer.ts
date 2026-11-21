@@ -33,6 +33,10 @@ function fieldsWithShow(def: FormDefinition): ReadonlySet<string> {
   return ids;
 }
 
+/** Identical results must not re-render the grid. */
+const sameSet = (a: ReadonlySet<string> | null, b: ReadonlySet<string> | null) =>
+  a === b || (!!a && !!b && a.size === b.size && [...a].every((x) => b.has(x)));
+
 /** Seam so tests can slow down or break the evaluation. */
 export const VISIBILITY_EVALUATOR = new InjectionToken<typeof evaluateVisibility>(
   'VISIBILITY_EVALUATOR',
@@ -68,7 +72,7 @@ export class FormRenderer {
   });
 
   /** null = not evaluated yet. */
-  private readonly evaluated = signal<ReadonlySet<string> | null>(null);
+  private readonly evaluated = signal<ReadonlySet<string> | null>(null, { equal: sameSet });
   private readonly initiallyHidden = computed(() => fieldsWithShow(this.definition()));
   protected readonly hidden = computed(() => this.evaluated() ?? this.initiallyHidden());
 
@@ -113,8 +117,9 @@ export class FormRenderer {
     this.index.set(index);
     afterNextRender(
       () => {
-        this.heading()?.nativeElement.focus();
-        window.scrollTo({ top: 0 });
+        const heading = this.heading()?.nativeElement;
+        heading?.focus();
+        heading?.scrollIntoView({ block: 'start' });
       },
       { injector: this.injector },
     );

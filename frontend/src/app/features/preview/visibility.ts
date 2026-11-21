@@ -2,15 +2,24 @@ import jsonata from 'jsonata';
 import { FormDefinition, FormField, Question } from './form-definition';
 import { withUserAnswers } from './with-user-answers';
 
-const compiled = new Map<string, jsonata.Expression>();
+/** Compiled queries; a failed compile is cached as null so a broken query warns once. */
+const compiled = new Map<string, jsonata.Expression | null>();
 
 const truthy = (r: unknown): boolean => r === true || (Array.isArray(r) && r.includes(true));
 
 /** Fail-open: a query that does not compile or evaluate counts as "no opinion" (null), with a warning. */
 async function run(field: FormField, query: string, input: unknown): Promise<boolean | null> {
   try {
-    let expr = compiled.get(query);
-    if (!expr) compiled.set(query, (expr = jsonata(query)));
+    if (!compiled.has(query)) {
+      try {
+        compiled.set(query, jsonata(query));
+      } catch (e) {
+        compiled.set(query, null);
+        throw e;
+      }
+    }
+    const expr = compiled.get(query);
+    if (!expr) return null;
     return truthy(await expr.evaluate(input));
   } catch (e) {
     console.warn(`Visibility query failed for field "${field.techName}"`, e);

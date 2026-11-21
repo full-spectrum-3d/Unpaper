@@ -4,23 +4,25 @@ import { FieldBase } from './field-base';
 @Component({
   selector: 'app-file-uploader-field',
   template: `
-    <span [id]="id() + '-label'" class="block text-label font-semibold">{{ label() }}</span>
-    @if (hasText(field().description)) {
-      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
+    @if (hasDescription()) {
+      <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
     }
+    <span [id]="id() + '-label'" [class]="labelClass()">{{ label() }}</span>
     <div
-      class="border border-dashed border-border-input rounded-card bg-surface p-section"
+      class="border border-border-input rounded-field bg-surface p-section"
       (dragover)="$event.preventDefault()"
       (drop)="$event.preventDefault(); pick($any($event).dataTransfer.files)"
     >
-      <button
-        type="button"
-        class="border border-primary text-primary rounded-field px-field-x py-field-y font-semibold focus-ring"
-        [attr.aria-describedby]="id() + '-label'"
-        (click)="input.click()"
-      >
-        Dodaj lub przeciągnij plik
-      </button>
+      <div class="flex justify-center">
+        <button
+          type="button"
+          class="border border-primary text-primary rounded-field px-field-x py-field-y font-semibold focus-ring"
+          [attr.aria-describedby]="id() + '-label'"
+          (click)="input.click()"
+        >
+          Dodaj lub przeciągnij plik
+        </button>
+      </div>
       <input
         #input
         type="file"
@@ -36,15 +38,24 @@ import { FieldBase } from './field-base';
           }
         </ul>
       }
+      <!-- shortcut: constraints are fixed until the JSON format carries them -->
+      <table class="mt-4 w-full text-left text-fg-secondary">
+        <tbody class="divide-y divide-border">
+          <tr>
+            <th scope="row" class="py-1 pr-4 font-normal">Dopuszczalny format pliku:</th>
+            <td class="py-1 font-bold">.jpg, .pdf, .png, .jpeg, .doc, .odt, .docx, .ods</td>
+          </tr>
+          <tr>
+            <th scope="row" class="py-1 pr-4 font-normal">Maksymalny rozmiar pliku:</th>
+            <td class="py-1 font-bold">10 MB</td>
+          </tr>
+          <tr>
+            <th scope="row" class="py-1 pr-4 font-normal">Maksymalna liczba plików:</th>
+            <td class="py-1 font-bold">1</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <!-- shortcut: constraints are fixed until the JSON format carries them -->
-    <table class="mt-2 text-fg-muted text-left">
-      <tbody>
-        <tr><th scope="row" class="pr-4 font-semibold">Dopuszczalny format pliku</th><td>.jpg, .pdf, .png, .jpeg, .doc, .odt, .docx, .ods</td></tr>
-        <tr><th scope="row" class="pr-4 font-semibold">Maksymalny rozmiar pliku</th><td>10 MB</td></tr>
-        <tr><th scope="row" class="pr-4 font-semibold">Maksymalna liczba plików</th><td>1</td></tr>
-      </tbody>
-    </table>
   `,
   host: { class: 'block' },
 })

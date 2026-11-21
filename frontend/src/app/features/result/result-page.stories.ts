@@ -79,7 +79,7 @@ export const Done: Story = {
     await userEvent.click(previewBtn);
     expect(previewBtn).toHaveAttribute('aria-pressed', 'true');
     expect(c.getByRole('heading', { level: 2, name: nadplata.title })).toBeVisible();
-    expect(pre).not.toBeVisible();
+    expect(c.queryByLabelText('Wynik konwersji w formacie JSON')).toBeNull();
   },
 };
 

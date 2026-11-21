@@ -3,7 +3,9 @@
 <!-- Re-creates the field subtree when the definition changes, so no field keeps a signal detached by store.init. -->
 @for (d of [definition()]; track d) {
   @if (page(); as p) {
-    <h3 #stepHeading tabindex="-1" class="m-0 mb-4 text-title font-semibold">{{ stepTitle() }}</h3>
+    <h3 #stepHeading tabindex="-1" class="m-0 mb-2 text-label text-fg-muted font-normal">
+      {{ stepTitle() }}
+    </h3>
     <app-renderer-grid [questions]="p.questions" [hidden]="hidden()" />
   }
 }
@@ -11,7 +13,7 @@
 <div class="mt-8 flex items-center justify-between gap-4">
   <button
     type="button"
-    class="focus-ring bg-transparent border-0 p-0 text-primary underline cursor-pointer"
+    class="focus-ring bg-transparent border-0 p-0 text-primary font-bold no-underline hover:text-primary-hover cursor-pointer"
     (click)="abort()"
   >
     Przerwij wypełnianie
@@ -20,7 +22,7 @@
     @if (index() > 0) {
       <button appButton variant="secondary" (click)="go(index() - 1)">Wstecz</button>
     }
-    @if (!isFinish()) {
+    @if (index() < pages().length - 1) {
       <button appButton variant="primary" (click)="go(index() + 1)">Dalej</button>
     }
   </div>

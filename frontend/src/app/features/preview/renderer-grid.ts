@@ -3,12 +3,22 @@ import { FieldHost } from './field-host';
 import { Question } from './form-definition';
 import { sortQuestions } from './page-order';
 
+/** Grid row per question, numbered from the visible questions only so hidden rows leave no gap. */
+export function gridRows(visible: Question[]): Map<Question, number> {
+  const ys = [...new Set(visible.map((q) => q.y))].sort((a, b) => a - b);
+  return new Map(visible.map((q) => [q, ys.indexOf(q.y) + 1]));
+}
+
 @Component({
   selector: 'app-renderer-grid',
   imports: [forwardRef(() => FieldHost)],
   template: `
     @for (q of visible(); track q.field.id) {
-      <div [style.grid-area]="area(q)" class="max-sm:[grid-area:auto]!">
+      <div
+        [style.grid-row]="rows().get(q) + ' / span 1'"
+        [style.grid-column]="q.x + 1 + ' / span ' + q.cols"
+        class="max-sm:[grid-area:auto]!"
+      >
         <app-field-host [field]="q.field" [hidden]="hidden()" />
       </div>
     }
@@ -21,5 +31,5 @@ export class RendererGrid {
   protected readonly visible = computed(() =>
     sortQuestions(this.questions()).filter((q) => !this.hidden().has(q.field.id)),
   );
-  protected area = (q: Question) => `${q.y + 1} / ${q.x + 1} / span ${q.rows} / span ${q.cols}`;
+  protected readonly rows = computed(() => gridRows(this.visible()));
 }

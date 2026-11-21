@@ -23,7 +23,13 @@ const f = (id: string, type: string, extra: Partial<FormField> = {}): FormField 
   title: `Pole ${id}`,
   ...extra,
 });
-const q = (field: FormField, y: number, cols = 3, x = 0): Question => ({ x, y, rows: 1, cols, field });
+const q = (field: FormField, y: number, cols = 3, x = 0): Question => ({
+  x,
+  y,
+  rows: 1,
+  cols,
+  field,
+});
 const opts = ['Swoim', 'Innej osoby', 'Firmy'].map((name, i) => ({ id: `o${i}`, name }));
 
 const meta: Meta<FieldsHarness> = {
@@ -35,10 +41,18 @@ export default meta;
 type Story = StoryObj<FieldsHarness>;
 
 const allTypes: Question[] = [
-  f('urzad', 'TEXT_FIELD', { title: 'Urząd', readOnly: true, defaultValue: 'Urząd Gminy Ulan-Majorat' }),
+  f('urzad', 'TEXT_FIELD', {
+    title: 'Urząd',
+    readOnly: true,
+    defaultValue: 'Urząd Gminy Ulan-Majorat',
+  }),
   f('kwota', 'NUMBER', { title: 'Kwota' }),
   f('opis', 'TEXTAREA', { title: 'Opis', description: '<p>Opisz sprawę</p>' }),
-  f('radio', 'RADIO', { title: 'W czyim imieniu', description: '<p>Wybierz jedno</p>', options: opts }),
+  f('radio', 'RADIO', {
+    title: 'W czyim imieniu',
+    description: '<p>Wybierz jedno</p>',
+    options: opts,
+  }),
   f('sel', 'SELECT', { title: 'Wybór', options: opts }),
   f('dict', 'SELECT', { title: 'Kraj', dictionaryName: 'Kraje' }),
   f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
@@ -47,7 +61,9 @@ const allTypes: Question[] = [
   f('blok', 'TEXT_BLOCK', { description: '<p>Ważne</p><script>x</script>' }),
   f('zgody', 'CONSENT_SECTION', {
     title: 'Zgody',
-    consentSectionConfig: { consents: [{ description: '<b>Zgoda</b> na kontakt', required: true }] },
+    consentSectionConfig: {
+      consents: [{ description: '<b>Zgoda</b> na kontakt', required: true }],
+    },
   }),
   f('foo', 'FOO', { title: 'Dziwne' }),
 ].map((field, i) => q(field, i));
@@ -67,13 +83,17 @@ export const AllTypes: Story = {
 
     const radios = within(c.getByRole('group', { name: 'W czyim imieniu' })).getAllByRole('radio');
     expect(radios).toHaveLength(3);
-    expect(c.getByRole('group', { name: 'W czyim imieniu' })).toHaveAccessibleDescription('Wybierz jedno');
+    expect(c.getByRole('group', { name: 'W czyim imieniu' })).toHaveAccessibleDescription(
+      'Wybierz jedno',
+    );
     await userEvent.click(radios[1]);
     expect(radios[1]).toBeChecked();
 
     const sel = within(c.getByLabelText('Wybór'));
     expect(sel.getAllByRole('option')[0]).toHaveTextContent('Wybierz');
-    expect(within(c.getByLabelText('Kraj')).getByRole('option', { name: 'Słownik: Kraje' })).toBeDisabled();
+    expect(
+      within(c.getByLabelText('Kraj')).getByRole('option', { name: 'Słownik: Kraje' }),
+    ).toBeDisabled();
 
     const chk = c.getByRole('checkbox', { name: 'Zgoda ogólna' });
     await userEvent.click(chk);
@@ -100,21 +120,32 @@ export const AllTypes: Story = {
 export const SectionNested: Story = {
   args: {
     questions: [
-      q(f('s1', 'SECTION', { title: 'Dane', repeatingSectionGrid: [q(f('n1', 'TEXT_FIELD', { title: 'Imię' }), 0)] }), 0),
+      q(
+        f('s1', 'SECTION', {
+          title: 'Dane',
+          repeatingSectionGrid: [q(f('n1', 'TEXT_FIELD', { title: 'Imię' }), 0)],
+        }),
+        0,
+      ),
     ],
   },
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     expect(c.getByRole('heading', { level: 4, name: 'Dane' })).toBeVisible();
     expect(c.getByLabelText('Imię')).toBeVisible();
-    const cell = c.getByRole('heading', { level: 4 }).closest('[style*="grid-area"]') as HTMLElement;
+    const cell = c
+      .getByRole('heading', { level: 4 })
+      .closest('[style*="grid-area"]') as HTMLElement;
     expect(cell.style.gridArea).toBe('1 / 1 / span 1 / span 3');
   },
 };
 
 export const HiddenField: Story = {
   args: {
-    questions: [q(f('a', 'TEXT_FIELD', { title: 'Widoczne' }), 0), q(f('b', 'TEXT_FIELD', { title: 'Ukryte' }), 1)],
+    questions: [
+      q(f('a', 'TEXT_FIELD', { title: 'Widoczne' }), 0),
+      q(f('b', 'TEXT_FIELD', { title: 'Ukryte' }), 1),
+    ],
     hidden: new Set(['b']),
   },
   play: async ({ canvasElement }) => {
@@ -127,9 +158,19 @@ export const HiddenField: Story = {
 export const SparseFields: Story = {
   args: {
     questions: [
-      ...['SECTION', 'TEXT_FIELD', 'NUMBER', 'TEXTAREA', 'RADIO', 'SELECT', 'CHECKBOX', 'DATEPICKER', 'FILE_UPLOADER', 'TEXT_BLOCK', 'CONSENT_SECTION'].map(
-        (t, i) => q({ id: `s${i}`, type: t, techName: t } as FormField, i),
-      ),
+      ...[
+        'SECTION',
+        'TEXT_FIELD',
+        'NUMBER',
+        'TEXTAREA',
+        'RADIO',
+        'SELECT',
+        'CHECKBOX',
+        'DATEPICKER',
+        'FILE_UPLOADER',
+        'TEXT_BLOCK',
+        'CONSENT_SECTION',
+      ].map((t, i) => q({ id: `s${i}`, type: t, techName: t } as FormField, i)),
     ],
   },
   play: async ({ canvasElement }) => {

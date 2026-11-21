@@ -5,10 +5,10 @@ import { FieldBase } from './field-base';
   selector: 'app-consent-section-field',
   template: `
     <fieldset class="m-0 p-0 border-0" [attr.aria-describedby]="describedBy()">
-      <legend class="block text-label font-semibold">{{ label() }}</legend>
-      @if (hasText(field().description)) {
-      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
-    }
+      <legend [class]="labelClass()">{{ label() }}</legend>
+      @if (hasDescription()) {
+        <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
+      }
       @for (c of field().consentSectionConfig?.consents ?? []; track $index) {
         <label class="flex items-start gap-2 py-1">
           <input

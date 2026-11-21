@@ -100,4 +100,13 @@ describe('evaluateVisibility', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('broken_field'), expect.anything());
     warn.mockRestore();
   });
+
+  it('warns once per broken query, not on every evaluation', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const d = syntheticDef([{ type: 'SHOW', query: '(((' }]);
+    await evaluateVisibility(d, new Map());
+    await evaluateVisibility(d, new Map());
+    expect(warn).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
+  });
 });

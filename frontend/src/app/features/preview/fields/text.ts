@@ -9,6 +9,7 @@ import { FieldBase } from './field-base';
     <app-text-field
       [label]="label()"
       [description]="descriptionText()"
+      [labelHidden]="!hasTitle()"
       [readonly]="!!field().readOnly"
       [inputmode]="field().type === 'NUMBER' ? 'decimal' : undefined"
       [value]="value()"
@@ -16,9 +17,4 @@ import { FieldBase } from './field-base';
     />
   `,
 })
-export class TextFieldType extends FieldBase {
-  protected descriptionText() {
-    const d = this.field().description;
-    return this.hasText(d) ? new DOMParser().parseFromString(d!, 'text/html').body.textContent!.trim() : undefined;
-  }
-}
+export class TextFieldType extends FieldBase {}

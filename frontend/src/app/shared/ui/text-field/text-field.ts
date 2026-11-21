@@ -6,13 +6,21 @@ let nextId = 0;
 @Component({
   selector: 'app-text-field',
   template: `
-    <label [for]="inputId" class="block text-label font-semibold">{{ label() }}</label>
+    <label
+      [for]="inputId"
+      [class]="labelHidden() ? 'sr-only' : 'block text-label font-label mb-1.5'"
+      >{{ label() }}</label
+    >
     @if (description(); as text) {
       <small [id]="descriptionId" class="block text-fg-muted">{{ text }}</small>
     }
     <input
       class="block w-full text-fg text-body border rounded-field px-field-x py-field-y focus-ring"
-      [class]="(error() ? 'border-danger' : 'border-border-input') + (readonly() ? ' bg-surface-readonly' : ' bg-surface')"
+      [class]="
+        readonly()
+          ? 'border-transparent bg-surface-readonly'
+          : (error() ? 'border-danger' : 'border-border-input') + ' bg-surface'
+      "
       [readOnly]="readonly()"
       [id]="inputId"
       [type]="type()"
@@ -41,6 +49,7 @@ export class TextField implements FormValueControl<string> {
   readonly error = input<string>();
   readonly autocomplete = input<string>();
   readonly readonly = input(false);
+  readonly labelHidden = input(false);
   readonly inputmode = input<string>();
 
   private static readonly prefix = 'app-text-field-';

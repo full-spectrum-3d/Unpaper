@@ -45,6 +45,7 @@ export const Nadplata: Story = {
     await waitFor(() =>
       expect(c.getAllByRole('textbox', { name: 'Numer budynku' })[0]).toHaveValue(initial),
     );
+    await waitFor(() => expect(c.queryByRole('heading', { name: 'Dane innej osoby' })).toBeNull());
 
     for (let i = 0; i < 3; i++) await userEvent.click(c.getByRole('button', { name: 'Dalej' }));
     await heading(3, 'Podsumowanie');

@@ -45,6 +45,8 @@
   --text-body: 13px;
   --text-label: 13px;
   --text-title: 16px;
+  --text-section-title: 16px;
+  --font-weight-label: 600;
 
   --spacing-field-y: 5px;
   --spacing-field-x: 8px;
@@ -63,6 +65,8 @@
   --text-body: 15px;
   --text-label: 14px;
   --text-title: 24px;
+  --text-section-title: 18px;
+  --font-weight-label: 400;
   --spacing-field-y: 9px;
   --spacing-field-x: 12px;
   --spacing-section: 16px;
