@@ -164,3 +164,22 @@ Kwota
 - Czy `evaluateVisibility` zostaje jako wrapper, czy znika.
 - Ikona „i” (inline SVG) i dokładne klasy.
 - Podział `FieldBase` na mniejsze części, jeśli urośnie.
+
+## Doprecyzowania po przeglądzie buildera (moje decyzje)
+
+1. **Dopasowanie mocków do szablonów backendu.** Robi to jednorazowy skrypt (nie commitujemy go). Commitujemy tylko zaktualizowane JSON-y. W `techName` szablonu `{sfx}` oznacza `''`, `_siedziba` albo `_inna_osoba`. Szablony z innymi placeholderami (`{field_tech_name}`, `{section_tech_name}`) są pomijane. Dopasowanie jest dokładne po podstawieniu. Wynik dla obu mocków:
+   - `kraj*`, `wojewodztwo*`, `miejscowosc*_zagranica`, `kod_pocztowy*_zagranica`, `ulica*_zagranica`, `ulica*`, `numer_budynku*`: `REQUIRED`.
+   - `kod_pocztowy*` (krajowy): `REQUIRED, ZIP_CODE`.
+   - `numer_lokalu*`, `numer_telefonu`, `numer_krs`: bez walidatorów.
+   - `adres_e_mail`: `EMAIL`.
+   - `nazwa`: `REQUIRED`. `nip`: `REQUIRED, NIP`. `regon`: `REQUIRED, REGON`.
+   - `imie`, `nazwisko`, `numer_pesel`: z szablonu (`REQUIRED`, `PESEL`), ale są `readOnly`, więc nie są walidowane.
+   - Pozostałe pola wejściowe poza `readOnly` (np. `kwota`, `uzasadnienie`, `numer_rachunku`, `obreb_numer`, `potwierdzenie_przelewu`): `REQUIRED` według reguły 2.
+2. **NIP i „dane z rejestru” są osiągalne na „Nadpłacie”.** Sekcja „Dane podmiotu” ma pole `nip` (widoczne po wyborze „Osoby prawnej…”). Pola `EXTERNAL_SYSTEM` to imię, nazwisko, PESEL, kod pocztowy, ulica, numer budynku, numer lokalu, telefon i e-mail. Wartości testowe z `SAMPLE_REGISTRY_DATA` spełniają walidatory (`00-001`, `jan.kowalski@example.com`), więc prefill nie blokuje „Dalej”.
+3. **Brak instancji powtarzanych.** Każde pole ma unikalne `id` (UUID), a renderer rysuje je raz (`REPEATING_SECTION` nie występuje w mockach). Klucz błędów to `field.id`.
+4. **„Dalej” przed pierwszą ewaluacją** używa tego samego `hidden()` co widok (`evaluated ?? initiallyHidden`) i pustego `readOnly`.
+5. **Tryb błędów obejmuje tylko bieżący krok i jest liczony na bieżąco.** Pole wymagane, które pojawi się po zmianie odpowiedzi (SHOW), od razu pokazuje błąd, bo tryb jest już włączony.
+6. **Pustość**: NUMBER i DATEPICKER są przechowywane jako string (pole tekstowe), pusty = `''` po `trim`. `'0'` to poprawna wartość.
+7. **Konsumenci komponentów:** `app-text-field` używa też logowanie. Nowe wejścia comboboxa (`error`, `readonly`) mają wartości domyślne (`undefined`, `false`), więc istniejące użycia się nie zmieniają. Story `UI/Combobox` dostaje warianty z błędem i tylko do odczytu.
+8. **Podpowiedź i „dane z rejestru” w polach grupowych.** RADIO, CHECKBOX i FILE_UPLOADER umieszczają je przy legendzie lub etykiecie grupy. CONSENT_SECTION nie ma tytułu, więc ich nie pokazuje. „dane z rejestru” w grupie jest częścią legendy (sr-only przecinek jak wyżej).
+9. **Testy wolno aktualizować.** Testy klikające „Dalej” na mocku z pustymi polami (np. przejście na krok 2) uzupełniają wymagane pola albo używają definicji testowej bez walidatorów. Testy wyścigu dostosowujemy do `evaluateStates`.
