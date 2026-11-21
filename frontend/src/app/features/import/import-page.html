@@ -1,0 +1,92 @@
+<main class="flex flex-col gap-section max-w-[960px] mx-auto">
+  <h1 class="text-title font-semibold">Import formularzy</h1>
+  <app-file-drop [maxSizeMb]="maxSizeMb" (filesSelected)="onFiles($event)" />
+  <app-card>
+    <h2 cardTitle id="queue-title" tabindex="-1">Kolejka</h2>
+    <span cardActions class="flex items-center gap-[12px]">
+      <span class="text-fg-muted">{{ summary() }}</span>
+      <button
+        appButton
+        type="button"
+        variant="primary"
+        [disabled]="counts().done === 0"
+        (click)="downloadZip()"
+      >
+        Pobierz wszystkie (ZIP)
+      </button>
+    </span>
+    @if (items().length === 0) {
+      <p class="p-[10px] text-fg-muted">Kolejka jest pusta. Dodaj pliki powyżej.</p>
+    } @else {
+      <table appTable aria-labelledby="queue-title">
+        <thead>
+          <tr>
+            <th>Plik</th>
+            <th class="w-px whitespace-nowrap">Rozmiar</th>
+            <th class="w-px whitespace-nowrap">Status</th>
+            <th class="w-px whitespace-nowrap">Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (i of items(); track i.id) {
+            <tr>
+              <td class="[overflow-wrap:anywhere]">
+                {{ i.name }}
+                @if (i.error) {
+                  <div [id]="'err-' + i.id" class="text-danger text-[12px]">{{ i.error }}</div>
+                }
+              </td>
+              <td class="w-px whitespace-nowrap">{{ formatSize(i.size) }}</td>
+              <td class="w-px whitespace-nowrap">
+                <app-badge [status]="i.status" />
+                @if (i.status === 'processing') {
+                  <app-progress [label]="'Przetwarzanie ' + i.name" class="mt-[4px]" />
+                }
+                @if (i.status === 'done') {
+                  <span class="text-fg-muted text-[12px]">{{ seconds(i.durationMs) }}</span>
+                }
+              </td>
+              <td class="w-px whitespace-nowrap">
+                <span class="flex gap-[8px]">
+                  @if (i.status === 'done') {
+                    <a
+                      [routerLink]="['/result', i.id]"
+                      [attr.aria-label]="'Otwórz wynik ' + i.name"
+                      class="border rounded-field px-[12px] py-field-y font-semibold text-body focus-ring bg-surface text-primary border-primary hover:bg-primary-subtle"
+                    >
+                      Otwórz wynik
+                    </a>
+                  }
+                  @if (i.status === 'error' && i.retryable) {
+                    <button
+                      appButton
+                      type="button"
+                      [attr.aria-label]="'Ponów ' + i.name"
+                      [attr.aria-describedby]="'err-' + i.id"
+                      (click)="retry(i.id)"
+                    >
+                      Ponów
+                    </button>
+                  }
+                  <button
+                    appButton
+                    type="button"
+                    [id]="'remove-' + i.id"
+                    [attr.aria-label]="'Usuń ' + i.name"
+                    [attr.aria-describedby]="i.error ? 'err-' + i.id : null"
+                    [attr.aria-disabled]="i.status === 'processing' ? 'true' : null"
+                    class="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                    (click)="remove(i)"
+                  >
+                    Usuń
+                  </button>
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </app-card>
+  <div aria-live="polite" class="sr-only">{{ announcement() }}</div>
+</main>

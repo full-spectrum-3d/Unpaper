@@ -1,0 +1,19 @@
+<main class="flex flex-col gap-section max-w-[960px] mx-auto">
+  <a routerLink="/import" class="self-start text-primary focus-ring rounded-field">← Wróć do importu</a>
+  @if (item(); as i) {
+    <app-card>
+      <h1 cardTitle class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
+      <span cardActions>
+        <button appButton type="button" variant="primary" (click)="download()">Pobierz .json</button>
+      </span>
+      <pre
+        tabindex="0"
+        aria-label="Wynik konwersji w formacie JSON"
+        class="overflow-auto p-[10px] text-[13px] font-mono focus-ring"
+      >{{ json() }}</pre>
+    </app-card>
+  } @else {
+    <h1 class="text-title font-semibold">Wynik</h1>
+    <p class="text-fg-muted">Wynik niedostępny. Wróć do importu i przetwórz plik ponownie.</p>
+  }
+</main>

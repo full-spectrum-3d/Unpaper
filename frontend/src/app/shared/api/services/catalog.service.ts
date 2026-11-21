@@ -27,7 +27,7 @@ export class CatalogService extends BaseService {
   /**
    * List Dictionaries.
    *
-   *
+   * Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami).
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `listDictionariesApiV1DictionariesGet()` instead.
@@ -44,7 +44,7 @@ export class CatalogService extends BaseService {
   /**
    * List Dictionaries.
    *
-   *
+   * Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami).
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `listDictionariesApiV1DictionariesGet$Response()` instead.
