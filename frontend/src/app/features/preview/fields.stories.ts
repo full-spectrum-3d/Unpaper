@@ -37,8 +37,8 @@ type Story = StoryObj<FieldsHarness>;
 const allTypes: Question[] = [
   f('urzad', 'TEXT_FIELD', { title: 'Urząd', readOnly: true, defaultValue: 'Urząd Gminy Ulan-Majorat' }),
   f('kwota', 'NUMBER', { title: 'Kwota' }),
-  f('opis', 'TEXTAREA', { title: 'Opis' }),
-  f('radio', 'RADIO', { title: 'W czyim imieniu', options: opts }),
+  f('opis', 'TEXTAREA', { title: 'Opis', description: '<p>Opisz sprawę</p>' }),
+  f('radio', 'RADIO', { title: 'W czyim imieniu', description: '<p>Wybierz jedno</p>', options: opts }),
   f('sel', 'SELECT', { title: 'Wybór', options: opts }),
   f('dict', 'SELECT', { title: 'Kraj', dictionaryName: 'Kraje' }),
   f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
@@ -61,11 +61,13 @@ export const AllTypes: Story = {
     expect(urzad).toHaveValue('Urząd Gminy Ulan-Majorat');
     expect(c.getByLabelText('Kwota')).toHaveAttribute('inputmode', 'decimal');
 
+    expect(c.getByLabelText('Opis')).toHaveAccessibleDescription('Opisz sprawę 0/8000');
     await userEvent.type(c.getByLabelText('Opis'), 'abc');
     expect(c.getByText('3/8000')).toBeVisible();
 
     const radios = within(c.getByRole('group', { name: 'W czyim imieniu' })).getAllByRole('radio');
     expect(radios).toHaveLength(3);
+    expect(c.getByRole('group', { name: 'W czyim imieniu' })).toHaveAccessibleDescription('Wybierz jedno');
     await userEvent.click(radios[1]);
     expect(radios[1]).toBeChecked();
 
@@ -123,8 +125,6 @@ export const HiddenField: Story = {
 };
 
 export const SparseFields: Story = {
-  // Title-less fields have no accessible names by construction; this story only checks nothing throws.
-  parameters: { a11y: { test: 'off' } },
   args: {
     questions: [
       ...['SECTION', 'TEXT_FIELD', 'NUMBER', 'TEXTAREA', 'RADIO', 'SELECT', 'CHECKBOX', 'DATEPICKER', 'FILE_UPLOADER', 'TEXT_BLOCK', 'CONSENT_SECTION'].map(
@@ -134,5 +134,6 @@ export const SparseFields: Story = {
   },
   play: async ({ canvasElement }) => {
     expect(canvasElement.querySelectorAll('app-field-host').length).toBe(11);
+    expect(within(canvasElement).getByLabelText('TEXT FIELD')).toBeVisible(); // humanized techName fallback
   },
 };

@@ -12,7 +12,19 @@ export abstract class FieldBase<T = string> {
   protected readonly answer = computed(() => this.store.answer(this.field()));
   protected readonly value = computed(() => this.answer()() as T);
   protected readonly hasText = hasText;
+  protected readonly id = computed(() => 'fld-' + this.field().id);
+  protected readonly descId = computed(() => this.id() + '-desc');
+  /** Id of the description element when there is one, for aria-describedby. */
+  protected readonly describedBy = computed(() => (hasText(this.field().description) ? this.descId() : null));
+  protected readonly label = computed(
+    () => this.field().title || humanize(this.field().techName) || 'Pole bez nazwy',
+  );
   protected set(v: T) {
     this.answer().set(v);
   }
 }
+
+const humanize = (s: string | undefined) => {
+  const t = (s ?? '').replace(/[_-]+/g, ' ').trim();
+  return t && t[0].toUpperCase() + t.slice(1);
+};

@@ -7,7 +7,7 @@ import { FieldBase } from './field-base';
   imports: [TextField],
   template: `
     <app-text-field
-      [label]="field().title"
+      [label]="label()"
       [description]="descriptionText()"
       [readonly]="!!field().readOnly"
       [inputmode]="field().type === 'NUMBER' ? 'decimal' : undefined"

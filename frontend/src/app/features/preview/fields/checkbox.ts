@@ -4,12 +4,12 @@ import { FieldBase } from './field-base';
 @Component({
   selector: 'app-checkbox-field',
   template: `
-    <fieldset class="m-0 p-0 border-0">
-      <legend class="block text-label font-semibold">{{ field().title }}</legend>
+    <fieldset class="m-0 p-0 border-0" [attr.aria-describedby]="describedBy()">
+      <legend class="block text-label font-semibold">{{ label() }}</legend>
       @if (hasText(field().description)) {
-      <div class="text-fg-muted" [innerHTML]="field().description"></div>
+      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
     }
-      @for (o of field().options?.length ? field().options! : [{ id: field().id, name: field().title }]; track o.id) {
+      @for (o of field().options?.length ? field().options! : [{ id: field().id, name: label() }]; track o.id) {
         <label class="flex items-center gap-2 py-1">
           <input
             type="checkbox"

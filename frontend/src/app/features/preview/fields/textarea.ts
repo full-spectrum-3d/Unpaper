@@ -4,16 +4,16 @@ import { FieldBase } from './field-base';
 @Component({
   selector: 'app-textarea-field',
   template: `
-    <label [for]="id()" class="block text-label font-semibold">{{ field().title }}</label>
+    <label [for]="id()" class="block text-label font-semibold">{{ label() }}</label>
     @if (hasText(field().description)) {
-      <div class="text-fg-muted" [innerHTML]="field().description"></div>
+      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
     }
     <textarea
       class="block w-full bg-surface text-fg text-body border border-border-input rounded-field px-field-x py-field-y focus-ring min-h-32"
       [id]="id()"
       rows="5"
       maxlength="8000"
-      [attr.aria-describedby]="id() + '-count'"
+      [attr.aria-describedby]="describedByAll()"
       [value]="value()"
       (input)="set($any($event.target).value)"
     ></textarea>
@@ -22,5 +22,7 @@ import { FieldBase } from './field-base';
   host: { class: 'block' },
 })
 export class TextareaField extends FieldBase {
-  protected readonly id = computed(() => 'fld-' + this.field().id);
+  protected readonly describedByAll = computed(() =>
+    [this.describedBy(), this.id() + '-count'].filter(Boolean).join(' '),
+  );
 }

@@ -1,12 +1,12 @@
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
 import { FieldBase } from './field-base';
 
 @Component({
   selector: 'app-file-uploader-field',
   template: `
-    <span [id]="id() + '-label'" class="block text-label font-semibold">{{ field().title }}</span>
+    <span [id]="id() + '-label'" class="block text-label font-semibold">{{ label() }}</span>
     @if (hasText(field().description)) {
-      <div class="text-fg-muted" [innerHTML]="field().description"></div>
+      <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
     }
     <div
       class="border border-dashed border-border-input rounded-card bg-surface p-section"
@@ -49,7 +49,6 @@ import { FieldBase } from './field-base';
   host: { class: 'block' },
 })
 export class FileUploaderField extends FieldBase<string[]> {
-  protected readonly id = computed(() => 'fld-' + this.field().id);
   protected pick(files: FileList | null) {
     if (files?.length) this.set(Array.from(files, (f) => f.name));
   }
