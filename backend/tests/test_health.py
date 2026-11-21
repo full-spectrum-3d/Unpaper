@@ -70,3 +70,12 @@ def test_convert_has_no_mode_param() -> None:
         spec = client.get("/openapi.json").json()
     params = spec["paths"]["/api/v1/forms/convert"]["post"]["parameters"]
     assert [p["name"] for p in params] == ["report"]
+
+
+def test_openapi_documents_ready_failure() -> None:
+    spec = create_app(_settings(), llm_client=FakeLlmClient(), converter=None).openapi()
+    responses = spec["paths"]["/api/v1/health/ready"]["get"]["responses"]
+    assert set(responses) == {"200", "503"}
+    assert "application/problem+json" in responses["503"]["content"]
+    ready = spec["components"]["schemas"]["ReadyResponse"]["properties"]
+    assert set(ready) == {"status", "degraded"}

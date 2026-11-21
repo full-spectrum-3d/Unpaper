@@ -17,7 +17,7 @@ from fastapi import APIRouter, Body, Depends, Query, Request
 from fastapi.responses import JSONResponse
 
 from app.core.config import Settings, get_settings
-from app.core.errors import PROBLEM_MEDIA_TYPE, AppError, ErrorCode, ProblemDetail
+from app.core.errors import AppError, ErrorCode, ProblemDetail, problem_doc
 from app.pipeline.convert import convert_upload, upload_limits
 from app.pipeline.llm_client import LlmClient, get_llm_client
 from app.pipeline.upload_validation import UploadError, accept_upload
@@ -55,13 +55,6 @@ _MULTIPART_BODY: dict[str, Any] = {
 }
 
 
-def _problem(description: str) -> dict[str, Any]:
-    return {
-        "description": description,
-        "content": {PROBLEM_MEDIA_TYPE: {"schema": {"$ref": "#/components/schemas/ProblemDetail"}}},
-    }
-
-
 _CONVERT_RESPONSES: dict[int | str, dict[str, Any]] = {
     200: {
         "description": "Konfiguracja formularza w formacie importu (spec §7) albo, przy "
@@ -74,11 +67,11 @@ _CONVERT_RESPONSES: dict[int | str, dict[str, Any]] = {
             "application/json": {"schema": {"type": "object", "additionalProperties": True}}
         },
     },
-    400: _problem("Brak pliku, kilka plików albo niedozwolona nazwa pliku"),
-    413: _problem("Plik większy niż MAX_FILE_SIZE_MB"),
-    415: _problem("Nieobsługiwany format albo zawartość niezgodna z rozszerzeniem"),
-    422: _problem("Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem"),
-    504: _problem("Przekroczono REQUEST_TIMEOUT_S"),
+    400: problem_doc("Brak pliku, kilka plików albo niedozwolona nazwa pliku"),
+    413: problem_doc("Plik większy niż MAX_FILE_SIZE_MB"),
+    415: problem_doc("Nieobsługiwany format albo zawartość niezgodna z rozszerzeniem"),
+    422: problem_doc("Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem"),
+    504: problem_doc("Przekroczono REQUEST_TIMEOUT_S"),
 }
 
 

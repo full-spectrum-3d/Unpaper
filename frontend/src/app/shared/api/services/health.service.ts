@@ -12,8 +12,10 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { liveApiV1HealthLiveGet } from '../fn/health/live-api-v-1-health-live-get';
 import { LiveApiV1HealthLiveGet$Params } from '../fn/health/live-api-v-1-health-live-get';
+import { LiveResponse } from '../models/live-response';
 import { readyApiV1HealthReadyGet } from '../fn/health/ready-api-v-1-health-ready-get';
 import { ReadyApiV1HealthReadyGet$Params } from '../fn/health/ready-api-v-1-health-ready-get';
+import { ReadyResponse } from '../models/ready-response';
 
 @Injectable({ providedIn: 'root' })
 export class HealthService extends BaseService {
@@ -34,9 +36,7 @@ export class HealthService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  liveApiV1HealthLiveGet$Response(params?: LiveApiV1HealthLiveGet$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
-}>> {
+  liveApiV1HealthLiveGet$Response(params?: LiveApiV1HealthLiveGet$Params, context?: HttpContext): Observable<StrictHttpResponse<LiveResponse>> {
     const obs = liveApiV1HealthLiveGet(this.http, this.rootUrl, params, context);
     return obs;
   }
@@ -51,16 +51,10 @@ export class HealthService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  liveApiV1HealthLiveGet(params?: LiveApiV1HealthLiveGet$Params, context?: HttpContext): Observable<{
-[key: string]: string;
-}> {
+  liveApiV1HealthLiveGet(params?: LiveApiV1HealthLiveGet$Params, context?: HttpContext): Observable<LiveResponse> {
     const resp = this.liveApiV1HealthLiveGet$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<{
-[key: string]: string;
-}>): {
-[key: string]: string;
-} => r.body)
+      map((r: StrictHttpResponse<LiveResponse>): LiveResponse => r.body)
     );
   }
 
@@ -80,9 +74,7 @@ export class HealthService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  readyApiV1HealthReadyGet$Response(params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
+  readyApiV1HealthReadyGet$Response(params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<ReadyResponse>> {
     const obs = readyApiV1HealthReadyGet(this.http, this.rootUrl, params, context);
     return obs;
   }
@@ -100,16 +92,10 @@ export class HealthService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  readyApiV1HealthReadyGet(params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<{
-[key: string]: any;
-}> {
+  readyApiV1HealthReadyGet(params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<ReadyResponse> {
     const resp = this.readyApiV1HealthReadyGet$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<{
-[key: string]: any;
-}>): {
-[key: string]: any;
-} => r.body)
+      map((r: StrictHttpResponse<ReadyResponse>): ReadyResponse => r.body)
     );
   }
 

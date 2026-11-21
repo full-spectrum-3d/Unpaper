@@ -3,6 +3,8 @@
 
 export type { BodyIssueTokenApiV1AuthTokenPost } from './models/body-issue-token-api-v-1-auth-token-post';
 export type { HttpValidationError } from './models/http-validation-error';
+export type { LiveResponse } from './models/live-response';
 export type { ProblemDetail } from './models/problem-detail';
+export type { ReadyResponse } from './models/ready-response';
 export type { TokenResponse } from './models/token-response';
 export type { ValidationError } from './models/validation-error';

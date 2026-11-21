@@ -125,6 +125,14 @@ class ProblemDetail(BaseModel):
     errors: list[dict[str, Any]] | None = None
 
 
+def problem_doc(description: str) -> dict[str, Any]:
+    """Opis odpowiedzi błędu do `responses=` endpointu: problem+json ze schematem ProblemDetail."""
+    return {
+        "description": description,
+        "content": {PROBLEM_MEDIA_TYPE: {"schema": {"$ref": "#/components/schemas/ProblemDetail"}}},
+    }
+
+
 class AppError(Exception):
     """Błąd domenowy zamieniany na odpowiedź problem+json."""
 

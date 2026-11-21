@@ -7,13 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { LiveResponse } from '../../models/live-response';
 
 export interface LiveApiV1HealthLiveGet$Params {
 }
 
-export function liveApiV1HealthLiveGet(http: HttpClient, rootUrl: string, params?: LiveApiV1HealthLiveGet$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
-}>> {
+export function liveApiV1HealthLiveGet(http: HttpClient, rootUrl: string, params?: LiveApiV1HealthLiveGet$Params, context?: HttpContext): Observable<StrictHttpResponse<LiveResponse>> {
   const rb = new RequestBuilder(rootUrl, liveApiV1HealthLiveGet.PATH, 'get');
   if (params) {
   }
@@ -23,9 +22,7 @@ export function liveApiV1HealthLiveGet(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      [key: string]: string;
-      }>;
+      return r as StrictHttpResponse<LiveResponse>;
     })
   );
 }

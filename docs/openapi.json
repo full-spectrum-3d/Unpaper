@@ -73,6 +73,18 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "LiveResponse": {
+        "properties": {
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "LiveResponse",
+        "type": "object"
+      },
       "ProblemDetail": {
         "description": "Treść odpowiedzi błędu (RFC 9457) rozszerzona o `code` i `request_id`.",
         "properties": {
@@ -148,6 +160,34 @@
           "code"
         ],
         "title": "ProblemDetail",
+        "type": "object"
+      },
+      "ReadyResponse": {
+        "properties": {
+          "degraded": {
+            "anyOf": [
+              {
+                "items": {
+                  "const": "converter",
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Działające z ograniczeniami części; `converter`: brak LibreOffice, pliki DOC i ODS dostają 415",
+            "title": "Degraded"
+          },
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "ReadyResponse",
         "type": "object"
       },
       "TokenResponse": {
@@ -560,11 +600,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "title": "Response Live Api V1 Health Live Get",
-                  "type": "object"
+                  "$ref": "#/components/schemas/LiveResponse"
                 }
               }
             },
@@ -586,13 +622,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "title": "Response Ready Api V1 Health Ready Get",
-                  "type": "object"
+                  "$ref": "#/components/schemas/ReadyResponse"
                 }
               }
             },
             "description": "Successful Response"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "LLM_UNAVAILABLE: serwer modelu nieosiągalny albo brak modelu"
           }
         },
         "summary": "Ready",
