@@ -80,6 +80,7 @@ def test_field_points_to_its_block_with_relative_box() -> None:
         "blockId": "b2",
         "text": "Cel wydania zaświadczenia: …",
         "box": {"x": 0.1, "y": 0.25, "width": 0.5, "height": 0.05},
+        "pageAspect": 0.75,
     }
 
 

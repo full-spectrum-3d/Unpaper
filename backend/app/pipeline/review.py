@@ -144,6 +144,7 @@ def _source(found: _Located) -> dict[str, Any]:
             "width": round(min(max((box.x1 - box.x0) / page.width, 0.0), 1.0), 4),
             "height": round(min(max((box.y1 - box.y0) / page.height, 0.0), 1.0), 4),
         }
+        source["pageAspect"] = round(page.width / page.height, 4)
     if found.block.ocr_confidence is not None:
         source["ocrConfidence"] = round(found.block.ocr_confidence, 3)
     return source
