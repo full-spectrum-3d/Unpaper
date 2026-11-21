@@ -302,7 +302,7 @@ def test_wrapper_tech_name_never_has_junk_prefix(tech: Any, expected: str):
 def test_finish_page_non_info_section_is_warning():
     result = verify_form(_form())
     assert result.valid
-    warned = [w for w in result.warnings if w.code == IssueCode.W11_FINISH_NOT_INFO]
+    warned = [w for w in result.warnings if w.code == IssueCode.W29_FINISH_NOT_INFO]
     assert [w.path for w in warned] == ["tabs[1].questions[0].field.repeatingSectionGrid[0]"]
 
 
@@ -312,7 +312,7 @@ def test_finish_page_info_section_has_no_warning():
     finish.update(type="INFO_SECTION", description="<p>Podgląd</p>")
     result = verify_form(form)
     assert result.valid, result.errors
-    assert IssueCode.W11_FINISH_NOT_INFO not in _codes(result.warnings)
+    assert IssueCode.W29_FINISH_NOT_INFO not in _codes(result.warnings)
 
 
 def test_finish_input_is_error_not_extra_warning():
@@ -320,7 +320,7 @@ def test_finish_input_is_error_not_extra_warning():
     form["tabs"][1]["questions"][0]["field"]["repeatingSectionGrid"].append(
         _q(_field("TEXT_FIELD", "wpis", _u(12)))
     )
-    warned = [w for w in verify_form(form).warnings if w.code == IssueCode.W11_FINISH_NOT_INFO]
+    warned = [w for w in verify_form(form).warnings if w.code == IssueCode.W29_FINISH_NOT_INFO]
     assert len(warned) == 1  # tylko TEXT_BLOCK; pole wejściowe to błąd R05
 
 
@@ -378,7 +378,7 @@ def test_section_title_fix_keeps_states_valid():
 
 
 def _id_warnings(result: Any) -> list[Any]:
-    return [w for w in result.warnings if w.code == IssueCode.W12_ID_FORMAT]
+    return [w for w in result.warnings if w.code == IssueCode.W30_ID_FORMAT]
 
 
 def test_non_uuid_ids_warn_and_are_replaced_consistently():
@@ -400,11 +400,11 @@ def test_non_uuid_ids_warn_and_are_replaced_consistently():
     ids = [tab1, tab2, link["id"], _first_field(fixed.form)["id"]]
     assert all(UUID_RE.match(i) for i in ids)
     assert len(set(ids)) == 4
-    assert {f.code for f in fixed.fixes} == {IssueCode.W12_ID_FORMAT}
+    assert {f.code for f in fixed.fixes} == {IssueCode.W30_ID_FORMAT}
 
 
 def test_uuid_ids_are_left_alone():
     result = verify_form(_form())
-    assert IssueCode.W12_ID_FORMAT not in {f.code for f in result.fixes}
+    assert IssueCode.W30_ID_FORMAT not in {f.code for f in result.fixes}
     assert result.form["tabs"][0]["id"] == _u(1)
     assert not _id_warnings(result)

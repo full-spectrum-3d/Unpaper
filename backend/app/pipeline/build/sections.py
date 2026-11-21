@@ -13,6 +13,7 @@ from app.core.config import Settings
 from app.models.draft import ApplicantKind, FormDraft
 from app.models.form import FieldType, Validator
 from app.pipeline.build.fields import normalize_title, slugify
+from app.pipeline.build.file_hints import file_constraints_html
 from app.pipeline.build.html import external_link, paragraphs
 from app.pipeline.build.ir import AllOf, AnyOf, Condition, Consent, Eq, FieldNode, Not, SectionNode
 
@@ -27,7 +28,6 @@ APPLICANT_OPTIONS: dict[ApplicantKind, str] = {
 
 _ROLE_REPRESENTATIVE = "Reprezentant"
 _ROLE_ATTORNEY = "Pełnomocnik"
-_FILE_FORMATS = ".jpg, .pdf, .png, .jpeg"
 _PREVIEW_SIGNED = (
     "Zanim przejdziesz do wyboru sposobu podpisu, sprawdź dane na podglądzie. "
     "Jeśli zobaczysz błędy, wróć do edycji."
@@ -306,10 +306,7 @@ def contact_page_sections(
 ) -> list[SectionNode]:
     sections = [instantiate(load_template("contact.json"), key="dane_do_kontaktu")]
     if extra_attachments:
-        description = paragraphs(
-            f"Dopuszczalny format pliku: {_FILE_FORMATS}. "
-            "Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1."
-        )
+        description = file_constraints_html()
         fields = [
             FieldNode(
                 key=f"zalaczniki.zalacznik_{index}",

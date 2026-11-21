@@ -287,7 +287,7 @@ def _fix_id_format(form: dict[str, Any], ctx: _Ctx) -> None:
         value = holder.get("id")
         if isinstance(value, str) and not UUID_RE.match(value):
             renamed[value] = holder["id"] = ctx.id_factory()
-            ctx.fix(IssueCode.W12_ID_FORMAT, f"Zamieniono id {value!r} na UUID", path)
+            ctx.fix(IssueCode.W30_ID_FORMAT, f"Zamieniono id {value!r} na UUID", path)
     # Jedyne odwołania do id w formularzu to końce połączeń przepływu.
     flow = form.get("flow")
     for _, link in _items(flow.get("links"), "flow.links") if isinstance(flow, dict) else ():
@@ -560,7 +560,7 @@ def _rule_finish_content(form: dict[str, Any]) -> list[Issue]:
     # Reguła 7: na stronie końcowej wyłącznie INFO_SECTION (pola wejściowe to błąd R05).
     return [
         Issue(
-            IssueCode.W11_FINISH_NOT_INFO,
+            IssueCode.W29_FINISH_NOT_INFO,
             "Strona końcowa powinna zawierać wyłącznie sekcje informacyjne (INFO_SECTION)",
             n.path,
         )
@@ -581,7 +581,7 @@ def _rule_section_titles(form: dict[str, Any]) -> list[Issue]:
 
 def _rule_id_format(form: dict[str, Any]) -> list[Issue]:
     return [
-        Issue(IssueCode.W12_ID_FORMAT, f"id nie jest UUID: {holder['id']!r}", path)
+        Issue(IssueCode.W30_ID_FORMAT, f"id nie jest UUID: {holder['id']!r}", path)
         for path, holder in _id_holders(form)
         if isinstance(holder.get("id"), str) and not UUID_RE.match(holder["id"])
     ]
