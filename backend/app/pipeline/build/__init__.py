@@ -10,7 +10,7 @@ from app.pipeline.build.dictionaries import apply_dictionaries
 from app.pipeline.build.fields import assign_unique_tech_names, normalize_title
 from app.pipeline.build.html import accessible_links
 from app.pipeline.build.initial_data import apply_initial_data
-from app.pipeline.build.ir import PageNode
+from app.pipeline.build.ir import PageNode, iter_fields
 from app.pipeline.build.pages import subject_pages
 from app.pipeline.build.proposals import propose_dictionaries
 from app.pipeline.build.sections import (
@@ -34,6 +34,8 @@ class BuildResult:
     warnings: list[ConversionWarning]
     # Do raportu: `report.dictionaryProposals` (spec §6.2, §8.6).
     dictionary_proposals: list[DictionaryProposal] = field(default_factory=list)
+    # techName pola → klucz węzła (`p1.s2.f3` dla pól ze szkicu); do mapy pochodzenia w raporcie.
+    field_keys: dict[str, str] = field(default_factory=dict)
 
 
 def _label_key(label: str) -> str:
@@ -117,7 +119,8 @@ def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> Bu
     form = FormDefinition.model_validate(
         to_form_definition(title, pages, states, options.id_factory)
     )
-    return BuildResult(form, warnings, propose_dictionaries(form))
+    field_keys = {node.tech_name: node.key for _, _, node in iter_fields(pages)}
+    return BuildResult(form, warnings, propose_dictionaries(form), field_keys)
 
 
 def build_fallback(
