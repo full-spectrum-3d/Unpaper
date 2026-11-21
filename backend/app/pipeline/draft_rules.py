@@ -69,6 +69,8 @@ _SUBJECT_CONTEXT = re.compile(
     r"|drog|teren|inwestycj|robót|świetlic|imprez|zgromadz"
 )
 _APPLICANT_WORD = re.compile(r"(?i)wnioskodawc")
+# Podpis (także innej osoby: kandydata, rodzica) to w e-formularzu podpis elektroniczny.
+_SIGNATURE_LABEL = re.compile(r"(?i)^\W*(czytelny\s+|własnoręczny\s+)?podpis\b")
 # Numer pozycji przed oświadczeniem („35.”) w deklaracjach: to pole do zaznaczenia.
 _POSITION_NUMBER = re.compile(r"^\s*\d{1,3}\.?\s*$")
 # Warianty do skreślenia: „wynajęcie/użyczenie*”, „hodowanie/utrzymywanie*”.
@@ -142,9 +144,12 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
     words = _words(label)
     if not words:
         return None
-    if words <= _SIGNATURE_WORDS and (
-        "podpis" in words
-        or ("data" in words and words & {"miejscowość", "złożenia", "sporządzenia"})
+    if _SIGNATURE_LABEL.match(label) or (
+        words <= _SIGNATURE_WORDS
+        and (
+            "podpis" in words
+            or ("data" in words and words & {"miejscowość", "złożenia", "sporządzenia"})
+        )
     ):
         return "miejsce i data złożenia oraz podpis są w sekcjach systemowych"
     titles = list(context)

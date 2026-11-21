@@ -66,6 +66,17 @@ def test_subject_labels_kept(label: str) -> None:
     assert applicant_field_reason(label, ["Lokalizacja budynku"]) is None
 
 
+@pytest.mark.parametrize(
+    "label", ["Podpis kandydata (zgoda pełnoletniego)", "Czytelny podpis rodzica/opiekuna"]
+)
+def test_signature_of_other_person_removed(label: str) -> None:
+    assert applicant_field_reason(label, ["Zgoda kandydata"])
+
+
+def test_label_mentioning_signature_later_kept() -> None:
+    assert applicant_field_reason("Data złożenia podpisu pod umową", ["Umowa"]) is None
+
+
 def test_personal_fields_of_other_person_kept() -> None:
     assert applicant_field_reason("Imię", ["Dane sportowca"]) is None
     assert applicant_field_reason("Nr telefonu", ["Osoba odpowiedzialna"]) is None
