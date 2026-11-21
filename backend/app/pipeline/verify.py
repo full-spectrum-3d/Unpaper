@@ -346,18 +346,64 @@ def _flow_problems(form: dict[str, Any]) -> list[str]:
         elif isinstance(ends[0], str) and isinstance(ends[1], str):
             graph.setdefault(ends[0], set()).add(ends[1])
     if tabs and isinstance(ids[0], str):
-        seen, queue = {ids[0]}, deque([ids[0]])
-        while queue:
-            for nxt in graph.get(queue.popleft(), ()):
-                if nxt not in seen:
-                    seen.add(nxt)
-                    queue.append(nxt)
+        seen = _reachable(graph, {ids[0]})
         problems += [
             f"Strona '{t.get('title')}' jest nieosiągalna z pierwszej strony"
             for t in tabs
             if t.get("id") not in seen
         ]
+        problems += _flow_exit_problems(tabs, graph, seen)
     return problems
+
+
+def _reachable(graph: dict[str, set[str]], start: set[str]) -> set[str]:
+    seen, queue = set(start), deque(start)
+    while queue:
+        for nxt in graph.get(queue.popleft(), ()):
+            if nxt not in seen:
+                seen.add(nxt)
+                queue.append(nxt)
+    return seen
+
+
+def _flow_exit_problems(
+    tabs: list[dict[str, Any]], graph: dict[str, set[str]], reachable: set[str]
+) -> list[str]:
+    """Rozgałęzienia są dozwolone, ale z każdej strony musi dać się dojść do FINISH, bez cykli."""
+    finish = {
+        t["id"] for t in tabs if t.get("type") == TabType.FINISH and isinstance(t.get("id"), str)
+    }
+    if not finish:
+        return []  # brak FINISH zgłasza reguła struktury stron
+    reverse: dict[str, set[str]] = {}
+    for src, targets in graph.items():
+        for tgt in targets:
+            reverse.setdefault(tgt, set()).add(src)
+    can_finish = _reachable(reverse, finish)
+    problems = [
+        f"Ze strony '{t.get('title')}' nie da się dojść do strony końcowej"
+        for t in tabs
+        if t.get("id") in reachable and t.get("id") not in can_finish
+    ]
+    if _has_cycle(graph):
+        problems.append("Przepływ stron zawiera cykl")
+    return problems
+
+
+def _has_cycle(graph: dict[str, set[str]]) -> bool:
+    indegree = dict.fromkeys(graph, 0)
+    for targets in graph.values():
+        for tgt in targets:
+            indegree[tgt] = indegree.get(tgt, 0) + 1
+    queue = deque(n for n, d in indegree.items() if d == 0)
+    done = 0
+    while queue:
+        done += 1
+        for nxt in graph.get(queue.popleft(), ()):
+            indegree[nxt] -= 1
+            if indegree[nxt] == 0:
+                queue.append(nxt)
+    return done < len(indegree)
 
 
 def _fix_flow(form: dict[str, Any], ctx: _Ctx) -> None:
