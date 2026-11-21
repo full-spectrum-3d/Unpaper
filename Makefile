@@ -1,4 +1,4 @@
-.PHONY: build up down model test convert-all
+.PHONY: build up down model test convert-all password-hash
 
 build:
 	docker compose build
@@ -17,3 +17,6 @@ test:
 
 convert-all:
 	uv run --project backend python scripts/convert_all.py --input materials --output out
+
+password-hash:
+	cd backend && uv run python -m app.core.security hash-password
