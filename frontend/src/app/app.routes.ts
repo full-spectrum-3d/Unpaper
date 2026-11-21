@@ -5,7 +5,7 @@ import { LoginPage } from './features/login/login-page';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'import' },
-  { path: 'login', component: LoginPage, canActivate: [guestGuard] },
-  { path: 'import', component: ImportPage, canActivate: [authGuard] },
+  { path: 'login', title: 'Logowanie', component: LoginPage, canActivate: [guestGuard] },
+  { path: 'import', title: 'Import', component: ImportPage, canActivate: [authGuard] },
   { path: '**', redirectTo: 'import' },
 ];

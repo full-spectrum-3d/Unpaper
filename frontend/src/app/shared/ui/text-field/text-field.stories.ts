@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, required } from '@angular/forms/signals';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { TextField } from './text-field';
@@ -24,7 +24,7 @@ class TextFieldHarness {}
   `,
 })
 class SignalFormHarness {
-  protected readonly f = form(signal({ login: '' }));
+  protected readonly f = form(signal({ login: '' }), (p) => required(p.login));
 }
 
 const meta: Meta<TextFieldHarness> = { title: 'UI/TextField', component: TextFieldHarness };
@@ -59,5 +59,6 @@ export const SignalForm: StoryObj<SignalFormHarness> = {
     const c = within(canvasElement);
     await userEvent.type(c.getByLabelText('Login'), 'abc');
     expect(c.getByTestId('v')).toHaveTextContent('abc');
+    expect(c.getByLabelText('Login')).toHaveAttribute('aria-required', 'true');
   },
 };

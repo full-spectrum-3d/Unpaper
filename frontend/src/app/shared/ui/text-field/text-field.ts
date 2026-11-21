@@ -18,6 +18,7 @@ let nextId = 0;
       [value]="value()"
       [attr.autocomplete]="autocomplete()"
       [attr.aria-describedby]="describedBy()"
+      [attr.aria-required]="required() || null"
       [attr.aria-invalid]="error() ? 'true' : null"
       (input)="value.set($any($event.target).value)"
     />
@@ -34,6 +35,7 @@ export class TextField implements FormValueControl<string> {
   readonly label = input.required<string>();
   readonly type = input<'text' | 'password'>('text');
   readonly description = input<string>();
+  readonly required = input(false);
   readonly error = input<string>();
   readonly autocomplete = input<string>();
 

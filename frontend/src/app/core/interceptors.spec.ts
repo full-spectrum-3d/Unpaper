@@ -58,6 +58,13 @@ describe('interceptors', () => {
     expect(onError).toHaveBeenCalled();
   });
 
+  it('401 without token does not logout', () => {
+    const { http, ctrl, dispatch } = setup(null);
+    http.get('/api/v1/dictionaries').subscribe({ error: vi.fn() });
+    ctrl.expectOne('/api/v1/dictionaries').flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
   it('401 on token endpoint does not logout', () => {
     const { http, ctrl, dispatch } = setup('t1');
     const onError = vi.fn();

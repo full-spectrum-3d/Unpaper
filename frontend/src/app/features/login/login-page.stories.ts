@@ -1,7 +1,7 @@
 import { ActionsSubject } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { AuthState, authFeatureKey, initialAuthState } from '../../store/auth/auth.reducer';
 import { LoginPage } from './login-page';
@@ -38,7 +38,10 @@ export const Default: Story = {
     const c = within(canvasElement);
     await userEvent.click(c.getByRole('button', { name: 'Zaloguj' }));
     expect(c.getAllByText('Pole wymagane')).toHaveLength(2);
-    expect(document.activeElement).toBe(c.getByLabelText('Login'));
+    await waitFor(() => expect(document.activeElement).toBe(c.getByLabelText('Login')));
+    expect(c.getByLabelText('Login')).toHaveAccessibleDescription(/Pole wymagane/);
+    expect(c.getByLabelText('Login')).toHaveAttribute('aria-required', 'true');
+    expect(c.getByLabelText('Hasło')).toHaveAttribute('aria-required', 'true');
     expect(dispatched).not.toHaveBeenCalledWith(expect.objectContaining({ username: 'dev' }));
     await userEvent.type(c.getByLabelText('Login'), 'dev');
     await userEvent.type(c.getByLabelText('Hasło'), 'secret');
@@ -49,12 +52,12 @@ export const Default: Story = {
   },
 };
 
-export const Error: Story = {
+export const LoginError: Story = {
   decorators: [withAuth({ status: 'error', error: 'Nieprawidłowy login lub hasło' })],
   play: async ({ canvasElement }) => {
-    expect(within(canvasElement).getByRole('alert')).toHaveTextContent(
-      'Nieprawidłowy login lub hasło',
-    );
+    const alert = within(canvasElement).getByRole('alert');
+    expect(alert).toHaveTextContent('Nieprawidłowy login lub hasło');
+    await waitFor(() => expect(document.activeElement).toBe(alert));
   },
 };
 
