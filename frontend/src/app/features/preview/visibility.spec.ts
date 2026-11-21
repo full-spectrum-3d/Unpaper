@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
 import { FormDefinition, FormField, Question } from './form-definition';
-import { evaluateVisibility } from './visibility';
+import { evaluateStates } from './visibility';
 
 const def = nadplata as unknown as FormDefinition;
 
@@ -39,9 +39,9 @@ const syntheticDef = (states: { type: string; query: string }[]): FormDefinition
   ],
 });
 
-describe('evaluateVisibility', () => {
+describe('evaluateStates', () => {
   it('default shows only base sections', async () => {
-    const hidden = await evaluateVisibility(def, new Map());
+    const { hidden } = await evaluateStates(def, new Map());
     for (const t of [
       'dane_podmiotu',
       'adres_siedziby',
@@ -65,7 +65,7 @@ describe('evaluateVisibility', () => {
 
   it('other person shows its sections', async () => {
     const answers = new Map([[idOf('wybierz_w_czyim_imieniu_wnioskujesz'), 'Innej osoby']]);
-    const hidden = await evaluateVisibility(def, answers);
+    const { hidden } = await evaluateStates(def, answers);
     for (const t of [
       'dane_innej_osoby',
       'adres_zamieszkania_osoby_ktorej_jestes_pelnomocnikiem',
@@ -77,13 +77,13 @@ describe('evaluateVisibility', () => {
   });
 
   it('hidden section hides children', async () => {
-    const hidden = await evaluateVisibility(def, new Map());
+    const { hidden } = await evaluateStates(def, new Map());
     expect(hidden.has(idOf('nip'))).toBe(true);
     expect(hidden.has(idOf('nazwisko_inna_osoba'))).toBe(true);
   });
 
   it('HIDE true hides', async () => {
-    const hidden = await evaluateVisibility(
+    const { hidden } = await evaluateStates(
       syntheticDef([{ type: 'HIDE', query: '1 = 1' }]),
       new Map(),
     );
@@ -92,7 +92,7 @@ describe('evaluateVisibility', () => {
 
   it('fail-open on broken query', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    const hidden = await evaluateVisibility(
+    const { hidden } = await evaluateStates(
       syntheticDef([{ type: 'SHOW', query: '(' }]),
       new Map(),
     );
@@ -104,9 +104,45 @@ describe('evaluateVisibility', () => {
   it('warns once per broken query, not on every evaluation', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     const d = syntheticDef([{ type: 'SHOW', query: '(((' }]);
-    await evaluateVisibility(d, new Map());
-    await evaluateVisibility(d, new Map());
+    await evaluateStates(d, new Map());
+    await evaluateStates(d, new Map());
     expect(warn).toHaveBeenCalledTimes(1);
     warn.mockRestore();
+  });
+
+  it('READ_ONLY true marks the field, false does not', async () => {
+    expect(
+      (
+        await evaluateStates(syntheticDef([{ type: 'READ_ONLY', query: '1 = 1' }]), new Map())
+      ).readOnly.has('f1'),
+    ).toBe(true);
+    expect(
+      (
+        await evaluateStates(syntheticDef([{ type: 'READ_ONLY', query: '1 = 2' }]), new Map())
+      ).readOnly.has('f1'),
+    ).toBe(false);
+  });
+
+  it('READ_ONLY fails open on broken query', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { readOnly } = await evaluateStates(
+      syntheticDef([{ type: 'READ_ONLY', query: '[[[' }]),
+      new Map(),
+    );
+    expect(readOnly.has('f1')).toBe(false);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('broken_field'), expect.anything());
+    warn.mockRestore();
+  });
+
+  it('hidden field is never read-only', async () => {
+    const states = await evaluateStates(
+      syntheticDef([
+        { type: 'HIDE', query: '1 = 1' },
+        { type: 'READ_ONLY', query: '1 = 1' },
+      ]),
+      new Map(),
+    );
+    expect(states.hidden.has('f1')).toBe(true);
+    expect(states.readOnly.has('f1')).toBe(false);
   });
 });

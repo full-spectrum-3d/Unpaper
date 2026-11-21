@@ -15,6 +15,8 @@ import { FieldBase } from './field-base';
             type="checkbox"
             class="mt-1 focus-ring"
             [checked]="!!value()[$index]"
+            [disabled]="readOnly()"
+            [attr.aria-invalid]="error() ? 'true' : null"
             (change)="toggle($index, $any($event.target).checked)"
           />
           <span>
@@ -24,6 +26,11 @@ import { FieldBase } from './field-base';
             }
           </span>
         </label>
+      }
+      @if (error(); as text) {
+        <small [id]="errorId()" class="block text-danger"
+          ><span aria-hidden="true">✕</span> {{ text }}</small
+        >
       }
     </fieldset>
   `,

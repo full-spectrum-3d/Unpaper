@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnswersStore } from '../answers-store';
 import { findDictionary } from '../dictionaries.mock';
 import { FormField } from '../form-definition';
+import { FormState } from '../form-state';
 import { cascadeLevels, DictionaryCascadeField } from './dictionary-cascade';
 
 const teryt = findDictionary('TERYT_4G_DOWODOWY')!;
@@ -46,7 +47,7 @@ describe('DictionaryCascadeField', () => {
   });
   const create = async (f: FormField) => {
     TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection(), AnswersStore],
+      providers: [provideZonelessChangeDetection(), AnswersStore, FormState],
     });
     store = TestBed.inject(AnswersStore);
     fixture = TestBed.createComponent(DictionaryCascadeField);

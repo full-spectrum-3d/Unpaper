@@ -203,3 +203,88 @@ describe('Combobox', () => {
     ).toBeTruthy();
   });
 });
+
+@Component({
+  imports: [Combobox],
+  template: `
+    <app-combobox
+      label="Kraj"
+      [options]="['Polska', 'Niemcy']"
+      [value]="value()"
+      [error]="error()"
+      [readonly]="readonly()"
+      [tooltip]="tooltip()"
+      [tag]="tag()"
+      describedBy="external"
+    />
+  `,
+})
+class StateHost {
+  readonly value = signal('Polska');
+  readonly error = signal<string | undefined>(undefined);
+  readonly readonly = signal(false);
+  readonly tooltip = signal<string | undefined>(undefined);
+  readonly tag = signal<string | undefined>(undefined);
+}
+
+describe('Combobox states', () => {
+  let fixture: ComponentFixture<StateHost>;
+  let host: StateHost;
+  const render = async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+  };
+  const input = () => fixture.nativeElement.querySelector('input') as HTMLInputElement;
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    fixture = TestBed.createComponent(StateHost);
+    host = fixture.componentInstance;
+    await render();
+  });
+
+  it('shows the error with aria-invalid, danger border and describedby', async () => {
+    host.error.set('Wybierz jedną z opcji');
+    await render();
+    expect(input().getAttribute('aria-invalid')).toBe('true');
+    expect(input().classList).toContain('border-danger');
+    const ids = input().getAttribute('aria-describedby')!.split(' ');
+    expect(ids).toContain('external');
+    const message = ids
+      .map((id) => document.getElementById(id))
+      .find((el) => el?.textContent?.includes('Wybierz jedną z opcji'));
+    expect(message).toBeTruthy();
+  });
+
+  it('has no aria-invalid without an error', () => {
+    expect(input().hasAttribute('aria-invalid')).toBe(false);
+    expect(input().getAttribute('aria-describedby')).toBe('external');
+  });
+
+  it('readonly blocks opening and hides the clear button', async () => {
+    host.readonly.set(true);
+    await render();
+    expect(input().readOnly).toBe(true);
+    expect(input().classList).toContain('bg-surface-readonly');
+    expect(fixture.nativeElement.querySelector('button')).toBeNull();
+    input().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    input().click();
+    await render();
+    expect(input().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('includes the tag in the accessible label', async () => {
+    host.tag.set('dane z rejestru');
+    await render();
+    const label = fixture.nativeElement.querySelector(`label[for="${input().id}"]`) as HTMLElement;
+    expect(label.textContent).toContain('dane z rejestru');
+  });
+
+  it('renders the tooltip button outside the label', async () => {
+    host.tooltip.set('Podpowiedź');
+    await render();
+    const button = fixture.nativeElement.querySelector('app-field-tooltip button') as HTMLElement;
+    expect(button.getAttribute('aria-label')).toBe('Więcej informacji: Kraj');
+    expect(fixture.nativeElement.querySelector('label button')).toBeNull();
+  });
+});

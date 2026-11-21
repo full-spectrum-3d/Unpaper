@@ -23,7 +23,7 @@
       <button appButton variant="secondary" (click)="go(index() - 1)">Wstecz</button>
     }
     @if (index() < pages().length - 1) {
-      <button appButton variant="primary" (click)="go(index() + 1)">Dalej</button>
+      <button appButton variant="primary" (click)="next()">Dalej</button>
     }
   </div>
 </div>

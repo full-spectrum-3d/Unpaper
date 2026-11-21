@@ -37,3 +37,26 @@ export const PustaLista: Story = {
     await expect(visible).toBeVisible();
   },
 };
+
+export const ZBledem: Story = {
+  args: { error: 'Wybierz jedną z opcji' },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('combobox', { name: 'Kraj' });
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+    await expect(input).toHaveAccessibleDescription(/Wybierz jedną z opcji/);
+  },
+};
+
+export const TylkoDoOdczytu: Story = {
+  args: { value: 'Polska', readonly: true, tag: 'dane z rejestru', tooltip: 'Wartość z rejestru' },
+  globals: { theme: 'preview' },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const input = c.getByRole('combobox', { name: /^Kraj\s*, dane z rejestru$/ });
+    await userEvent.click(input);
+    await expect(input).toHaveAttribute('aria-expanded', 'false');
+    await expect(c.queryByRole('button', { name: /Wyczyść/ })).toBeNull();
+    await userEvent.click(c.getByRole('button', { name: 'Więcej informacji: Kraj' }));
+    await expect(c.getByText('Wartość z rejestru')).toBeVisible();
+  },
+};

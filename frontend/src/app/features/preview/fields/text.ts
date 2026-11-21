@@ -10,8 +10,11 @@ import { FieldBase } from './field-base';
       [label]="label()"
       [description]="descriptionText()"
       [labelHidden]="!hasTitle()"
-      [readonly]="!!field().readOnly"
+      [readonly]="readOnly()"
       [inputmode]="field().type === 'NUMBER' ? 'decimal' : undefined"
+      [error]="error() ?? undefined"
+      [tooltip]="tooltip()"
+      [tag]="tag()"
       [value]="value()"
       (valueChange)="set($event)"
     />

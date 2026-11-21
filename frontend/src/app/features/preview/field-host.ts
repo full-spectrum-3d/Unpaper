@@ -74,7 +74,7 @@ import { UnknownField } from './fields/unknown';
       }
     }
   `,
-  host: { class: 'block' },
+  host: { class: 'block', '[attr.data-field-id]': 'field().id' },
 })
 export class FieldHost {
   readonly field = input.required<FormField>();

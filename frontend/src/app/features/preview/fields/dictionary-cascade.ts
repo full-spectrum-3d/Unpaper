@@ -3,6 +3,7 @@ import { Combobox } from '../../../shared/ui/combobox/combobox';
 import { Dictionary, DictionaryNode, findDictionary } from '../dictionaries.mock';
 import { isSearchable } from '../select-options';
 import { FieldBase } from './field-base';
+import { FieldLabel } from './field-label';
 
 /** Levels to render for a selected path: level i+1 shows only when level i is chosen and has children. */
 export function cascadeLevels(
@@ -20,7 +21,7 @@ export function cascadeLevels(
 
 @Component({
   selector: 'app-dictionary-cascade-field',
-  imports: [Combobox],
+  imports: [Combobox, FieldLabel],
   template: `
     <div
       role="group"
@@ -28,7 +29,12 @@ export function cascadeLevels(
       [attr.aria-labelledby]="showTitle() ? id() + '-title' : null"
     >
       @if (showTitle()) {
-        <div [id]="id() + '-title'" class="text-label font-label">{{ label() }}</div>
+        <app-field-label
+          [label]="label()"
+          [labelId]="id() + '-title'"
+          [tooltip]="tooltip()"
+          [tag]="tag()"
+        />
       }
       @if (hasDescription()) {
         <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
@@ -38,7 +44,11 @@ export function cascadeLevels(
           [label]="level.label"
           [options]="level.options"
           [searchable]="searchable(level.options.length)"
-          [describedBy]="i === 0 ? describedBy() : null"
+          [describedBy]="i === 0 && hasDescription() ? descId() : null"
+          [error]="i === errorLevel() ? (error() ?? undefined) : undefined"
+          [readonly]="readOnly()"
+          [tooltip]="i === 0 && !showTitle() ? tooltip() : undefined"
+          [tag]="i === 0 && !showTitle() ? tag() : undefined"
           [value]="value()[i] ?? ''"
           (valueChange)="choose(i, $event)"
         />
@@ -55,6 +65,11 @@ export class DictionaryCascadeField extends FieldBase<string[]> {
   // A title equal to the dictionary name is a technical leftover, not a legend.
   protected readonly showTitle = computed(
     () => this.hasTitle() && this.label() !== this.field().dictionaryName,
+  );
+
+  /** The error belongs to the first empty level (the last one when all are filled). */
+  protected readonly errorLevel = computed(() =>
+    Math.min(this.value().length, this.levels().length - 1),
   );
 
   protected searchable(count: number): boolean {

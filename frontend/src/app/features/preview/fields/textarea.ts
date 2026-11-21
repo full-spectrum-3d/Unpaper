@@ -1,25 +1,41 @@
 import { Component, computed } from '@angular/core';
 import { FieldBase } from './field-base';
+import { FieldLabel } from './field-label';
 
 @Component({
   selector: 'app-textarea-field',
+  imports: [FieldLabel],
   template: `
     @if (hasDescription()) {
       <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
     }
-    <label [for]="id()" [class]="labelClass()">{{ label() }}</label>
+    <app-field-label
+      [label]="label()"
+      [for]="id()"
+      [hidden]="!hasTitle()"
+      [tooltip]="tooltip()"
+      [tag]="tag()"
+    />
     <textarea
-      class="block w-full bg-surface text-fg text-body border border-border-input rounded-field px-field-x py-field-y focus-ring min-h-32"
+      class="min-h-32"
+      [class]="controlClass()"
       [id]="id()"
       rows="5"
       maxlength="8000"
+      [readOnly]="readOnly()"
       [attr.aria-describedby]="describedByAll()"
+      [attr.aria-invalid]="error() ? 'true' : null"
       [value]="value()"
       (input)="set($any($event.target).value)"
     ></textarea>
     <small [id]="id() + '-count'" class="block text-right text-fg-muted"
       >{{ value().length }}/8000</small
     >
+    @if (error(); as text) {
+      <small [id]="errorId()" class="block text-danger"
+        ><span aria-hidden="true">✕</span> {{ text }}</small
+      >
+    }
   `,
   host: { class: 'block' },
 })
