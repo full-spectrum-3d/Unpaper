@@ -20,7 +20,10 @@ interface Row {
   selector: 'app-queue-harness',
   imports: [Topbar, FileDrop, Card, Table, Badge, Button, Progress],
   template: `
-    <app-topbar appName="Formularze" userName="Jan Kowalski" />
+    <app-topbar appName="Formularze" userName="Jan Kowalski">
+      <a href="#" aria-current="page">Import</a>
+      <a href="#">Walidator</a>
+    </app-topbar>
     <main class="max-w-[480px] p-[16px] flex flex-col gap-[16px]">
       <h1 class="text-title font-semibold">Import formularzy</h1>
       <app-file-drop [maxSizeMb]="20" />
@@ -42,7 +45,7 @@ interface Row {
           <tbody>
             @for (r of rows; track r.name) {
               <tr>
-                <td class="break-all">{{ r.name }}</td>
+                <td class="wrap-anywhere">{{ r.name }}</td>
                 <td>{{ r.size }}</td>
                 <td>
                   <app-badge [status]="r.status" />
