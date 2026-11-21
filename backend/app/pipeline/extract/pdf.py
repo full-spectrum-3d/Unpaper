@@ -154,9 +154,16 @@ def _nearest(edges: list[float], value: float) -> int:
 
 
 def _widgets(page: PlumberPage) -> list[Frame]:
-    """Pola formularza AcroForm (tekstowe i checkboxy) jako ramki."""
+    """Pola formularza AcroForm (tekstowe i checkboxy) jako ramki.
+
+    Adnotacje to dodatek: uszkodzony słownik adnotacji nie może zatrzymać ekstrakcji.
+    """
+    try:
+        annots = page.annots or []
+    except Exception:  # pdfminer zgłasza tu różne wyjątki parsera
+        return []
     frames: list[Frame] = []
-    for annot in page.annots or []:
+    for annot in annots:
         subtype = str((annot.get("data") or {}).get("Subtype", ""))
         if subtype.endswith("Widget'") or subtype.endswith("Widget"):
             frames.append(
