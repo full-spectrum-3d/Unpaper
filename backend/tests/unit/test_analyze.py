@@ -194,3 +194,15 @@ async def test_chunking_stops_when_budget_runs_out() -> None:
 async def test_failed_first_chunk_falls_back() -> None:
     r, client = await _run([_invalid()], settings=CHUNKED, doc=_long_doc())
     assert len(client.calls) == 1 and r.fallback_reason == "invalid_output"
+
+
+async def test_merge_failure_is_invalid_output_not_exception(monkeypatch: Any) -> None:
+    import app.pipeline.analyze as module
+    from app.models.draft import FormDraft
+
+    def broken(drafts: Any) -> FormDraft:
+        return FormDraft.model_validate({})  # rzuca ValidationError jak zepsute łączenie
+
+    monkeypatch.setattr(module, "merge_drafts", broken)
+    r, _ = await _run([_valid(), _valid(), _valid()], settings=CHUNKED, doc=_long_doc())
+    assert (r.fallback, r.fallback_reason) == (True, "invalid_output")

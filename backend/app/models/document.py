@@ -19,6 +19,7 @@ FIELD_MARKER = "[POLE]"
 _FILL_RUN = re.compile(r"[.…_]{3,}")
 _WHITESPACE = re.compile(r"\s+")
 _BOILERPLATE = re.compile(r"(?i)klauzula informacyjna|\bRODO\b|ochron\w* danych osobowych")
+_BOILERPLATE_PARAGRAPH = re.compile(r"(?i)^\s*klauzula informacyjna")
 
 
 class _DocModel(BaseModel):
@@ -93,11 +94,11 @@ class DocumentModel(_DocModel):
             table_rows: dict[int, list[tuple[int, str]]] | None = None
             for block in page.blocks:
                 if exclude_boilerplate:
-                    if block.kind in ("heading", "paragraph") and _BOILERPLATE.search(block.text):
+                    if _starts_boilerplate(block):
                         skipping = True
                         continue
                     if skipping:
-                        if block.kind != "heading":
+                        if not _ends_boilerplate(block):
                             continue
                         skipping = False
                 if block.kind == "table_cell" and table_rows is not None and block.table:
@@ -119,6 +120,18 @@ class DocumentModel(_DocModel):
                 lines.append(f"=== strona {page.number}")
                 lines.extend(page_lines)
         return "\n".join(lines)
+
+
+def _starts_boilerplate(block: Block) -> bool:
+    """Klauzulę zaczyna nagłówek o RODO albo akapit zaczynający się od „Klauzula informacyjna”."""
+    if block.kind == "heading":
+        return bool(_BOILERPLATE.search(block.text))
+    return block.kind == "paragraph" and bool(_BOILERPLATE_PARAGRAPH.match(block.text))
+
+
+def _ends_boilerplate(block: Block) -> bool:
+    """Klauzulę kończy inny nagłówek albo miejsce na dane (pole formularza)."""
+    return block.kind in ("heading", "input_placeholder") or bool(_FILL_RUN.search(block.text))
 
 
 def _clean(text: str) -> str:

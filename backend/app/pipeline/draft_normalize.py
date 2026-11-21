@@ -42,6 +42,7 @@ def normalize_draft(
     _filter_statements(data, doc_text, warnings)
     _normalize_title_case(data, warnings)
     _check_labels(draft, doc_text, warnings)
+    _check_authority(draft, doc_text, warnings)
     _remove_empty_pages(data, warnings)
 
     return FormDraft.model_validate(data), warnings
@@ -146,6 +147,31 @@ def _check_labels(draft: FormDraft, doc_text: str, warnings: list[ConversionWarn
                     path=path,
                 )
             )
+
+
+def _check_authority(draft: FormDraft, doc_text: str, warnings: list[ConversionWarning]) -> None:
+    """Każde słowo adresata (min. 3 litery) musi mieć w dokumencie słowo o wspólnym rdzeniu."""
+    doc_words = _WORD.findall(_normalize(doc_text))
+    missing = [
+        word
+        for word in _WORD.findall(_normalize(draft.authority_name))
+        if len(word) >= 3 and not any(_same_stem(word, d) for d in doc_words)
+    ]
+    if missing:
+        warnings.append(
+            ConversionWarning(
+                code="W19_AUTHORITY_NOT_IN_DOCUMENT",
+                message=f"Adresata „{draft.authority_name}” nie znaleziono w treści blankietu "
+                f"(brak: {', '.join(missing)}) - sprawdź nazwę urzędu lub organu.",
+                path="authority_name",
+            )
+        )
+
+
+def _same_stem(word: str, other: str) -> bool:
+    """Wspólny początek o długości słowa minus 2 (min. 3) - toleruje polską odmianę."""
+    need = min(len(word), max(3, len(word) - 2))
+    return len(other) >= need and word[:need] == other[:need]
 
 
 def _remove_empty_pages(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:

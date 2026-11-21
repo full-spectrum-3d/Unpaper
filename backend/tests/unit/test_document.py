@@ -126,3 +126,15 @@ def test_ocr_mean_confidence() -> None:
     )
     assert doc.ocr_mean_confidence == pytest.approx(0.7)
     assert _doc([_p("a")]).ocr_mean_confidence is None
+
+
+def test_passing_rodo_mention_does_not_drop_fields() -> None:
+    doc = _doc([_p("Dane przetwarzamy zgodnie z RODO."), _p("Numer działki ………"), _p("Obręb ………")])
+    text = doc.to_prompt_text()
+    assert "Numer działki [POLE]" in text and "Obręb [POLE]" in text
+
+
+def test_field_placeholder_ends_boilerplate_skip() -> None:
+    doc = _doc([_p("KLAUZULA INFORMACYJNA"), _p("Administratorem…"), _p("Podpis ………")])
+    text = doc.to_prompt_text()
+    assert "Administratorem" not in text and "Podpis [POLE]" in text

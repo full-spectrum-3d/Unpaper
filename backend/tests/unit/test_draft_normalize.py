@@ -90,7 +90,8 @@ def test_statement_not_in_document_removed() -> None:
 def test_statement_from_document_kept() -> None:
     stmt = "Oświadczam, że jestem właścicielem działki."
     doc = _doc_with(
-        "Miejscowość Ulica Numer ewidencyjny działki Obręb. Oświadczam, że jestem właścicielem"
+        "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb. Oświadczam, że "
+        "jestem właścicielem"
         " działki."
     )
     out, warnings = normalize_draft(_make(lambda d: d.update(statements=[stmt])), doc)
@@ -136,3 +137,19 @@ def test_matches_text() -> None:
     assert matches_text("Obręb", "nr działki [POLE] w obrębie [POLE]", 0.6)
     assert matches_text("Numer ewidencyjny działki", "nr ewidencyjny działki [POLE]", 0.6)
     assert not matches_text("Powierzchnia działki", "nr ewidencyjny działki [POLE]", 0.6)
+
+
+def test_authority_not_in_document_warned() -> None:
+    out, warnings = normalize_draft(
+        _make(lambda d: d.update(authority_name="Wójt Gminy Elusing")), DOC
+    )
+    assert _codes(warnings) == ["W19_AUTHORITY_NOT_IN_DOCUMENT"]
+    assert out.authority_name == "Wójt Gminy Elusing"
+
+
+def test_inflected_authority_accepted() -> None:
+    doc = _doc_with("Miejscowość Ulica Numer ewidencyjny działki Obręb. Do Urzędu Gminy Elbląg")
+    _, warnings = normalize_draft(
+        _make(lambda d: d.update(authority_name="Urząd Gminy Elbląg")), doc
+    )
+    assert warnings == []

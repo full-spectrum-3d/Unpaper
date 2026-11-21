@@ -40,9 +40,8 @@ async def test_wniosek1_live(mode: LlmMode) -> None:
     )
     assert r.draft is not None and not r.fallback
     labels = [f.label for _, f in r.draft.iter_fields()]
-    print(
-        f"{mode}: {r.draft.title!r} / {r.draft.authority_kind} {r.draft.authority_name!r} / {labels}"
-    )
+    d = r.draft
+    print(f"{mode}: {d.title!r} / {d.authority_kind} {d.authority_name!r} / {labels}")
     found = sum(any(matches_text(e, label, 0.6) for label in labels) for e in EXPECTED)
     assert found >= 3
     assert r.draft.authority_kind == "ORGAN"

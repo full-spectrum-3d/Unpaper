@@ -99,3 +99,40 @@ def test_merge_joins_same_titled_pages_and_takes_first_meta() -> None:
     assert [p.title for p in merged.subject_pages] == ["Informacje"]
     assert len(merged.subject_pages[0].sections) == 2
     assert merged.title == "Wniosek A" and merged.attachments == ["Mapa", "Akt"]
+
+
+def test_merge_keeps_repeated_labels_within_one_draft() -> None:
+    draft = FormDraft.model_validate(
+        {
+            "title": "Wniosek A",
+            "authority_kind": "ORGAN",
+            "authority_name": "Wójt",
+            "applicant_kinds": ["SELF"],
+            "subject_pages": [
+                {
+                    "title": "P",
+                    "sections": [
+                        {"title": "Budynek", "repeating": False, "fields": [_field("f1", "Ulica")]},
+                        {"title": "Działka", "repeating": False, "fields": [_field("f2", "Ulica")]},
+                    ],
+                }
+            ],
+        }
+    )
+    merged = merge_drafts([draft, _draft("P", [_field("f1", "Ulica")])])
+    assert [s.title for s in merged.subject_pages[0].sections] == ["Budynek", "Działka"]
+    assert len(list(merged.iter_fields())) == 2
+
+
+def test_merge_drops_condition_on_non_choice_duplicate() -> None:
+    first = _draft("A", [_field("f1", "Typ", options=["a", "b"])])
+    second = _draft(
+        "B",
+        [
+            _field("f1", "Typ", kind="single_choice", options=["a", "b"]),
+            _field("f2", "Opis", visible_when=[{"field_id": "f1", "op": "equals", "value": "a"}]),
+        ],
+    )
+    merged = merge_drafts([first, second])
+    opis = next(f for _, f in merged.iter_fields() if f.label == "Opis")
+    assert opis.visible_when == []

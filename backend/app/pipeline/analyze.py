@@ -135,7 +135,11 @@ async def _analyze(
     if isinstance(outcome, str):
         return result._fail(outcome)
 
-    result.draft, warnings = normalize_draft(outcome, doc)
+    try:
+        result.draft, warnings = normalize_draft(outcome, doc)
+    except ValidationError:
+        logger.exception("normalizacja dała niepoprawny szkic")
+        return result._fail("invalid_output")
     result.warnings.extend(warnings)
     return result
 
@@ -221,7 +225,11 @@ async def _chunked(
         )
         if failure == "timeout":
             break
-    return merge_drafts(drafts)
+    try:
+        return merge_drafts(drafts)
+    except ValidationError:
+        logger.exception("łączenie fragmentów dało niepoprawny szkic")
+        return "invalid_output"
 
 
 async def _call(
