@@ -1,0 +1,44 @@
+{
+  "key": "dane_podmiotu",
+  "type": "SECTION",
+  "title": "Dane podmiotu",
+  "techName": "dane_podmiotu",
+  "fields": [
+    {
+      "key": "nazwa",
+      "type": "TEXT_FIELD",
+      "title": "Nazwa",
+      "techName": "nazwa",
+      "validation": [
+        "REQUIRED"
+      ]
+    },
+    {
+      "key": "nip",
+      "type": "TEXT_FIELD",
+      "title": "NIP",
+      "techName": "nip",
+      "validation": [
+        "REQUIRED",
+        "NIP"
+      ]
+    },
+    {
+      "key": "regon",
+      "type": "TEXT_FIELD",
+      "title": "REGON",
+      "techName": "regon",
+      "validation": [
+        "REQUIRED",
+        "REGON"
+      ]
+    },
+    {
+      "key": "numer_krs",
+      "type": "TEXT_FIELD",
+      "title": "Numer KRS",
+      "techName": "numer_krs",
+      "descriptionHtml": "<p>Wpisz 10 cyfr.</p>"
+    }
+  ]
+}

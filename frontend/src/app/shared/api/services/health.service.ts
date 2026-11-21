@@ -70,7 +70,7 @@ export class HealthService extends BaseService {
   /**
    * Ready.
    *
-   *
+   * Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `readyApiV1HealthReadyGet()` instead.
@@ -78,7 +78,7 @@ export class HealthService extends BaseService {
    * This method doesn't expect any request body.
    */
   readyApiV1HealthReadyGet$Response(params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
+[key: string]: any;
 }>> {
     const obs = readyApiV1HealthReadyGet(this.http, this.rootUrl, params, context);
     return obs;
@@ -87,7 +87,7 @@ export class HealthService extends BaseService {
   /**
    * Ready.
    *
-   *
+   * Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `readyApiV1HealthReadyGet$Response()` instead.
@@ -95,14 +95,14 @@ export class HealthService extends BaseService {
    * This method doesn't expect any request body.
    */
   readyApiV1HealthReadyGet(params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<{
-[key: string]: string;
+[key: string]: any;
 }> {
     const resp = this.readyApiV1HealthReadyGet$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<{
-[key: string]: string;
+[key: string]: any;
 }>): {
-[key: string]: string;
+[key: string]: any;
 } => r.body)
     );
   }

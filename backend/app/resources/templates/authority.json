@@ -1,0 +1,15 @@
+{
+  "key": "authority",
+  "type": "SECTION",
+  "title": "{title}",
+  "techName": "{section_tech_name}",
+  "fields": [
+    {
+      "key": "{field_tech_name}",
+      "type": "TEXT_FIELD",
+      "title": "{label}",
+      "techName": "{field_tech_name}",
+      "readOnly": true
+    }
+  ]
+}

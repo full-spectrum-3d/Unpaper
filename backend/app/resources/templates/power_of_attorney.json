@@ -1,0 +1,19 @@
+{
+  "key": "pelnomocnictwo",
+  "type": "SECTION",
+  "title": "Pełnomocnictwo",
+  "techName": "pelnomocnictwo",
+  "descriptionHtml": "<p>Dodaj dokument potwierdzający, że jesteś pełnomocnikiem.</p>",
+  "fields": [
+    {
+      "key": "plik_dokumentu_z_pelnomocnictwem",
+      "type": "FILE_UPLOADER",
+      "title": "Plik dokumentu z pełnomocnictwem",
+      "techName": "plik_dokumentu_z_pelnomocnictwem",
+      "validation": [
+        "REQUIRED"
+      ],
+      "descriptionHtml": "<p>Dopuszczalny format pliku: .jpg, .pdf, .xml, .PAdES, .png, .jpeg, .CAdES, .XAdES. Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1.</p>"
+    }
+  ]
+}

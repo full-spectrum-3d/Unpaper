@@ -12,7 +12,7 @@ export interface ReadyApiV1HealthReadyGet$Params {
 }
 
 export function readyApiV1HealthReadyGet(http: HttpClient, rootUrl: string, params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
+[key: string]: any;
 }>> {
   const rb = new RequestBuilder(rootUrl, readyApiV1HealthReadyGet.PATH, 'get');
   if (params) {
@@ -24,7 +24,7 @@ export function readyApiV1HealthReadyGet(http: HttpClient, rootUrl: string, para
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
       return r as StrictHttpResponse<{
-      [key: string]: string;
+      [key: string]: any;
       }>;
     })
   );

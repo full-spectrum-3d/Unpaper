@@ -4,15 +4,27 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from app.pipeline.build.dictionaries import catalog_listing
+from app.pipeline.build.catalogs import load_dictionary_catalog
+from app.pipeline.build.proposals import load_proposal_catalog
 
 router = APIRouter(tags=["catalog"])
 
 
 @router.get("/dictionaries")
 async def list_dictionaries() -> list[dict[str, Any]]:
-    """Słowniki predefiniowane (`PREDEFINED`) i proponowane (`PROPOSED`, z pozycjami)."""
-    return catalog_listing()
+    """Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami)."""
+    predefined = [
+        {
+            "name": entry.name,
+            "description": entry.description,
+            "status": "PREDEFINED",
+            "fieldTypes": list(entry.field_types),
+            "multiLevelTree": entry.multi_level_tree,
+        }
+        for entry in load_dictionary_catalog().values()
+    ]
+    proposed = [template.to_catalog_json() for template in load_proposal_catalog()]
+    return predefined + proposed
 
 
 @router.get("/initial-data-sources")

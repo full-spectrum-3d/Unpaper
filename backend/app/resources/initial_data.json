@@ -1,1 +1,359 @@
-{}
+[
+  {
+    "source": "PESEL",
+    "attribute": "pesel",
+    "label": "Pesel z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "name",
+    "label": "Imię z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "surname",
+    "label": "Nazwisko z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "birthDate",
+    "label": "Data urodzenia z PESEL",
+    "fieldType": "DATEPICKER",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "citizenship",
+    "label": "Narodowość z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "motherName",
+    "label": "Imię matki z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "birthPlace",
+    "label": "Miejsce urodzenia z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "motherSurname",
+    "label": "Nazwisko matki z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "sex",
+    "label": "Płeć z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "fatherName",
+    "label": "Imię ojca z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "secondName",
+    "label": "Drugie imię z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "birthCountry",
+    "label": "Kraj urodzenia z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "foreignBirthUSC",
+    "label": "Zagraniczne miasto USC urodzenia z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "familyName",
+    "label": "Nazwisko rodowe z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "fatherSurname",
+    "label": "Nazwisko ojca z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL",
+    "attribute": "maritalStatus",
+    "label": "Stan cywilny z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressVoivodeship",
+    "label": "Tymczasowy adres zameldowania: województwo z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressDistrict",
+    "label": "Tymczasowy adres zameldowania: region z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressCommunity",
+    "label": "Tymczasowy adres zameldowania: gmina z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressPlace",
+    "label": "Tymczasowy adres zameldowania: Miejscowość z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressStreetType",
+    "label": "Tymczasowy adres zameldowania: Typ ulicy z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressStreet",
+    "label": "Tymczasowy adres zameldowania: Ulica z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressHouseNumber",
+    "label": "Tymczasowy adres zameldowania: Numer domu z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressApartmentNumber",
+    "label": "Tymczasowy adres zameldowania: Numer lokalu z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "temporaryAddressPostalCode",
+    "label": "Tymczasowy adres zameldowania: Kod pocztowy z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressVoivodeship",
+    "label": "Stały adres zameldowania: województwo z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressDistrict",
+    "label": "Stały adres zameldowania: region z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressCommunity",
+    "label": "Stały adres zameldowania: gmina z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressPlace",
+    "label": "Stały adres zameldowania: Miejscowość z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressStreetType",
+    "label": "Stały adres zameldowania: Typ ulicy z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressStreet",
+    "label": "Stały adres zameldowania: Ulica z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressPostalCode",
+    "label": "Stały adres zameldowania: Kod pocztowy z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressHouseNumber",
+    "label": "Stały adres zameldowania: Numer domu z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "PESEL_ADDRESS",
+    "attribute": "permanentAddressApartmentNumber",
+    "label": "Stały adres zameldowania: Numer lokalu z PESEL",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "name",
+    "label": "Imię z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "secondName",
+    "label": "Drugie Imię z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "surname",
+    "label": "Nazwisko z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "pesel",
+    "label": "Wartość PESEL z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "phoneNumber",
+    "label": "Numer telefonu z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "email",
+    "label": "Adres email z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "country",
+    "label": "Kraj z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "voivodeship",
+    "label": "Województwo z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "district",
+    "label": "Dzielnica z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "community",
+    "label": "Gmina z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "place",
+    "label": "Miejscowość z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "postCode",
+    "label": "Kod pocztowy z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "street",
+    "label": "Ulica z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "building",
+    "label": "Nr budynku z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "apartment",
+    "label": "Nr lokalu z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": true
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "institutionName",
+    "label": "Nazwa Organizacji z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  },
+  {
+    "source": "MLPZ",
+    "attribute": "descriptiveOrganizationName",
+    "label": "Opisowa nazwa organizacji z MLPZ",
+    "fieldType": "TEXT_FIELD",
+    "editable": false
+  }
+]

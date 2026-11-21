@@ -1,0 +1,143 @@
+{
+  "key": "{section_tech_name}",
+  "type": "SECTION",
+  "title": "{title}",
+  "techName": "{section_tech_name}",
+  "fields": [
+    {
+      "key": "kraj",
+      "type": "SELECT",
+      "title": "Kraj",
+      "techName": "kraj{sfx}",
+      "validation": [
+        "REQUIRED"
+      ],
+      "dictionaryName": "Kraje",
+      "multiLevelTree": false,
+      "searchEnabled": true,
+      "defaultValue": [
+        "Polska"
+      ]
+    },
+    {
+      "key": "miejscowosc_zagranica",
+      "type": "TEXT_FIELD",
+      "title": "Miejscowość",
+      "techName": "miejscowosc{sfx}_zagranica",
+      "validation": [
+        "REQUIRED"
+      ],
+      "showWhen": {
+        "not": {
+          "eq": [
+            "kraj",
+            "Polska"
+          ]
+        }
+      }
+    },
+    {
+      "key": "kod_pocztowy_zagranica",
+      "type": "TEXT_FIELD",
+      "title": "Kod pocztowy",
+      "techName": "kod_pocztowy{sfx}_zagranica",
+      "validation": [
+        "REQUIRED"
+      ],
+      "showWhen": {
+        "not": {
+          "eq": [
+            "kraj",
+            "Polska"
+          ]
+        }
+      }
+    },
+    {
+      "key": "ulica_zagranica",
+      "type": "TEXT_FIELD",
+      "title": "Ulica",
+      "techName": "ulica{sfx}_zagranica",
+      "validation": [
+        "REQUIRED"
+      ],
+      "showWhen": {
+        "not": {
+          "eq": [
+            "kraj",
+            "Polska"
+          ]
+        }
+      }
+    },
+    {
+      "key": "wojewodztwo",
+      "type": "SELECT",
+      "title": "TERYT_4G_DOWODOWY",
+      "techName": "wojewodztwo{sfx}",
+      "validation": [
+        "REQUIRED"
+      ],
+      "dictionaryName": "TERYT_4G_DOWODOWY",
+      "multiLevelTree": true,
+      "searchEnabled": true,
+      "defaultValue": [],
+      "showWhen": {
+        "eq": [
+          "kraj",
+          "Polska"
+        ]
+      }
+    },
+    {
+      "key": "kod_pocztowy",
+      "type": "TEXT_FIELD",
+      "title": "Kod pocztowy",
+      "techName": "kod_pocztowy{sfx}",
+      "validation": [
+        "REQUIRED",
+        "ZIP_CODE"
+      ],
+      "initialData": "MLPZ.postCode",
+      "showWhen": {
+        "eq": [
+          "kraj",
+          "Polska"
+        ]
+      }
+    },
+    {
+      "key": "ulica",
+      "type": "TEXT_FIELD",
+      "title": "Ulica",
+      "techName": "ulica{sfx}",
+      "validation": [
+        "REQUIRED"
+      ],
+      "initialData": "MLPZ.street",
+      "showWhen": {
+        "eq": [
+          "kraj",
+          "Polska"
+        ]
+      }
+    },
+    {
+      "key": "numer_budynku",
+      "type": "TEXT_FIELD",
+      "title": "Numer budynku",
+      "techName": "numer_budynku{sfx}",
+      "validation": [
+        "REQUIRED"
+      ],
+      "initialData": "MLPZ.building"
+    },
+    {
+      "key": "numer_lokalu",
+      "type": "TEXT_FIELD",
+      "title": "Numer lokalu",
+      "techName": "numer_lokalu{sfx}",
+      "initialData": "MLPZ.apartment"
+    }
+  ]
+}

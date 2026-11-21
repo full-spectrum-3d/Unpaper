@@ -1,182 +1,246 @@
-"""Mapowanie pól szkicu na pola COI: typy, walidatory, techName, słowniki (spec §7.2, §8.3, §8.4).
+"""Mapowanie typów pól, walidatorów i generowanie techName (spec §8.3, §7.2)."""
 
-`FieldBuilder` przechodzi po polach szkicu (`DraftField`) i zwraca gotowe `Field`.
-Układ siatki (`Question`) robi `layout.py`, a warunki widoczności (`states`)
-`states.py` - korzysta z map `draft_ids` i `produced`.
-"""
-
-import html
 import re
-import uuid
-from collections.abc import Callable
+import unicodedata
+from collections.abc import Mapping
 
-from app.core.text import to_tech_name
-from app.models.draft import DraftField, DraftSection
-from app.models.form import Field, FieldType, Option, Validator
+from app.models.draft import CHOICE_KINDS, DraftField, FieldKind
+from app.models.draft import Condition as DraftCondition
+from app.models.form import ALLOWED_VALIDATORS, CHOICE_TYPES, FieldType, Validator
 from app.models.warning import ConversionWarning
-from app.pipeline.build.dictionaries import (
-    bind_dictionary,
-    is_phone_field,
-    normalize_label,
-    phone_prefix_field,
-)
+from app.pipeline.build.html import paragraphs
+from app.pipeline.build.ir import AllOf, Condition, Eq, FieldNode, Not, PageNode, Semantic
+from app.pipeline.issues import IssueCode
 
-MAX_RADIO_OPTIONS = 5
-SEARCH_ENABLED_MIN_OPTIONS = 16
-MAX_LABEL_LENGTH = 80
-DEFAULT_TECH_NAME = "pole"
+_TRANSLITERATION = str.maketrans("ąćęłńóśźż", "acelnoszz")
+_TITLE_PREFIXES = ("wniosek", "zgłoszenie", "deklaracja", "oświadczenie")
+_TITLE_MAX = 255
+_LABEL_MAX = 80
+_TECH_NAME_MAX = 60
+_RADIO_MAX_OPTIONS = 5
+_SEARCH_THRESHOLD = 15
 
-_SIMPLE_TYPES: dict[str, FieldType] = {
+_KIND_TYPES: dict[FieldKind, FieldType] = {
     "short_text": FieldType.TEXT_FIELD,
     "long_text": FieldType.TEXTAREA,
     "number": FieldType.NUMBER,
     "date": FieldType.DATEPICKER,
-    "multi_choice": FieldType.CHECKBOX,
     "file": FieldType.FILE_UPLOADER,
-    "info": FieldType.TEXT_BLOCK,
 }
 
-# Walidatory formatu po etykiecie (spec §8.3). Kolejność nie ma znaczenia:
-# gdy pasuje więcej niż jeden (np. „PESEL lub NIP”), nie ustawiamy żadnego.
-_FORMAT_VALIDATORS: tuple[tuple[Validator, re.Pattern[str]], ...] = (
-    (Validator.PESEL, re.compile(r"\bpesel\b")),
-    (Validator.NIP, re.compile(r"\bnip\b")),
-    (Validator.REGON, re.compile(r"\bregon\b")),
-    (Validator.ZIP_CODE, re.compile(r"\bkod pocztowy\b")),
-    (Validator.EMAIL, re.compile(r"\be-?mail\b|\badres poczty elektronicznej\b")),
-    (Validator.EPUAP, re.compile(r"\bepuap\b|\bskrytk")),
-    (Validator.ADE, re.compile(r"\be-?doręcze")),
-    (
-        Validator.SERIAL_NUMBER_ID_CARD,
-        re.compile(r"\bseri\w* i numer dowodu\b|\bnumer dowodu osobistego\b"),
-    ),
+_SEMANTIC_VALIDATORS: dict[Semantic, Validator] = {
+    Semantic.PESEL: Validator.PESEL,
+    Semantic.NIP: Validator.NIP,
+    Semantic.REGON: Validator.REGON,
+    Semantic.ZIP_CODE: Validator.ZIP_CODE,
+    Semantic.EMAIL: Validator.EMAIL,
+    Semantic.EPUAP: Validator.EPUAP,
+    Semantic.ADE: Validator.ADE,
+    Semantic.ID_CARD: Validator.SERIAL_NUMBER_ID_CARD,
+}
+
+_LABEL_SEMANTICS: tuple[tuple[re.Pattern[str], Semantic], ...] = tuple(
+    (re.compile(pattern, re.IGNORECASE), semantic)
+    for pattern, semantic in (
+        (r"\bpesel\b", Semantic.PESEL),
+        (r"\bnip\b", Semantic.NIP),
+        (r"\bregon\b", Semantic.REGON),
+        (r"kod\w*\s+pocztow", Semantic.ZIP_CODE),
+        (r"e-?mail|poczty\s+elektronicznej", Semantic.EMAIL),
+        (r"\bepuap\b", Semantic.EPUAP),
+        (r"e-?doręcze", Semantic.ADE),
+        (r"seri\w*\s+i\s+numer\w*\s+dowodu", Semantic.ID_CARD),
+        (r"numer\w*\s+kierunkow", Semantic.PHONE_PREFIX),
+        (r"\bkraj\b|\bpaństw|obywatelstw", Semantic.COUNTRY),
+    )
 )
-# Typy, w których wolno użyć walidatora formatu (R15). Pozostałe: tylko REQUIRED.
-_FORMAT_FIELD_TYPES = frozenset({FieldType.TEXT_FIELD})
-_NO_VALIDATION_TYPES = frozenset({FieldType.TEXT_BLOCK})
-_CHOICE_TYPES = frozenset({FieldType.RADIO, FieldType.SELECT, FieldType.CHECKBOX})
-
-IdFactory = Callable[[], str]
 
 
-def _uuid4() -> str:
-    return str(uuid.uuid4())
+def label_semantic(label: str) -> Semantic | None:
+    """Pierwsza semantyka, której wzorzec pasuje do etykiety."""
+    return next((sem for rx, sem in _LABEL_SEMANTICS if rx.search(label)), None)
 
 
-class FieldBuilder:
-    """Buduje pola jednego formularza; pilnuje unikalności `techName` (R12)."""
+def slugify(text: str, *, max_length: int = 60) -> str:
+    """techName: ASCII `[a-z0-9_]`, polskie znaki transliterowane."""
+    lowered = text.lower().translate(_TRANSLITERATION)
+    decomposed = unicodedata.normalize("NFKD", lowered)
+    ascii_text = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    slug = re.sub(r"[^a-z0-9]+", "_", ascii_text).strip("_")
+    if len(slug) > max_length:
+        cut = slug[:max_length]
+        idx = cut.rfind("_")
+        if idx >= max_length / 2:
+            cut = cut[:idx]
+        slug = cut.strip("_")
+    return slug or "pole"
 
-    def __init__(self, id_factory: IdFactory = _uuid4) -> None:
-        self._new_id = id_factory
-        self._tech_names: set[str] = set()
-        # id pola szkicu → techName pola głównego (cel warunków `visible_when`).
-        self.draft_ids: dict[str, str] = {}
-        # id pola szkicu → techName wszystkich pól z niego zbudowanych (komu dać `states`).
-        self.produced: dict[str, list[str]] = {}
-        self.warnings: list[ConversionWarning] = []
 
-    def reserve_tech_name(self, base: str) -> str:
-        """Unikalny techName: `kraj`, potem `kraj_2`, `kraj_3`… (spec §5, naprawy)."""
-        base = base or DEFAULT_TECH_NAME
-        name, n = base, 1
-        while name in self._tech_names:
-            n += 1
-            name = f"{base}_{n}"
-        self._tech_names.add(name)
-        return name
-
-    def build_section_fields(self, section: DraftSection, path: str) -> list[Field]:
-        """Pola sekcji w kolejności szkicu, z `questionOrder` = pozycja w sekcji."""
-        fields: list[Field] = []
-        for k, draft in enumerate(section.fields):
-            fields.extend(self.build_field(draft, f"{path}.fields[{k}]"))
-        return [f.model_copy(update={"question_order": i}) for i, f in enumerate(fields)]
-
-    def build_field(self, draft: DraftField, path: str) -> list[Field]:
-        """Jedno pole szkicu → 1 pole COI (albo 2: numer kierunkowy + telefon)."""
-        field_type = _field_type(draft)
-        format_validator = _format_validator(draft.label)
-        if format_validator and field_type is FieldType.NUMBER:
-            # PESEL/NIP/kod jako liczba gubi zera wiodące i walidator formatu.
-            field_type = FieldType.TEXT_FIELD
-
-        tech_name = self.reserve_tech_name(to_tech_name(draft.label))
-        self.draft_ids[draft.id] = tech_name
-        field = Field(
-            id=self._new_id(),
-            type=field_type,
-            tech_name=tech_name,
-            title="" if field_type is FieldType.TEXT_BLOCK else draft.label,
-            description=_text_block_html(draft.label) if field_type is FieldType.TEXT_BLOCK else "",
-            options=_options(draft.options) if field_type in _CHOICE_TYPES else [],
-            validation=_validation(draft.required, field_type, format_validator),
-        )
-        if field_type is FieldType.SELECT and len(field.options) >= SEARCH_ENABLED_MIN_OPTIONS:
-            field = field.model_copy(update={"search_enabled": True})
-
-        field, dictionary_warnings = bind_dictionary(field, path)
-        self.warnings.extend(dictionary_warnings)
-        self._check_label(draft.label, path)
-
-        if is_phone_field(field):
-            prefix = phone_prefix_field(field, field_id=self._new_id())
-            prefix = prefix.model_copy(
-                update={"tech_name": self.reserve_tech_name(prefix.tech_name)}
+def normalize_title(raw: str) -> tuple[str, list[ConversionWarning]]:
+    """Zwija białe znaki, ucina do 255 znaków i pilnuje prefiksu tytułu."""
+    issues: list[ConversionWarning] = []
+    title = " ".join(raw.split())
+    if len(title) > _TITLE_MAX:
+        title = title[:_TITLE_MAX].rstrip()
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W08_TITLE_TRUNCATED, message="Tytuł skrócono do 255 znaków."
             )
-            self.produced[draft.id] = [prefix.tech_name, field.tech_name]
-            return [prefix, field]
-        self.produced[draft.id] = [field.tech_name]
-        return [field]
+        )
+    if not title:
+        title = "Wniosek"
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W05_TITLE_PREFIX, message="Brak tytułu, użyto „Wniosek”."
+            )
+        )
+    elif not title.lower().startswith(_TITLE_PREFIXES):
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W05_TITLE_PREFIX,
+                message=(
+                    "Tytuł nie zaczyna się od „Wniosek”, „Zgłoszenie”, „Deklaracja” "
+                    "ani „Oświadczenie”."
+                ),
+            )
+        )
+    return title, issues
 
-    def _check_label(self, label: str, path: str) -> None:
-        if len(label) > MAX_LABEL_LENGTH:
-            self.warnings.append(
+
+def _choice_type(draft: DraftField, key: str, issues: list[ConversionWarning]) -> FieldType:
+    count = len(draft.options)
+    if draft.kind == "single_choice":
+        if count == 0 or count == 1:
+            issues.append(
                 ConversionWarning(
-                    code="W22_LABEL_TOO_LONG",
-                    message=(
-                        f"Etykieta ma {len(label)} znaków (zalecane ≤ {MAX_LABEL_LENGTH}). "
-                        "Przenieś wyjaśnienia do opisu pola."
-                    ),
-                    path=path,
+                    code=IssueCode.W07_CHOICE_OPTIONS,
+                    message=f"Pole wyboru ma {count} opcji.",
+                    path=key,
                 )
             )
+            return FieldType.TEXT_FIELD if count == 0 else FieldType.CHECKBOX
+        return FieldType.RADIO if count <= _RADIO_MAX_OPTIONS else FieldType.SELECT
+    if count == 0:
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W07_CHOICE_OPTIONS, message="Pole wyboru nie ma opcji.", path=key
+            )
+        )
+        return FieldType.TEXT_FIELD
+    return FieldType.CHECKBOX
 
 
-def _field_type(draft: DraftField) -> FieldType:
-    if draft.kind == "single_choice":
-        return FieldType.RADIO if len(draft.options) <= MAX_RADIO_OPTIONS else FieldType.SELECT
-    return _SIMPLE_TYPES[draft.kind]
-
-
-def _format_validator(label: str) -> Validator | None:
-    text = normalize_label(label)
-    found = [v for v, pattern in _FORMAT_VALIDATORS if pattern.search(text)]
-    return found[0] if len(found) == 1 else None
-
-
-def _validation(
-    required: bool, field_type: FieldType, format_validator: Validator | None
+def _validators(
+    required: bool, semantic: Semantic | None, field_type: FieldType
 ) -> list[Validator]:
-    if field_type in _NO_VALIDATION_TYPES:
-        return []
-    out = [Validator.REQUIRED] if required else []
-    if format_validator and field_type in _FORMAT_FIELD_TYPES:
-        out.append(format_validator)
-    return out
+    allowed = ALLOWED_VALIDATORS[field_type]
+    result: list[Validator] = []
+    if required and Validator.REQUIRED in allowed:
+        result.append(Validator.REQUIRED)
+    if field_type is not FieldType.TEXT_FIELD or semantic is None:
+        return result
+    extra = _SEMANTIC_VALIDATORS.get(semantic)
+    if extra is not None and extra not in result:
+        result.append(extra)
+    return result
 
 
-def _options(names: list[str]) -> list[Option]:
-    """`id` = `name` jak we wzorcach (spec §7.2); duplikaty pomijamy."""
-    out: list[Option] = []
-    seen: set[str] = set()
-    for raw in names:
-        name = raw.strip()
-        if not name or name in seen:
-            continue
-        seen.add(name)
-        out.append(Option(id=name, name=name, tech_name=to_tech_name(name)))
-    return out
+def map_draft_field(field: DraftField, *, key: str) -> tuple[FieldNode, list[ConversionWarning]]:
+    """Pole ze szkicu na `FieldNode` (spec §8.3). Semantykę ustala etykieta."""
+    issues: list[ConversionWarning] = []
+    unique = list(dict.fromkeys(field.options))
+    if len(unique) != len(field.options):
+        field = field.model_copy(update={"options": unique})
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W07_CHOICE_OPTIONS,
+                message="Usunięto powtórzone opcje pola.",
+                path=key,
+            )
+        )
+    node = FieldNode(
+        key=key,
+        type=FieldType.TEXT_FIELD,
+        title=field.label,
+        tech_name=slugify(field.label),
+    )
+    if field.kind == "info":
+        node.type = FieldType.TEXT_BLOCK
+        node.title = ""
+        node.description_html = paragraphs(field.label)
+        return node, issues
+
+    if field.kind in CHOICE_KINDS:
+        node.type = _choice_type(field, key, issues)
+        if node.type in (FieldType.RADIO, FieldType.SELECT, FieldType.CHECKBOX):
+            node.options = list(field.options)
+        if node.type is FieldType.SELECT and len(field.options) > _SEARCH_THRESHOLD:
+            node.search_enabled = True
+    else:
+        node.type = _KIND_TYPES[field.kind]
+
+    if len(field.label) > _LABEL_MAX:
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W02_LABEL_TOO_LONG,
+                message=f"Etykieta ma {len(field.label)} znaków.",
+                path=key,
+            )
+        )
+    if field.kind != "file":
+        node.semantic = label_semantic(field.label)
+    node.validation = _validators(field.required, node.semantic, node.type)
+    return node, issues
 
 
-def _text_block_html(text: str) -> str:
-    return f"<html><head></head><body><p>{html.escape(text)}</p></body></html>"
+def unresolved_condition(
+    conds: list[DraftCondition], by_id: Mapping[str, FieldNode], owner: FieldNode
+) -> DraftCondition | None:
+    """Pierwszy warunek, którego cel nie istnieje, nie jest wyborem albo jest właścicielem."""
+    for cond in conds:
+        target = by_id.get(cond.field_id)
+        if target is None or target is owner or target.type not in CHOICE_TYPES:
+            return cond
+    return None
+
+
+def convert_conditions(
+    conds: list[DraftCondition], by_id: Mapping[str, FieldNode], owner: FieldNode
+) -> Condition | None:
+    """Warunki szkicu (AND) na `Condition`. `None`, gdy któreś pole jest nieznane,
+    nie jest polem wyboru albo jest samym właścicielem."""
+    if unresolved_condition(conds, by_id, owner) is not None:
+        return None
+    items: list[Condition] = []
+    for cond in conds:
+        target = by_id[cond.field_id]
+        eq = Eq(target.key, cond.value)
+        items.append(Not(eq) if cond.op == "not_equals" else eq)
+    if not items:
+        return None
+    return items[0] if len(items) == 1 else AllOf(tuple(items))
+
+
+def assign_unique_tech_names(pages: list[PageNode]) -> None:
+    """Pierwsze wystąpienie zostaje, kolejne dostają `_2`, `_3`. Sekcje i pola wspólnie."""
+    used: set[str] = set()
+
+    def unique(base: str) -> str:
+        if base not in used:
+            used.add(base)
+            return base
+        n = 2
+        while True:
+            suffix = f"_{n}"
+            name = base[: _TECH_NAME_MAX - len(suffix)].rstrip("_") + suffix
+            if name not in used:
+                break
+            n += 1
+        used.add(name)
+        return name
+
+    for page in pages:
+        for section in page.sections:
+            section.tech_name = unique(section.tech_name)
+            for node in section.fields:
+                node.tech_name = unique(node.tech_name)

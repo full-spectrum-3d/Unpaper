@@ -1,0 +1,36 @@
+{
+  "key": "podmiot_wniosku",
+  "type": "SECTION",
+  "title": "Podmiot wniosku",
+  "techName": "podmiot_wniosku",
+  "fields": [
+    {
+      "key": "w_czyim_imieniu",
+      "type": "RADIO",
+      "title": "Wybierz, w czyim imieniu wnioskujesz",
+      "techName": "wybierz_w_czyim_imieniu_wnioskujesz",
+      "validation": [
+        "REQUIRED"
+      ]
+    },
+    {
+      "key": "jako_kto",
+      "type": "RADIO",
+      "title": "Wybierz, jako kto wnioskujesz",
+      "techName": "wybierz_jako_kto_wnioskujesz",
+      "options": [
+        "Pełnomocnik",
+        "Reprezentant"
+      ],
+      "validation": [
+        "REQUIRED"
+      ],
+      "showWhen": {
+        "eq": [
+          "w_czyim_imieniu",
+          "Osoby prawnej lub jednostki organizacyjnej"
+        ]
+      }
+    }
+  ]
+}
