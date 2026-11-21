@@ -241,8 +241,6 @@ Wspólny model pośredni niezależny od formatu: lista stron, a na stronie lista
 | DOCX | python-docx: akapity, style nagłówków, tabele, pola formularza | `☐`, podkreślenia, puste komórki tabel obok etykiet |
 | XLSX | openpyxl: komórki, scalenia, obramowania | komórka z etykietą + pusta komórka z obramowaniem obok |
 
-Tryb opcjonalny (`EXTRACTION_VLM_ENABLED=true`): strony skanów idą dodatkowo do modelu wizyjnego, który lepiej wykrywa zaznaczenia i układ. Domyślnie wyłączony ze względu na koszt.
-
 ### 5.4. [4] Analiza LLM → `FormDraft`
 - Wejście: `DocumentModel` zserializowany do zwięzłego tekstu z markerami (`[POLE]`, `[OPCJA]`, `[TABELA]`) oraz prompt systemowy ze skrótem standardów (§8).
 - Wyjście: JSON wymuszony schematem `FormDraft` (Pydantic → JSON Schema → parametr `format` w Ollama):
@@ -767,7 +765,6 @@ Wszystkie parametry przez zmienne środowiskowe (pydantic-settings). Plik `.env.
 | `LLM_NUM_CTX` | `8192` | okno kontekstu (prompt z przykładem ok. 3 tys. tokenów + odpowiedź; większe okno tylko zajmuje RAM) |
 | `LLM_NUM_PREDICT` | `2048` | limit tokenów odpowiedzi (zapętlony model nie zużyje całego budżetu) |
 | `LLM_MAX_CHUNK_CHARS` | `4500` | dłuższy tekst blankietu dzielony na fragmenty analizowane osobno |
-| `EXTRACTION_VLM_ENABLED` / `VLM_MODEL` | `false` / `qwen2.5vl:7b` | tryb wizyjny dla skanów |
 | `OCR_LANG` | `pol` | |
 | `OCR_DPI` | `300` | |
 | `CONVERTER_TIMEOUT_S` | `60` | LibreOffice |
@@ -788,7 +785,7 @@ Aplikacja waliduje konfigurację przy starcie i nie uruchamia się bez wymaganyc
 |---|---|---|
 | Jednostkowe | walidacja uploadu (każdy przypadek z §6.3), slug `techName`, walidatory PESEL/NIP/REGON, generator JSONata, layout, reguły R01–R15 | pytest |
 | Ekstrakcja | dla każdego formatu z `` `DocumentModel` zawiera kluczowe etykiety (lista oczekiwanych fraz per formularz) | pytest |
-| Golden | 2 formularze z wzorcowymi JSON-ami: wynik vs wzorzec, metryka podobieństwa strukturalnego (pokrycie sekcji po tytule, pokrycie pól po `techName`/etykiecie, zgodność typów, zgodność `states`). Próg regresji w CI | pytest + własny skrypt `scripts/compare.py` |
+| Golden | 2 formularze z wzorcowymi JSON-ami: wynik vs wzorzec, metryka podobieństwa strukturalnego (pokrycie sekcji po tytule, pokrycie pól po `techName`/etykiecie, zgodność typów, zgodność `states`). Próg regresji w CI | pytest (`tests/golden`, pełne porównanie) + `scripts/compare.py` (pokrycie sekcji, pól i typów dla wyniku z `out/`, próg 85%) |
 | Kontraktowe | każdy wynik przechodzi JSON Schema i reguły R01–R15 | pytest |
 | E2E API | wszystkie pliki z `` (9 formularzy × do 8 formatów) → 200 + poprawny JSON. Błędne pliki → właściwe kody | pytest + httpx |
 | Frontend | reducery i selektory (czyste funkcje), effects (`provideMockActions`), komponenty renderera, ewaluacja `states`, walidatory | Vitest + `@ngrx/store/testing` |
@@ -804,15 +801,15 @@ LLM w testach jednostkowych mockujemy (zapisane odpowiedzi). Testy golden i E2E 
 |---|---|
 | Czas konwersji (CPU 8 rdzeni, 16 GB RAM, formularz 1–3 strony) | p50 ≤ 120 s, p95 ≤ 300 s |
 | Czas konwersji z GPU (≥ 8 GB VRAM) | p50 ≤ 15 s |
-| Zasoby | api ≤ 1 GB RAM. llm ≤ 8 GB RAM (model 8B Q4) |
+| Zasoby | api ≤ 1 GB RAM. llm ≤ 8 GB RAM (model 8B Q4). Twarde limity w compose z zapasem: `mem_limit` api 2 GB (tmpfs 512 MB liczy się do limitu), llm 10 GB, frontend 128 MB |
 | Poprawność strukturalna | 100% wyników przechodzi JSON Schema i R01–R15 (wymuszone kodem) |
 | Jakość merytoryczna | pokrycie pól wzorca ≥ 85% na dwóch formularzach golden |
 | Powtarzalność | ten sam plik daje ten sam JSON (z dokładnością do UUID) |
 | Obserwowalność | logi JSON z `request_id` i czasami etapów pipeline'u |
-| Uruchomienie | `docker compose up` + jednorazowe pobranie modelu. Bez innych kroków |
+| Uruchomienie | `make setup` + `make up`: wygenerowanie `.env` z sekretami (`scripts/init-env.sh`), budowa obrazów, jednorazowe pobranie modelu, `docker compose up`. Bez `.env` compose nie startuje |
 
 ### 13.3. Generowanie plików wynikowych do oceny
-Skrypt `scripts/convert_all.py` przepuszcza wszystkie formularze z katalogu wejściowego przez API i zapisuje `out/<nazwa>.json` oraz `out/<nazwa>.report.json`. Wynikowe JSON-y idą do zgłoszenia (wymóg formalny pkt 4).
+Skrypt `scripts/convert_all.py` (`make convert-all`) przepuszcza wszystkie formularze z katalogu wejściowego przez API i zapisuje `out/<nazwa pliku>.json` oraz `out/<nazwa pliku>.report.json` (nazwa z rozszerzeniem, bo ten sam formularz bywa w kilku formatach). Wynikowe JSON-y idą do zgłoszenia (wymóg formalny pkt 4).
 
 ---
 
@@ -864,7 +861,7 @@ Skrypt `scripts/convert_all.py` przepuszcza wszystkie formularze z katalogu wej�
 /out                wynikowe JSON-y do zgłoszenia
 docker-compose.yml
 .env.example
-Makefile            build, up, model, test, convert-all
+Makefile            setup, env, build, up, model, test, test-frontend, convert-all
 README.md
 ```
 

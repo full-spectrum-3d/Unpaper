@@ -31,7 +31,8 @@ USER ollama
 EXPOSE 11434
 
 FROM ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289 AS cpu
-# ca-certificates: TLS przy jednorazowym pobieraniu modelu (llm-pull).
+# ca-certificates: TLS przy jednorazowym pobieraniu modelu (llm-pull). Bez wersji celowo:
+# archiwum Ubuntu usuwa stare wersje po aktualizacji, a obraz bazowy jest przypięty digestem.
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
  && rm -rf /var/lib/apt/lists/* \

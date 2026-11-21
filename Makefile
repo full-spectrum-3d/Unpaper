@@ -1,13 +1,18 @@
-.PHONY: setup build env model up down logs test convert-all password-hash
+.PHONY: setup build env model up down logs test test-frontend convert-all password-hash
 
-# Pierwsze uruchomienie: obrazy, .env z sekretami, model w wolumenie.
-setup: build env model
+# Pierwsze uruchomienie: .env z sekretami, obrazy, model w wolumenie. `.env` przed `build`:
+# COMPOSE_PROFILES z .env decyduje, czy compose buduje obraz llm.
+setup: env build model
 
 build:
 	docker compose build
 
+# Hash hasła liczy obraz API, więc bez .env budujemy go samym `docker build` (compose bez
+# .env nie przechodzi walidacji env_file). Istniejący .env zostaje - `make setup` można powtórzyć.
 env:
-	scripts/init-env.sh
+	@if [ -e .env ]; then echo ".env istnieje - pomijam."; else \
+		docker build -t coi-cf-api:0.1.0 ./backend && scripts/init-env.sh; \
+	fi
 
 # Model z LLM_MODEL (domyślnie qwen3:8b) pobiera jednorazowy kontener z dostępem do sieci.
 # Tylko z profilem `ollama` (COMPOSE_PROFILES w .env); z zewnętrznym serwerem modelu nic nie robi.
@@ -30,6 +35,11 @@ logs:
 test:
 	cd backend && uv run pytest
 
+test-frontend:
+	cd frontend && npm test -- --watch=false
+
+# Wymaga działającego API (make up). Login: API_USER (środowisko albo .env), hasło: API_PASSWORD
+# albo pytanie w terminalu.
 convert-all:
 	uv run --project backend python scripts/convert_all.py --input materials --output out
 

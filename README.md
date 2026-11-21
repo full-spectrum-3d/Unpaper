@@ -155,7 +155,7 @@ przy instalacji ([Uruchomienie](#uruchomienie-aplikacji), krok 3).
 ### Szybki start
 
 ```bash
-make setup     # obrazy + .env z sekretami + pobranie modelu
+make setup     # .env z sekretami + obrazy + pobranie modelu (można powtórzyć, .env zostaje)
 make up        # start w tle
 ```
 
@@ -178,7 +178,7 @@ i hasło: `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`. Ręcznie: 
 | Adres | Co |
 |---|---|
 | http://localhost:8080 | aplikacja webowa (logowanie kontem z `.env`) |
-| http://localhost:8000/docs | Swagger UI z opisem API |
+| http://localhost:8000/docs | Swagger UI z opisem API (tylko `APP_ENV=development`; w produkcji wyłączone) |
 | http://localhost:8000/api/v1/health/ready | gotowość: 200 = model dostępny |
 
 ```bash
@@ -186,6 +186,18 @@ docker compose ps                 # stan usług (healthy)
 docker compose logs -f api        # logi API (JSON, bez treści dokumentów)
 make down                         # zatrzymanie (docker compose down)
 ```
+
+### Konwersja wsadowa (pliki wynikowe)
+
+```bash
+make convert-all       # materials/* -> out/<plik>.json + out/<plik>.report.json
+```
+
+Wymaga działającego API (`make up`). Login bierze z `API_USER` (środowisko albo `.env`),
+hasło z `API_PASSWORD` albo pyta w terminalu. Adres API: `--url` / `API_URL`
+(domyślnie `http://localhost:8000`). Błąd jednego pliku nie przerywa przebiegu; na końcu
+lista błędów i kod wyjścia 1. Pokrycie wzorca:
+`uv run --project backend python scripts/compare.py out/plik.json wymagania/wzorzec.json`.
 
 Pierwsza konwersja po starcie może trwać dłużej o kilkadziesiąt sekund: model ładuje się
 do pamięci. API rozgrzewa go przy starcie, a `OLLAMA_KEEP_ALIVE=24h` trzyma go potem w RAM.
@@ -283,7 +295,7 @@ sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
 | `JWT_LEEWAY_S` | `30` | tolerancja różnicy zegarów przy `exp` / `nbf` / `iat` |
 | `JWT_SUBJECT_CLAIM` | `sub` | claim z identyfikatorem użytkownika (np. `preferred_username`) |
 | `JWT_ROLES_CLAIM` | `roles` | claim z rolami; kropka = zagnieżdżenie (np. `realm_access.roles` w Keycloak) |
-| `JWT_REQUIRED_ROLE` | — | rola wymagana do użycia API; pusta = bez wymogu, brak roli → 403 |
+| `JWT_REQUIRED_ROLE` | — | rola wymagana do użycia API; pusta = bez wymogu, brak roli → 403. W produkcji z RS256 bez wydawania tokenów (sam klucz publiczny) jest obowiązkowa: bez niej API nie wystartuje |
 | `API_USER` | — | login konta technicznego dla `/auth/token` |
 | `API_PASSWORD_HASH` | — | hash argon2id hasła (`make password-hash`); w `.env` w pojedynczych cudzysłowach |
 
@@ -309,7 +321,7 @@ sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
 | `INITIAL_DATA_IDENTITY_SOURCE` | `MLPZ` | źródło danych „Twoje dane”: `MLPZ` albo `PESEL` |
 | `FINISH_PAGE_STYLE` | `sample` | strona końcowa jak we wzorcach (`sample`) albo `info_section` |
 | `MAX_SECTIONS_PER_PAGE` | `8` | powyżej tej liczby sekcji przedmiot wniosku dzielony jest na kolejne strony |
-| `RODO_CLAUSE_URL` | — | adres klauzuli informacyjnej RODO (np. w BIP) linkowanej w sekcji zgód; bez niego zgoda jest zwykłym tekstem bez linku, a raport konwersji ma ostrzeżenie `W28_RODO_CLAUSE_URL_MISSING` |
+| `RODO_CLAUSE_URL` | — | adres `https://` klauzuli informacyjnej RODO (np. w BIP) linkowanej w sekcji zgód; bez niego zgoda jest zwykłym tekstem bez linku, a raport konwersji ma ostrzeżenie `W28_RODO_CLAUSE_URL_MISSING` |
 
 ### Aplikacja i HTTP
 
@@ -319,13 +331,14 @@ sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
 | `LOG_LEVEL` | `INFO` | `DEBUG` / `INFO` / `WARNING` / `ERROR`; logi JSON na stdout, bez treści dokumentów |
 | `CORS_ORIGINS` | `http://localhost:8080` | dozwolone originy, rozdzielone przecinkami |
 | `API_PORT` / `FRONTEND_PORT` | `8000` / `8080` | porty na hoście (zmienne Compose); API nasłuchuje tylko na `127.0.0.1` |
+| `API_MEM_LIMIT` / `LLM_MEM_LIMIT` | `2g` / `10g` | limit pamięci kontenerów (zmienne Compose); większy `LLM_MODEL` albo `MAX_CONCURRENT_JOBS` wymaga podniesienia |
 
 Zmiana hasła: `make password-hash`, wklej hash do `.env` i wykonaj `docker compose up -d api`.
 
 ## REST API
 
 - Prefiks: `/api/v1`.
-- Opis OpenAPI: http://localhost:8000/docs (Swagger UI), `/openapi.json`, kopia w `docs/openapi.json`.
+- Opis OpenAPI: http://localhost:8000/docs (Swagger UI) i `/openapi.json` w trybie `development`, zawsze kopia w `docs/openapi.json`.
 - Uwierzytelnianie: nagłówek `Authorization: Bearer <JWT>` na wszystkich endpointach poza `/auth/token` i `/health/*`.
 - Każda odpowiedź ma nagłówek `X-Request-ID` (można go też podać w żądaniu); ten sam identyfikator jest w logach.
 
@@ -458,7 +471,8 @@ Format RFC 9457 (`application/problem+json`), pole `code` do obsługi w kliencie
 | 413 | `FILE_TOO_LARGE` |
 | 415 | `UNSUPPORTED_EXTENSION`, `MIME_MISMATCH` |
 | 422 | `ARCHIVE_TOO_LARGE`, `DOCUMENT_TOO_COMPLEX`, `DOCUMENT_UNREADABLE`, `DOCUMENT_PASSWORD_REQUIRED`, `DOCUMENT_PASSWORD_INVALID`, `VALIDATION_ERROR` |
-| 503 | `LLM_UNAVAILABLE` (tylko `/health/ready`; konwersja przechodzi wtedy na szkic z reguł) |
+| 503 | `SERVER_BUSY` (wszystkie miejsca na konwersję/walidację zajęte; nagłówek `Retry-After`), `LLM_UNAVAILABLE` i `SERVICE_UNAVAILABLE` (tylko `/health/ready`: brak modelu albo libmagic/tesseract; konwersja bez modelu przechodzi na szkic z reguł) |
+| 429 | `TOO_MANY_REQUESTS` (nginx: limit prób logowania, `Retry-After: 60`) |
 | 504 | `PROCESSING_TIMEOUT` (przekroczony `REQUEST_TIMEOUT_S`) |
 | 500 | `INTERNAL_ERROR` (bez szczegółów w treści; pełny log z `request_id` po stronie serwera) |
 
@@ -470,12 +484,14 @@ Format RFC 9457 (`application/problem+json`), pole `code` do obsługi w kliencie
 | lekkie dystrybucje | Alpine dla API i frontendu; `llm` na `ubuntu:24.04` (161 MB), bo binarka Ollamy wymaga glibc |
 | jawne wersjonowanie, bez `latest` | każdy `FROM` z tagiem i `@sha256`; własne obrazy z wersją (`:0.1.0`), wersja `uv` też przypięta |
 | dedykowany użytkownik z ograniczonymi uprawnieniami | `USER app` / `nginx` / `ollama`; żaden kontener nie działa jako root |
-| tylko wymagane porty | na hoście 8000 (API) i 8080 (frontend); `llm` bez portu na hoście |
+| tylko wymagane porty | na hoście 8080 (frontend) i 8000 (API, tylko `127.0.0.1`); `llm` bez portu na hoście |
 | sekrety tylko w runtime | `.env` (`env_file`) albo Docker secrets; żadnych `ARG`/`ENV` z sekretami; `.env` w `.gitignore` i `.dockerignore` |
 | izolowane środowisko | `read_only: true`, `tmpfs /tmp`, `cap_drop: ALL`, `no-new-privileges`, `pids_limit`; `llm` w sieci `internal: true` bez internetu i z `OLLAMA_NO_CLOUD=1`; model pobiera osobny jednorazowy kontener (`llm-pull`) |
 
-Dodatkowo: nagłówki bezpieczeństwa w nginx (CSP, `X-Content-Type-Options`,
-`Referrer-Policy`, `frame-ancestors 'none'`), `init: true` w API (sprzątanie procesów
+Dodatkowo: nagłówki bezpieczeństwa w nginx (CSP z `frame-ancestors 'none'`,
+`base-uri 'self'`, `form-action 'self'`; `X-Content-Type-Options`, `Referrer-Policy`,
+`Permissions-Policy`), rate limit logowania w nginx (`/api/v1/auth/token`: 10 prób/min
+na IP, do 5 naraz, potem 429), limity pamięci kontenerów (`mem_limit`), `init: true` w API (sprzątanie procesów
 LibreOffice), XML z dokumentów parsowany przez `defusedxml`, treść dokumentu trafia
 do modelu tylko jako dane, a wynik modelu jest ograniczony schematem i weryfikowany.
 
@@ -489,13 +505,25 @@ secrets:
   jwt_public_key: { file: ./secrets/jwt_public.pem }
 ```
 
+API nasłuchuje tylko na `127.0.0.1:8000` (Swagger, healthchecki z hosta); z sieci
+aplikacja jest dostępna wyłącznie przez nginx na 8080.
+
+**TLS.** Kontenery mówią tylko HTTP. W sieci innej niż localhost TLS trzeba zakończyć
+przed frontendem (reverse proxy, load balancer) i tam włączyć HSTS – przykład nagłówka
+jest zakomentowany w `frontend/nginx.conf`. Wysłany po samym HTTP byłby ignorowany.
+
 ## Testy
 
 ```bash
 cd backend && uv sync && uv run pytest            # testy jednostkowe, API, golden
 cd backend && uv run ruff check . && uv run mypy app
-cd frontend && npm ci && npm test                 # wymaga Node 24 (.nvmrc)
+cd frontend && npm ci && npm test                 # Node ≥ 24.15 (.nvmrc: nvm use)
+make test-frontend                                # to samo bez trybu watch
 ```
+
+CI (`.github/workflows/ci.yml`) uruchamia ruff, mypy i pytest backendu oraz `tsc`,
+`ng test`, `ng build` i `npm run api:check` (zgodność `docs/openapi.json` i klienta
+z backendem) frontendu.
 
 Testy na materiałach konkursowych: `COI_MATERIALS_DIR=/ścieżka/do/Wnioski uv run pytest tests/extraction`.
 Ocena jakości analizy AI na zestawie wzorcowym: `backend/llm_eval/`.
@@ -504,6 +532,9 @@ Praca nad API bez Dockera: uruchom Ollamę z portem na hoście
 (`docker run -d -p 127.0.0.1:11434:11434 -v ollama-models:/home/ollama/.ollama coi-cf-llm:0.40.16`),
 ustaw w `.env` `APP_ENV=development`, `LLM_BASE_URL=http://localhost:11434` i uruchom
 `cd backend && uv run uvicorn app.main:create_app --factory --reload`.
+Frontend z hot reload: `cd frontend && npm start` (http://localhost:4200); `ng serve`
+przekazuje `/api` do `http://localhost:8000` (`frontend/proxy.conf.json`), więc `CORS_ORIGINS`
+nie wymaga zmian.
 
 ## Licencje
 
@@ -570,10 +601,11 @@ backend/              API (FastAPI): app/api, app/pipeline (etapy 1–6), app/re
 frontend/             aplikacja Angular + nginx.conf
 llm/                  obraz Ollama z użytkownikiem bez roota, skrypt pobrania modelu
 docs/                 specyfikacja, architektura, openapi.json, projekty modułów
-scripts/init-env.sh   generowanie .env z sekretami
+scripts/              init-env.sh (.env z sekretami), convert_all.py (pliki wynikowe), compare.py (pokrycie wzorca)
+.github/workflows/    CI
 wymagania/            materiały konkursowe COI
 docker-compose.yml    usługi api, frontend, llm (+ llm-pull)
 docker-compose.gpu.yml  nakładka GPU
 .env.example          wzór konfiguracji
-Makefile              setup, build, model, up, down, logs, test, password-hash
+Makefile              setup, env, build, model, up, down, logs, test, test-frontend, convert-all, password-hash
 ```

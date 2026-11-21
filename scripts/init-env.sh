@@ -39,6 +39,7 @@ awk -v secret="$secret" -v user="$user" -v hash="$hash" '
   /^API_PASSWORD_HASH=/ { print "API_PASSWORD_HASH=\047" hash "\047"; next }
   { print }
 ' .env.example > .env
+chmod 600 .env  # umask 077 już to daje; jawnie, gdyby ktoś przeniósł umask
 
 echo "Utworzono .env (użytkownik: $user)."
 if [ "$generated" -eq 1 ]; then

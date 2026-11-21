@@ -12,6 +12,10 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+Requests to `/api` are proxied to the backend at `http://localhost:8000` (`proxy.conf.json`), so the default `CORS_ORIGINS` (only `:8080`) needs no change. Start the API first (`make up` in the repo root, or `uv run uvicorn …` — see the root README).
+
+Node ≥ 24.15 is required (Angular CLI 22.3); `nvm use` picks the version from `../.nvmrc`.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
