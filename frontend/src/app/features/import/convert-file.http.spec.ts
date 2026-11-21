@@ -24,8 +24,27 @@ describe('provideHttpConvertFile', () => {
     expect(req.request.method).toBe('POST');
     const body = req.request.body as FormData;
     expect((body.get('file') as File).name).toBe('wniosek.pdf');
+    expect(req.request.params.get('report')).toBe('true');
     req.flush({ title: 'Wniosek' });
-    expect(result).toEqual({ title: 'Wniosek' });
+    expect(result).toEqual({ form: { title: 'Wniosek' }, report: null });
+    ctrl.verify();
+  });
+
+  it('unwraps { form, report } from the response', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideApiConfiguration(''),
+        provideHttpConvertFile(),
+      ],
+    });
+    const convert = TestBed.inject(CONVERT_FILE);
+    const ctrl = TestBed.inject(HttpTestingController);
+    let result: unknown;
+    convert(new File(['x'], 'a.pdf')).subscribe((r) => (result = r));
+    ctrl.expectOne((r) => r.url === '/api/v1/forms/convert').flush({ form: { title: 'F' }, report: { durationMs: 1 } });
+    expect(result).toEqual({ form: { title: 'F' }, report: { durationMs: 1 } });
     ctrl.verify();
   });
 

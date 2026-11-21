@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Provider } from '@angular/core';
 import { defer, from, switchMap, throwError, timer } from 'rxjs';
 import { CONVERT_FILE, ConvertFileFn } from './convert-file';
+import { mockReport } from './mock-report';
 
 // Lazy chunks: reference forms stay out of the initial bundle.
 const FORMS = [
@@ -25,7 +26,7 @@ export const mockConvertFile: ConvertFileFn = (file, password) =>
         if (/haslo/i.test(file.name) && password !== MOCK_DOCUMENT_PASSWORD) {
           return fail(422, password ? 'DOCUMENT_PASSWORD_INVALID' : 'DOCUMENT_PASSWORD_REQUIRED');
         }
-        return from(load().then((m) => m.default));
+        return from(load().then((m) => ({ form: m.default, report: mockReport(m.default) })));
       }),
     );
   });

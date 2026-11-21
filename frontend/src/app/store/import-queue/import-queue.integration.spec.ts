@@ -19,6 +19,7 @@ const pending = (id: string): QueueItem => ({
   error: null,
   retryable: true,
   result: null,
+  report: null,
   startedAt: null,
   durationMs: null,
 });
@@ -54,7 +55,7 @@ describe('import queue integration', () => {
         defer(() => {
           calls.push(file.name);
           max = Math.max(max, ++active);
-          return timer(1000).pipe(map(() => ({})));
+          return timer(1000).pipe(map(() => ({ form: {}, report: null })));
         }).pipe(finalize(() => active--));
       const ids = Array.from({ length: 10 }, (_, i) => String(i));
       const { store } = setup(convert, ids);
@@ -76,7 +77,7 @@ describe('import queue integration', () => {
     const calls: string[] = [];
     const convert: ConvertFileFn = (file) => {
       calls.push(file.name);
-      return of({});
+      return of({ form: {}, report: null });
     };
     const { store, started } = setup(convert, ['1', '2', '3', '4'], (id) => id > '2');
     await new Promise((r) => setTimeout(r));
