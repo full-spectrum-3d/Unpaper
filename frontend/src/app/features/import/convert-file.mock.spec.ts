@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { mockConvertFile } from './convert-file.mock';
+import { MOCK_DOCUMENT_PASSWORD, mockConvertFile } from './convert-file.mock';
 
-const run = (name: string) => {
+const run = (name: string, password?: string) => {
   const out: { value?: unknown; error?: unknown } = {};
-  mockConvertFile(new File(['x'], name)).subscribe({
+  mockConvertFile(new File(['x'], name), password).subscribe({
     next: (v) => (out.value = v),
     error: (e) => (out.error = e),
   });
@@ -39,5 +39,22 @@ describe('mockConvertFile', () => {
     expect(err).toBeInstanceOf(HttpErrorResponse);
     expect(err.status).toBe(503);
     expect((err.error as { code: string }).code).toBe('LLM_UNAVAILABLE');
+  });
+
+  it.each([
+    [undefined, 'DOCUMENT_PASSWORD_REQUIRED'],
+    ['zle', 'DOCUMENT_PASSWORD_INVALID'],
+  ])('asks for a password for haslo in name (password %s)', async (password, code) => {
+    const out = run('umowa_haslo.pdf', password);
+    await vi.advanceTimersByTimeAsync(5000);
+    const err = out.error as HttpErrorResponse;
+    expect(err.status).toBe(422);
+    expect(err.error).toEqual({ code });
+  });
+
+  it('converts a haslo file with the demo password', async () => {
+    const out = run('umowa_haslo.pdf', MOCK_DOCUMENT_PASSWORD);
+    await vi.advanceTimersByTimeAsync(5000);
+    await vi.waitFor(() => expect(out.value).toBeDefined());
   });
 });

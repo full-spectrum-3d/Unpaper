@@ -54,12 +54,31 @@ describe('importQueueReducer', () => {
     expect(state.entities['a']).toMatchObject({ status: 'error', error: 'boom', retryable: true });
   });
 
+  it('convertFailed stores passwordState, defaulting to null', () => {
+    const before = withItems(item('a', { status: 'processing' }));
+    const asked = importQueueReducer(
+      before,
+      ImportQueueActions.convertFailed({ id: 'a', error: 'x', passwordState: 'required' }),
+    );
+    expect(asked.entities['a']).toMatchObject({ status: 'error', passwordState: 'required' });
+    const plain = importQueueReducer(before, ImportQueueActions.convertFailed({ id: 'a', error: 'x' }));
+    expect(plain.entities['a']?.passwordState).toBeNull();
+  });
+
+  it('passwordSubmitted re-queues only a password error', () => {
+    const asked = withItems(item('a', { status: 'error', error: 'x', retryable: true, passwordState: 'invalid' }));
+    const state = importQueueReducer(asked, ImportQueueActions.passwordSubmitted({ id: 'a' }));
+    expect(state.entities['a']).toMatchObject({ status: 'pending', error: null, passwordState: null });
+    const other = withItems(item('a', { status: 'error', error: 'x', retryable: true }));
+    expect(importQueueReducer(other, ImportQueueActions.passwordSubmitted({ id: 'a' }))).toBe(other);
+  });
+
   it('retry only for retryable error', () => {
     const fixed = withItems(item('a', { status: 'error', error: 'x', retryable: false }));
     expect(importQueueReducer(fixed, ImportQueueActions.retry({ id: 'a' }))).toBe(fixed);
-    const retryable = withItems(item('a', { status: 'error', error: 'x', retryable: true }));
+    const retryable = withItems(item('a', { status: 'error', error: 'x', retryable: true, passwordState: 'required' }));
     const state = importQueueReducer(retryable, ImportQueueActions.retry({ id: 'a' }));
-    expect(state.entities['a']).toMatchObject({ status: 'pending', error: null });
+    expect(state.entities['a']).toMatchObject({ status: 'pending', error: null, passwordState: null });
   });
 
   it('removed deletes pending, error and done', () => {

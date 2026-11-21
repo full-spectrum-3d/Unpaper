@@ -28,4 +28,24 @@ describe('provideHttpConvertFile', () => {
     expect(result).toEqual({ title: 'Wniosek' });
     ctrl.verify();
   });
+
+  it('sends the password field only when given', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideApiConfiguration(''),
+        provideHttpConvertFile(),
+      ],
+    });
+    const convert = TestBed.inject(CONVERT_FILE);
+    const ctrl = TestBed.inject(HttpTestingController);
+    convert(new File(['x'], 'a.pdf')).subscribe();
+    convert(new File(['x'], 'b.pdf'), 'tajne').subscribe();
+
+    const [plain, withPassword] = ctrl.match((r) => r.url === '/api/v1/forms/convert');
+    expect((plain.request.body as FormData).has('password')).toBe(false);
+    expect((withPassword.request.body as FormData).get('password')).toBe('tajne');
+    ctrl.verify({ ignoreCancelled: true });
+  });
 });
