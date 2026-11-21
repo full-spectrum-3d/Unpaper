@@ -47,7 +47,7 @@ def _invalid() -> LlmReply:
 async def test_valid_reply_returns_draft() -> None:
     r, _ = await _run([_valid()])
     assert r.draft is not None and r.draft.authority_name == "Wójt Gminy Elbląg"
-    assert (r.fallback, r.retries, r.mode, r.model) == (False, 0, "accurate", "qwen3:8b")
+    assert (r.fallback, r.retries, r.model) == (False, 0, "qwen3:8b")
     assert (r.prompt_tokens, r.output_tokens, r.duration_ms) == (700, 300, 60_000)
 
 
@@ -78,12 +78,6 @@ async def test_invalid_twice_falls_back() -> None:
 async def test_truncated_json_is_invalid_output() -> None:
     r, _ = await _run([reply('{"title": "Wniosek o'), reply('{"title": "Wniosek o')])
     assert (r.fallback, r.fallback_reason) == (True, "invalid_output")
-
-
-async def test_fast_mode_never_retries() -> None:
-    r, client = await _run([_invalid()], mode="fast")
-    assert len(client.calls) == 1 and client.calls[0]["model"] == "qwen3:4b"
-    assert (r.mode, r.fallback_reason, r.retries) == ("fast", "invalid_output", 0)
 
 
 async def test_no_retry_when_budget_too_small() -> None:
@@ -131,13 +125,13 @@ async def test_timeout_falls_back() -> None:
 
 
 async def test_unavailable_falls_back() -> None:
-    r, _ = await _run([LlmUnavailableError("model 'qwen3:4b' not found")], mode="fast")
+    r, _ = await _run([LlmUnavailableError("model 'qwen3:8b' not found")])
     assert (r.fallback, r.fallback_reason) == (True, "unavailable")
 
 
-async def test_default_mode_from_settings() -> None:
-    r, client = await _run([_valid()], settings=_settings(llm_default_mode="fast"))
-    assert r.mode == "fast" and client.calls[0]["model"] == "qwen3:4b"
+async def test_model_from_settings() -> None:
+    r, client = await _run([_valid()], settings=_settings(llm_model="bielik:11b"))
+    assert r.model == "bielik:11b" and client.calls[0]["model"] == "bielik:11b"
 
 
 async def test_normalization_warnings_in_result() -> None:
