@@ -74,11 +74,21 @@ class Settings(BaseSettings):
 
     # --- LLM ---
     llm_base_url: str = "http://llm:11434"
+    # Proxy auth Modala (nagłówki Modal-Key/Modal-Secret); puste = lokalna Ollama.
+    llm_auth_key: str | None = None
+    llm_auth_secret: SecretStr | None = None
     llm_model: str = "qwen3:8b"
+    # Inne modele do wyboru parametrem `model` w /forms/convert (lista po przecinku).
+    llm_models: Annotated[list[str], NoDecode] = []
     llm_timeout_s: PositiveInt = 240
     llm_temperature: Annotated[float, Field(ge=0, le=2)] = 0
     llm_seed: int = 42
     llm_num_ctx: PositiveInt = 8192
+    # Limit tokenów odpowiedzi: zapętlony model nie zużyje całego budżetu czasu.
+    llm_num_predict: PositiveInt = 2048
+    # Dłuższy dokument dzielimy na fragmenty: 8b na CPU gubi pola w długim tekście
+    # (stypendium), a pojedyncze wywołanie nie mieści się w czasie (odpady, §10.2).
+    llm_max_chunk_chars: PositiveInt = 4500
     extraction_vlm_enabled: bool = False
     vlm_model: str = "qwen2.5vl:7b"
 
@@ -93,11 +103,11 @@ class Settings(BaseSettings):
     max_sections_per_page: PositiveInt = 8
     rodo_clause_url: str | None = None
 
-    @field_validator("cors_origins", mode="before")
+    @field_validator("cors_origins", "llm_models", mode="before")
     @classmethod
-    def _split_origins(cls, value: object) -> object:
+    def _split_csv(cls, value: object) -> object:
         if isinstance(value, str):
-            return [origin.strip() for origin in value.split(",") if origin.strip()]
+            return [item.strip() for item in value.split(",") if item.strip()]
         return value
 
     @field_validator("jwt_required_role", mode="before")
@@ -116,6 +126,11 @@ class Settings(BaseSettings):
     @classmethod
     def _unescape_private_pem(cls, value: object) -> object:
         return _unescape_pem(value)
+
+    @property
+    def llm_allowed_models(self) -> list[str]:
+        """Model domyślny i modele z `LLM_MODELS`, bez powtórzeń."""
+        return list(dict.fromkeys([self.llm_model, *self.llm_models]))
 
     @property
     def token_issuing_enabled(self) -> bool:

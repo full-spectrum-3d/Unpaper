@@ -1,6 +1,6 @@
 {
  "name": "Deklaracja o wysokości opłaty",
- "source": "Deklaracja o wysokości opłaty.pdf",
+ "source": "odpady.pdf",
  "document": {
   "source": {
    "method": "pdf_text",
@@ -12,178 +12,564 @@
     "blocks": [
      {
       "id": "b1",
-      "kind": "paragraph",
-      "text": "1/6"
+      "kind": "heading",
+      "text": "DEKLARACJA O WYSOKOŚCI MIESIĘCZNEJ OPŁATY",
+      "bbox": {
+       "x0": 159.72000524999999,
+       "y0": 107.54364231650004,
+       "x1": 435.3472956352158,
+       "y1": 119.54409306650007
+      }
      },
      {
       "id": "b2",
       "kind": "heading",
-      "text": "DEKLARACJA O WYSOKOŚCI MIESIĘCZNEJ OPŁATY"
+      "text": "ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI",
+      "bbox": {
+       "x0": 161.640003,
+       "y0": 121.46364081650006,
+       "x1": 433.52769979400756,
+       "y1": 133.4640915665001
+      }
      },
      {
       "id": "b3",
-      "kind": "heading",
-      "text": "ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI"
+      "kind": "paragraph",
+      "text": "Podstawa prawna: art. 6n ust. 1 i 2 i art. 6m ust. 1a i 1b ustawy o utrzymaniu czystości i porządku w gminach (t.j. Dz.U. z 2025r. poz.733)",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 146.74464260000002,
+       "x1": 552.91081185,
+       "y1": 154.78494260000002
+      }
      },
      {
       "id": "b4",
-      "kind": "paragraph",
-      "text": "Podstawa prawna: art. 6n ust. 1 i 2 i art. 6m ust. 1a i 1b ustawy o utrzymaniu czystości i porządku w gminach (t.j. Dz.U. z 2025r. poz.733)"
+      "kind": "label",
+      "text": "Składający:",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 156.10463960000004,
+       "x1": 84.8516113384521,
+       "y1": 164.14493960000004
+      }
      },
      {
       "id": "b5",
       "kind": "paragraph",
-      "text": "Składający: właściciel nieruchomości w rozumieniu art. 2 ust. 1 pkt 4 ustawy o utrzymaniu czystości i porządku w gminach, tj. także"
+      "text": "właściciel nieruchomości w rozumieniu art. 2 ust. 1 pkt 4 ustawy o utrzymaniu czystości i porządku w gminach, tj. także",
+      "bbox": {
+       "x0": 119.77570725,
+       "y0": 156.10463960000004,
+       "x1": 563.4551649930985,
+       "y1": 164.14493960000004
+      }
      },
      {
       "id": "b6",
       "kind": "paragraph",
-      "text": "współwłaściciel, użytkownik wieczysty oraz jednostka organizacyjna i osoba posiadająca nieruchomości w zarządzie lub"
+      "text": "współwłaściciel, użytkownik wieczysty oraz jednostka organizacyjna i osoba posiadająca nieruchomości w zarządzie lub użytkowaniu, a także inny podmiot władający nieruchomością.",
+      "bbox": {
+       "x0": 119.75999475,
+       "y0": 165.34464485,
+       "x1": 563.5282412606689,
+       "y1": 182.62493885000004
+      }
      },
      {
       "id": "b7",
       "kind": "paragraph",
-      "text": "użytkowaniu, a także inny podmiot władający nieruchomością."
+      "text": "Termin składania: w terminie 14 dni od dnia zamieszkania na danej nieruchomości pierwszego mieszkańca,",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 183.9446471,
+       "x1": 438.17603832690423,
+       "y1": 191.9849471
+      }
      },
      {
       "id": "b8",
       "kind": "paragraph",
-      "text": "Termin składania: w terminie 14 dni od dnia zamieszkania na danej nieruchomości pierwszego mieszkańca,"
+      "text": "w terminie 14 dni od dnia powstania na nieruchomości odpadów komunalnych lub",
+      "bbox": {
+       "x0": 119.748492,
+       "y0": 193.18465234999996,
+       "x1": 413.05932698338216,
+       "y1": 201.22495234999997
+      }
      },
      {
       "id": "b9",
       "kind": "paragraph",
-      "text": "w terminie 14 dni od dnia powstania na nieruchomości odpadów komunalnych lub"
+      "text": "w terminie do 10 dnia miesiąca następującego po miesiącu, w którym nastąpiła zmiana danych stanowiących podstawę ustalenia opłaty.",
+      "bbox": {
+       "x0": 119.75999475,
+       "y0": 202.54463810000004,
+       "x1": 563.4543710124591,
+       "y1": 219.82494335
+      }
      },
      {
       "id": "b10",
-      "kind": "paragraph",
-      "text": "w terminie do 10 dnia miesiąca następującego po miesiącu, w którym nastąpiła zmiana danych stanowiących podstawę"
+      "kind": "heading",
+      "text": "A. ORGAN, DO KTÓREGO SKŁADANA JEST DEKLARACJA",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 224.93081675000008,
+       "x1": 296.76154767260823,
+       "y1": 234.89119175000008
+      }
      },
      {
       "id": "b11",
-      "kind": "paragraph",
-      "text": "ustalenia opłaty."
+      "kind": "label",
+      "text": "Prezydent Miasta Gdyni",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 239.93081675000008,
+       "x1": 161.86468348549764,
+       "y1": 249.89119175000008
+      }
      },
      {
       "id": "b12",
-      "kind": "heading",
-      "text": "A. ORGAN, DO KTÓREGO SKŁADANA JEST DEKLARACJA"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 38.756470841911764,
+       "y0": 237.70285625,
+       "x1": 48.344001524999996,
+       "y1": 277.535994275
+      }
      },
      {
       "id": "b13",
       "kind": "paragraph",
-      "text": "Prezydent Miasta Gdyni"
+      "text": "Al. Marszałka Piłsudskiego 52/54",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 251.57083175000002,
+       "x1": 197.68141382124034,
+       "y1": 261.53120675
+      }
      },
      {
       "id": "b14",
       "kind": "paragraph",
-      "text": "Al. Marszałka Piłsudskiego 52/54"
+      "text": "81-382 Gdynia",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 263.09082050000006,
+       "x1": 115.60835180859375,
+       "y1": 273.05119550000006
+      }
      },
      {
       "id": "b15",
-      "kind": "paragraph",
-      "text": "81-382 Gdynia"
+      "kind": "heading",
+      "text": "B. DANE PODMIOTU ZOBOWIĄZANEGO DO ZŁOŻENIA DEKLARACJI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 281.690834,
+       "x1": 341.6820607981923,
+       "y1": 291.651209
+      }
      },
      {
       "id": "b16",
       "kind": "heading",
-      "text": "B. DANE PODMIOTU ZOBOWIĄZANEGO DO ZŁOŻENIA DEKLARACJI"
+      "text": "B.1 DANE IDENTYFIKACYJNE",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 298.8508152500001,
+       "x1": 166.6369131448234,
+       "y1": 308.8111902500001
+      }
      },
      {
       "id": "b17",
-      "kind": "heading",
-      "text": "B.1 DANE IDENTYFIKACYJNE"
+      "kind": "paragraph",
+      "text": "1. Składający deklarację (zaznaczyć właściwą kratkę)",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 312.91770275,
+       "x1": 269.29654505351965,
+       "y1": 321.91807775000007
+      }
      },
      {
       "id": "b18",
       "kind": "paragraph",
-      "text": "1. Składający deklarację (zaznaczyć właściwą kratkę)"
+      "text": "1. właściciel/współwłaściciel",
+      "bbox": {
+       "x0": 65.190114,
+       "y0": 323.35771249999993,
+       "x1": 181.9954338195472,
+       "y1": 332.35808749999995
+      }
      },
      {
       "id": "b19",
       "kind": "paragraph",
-      "text": "1. właściciel/współwłaściciel 2. współwłaściciel (wspólność majątkowa ) 3. najemca/dzierżawca"
+      "text": "2. współwłaściciel (wspólność majątkowa )",
+      "bbox": {
+       "x0": 203.55011100000004,
+       "y0": 323.35771249999993,
+       "x1": 376.4742807195353,
+       "y1": 332.35808749999995
+      }
      },
      {
       "id": "b20",
-      "kind": "paragraph",
-      "text": "4. wspólnota mieszkaniowa 5. spółdzielnia mieszkaniowa 6. inny podmiot posiadający nieruchomość"
+      "kind": "label",
+      "text": "3. najemca/dzierżawca",
+      "bbox": {
+       "x0": 403.350129,
+       "y0": 323.35771249999993,
+       "x1": 498.278947490637,
+       "y1": 332.35808749999995
+      }
      },
      {
       "id": "b21",
-      "kind": "paragraph",
-      "text": "w zarządzie lub użytkowaniu (należy podać jaki oraz dokładne dane)……………………………………………………………………………."
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 38.756470841911764,
+       "y0": 310.879991125,
+       "x1": 48.344001524999996,
+       "y1": 510.119998625
+      }
      },
      {
       "id": "b22",
-      "kind": "input_placeholder",
-      "text": "…………………………………………………………………………………………………………………………………………………….……………………………………….………"
+      "kind": "paragraph",
+      "text": "4. wspólnota mieszkaniowa",
+      "bbox": {
+       "x0": 65.190114,
+       "y0": 338.95770350000004,
+       "x1": 175.2796422855589,
+       "y1": 347.9580785
+      }
      },
      {
       "id": "b23",
-      "kind": "paragraph",
-      "text": "2. Nazwisko, imię / Nazwa pełna"
+      "kind": "checkbox_option",
+      "text": "5. spółdzielnia mieszkaniowa",
+      "bbox": {
+       "x0": 207.51010950000003,
+       "y0": 338.95770350000004,
+       "x1": 324.6515722199179,
+       "y1": 347.9580785
+      }
      },
      {
       "id": "b24",
-      "kind": "paragraph",
-      "text": "3. PESEL 4. NIP/REGON (dot. tylko osób prawnych)"
+      "kind": "checkbox_option",
+      "text": "6. inny podmiot posiadający nieruchomość",
+      "bbox": {
+       "x0": 356.79011625,
+       "y0": 338.95770350000004,
+       "x1": 528.6007708430049,
+       "y1": 347.9580785
+      }
      },
      {
       "id": "b25",
       "kind": "paragraph",
-      "text": "B.2 DANE IDENTYFIKACYJNE WSPÓŁMAŁŻONKA (wypełnić tylko w przypadku zaznaczenia kratki w poz. B 1.1.2)"
+      "text": "w zarządzie lub użytkowaniu (należy podać jaki oraz dokładne dane)…………………………………………………………………………….",
+      "bbox": {
+       "x0": 76.47529801522238,
+       "y0": 354.67769675,
+       "x1": 548.8872974324049,
+       "y1": 363.67807174999996
+      }
      },
      {
       "id": "b26",
-      "kind": "paragraph",
-      "text": "5. Nazwisko, imię"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 370.39771325000004,
+       "x1": 547.4975832890616,
+       "y1": 379.39808825
+      }
      },
      {
       "id": "b27",
-      "kind": "paragraph",
-      "text": "6. Adres zamieszkania"
+      "kind": "label",
+      "text": "2. Nazwisko, imię / Nazwa pełna",
+      "bbox": {
+       "x0": 52.320001500000004,
+       "y0": 386.59769525,
+       "x1": 185.77016936640229,
+       "y1": 395.59807025
+      }
      },
      {
       "id": "b28",
-      "kind": "heading",
-      "text": "7. PESEL"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 54.50571326785714,
+       "y0": 395.879993375,
+       "x1": 534.240005625,
+       "y1": 464.99999600000007
+      }
      },
      {
       "id": "b29",
-      "kind": "heading",
-      "text": "B.3 ADRES ZAMIESZKANIA / SIEDZIBY"
+      "kind": "paragraph",
+      "text": "3. PESEL",
+      "bbox": {
+       "x0": 52.320001500000004,
+       "y0": 473.95772600000004,
+       "x1": 87.57294908203127,
+       "y1": 482.958101
+      }
      },
      {
       "id": "b30",
-      "kind": "paragraph",
-      "text": "8. Kraj 9. Województwo 10. Gmina"
+      "kind": "label",
+      "text": "4. NIP/REGON (dot. tylko osób prawnych)",
+      "bbox": {
+       "x0": 350.75999475000003,
+       "y0": 473.95772600000004,
+       "x1": 518.5722327312541,
+       "y1": 482.958101
+      }
      },
      {
       "id": "b31",
-      "kind": "paragraph",
-      "text": "11. Miejscowość 12. Ulica"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 54.50571326785714,
+       "y0": 483.240001625,
+       "x1": 510.599990625,
+       "y1": 503.49912490217395
+      }
      },
      {
       "id": "b32",
       "kind": "paragraph",
-      "text": "13. Numer"
+      "text": "B.2 DANE IDENTYFIKACYJNE WSPÓŁMAŁŻONKA (wypełnić tylko w przypadku zaznaczenia kratki w poz. B 1.1.2)",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 515.9308167500001,
+       "x1": 537.4012507161613,
+       "y1": 525.89119175
+      }
      },
      {
       "id": "b33",
-      "kind": "paragraph",
-      "text": "nieruchomości/domu"
+      "kind": "label",
+      "text": "5 . Nazwisko, imię",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 535.0108190000001,
+       "x1": 123.83918226483974,
+       "y1": 544.971194
+      }
      },
      {
       "id": "b34",
-      "kind": "paragraph",
-      "text": "14. Numer lokalu 15. Kod pocztowy"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 38.756470841911764,
+       "y0": 530.15999975,
+       "x1": 534.240005625,
+       "y1": 680.0399967500001
+      }
      },
      {
       "id": "b35",
+      "kind": "heading",
+      "text": "6 . Adres zamieszkania",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 591.551664362,
+       "x1": 141.08389110037464,
+       "y1": 603.552115112
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 54.50571326785714,
+       "y0": 603.83999225,
+       "x1": 534.240005625,
+       "y1": 648.1199986249999
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "label",
+      "text": "7. PESEL",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 649.757699,
+       "x1": 86.26781149961738,
+       "y1": 658.7580740000001
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 54.50571326785714,
+       "y0": 659.03999675,
+       "x1": 209.79000365625,
+       "y1": 676.56000875
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "heading",
+      "text": "B.3 ADRES ZAMIESZKANIA / SIEDZIBY",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 685.8508152500001,
+       "x1": 204.53769632841716,
+       "y1": 695.8111902500001
+      }
+     },
+     {
+      "id": "b40",
       "kind": "paragraph",
-      "text": "16. Numer/y działki/działek (wypełnić jeżeli nieruchomość nie ma urzędowo nadanego adresu)"
+      "text": "8. Kraj",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 701.8377005,
+       "x1": 86.56273787695314,
+       "y1": 710.8380755000001
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "paragraph",
+      "text": "9. Województwo",
+      "bbox": {
+       "x0": 163.31999625,
+       "y0": 701.8377005,
+       "x1": 238.12733968202323,
+       "y1": 710.8380755000001
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "label",
+      "text": "10. Gmina",
+      "bbox": {
+       "x0": 403.56001275,
+       "y0": 701.8377005,
+       "x1": 447.2806937753906,
+       "y1": 710.8380755000001
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 38.756470841911764,
+       "y0": 700.1099928125,
+       "x1": 48.344001524999996,
+       "y1": 795.8399925
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "11. Miejscowość",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 723.91770275,
+       "x1": 119.58845372811301,
+       "y1": 732.9180777500001
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "paragraph",
+      "text": "12. Ulica",
+      "bbox": {
+       "x0": 163.31999625,
+       "y0": 723.91770275,
+       "x1": 201.5117750390625,
+       "y1": 732.9180777500001
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "paragraph",
+      "text": "13. Numer",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 747.07770575,
+       "x1": 96.49363211797277,
+       "y1": 756.07808075
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "14. Numer lokalu",
+      "bbox": {
+       "x0": 163.31999625,
+       "y0": 747.07770575,
+       "x1": 234.88052472070314,
+       "y1": 756.07808075
+      }
+     },
+     {
+      "id": "b48",
+      "kind": "paragraph",
+      "text": "15. Kod pocztowy",
+      "bbox": {
+       "x0": 403.56001275,
+       "y0": 747.07770575,
+       "x1": 477.48479207305087,
+       "y1": 756.07808075
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "paragraph",
+      "text": "nieruchomości/domu",
+      "bbox": {
+       "x0": 69.95999925000001,
+       "y0": 757.517693,
+       "x1": 154.78786563516826,
+       "y1": 766.5180680000001
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "paragraph",
+      "text": "16. Numer/y działki/działek (wypełnić jeżeli nieruchomość nie ma urzędowo nadanego adresu)",
+      "bbox": {
+       "x0": 51.95999925,
+       "y0": 769.517693,
+       "x1": 439.0000549883214,
+       "y1": 778.5180680000001
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "paragraph",
+      "text": "1/6",
+      "bbox": {
+       "x0": 509.03997825,
+       "y0": 809.95836485,
+       "x1": 524.417513781692,
+       "y1": 820.99881485
+      }
      }
     ]
    },
@@ -191,254 +577,620 @@
     "number": 2,
     "blocks": [
      {
-      "id": "b36",
-      "kind": "paragraph",
-      "text": "2/6"
-     },
-     {
-      "id": "b37",
-      "kind": "paragraph",
-      "text": "B.4 ADRES DO KORESPONDENCJI (wypełnić tylko w przypadku kiedy jest inny niż w poz. B.3)"
-     },
-     {
-      "id": "b38",
-      "kind": "paragraph",
-      "text": "17. Kraj 18. Województwo 19. Gmina"
-     },
-     {
-      "id": "b39",
-      "kind": "paragraph",
-      "text": "20. Miejscowość 21. Ulica"
-     },
-     {
-      "id": "b40",
-      "kind": "paragraph",
-      "text": "22. Numer nieruchomości/domu 23. Numer lokalu 24. Kod pocztowy"
-     },
-     {
-      "id": "b41",
-      "kind": "heading",
-      "text": "C. OKOLICZNOŚCI UZASADNIAJĄCE ZŁOŻENIE DEKLARACJI"
-     },
-     {
-      "id": "b42",
-      "kind": "paragraph",
-      "text": "25. Okoliczności"
-     },
-     {
-      "id": "b43",
-      "kind": "paragraph",
-      "text": "1. pierwsza deklaracja - data zdarzenia powodującego"
-     },
-     {
-      "id": "b44",
-      "kind": "paragraph",
-      "text": "powstanie obowiązku opłaty:"
-     },
-     {
-      "id": "b45",
-      "kind": "heading",
-      "text": "D D - M M - R R R R"
-     },
-     {
-      "id": "b46",
-      "kind": "paragraph",
-      "text": "3. ustanie obowiązku uiszczania opłaty – data zdarzenia"
-     },
-     {
-      "id": "b47",
-      "kind": "paragraph",
-      "text": "powodującego ustanie obowiązku opłaty:"
-     },
-     {
-      "id": "b48",
-      "kind": "heading",
-      "text": "D D - M M - R R R R"
-     },
-     {
-      "id": "b49",
-      "kind": "paragraph",
-      "text": "2. nowa deklaracja składana ze względu na zmianę"
-     },
-     {
-      "id": "b50",
-      "kind": "paragraph",
-      "text": "danych będących podstawą ustalenia wysokości"
-     },
-     {
-      "id": "b51",
-      "kind": "paragraph",
-      "text": "należnej opłaty za gospodarowanie odpadami"
-     },
-     {
       "id": "b52",
       "kind": "paragraph",
-      "text": "komunalnymi - data wystąpienia zmiany danych:"
+      "text": "B.4 ADRES DO KORESPONDENCJI (wypełnić tylko w przypadku kiedy jest inny niż w poz. B.3)",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 70.85082650000004,
+       "x1": 455.3734772636719,
+       "y1": 80.81120150000004
+      }
      },
      {
       "id": "b53",
-      "kind": "heading",
-      "text": "D D - M M - R R R R"
+      "kind": "paragraph",
+      "text": "17. Kraj",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 88.63770199999999,
+       "x1": 84.88273937695313,
+       "y1": 97.63807700000007
+      }
      },
      {
       "id": "b54",
       "kind": "paragraph",
-      "text": "4. korekta złożonej, obowiązującej deklaracji - data"
+      "text": "18. Województwo",
+      "bbox": {
+       "x0": 273.83999625,
+       "y0": 88.63770199999999,
+       "x1": 348.6473396820233,
+       "y1": 97.63807700000007
+      }
      },
      {
       "id": "b55",
       "kind": "paragraph",
-      "text": "wystąpienia zmiany danych:"
+      "text": "19. Gmina",
+      "bbox": {
+       "x0": 421.6799925,
+       "y0": 88.63770199999999,
+       "x1": 465.40067352539063,
+       "y1": 97.63807700000007
+      }
      },
      {
       "id": "b56",
-      "kind": "heading",
-      "text": "D D - M M - R R R R"
+      "kind": "paragraph",
+      "text": "20. Miejscowość",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 110.83770049999998,
+       "x1": 117.908455228113,
+       "y1": 119.83807550000006
+      }
      },
      {
       "id": "b57",
-      "kind": "heading",
-      "text": "D. DANE ADRESOWE NIERUCHOMOŚCI, NA KTÓREJ POWSTAJĄ I SĄ GROMADZONE ODPADY"
+      "kind": "paragraph",
+      "text": "21. Ulica",
+      "bbox": {
+       "x0": 273.83999625,
+       "y0": 110.83770049999998,
+       "x1": 312.0317750390625,
+       "y1": 119.83807550000006
+      }
      },
      {
       "id": "b58",
-      "kind": "heading",
-      "text": "D.1 ADRES NIERUCHOMOŚCI"
+      "kind": "paragraph",
+      "text": "22. Numer nieruchomości/domu",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 133.99770424999997,
+       "x1": 182.3685784726763,
+       "y1": 142.99807925000005
+      }
      },
      {
       "id": "b59",
       "kind": "paragraph",
-      "text": "26. Miejscowość"
+      "text": "23. Numer lokalu",
+      "bbox": {
+       "x0": 273.83999625,
+       "y0": 133.99770424999997,
+       "x1": 345.4005247207031,
+       "y1": 142.99807925000005
+      }
      },
      {
       "id": "b60",
-      "kind": "heading",
-      "text": "GDYNIA"
+      "kind": "paragraph",
+      "text": "24. Kod pocztowy",
+      "bbox": {
+       "x0": 421.6799925,
+       "y0": 133.99770424999997,
+       "x1": 495.6047718230509,
+       "y1": 142.99807925000005
+      }
      },
      {
       "id": "b61",
-      "kind": "paragraph",
-      "text": "27. Kod pocztowy 28. Ulica"
+      "kind": "heading",
+      "text": "C. OKOLICZNOŚCI UZASADNIAJĄCE ZŁOŻENIE DEKLARACJI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 158.93082800000002,
+       "x1": 309.32893413310467,
+       "y1": 168.89120300000002
+      }
      },
      {
       "id": "b62",
       "kind": "paragraph",
-      "text": "29. Numer nieruchomości/domu 30. Numer lokalu"
+      "text": "25. Okoliczności",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 172.757699,
+       "x1": 118.0315072390665,
+       "y1": 181.75807400000008
+      }
      },
      {
       "id": "b63",
-      "kind": "paragraph",
-      "text": "D.2 MIEJSCE GROMADZENIA ODPADÓW (W PRZYPADKU NIERUCHOMOŚCI ZABUDOWANEJ BUDYNKIEM"
+      "kind": "checkbox_option",
+      "text": "1. pierwsza deklaracja - data zdarzenia powodującego",
+      "bbox": {
+       "x0": 66.2701155,
+       "y0": 183.19770874999995,
+       "x1": 286.85141146639427,
+       "y1": 192.19808375000002
+      }
      },
      {
       "id": "b64",
-      "kind": "paragraph",
-      "text": "WIELOLOKALOWYM LUB BUDYNKAMI WIELOLOKALOWYMI, JEŻELI POSZCZEGÓLNE BUDYNKI LUB ICH CZĘŚCI"
+      "kind": "checkbox_option",
+      "text": "2. nowa deklaracja składana ze względu na zmianę",
+      "bbox": {
+       "x0": 346.3501065,
+       "y0": 183.19770874999995,
+       "x1": 552.6963601523439,
+       "y1": 192.19808375000002
+      }
      },
      {
       "id": "b65",
-      "kind": "paragraph",
-      "text": "POSIADAJĄ PRZYPORZĄDKOWANE IM ODDZIELNE MIEJSCA GROMADZENIA ODPADÓW KOMUNALNYCH)"
+      "kind": "label",
+      "text": "powstanie obowiązku opłaty:",
+      "bbox": {
+       "x0": 80.04000074999999,
+       "y0": 193.637696,
+       "x1": 197.2478060800781,
+       "y1": 202.63807100000008
+      }
      },
      {
       "id": "b66",
       "kind": "paragraph",
-      "text": "31. Adres lub opis miejsca lokalizacji pojemników 32. Numer/y działki/działek"
+      "text": "danych będących podstawą ustalenia wysokości",
+      "bbox": {
+       "x0": 357.599991,
+       "y0": 193.637696,
+       "x1": 549.2183263226483,
+       "y1": 202.63807100000008
+      }
      },
      {
       "id": "b67",
       "kind": "paragraph",
-      "text": "geodezyjnych"
+      "text": "należnej opłaty za gospodarowanie odpadami komunalnymi - data wystąpienia zmiany danych:",
+      "bbox": {
+       "x0": 357.6353017652224,
+       "y0": 204.07770574999995,
+       "x1": 553.7150456351483,
+       "y1": 223.51806800000008
+      }
      },
      {
       "id": "b68",
-      "kind": "heading",
-      "text": "D.3 DANE IDENTYFIKACYJNE"
+      "kind": "paragraph",
+      "text": "D D - M M - R R R R",
+      "bbox": {
+       "x0": 111.35999699999999,
+       "y0": 219.53083100000003,
+       "x1": 265.236948,
+       "y1": 229.49120600000003
+      }
      },
      {
       "id": "b69",
       "kind": "paragraph",
-      "text": "33. Rodzaj nieruchomości"
+      "text": "D D - M M - R R R R",
+      "bbox": {
+       "x0": 371.400009,
+       "y0": 239.21082350000006,
+       "x1": 525.2769495,
+       "y1": 249.17119850000006
+      }
      },
      {
       "id": "b70",
-      "kind": "paragraph",
-      "text": "1. Nieruchomość zabudowana budynkiem mieszkalnym jednorodzinnym"
+      "kind": "checkbox_option",
+      "text": "3. ustanie obowiązku uiszczania opłaty – data zdarzenia",
+      "bbox": {
+       "x0": 66.2701155,
+       "y0": 277.637696,
+       "x1": 291.5132892992108,
+       "y1": 286.6380710000001
+      }
      },
      {
       "id": "b71",
-      "kind": "paragraph",
-      "text": "2. Nieruchomość zabudowana budynkiem mieszkalnym wielolokalowym"
+      "kind": "checkbox_option",
+      "text": "4. korekta złożonej, obowiązującej deklaracji - data",
+      "bbox": {
+       "x0": 346.3501065,
+       "y0": 276.31771174999994,
+       "x1": 558.8500149859454,
+       "y1": 285.31808675
+      }
      },
      {
       "id": "b72",
-      "kind": "paragraph",
-      "text": "34. Nieruchomość zaznaczona w poz. 33 jest nieruchomością, która w części stanowi nieruchomość na której zamieszkują"
+      "kind": "label",
+      "text": "powodującego ustanie obowiązku opłaty:",
+      "bbox": {
+       "x0": 80.04000074999999,
+       "y0": 288.07770574999995,
+       "x1": 246.58409995233978,
+       "y1": 297.07808075
+      }
      },
      {
       "id": "b73",
-      "kind": "paragraph",
-      "text": "mieszkańcy, a w części nieruchomość na której nie zamieszkują mieszkańcy, a powstają na niej odpady komunalne"
+      "kind": "label",
+      "text": "wystąpienia zmiany danych:",
+      "bbox": {
+       "x0": 360.3468405202965,
+       "y0": 286.757699,
+       "x1": 473.57408937576525,
+       "y1": 295.7580740000001
+      }
      },
      {
       "id": "b74",
-      "kind": "heading",
-      "text": "TAK NIE"
+      "kind": "paragraph",
+      "text": "D D - M M - R R R R",
+      "bbox": {
+       "x0": 111.35999699999999,
+       "y0": 313.97081750000007,
+       "x1": 265.236948,
+       "y1": 323.93119250000007
+      }
      },
      {
       "id": "b75",
       "kind": "paragraph",
-      "text": "Składający deklarację, który zaznaczył kratkę TAK w poz. 34 zobowiązany jest do wypełnienia załącznika do deklaracji: A (w"
+      "text": "D D - M M - R R R R",
+      "bbox": {
+       "x0": 371.400009,
+       "y0": 312.7708130000001,
+       "x1": 525.2769495,
+       "y1": 322.7311880000001
+      }
      },
      {
       "id": "b76",
-      "kind": "paragraph",
-      "text": "przypadku zaznaczenia D.3.33.1) lub B (w przypadku zaznaczenia D.3.33.2)."
+      "kind": "heading",
+      "text": "D. DANE ADRESOWE NIERUCHOMOŚCI, NA KTÓREJ POWSTAJĄ I SĄ GROMADZONE ODPADY",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 338.45082874999997,
+       "x1": 456.8578514389148,
+       "y1": 348.41120374999997
+      }
      },
      {
       "id": "b77",
-      "kind": "paragraph",
-      "text": "D.4 OŚWIADCZENIE (DOTYCZY WYŁACZNIE WŁAŚCICIELI NIERUCHOMOŚCI ZABUDOWANYCH BUDYNKAMI"
+      "kind": "heading",
+      "text": "D.1 ADRES NIERUCHOMOŚCI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 357.65083325,
+       "x1": 164.71596141767662,
+       "y1": 367.61120825
+      }
      },
      {
       "id": "b78",
-      "kind": "heading",
-      "text": "MIESZKALNYMI JEDNORODZINNYMI)"
+      "kind": "paragraph",
+      "text": "26. Miejscowość",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 373.277711,
+       "x1": 117.908455228113,
+       "y1": 382.278086
+      }
      },
      {
       "id": "b79",
       "kind": "paragraph",
-      "text": "35."
+      "text": "27. Kod pocztowy",
+      "bbox": {
+       "x0": 242.63999175,
+       "y0": 373.277711,
+       "x1": 316.5647710730509,
+       "y1": 382.278086
+      }
      },
      {
       "id": "b80",
       "kind": "paragraph",
-      "text": "Oświadczam, że nieruchomość wyposażona jest w przydomowy kompostownik, w którym kompostowane są"
+      "text": "28. Ulica",
+      "bbox": {
+       "x0": 378.71999325,
+       "y0": 373.277711,
+       "x1": 416.91179528906247,
+       "y1": 382.278086
+      }
      },
      {
       "id": "b81",
-      "kind": "paragraph",
-      "text": "wytworzone na jej terenie bioodpady stanowiące odpady komunalne."
+      "kind": "heading",
+      "text": "GDYNIA",
+      "bbox": {
+       "x0": 127.31999625,
+       "y0": 383.71772075,
+       "x1": 158.80840587540263,
+       "y1": 392.71809575
+      }
      },
      {
       "id": "b82",
-      "kind": "heading",
-      "text": "E. OŚWIADCZENIE O WYSOKOŚCI OPŁATY ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI"
+      "kind": "paragraph",
+      "text": "29. Numer nieruchomości/domu",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 400.0376825,
+       "x1": 182.3685784726763,
+       "y1": 409.0380575
+      }
      },
      {
       "id": "b83",
       "kind": "paragraph",
-      "text": "Opłata stanowi sumę iloczynów ilości gospodarstw domowych dla których składana jest deklaracja oraz stawki opłaty"
+      "text": "30. Numer lokalu",
+      "bbox": {
+       "x0": 333.120003,
+       "y0": 400.0376825,
+       "x1": 404.6805314707031,
+       "y1": 409.0380575
+      }
      },
      {
       "id": "b84",
-      "kind": "paragraph",
-      "text": "ustalonej uchwałą Rady Miasta Gdyni podjętej na podstawie art. 6k ustawy o utrzymaniu czystości i porządku w gminach"
+      "kind": "heading",
+      "text": "D.2 MIEJSCE GROMADZENIA ODPADÓW (W PRZYPADKU NIERUCHOMOŚCI ZABUDOWANEJ BUDYNKIEM",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 427.4908295,
+       "x1": 563.4187197748523,
+       "y1": 437.4512045
+      }
      },
      {
       "id": "b85",
       "kind": "heading",
-      "text": "E.1 OBLICZENIE WYSOKOŚCI OPŁATY DLA NIERUCHOMOŚCI"
+      "text": "WIELOLOKALOWYM LUB BUDYNKAMI WIELOLOKALOWYMI, JEŻELI POSZCZEGÓLNE BUDYNKI LUB ICH CZĘŚCI",
+      "bbox": {
+       "x0": 62.04000075,
+       "y0": 439.01081899999997,
+       "x1": 563.4872207715819,
+       "y1": 448.97119399999997
+      }
+     },
+     {
+      "id": "b86",
+      "kind": "heading",
+      "text": "POSIADAJĄ PRZYPORZĄDKOWANE IM ODDZIELNE MIEJSCA GROMADZENIA ODPADÓW KOMUNALNYCH)",
+      "bbox": {
+       "x0": 62.04000075,
+       "y0": 450.65083325,
+       "x1": 506.3685165389649,
+       "y1": 460.61120825
+      }
+     },
+     {
+      "id": "b87",
+      "kind": "paragraph",
+      "text": "31. Adres lub opis miejsca lokalizacji pojemników",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 462.557717,
+       "x1": 254.22792275704725,
+       "y1": 471.558092
+      }
+     },
+     {
+      "id": "b88",
+      "kind": "paragraph",
+      "text": "32. Numer/y działki/działek",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 462.557717,
+       "x1": 526.6344126316648,
+       "y1": 471.558092
+      }
+     },
+     {
+      "id": "b89",
+      "kind": "paragraph",
+      "text": "geodezyjnych",
+      "bbox": {
+       "x0": 428.51998875000004,
+       "y0": 472.99770425,
+       "x1": 483.58649793828533,
+       "y1": 481.99807925
+      }
+     },
+     {
+      "id": "b90",
+      "kind": "heading",
+      "text": "D.3 DANE IDENTYFIKACYJNE",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 518.33082575,
+       "x1": 167.10555656762628,
+       "y1": 528.2912007499999
+      }
+     },
+     {
+      "id": "b91",
+      "kind": "paragraph",
+      "text": "33. Rodzaj nieruchomości",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 530.2377094999999,
+       "x1": 156.28679254687503,
+       "y1": 539.2380845
+      }
+     },
+     {
+      "id": "b92",
+      "kind": "checkbox_option",
+      "text": "1. Nieruchomość zabudowana budynkiem mieszkalnym jednorodzinnym",
+      "bbox": {
+       "x0": 63.870117750000006,
+       "y0": 540.67769675,
+       "x1": 357.3037889695554,
+       "y1": 549.6780717500001
+      }
+     },
+     {
+      "id": "b93",
+      "kind": "checkbox_option",
+      "text": "2. Nieruchomość zabudowana budynkiem mieszkalnym wielolokalowym",
+      "bbox": {
+       "x0": 63.870117750000006,
+       "y0": 556.27768775,
+       "x1": 356.8242377390867,
+       "y1": 565.2780627500001
+      }
+     },
+     {
+      "id": "b94",
+      "kind": "paragraph",
+      "text": "34. Nieruchomość zaznaczona w poz. 33 jest nieruchomością, która w części stanowi nieruchomość na której zamieszkują mieszkańcy, a w części nieruchomość na której nie zamieszkują mieszkańcy, a powstają na niej odpady komunalne",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 573.67769675,
+       "x1": 563.6029942816529,
+       "y1": 593.1180590000001
+      }
+     },
+     {
+      "id": "b95",
+      "kind": "checkbox_option",
+      "text": "TAK",
+      "bbox": {
+       "x0": 98.91011925,
+       "y0": 594.5577169999999,
+       "x1": 114.6194651828085,
+       "y1": 603.558092
+      }
+     },
+     {
+      "id": "b96",
+      "kind": "checkbox_option",
+      "text": "NIE",
+      "bbox": {
+       "x0": 311.31010499999996,
+       "y0": 594.5577169999999,
+       "x1": 324.37418447696507,
+       "y1": 603.558092
+      }
+     },
+     {
+      "id": "b97",
+      "kind": "paragraph",
+      "text": "Składający deklarację, który zaznaczył kratkę TAK w poz. 34 zobowiązany jest do wypełnienia załącznika do deklaracji: A (w przypadku zaznaczenia D.3.33.1) lub B (w przypadku zaznaczenia D.3.33.2).",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 604.99770425,
+       "x1": 563.6935249328686,
+       "y1": 624.4380665000001
+      }
+     },
+     {
+      "id": "b98",
+      "kind": "heading",
+      "text": "D.4 OŚWIADCZENIE (DOTYCZY WYŁACZNIE WŁAŚCICIELI NIERUCHOMOŚCI ZABUDOWANYCH BUDYNKAMI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 626.57083175,
+       "x1": 563.4256873800289,
+       "y1": 636.53120675
+      }
+     },
+     {
+      "id": "b99",
+      "kind": "heading",
+      "text": "MIESZKALNYMI JEDNORODZINNYMI)",
+      "bbox": {
+       "x0": 62.04000075,
+       "y0": 638.2108460000001,
+       "x1": 217.49410238393514,
+       "y1": 648.1712210000001
+      }
+     },
+     {
+      "id": "b100",
+      "kind": "paragraph",
+      "text": "35.",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 650.117684,
+       "x1": 63.02298481954725,
+       "y1": 659.1180590000001
+      }
+     },
+     {
+      "id": "b101",
+      "kind": "checkbox_option",
+      "text": "Oświadczam, że nieruchomość wyposażona jest w przydomowy kompostownik, w którym kompostowane są",
+      "bbox": {
+       "x0": 91.08000150000001,
+       "y0": 660.5577169999999,
+       "x1": 563.437260348422,
+       "y1": 669.558092
+      }
+     },
+     {
+      "id": "b102",
+      "kind": "paragraph",
+      "text": "wytworzone na jej terenie bioodpady stanowiące odpady komunalne.",
+      "bbox": {
+       "x0": 90.120003,
+       "y0": 670.99770425,
+       "x1": 370.74455848163666,
+       "y1": 679.99807925
+      }
+     },
+     {
+      "id": "b103",
+      "kind": "heading",
+      "text": "E. OŚWIADCZENIE O WYSOKOŚCI OPŁATY ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 689.9308167500001,
+       "x1": 460.84063373261665,
+       "y1": 699.8911917500001
+      }
+     },
+     {
+      "id": "b104",
+      "kind": "paragraph",
+      "text": "Opłata stanowi sumę iloczynów ilości gospodarstw domowych dla których składana jest deklaracja oraz stawki opłaty ustalonej uchwałą Rady Miasta Gdyni podjętej na podstawie art. 6k ustawy o utrzymaniu czystości i porządku w gminach",
+      "bbox": {
+       "x0": 53.04000075,
+       "y0": 701.3576892499999,
+       "x1": 563.4511966890707,
+       "y1": 720.7980972500001
+      }
+     },
+     {
+      "id": "b105",
+      "kind": "heading",
+      "text": "E.1 OBLICZENIE WYSOKOŚCI OPŁATY DLA NIERUCHOMOŚCI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 730.61080925,
+       "x1": 300.3459209000986,
+       "y1": 740.57118425
+      }
+     },
+     {
+      "id": "b106",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 42.4399996875,
+       "y0": 740.6400110000001,
+       "x1": 563.5119901,
+       "y1": 751.159999375
+      }
+     },
+     {
+      "id": "b107",
+      "kind": "paragraph",
+      "text": "2/6",
+      "bbox": {
+       "x0": 509.03997825,
+       "y0": 809.95836485,
+       "x1": 524.417513781692,
+       "y1": 820.99881485
+      }
      }
     ]
    },
@@ -446,474 +1198,1566 @@
     "number": 3,
     "blocks": [
      {
-      "id": "b86",
-      "kind": "paragraph",
-      "text": "3/6"
-     },
-     {
-      "id": "b87",
-      "kind": "paragraph",
-      "text": "36. Liczba gospodarstw domowych zajmujących"
-     },
-     {
-      "id": "b88",
-      "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
-     },
-     {
-      "id": "b89",
-      "kind": "paragraph",
-      "text": "nie przekraczającej 45 m² X"
-     },
-     {
-      "id": "b90",
-      "kind": "paragraph",
-      "text": "37. Stawka opłaty od"
-     },
-     {
-      "id": "b91",
-      "kind": "paragraph",
-      "text": "gospodarstwa domowego"
-     },
-     {
-      "id": "b92",
-      "kind": "paragraph",
-      "text": "38 zł ="
-     },
-     {
-      "id": "b93",
-      "kind": "paragraph",
-      "text": "38. Wysokość miesięcznej opłaty"
-     },
-     {
-      "id": "b94",
-      "kind": "paragraph",
-      "text": "zł"
-     },
-     {
-      "id": "b95",
-      "kind": "paragraph",
-      "text": "39. Liczba gospodarstw domowych zajmujących"
-     },
-     {
-      "id": "b96",
-      "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
-     },
-     {
-      "id": "b97",
-      "kind": "paragraph",
-      "text": "przekraczającej 45 m² jednak nie większej"
-     },
-     {
-      "id": "b98",
-      "kind": "paragraph",
-      "text": "niż 60 m² X"
-     },
-     {
-      "id": "b99",
-      "kind": "paragraph",
-      "text": "40. Stawka opłaty od"
-     },
-     {
-      "id": "b100",
-      "kind": "paragraph",
-      "text": "gospodarstwa domowego"
-     },
-     {
-      "id": "b101",
-      "kind": "paragraph",
-      "text": "69 zł ="
-     },
-     {
-      "id": "b102",
-      "kind": "paragraph",
-      "text": "41. Wysokość miesięcznej opłaty"
-     },
-     {
-      "id": "b103",
-      "kind": "paragraph",
-      "text": "zł"
-     },
-     {
-      "id": "b104",
-      "kind": "paragraph",
-      "text": "42. Liczba gospodarstw domowych zajmujących"
-     },
-     {
-      "id": "b105",
-      "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
-     },
-     {
-      "id": "b106",
-      "kind": "paragraph",
-      "text": "przekraczającej 60 m² jednak nie większej"
-     },
-     {
-      "id": "b107",
-      "kind": "paragraph",
-      "text": "niż 80 m² X"
-     },
-     {
       "id": "b108",
       "kind": "paragraph",
-      "text": "43. Stawka opłaty od"
+      "text": "36. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 65.71770349999997,
+       "x1": 247.76210386837545,
+       "y1": 74.71807850000005
+      }
      },
      {
       "id": "b109",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "37. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 65.71770349999997,
+       "x1": 315.44316156952726,
+       "y1": 74.71807850000005
+      }
      },
      {
       "id": "b110",
       "kind": "paragraph",
-      "text": "81 zł ="
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 65.71770349999997,
+       "x1": 359.9902012148438,
+       "y1": 74.71807850000005
+      }
      },
      {
       "id": "b111",
       "kind": "paragraph",
-      "text": "44. Wysokość miesięcznej opłaty"
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 65.71770349999997,
+       "x1": 389.21589546836736,
+       "y1": 74.71807850000005
+      }
      },
      {
       "id": "b112",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "38. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 65.71770349999997,
+       "x1": 550.7627655828165,
+       "y1": 74.71807850000005
+      }
      },
      {
       "id": "b113",
       "kind": "paragraph",
-      "text": "45. Liczba gospodarstw domowych zajmujących"
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 76.15770199999997,
+       "x1": 247.7513807675981,
+       "y1": 85.15807700000005
+      }
      },
      {
       "id": "b114",
       "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 76.15770199999997,
+       "x1": 387.2936122335698,
+       "y1": 85.15807700000005
+      }
      },
      {
       "id": "b115",
       "kind": "paragraph",
-      "text": "przekraczającej 80 m² X"
+      "text": "nie przekraczającej 45 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 86.59770649999996,
+       "x1": 174.48955878086744,
+       "y1": 95.59808150000003
+      }
      },
      {
       "id": "b116",
       "kind": "paragraph",
-      "text": "46. Stawka opłaty od"
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 92.11770724999997,
+       "x1": 260.84420475,
+       "y1": 101.11808225000004
+      }
      },
      {
       "id": "b117",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "38 zł",
+      "bbox": {
+       "x0": 318.71999325,
+       "y0": 97.03770499999996,
+       "x1": 339.4586151402424,
+       "y1": 106.03808000000004
+      }
      },
      {
       "id": "b118",
-      "kind": "paragraph",
-      "text": "101 zł ="
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 97.39770199999998,
+       "x1": 401.62520437499995,
+       "y1": 106.39807700000006
+      }
      },
      {
       "id": "b119",
-      "kind": "paragraph",
-      "text": "47. Wysokość miesięcznej opłaty"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 106.379996,
+       "x1": 169.09142507142855,
+       "y1": 121.19999487500002
+      }
      },
      {
       "id": "b120",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 107.47770349999996,
+       "x1": 563.4811926871173,
+       "y1": 116.47807850000004
+      }
      },
      {
       "id": "b121",
       "kind": "paragraph",
-      "text": "48. Liczba gospodarstw domowych objętych"
+      "text": "39. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 129.55770574999997,
+       "x1": 247.76210386837545,
+       "y1": 138.55808075000004
+      }
      },
      {
       "id": "b122",
       "kind": "paragraph",
-      "text": "zwolnieniem dochodowym"
+      "text": "40. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 129.55770574999997,
+       "x1": 315.44316156952726,
+       "y1": 138.55808075000004
+      }
      },
      {
       "id": "b123",
-      "kind": "heading",
-      "text": "X"
+      "kind": "paragraph",
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 129.55770574999997,
+       "x1": 359.9902012148438,
+       "y1": 138.55808075000004
+      }
      },
      {
       "id": "b124",
       "kind": "paragraph",
-      "text": "49. Stawka zwolnienia od"
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 129.55770574999997,
+       "x1": 389.21589546836736,
+       "y1": 138.55808075000004
+      }
      },
      {
       "id": "b125",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "41. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 129.55770574999997,
+       "x1": 550.7627655828165,
+       "y1": 138.55808075000004
+      }
      },
      {
       "id": "b126",
       "kind": "paragraph",
-      "text": "- 15 zł 00 gr ="
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 139.99770424999997,
+       "x1": 247.7513807675981,
+       "y1": 148.99807925000005
+      }
      },
      {
       "id": "b127",
       "kind": "paragraph",
-      "text": "50. Wysokość miesięcznego"
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 139.99770424999997,
+       "x1": 387.2936122335698,
+       "y1": 148.99807925000005
+      }
      },
      {
       "id": "b128",
       "kind": "paragraph",
-      "text": "zwolnienia"
+      "text": "przekraczającej 45 m² jednak nie większej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 150.43770274999997,
+       "x1": 247.71956301991395,
+       "y1": 159.43807775000005
+      }
      },
      {
       "id": "b129",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 156.07770574999995,
+       "x1": 260.84420475,
+       "y1": 165.07808075000003
+      }
      },
      {
       "id": "b130",
       "kind": "paragraph",
-      "text": "51. SUMA poz. 38, 41, 44 i 47"
+      "text": "niż 60 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 160.87770124999997,
+       "x1": 106.45850161759013,
+       "y1": 169.87807625000005
+      }
      },
      {
       "id": "b131",
       "kind": "paragraph",
-      "text": "pomniejszona o kwotę z poz."
+      "text": "69 zł",
+      "bbox": {
+       "x0": 318.71999325,
+       "y0": 160.87770124999997,
+       "x1": 339.4586151402424,
+       "y1": 169.87807625000005
+      }
      },
      {
       "id": "b132",
-      "kind": "paragraph",
-      "text": "50"
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 161.35770125,
+       "x1": 401.62520437499995,
+       "y1": 170.35807625000007
+      }
      },
      {
       "id": "b133",
-      "kind": "paragraph",
-      "text": "zł"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 170.23999400000002,
+       "x1": 169.09142507142855,
+       "y1": 185.03999112500003
+      }
      },
      {
       "id": "b134",
       "kind": "paragraph",
-      "text": "E.2 OBLICZENIE WYSOKOŚCI OPŁATY DLA WŁAŚCICIELI NIERUCHOMOŚCI ZABUDOWANYCH BUDYNKAMI"
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 171.3177005,
+       "x1": 563.4811926871173,
+       "y1": 180.31807550000008
+      }
      },
      {
       "id": "b135",
-      "kind": "heading",
-      "text": "MIESZKALNYMI JEDNORODZINNYMI ZWOLNIONYCH Z CZĘŚCI OPŁATY"
+      "kind": "paragraph",
+      "text": "42. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 193.517693,
+       "x1": 247.76210386837545,
+       "y1": 202.51806800000008
+      }
      },
      {
       "id": "b136",
-      "kind": "label",
-      "text": "(na podstawie oświadczenia zawartego w poz. 35 deklaracji)"
+      "kind": "paragraph",
+      "text": "43. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 193.517693,
+       "x1": 315.44316156952726,
+       "y1": 202.51806800000008
+      }
      },
      {
       "id": "b137",
       "kind": "paragraph",
-      "text": "52. Liczba gospodarstw domowych zajmujących"
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 193.517693,
+       "x1": 359.9902012148438,
+       "y1": 202.51806800000008
+      }
      },
      {
       "id": "b138",
       "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 193.517693,
+       "x1": 389.21589546836736,
+       "y1": 202.51806800000008
+      }
      },
      {
       "id": "b139",
       "kind": "paragraph",
-      "text": "nie przekraczającej 45 m² X"
+      "text": "44. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 193.517693,
+       "x1": 550.7627655828165,
+       "y1": 202.51806800000008
+      }
      },
      {
       "id": "b140",
       "kind": "paragraph",
-      "text": "53. Stawka opłaty od"
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 203.95770349999998,
+       "x1": 247.7513807675981,
+       "y1": 212.95807850000006
+      }
      },
      {
       "id": "b141",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 203.95770349999998,
+       "x1": 387.2936122335698,
+       "y1": 212.95807850000006
+      }
      },
      {
       "id": "b142",
       "kind": "paragraph",
-      "text": "28 zł ="
+      "text": "przekraczającej 60 m² jednak nie większej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 214.39771324999992,
+       "x1": 247.71956301991395,
+       "y1": 223.39808825
+      }
      },
      {
       "id": "b143",
       "kind": "paragraph",
-      "text": "54. Wysokość miesięcznej opłaty"
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 219.79769975,
+       "x1": 260.84420475,
+       "y1": 228.79807475000007
+      }
      },
      {
       "id": "b144",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "niż 80 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 224.95770349999998,
+       "x1": 106.45850161759013,
+       "y1": 233.95807850000006
+      }
      },
      {
       "id": "b145",
       "kind": "paragraph",
-      "text": "55. Liczba gospodarstw domowych zajmujących"
+      "text": "81 zł",
+      "bbox": {
+       "x0": 318.71999325,
+       "y0": 224.95770349999998,
+       "x1": 339.4586151402424,
+       "y1": 233.95807850000006
+      }
      },
      {
       "id": "b146",
-      "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 225.07770574999995,
+       "x1": 401.62520437499995,
+       "y1": 234.07808075000003
+      }
      },
      {
       "id": "b147",
-      "kind": "paragraph",
-      "text": "przekraczającej 45 m² jednak nie większej"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 234.1800003125,
+       "x1": 169.09142507142855,
+       "y1": 249.119998625
+      }
      },
      {
       "id": "b148",
       "kind": "paragraph",
-      "text": "niż 60 m² X"
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 235.39771324999992,
+       "x1": 563.4811926871173,
+       "y1": 244.39808825
+      }
      },
      {
       "id": "b149",
       "kind": "paragraph",
-      "text": "56. Stawka opłaty od"
+      "text": "45. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 256.99770424999997,
+       "x1": 247.76210386837545,
+       "y1": 265.99807925000005
+      }
      },
      {
       "id": "b150",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "46. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 256.99770424999997,
+       "x1": 315.44316156952726,
+       "y1": 265.99807925000005
+      }
      },
      {
       "id": "b151",
       "kind": "paragraph",
-      "text": "59 zł ="
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 256.99770424999997,
+       "x1": 359.9902012148438,
+       "y1": 265.99807925000005
+      }
      },
      {
       "id": "b152",
       "kind": "paragraph",
-      "text": "57. Wysokość miesięcznej opłaty"
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 256.99770424999997,
+       "x1": 389.21589546836736,
+       "y1": 265.99807925000005
+      }
      },
      {
       "id": "b153",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "47. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 256.99770424999997,
+       "x1": 550.7627655828165,
+       "y1": 265.99807925000005
+      }
      },
      {
       "id": "b154",
       "kind": "paragraph",
-      "text": "58. Liczba gospodarstw domowych zajmujących"
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 267.5576945,
+       "x1": 247.7513807675981,
+       "y1": 276.5580695000001
+      }
      },
      {
       "id": "b155",
       "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 267.5576945,
+       "x1": 387.2936122335698,
+       "y1": 276.5580695000001
+      }
      },
      {
       "id": "b156",
       "kind": "paragraph",
-      "text": "przekraczającej 60 m² jednak nie większej"
+      "text": "przekraczającej 80 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 277.99770424999997,
+       "x1": 159.29896492382815,
+       "y1": 286.99807925000005
+      }
      },
      {
       "id": "b157",
       "kind": "paragraph",
-      "text": "niż 80 m² X"
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 283.3977132499999,
+       "x1": 260.84420475,
+       "y1": 292.39808825
+      }
      },
      {
       "id": "b158",
       "kind": "paragraph",
-      "text": "59. Stawka opłaty od"
+      "text": "101 zł",
+      "bbox": {
+       "x0": 316.0800015,
+       "y0": 288.4377139999999,
+       "x1": 342.0922806168048,
+       "y1": 297.438089
+      }
      },
      {
       "id": "b159",
-      "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 288.67769675,
+       "x1": 401.62520437499995,
+       "y1": 297.6780717500001
+      }
      },
      {
       "id": "b160",
-      "kind": "paragraph",
-      "text": "71 zł ="
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 297.71999725,
+       "x1": 169.09142507142855,
+       "y1": 312.59999825
+      }
      },
      {
       "id": "b161",
       "kind": "paragraph",
-      "text": "60. Wysokość miesięcznej opłaty"
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 298.87770125,
+       "x1": 563.4811926871173,
+       "y1": 307.87807625000005
+      }
      },
      {
       "id": "b162",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "48. Liczba gospodarstw domowych objętych",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 320.7176975,
+       "x1": 247.7939215800581,
+       "y1": 329.71807250000006
+      }
      },
      {
       "id": "b163",
       "kind": "paragraph",
-      "text": "61. Liczba gospodarstw domowych zajmujących"
+      "text": "49. Stawka zwolnienia od",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 320.7176975,
+       "x1": 389.2507016015625,
+       "y1": 329.71807250000006
+      }
      },
      {
       "id": "b164",
       "kind": "paragraph",
-      "text": "lokale mieszkalne o powierzchni użytkowej"
+      "text": "50. Wysokość",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 320.7176975,
+       "x1": 468.65396171719954,
+       "y1": 329.71807250000006
+      }
      },
      {
       "id": "b165",
       "kind": "paragraph",
-      "text": "przekraczającej 80 m² X"
+      "text": "miesięcznego",
+      "bbox": {
+       "x0": 506.6420132367308,
+       "y0": 320.7176975,
+       "x1": 563.5727250968911,
+       "y1": 329.71807250000006
+      }
      },
      {
       "id": "b166",
       "kind": "paragraph",
-      "text": "62. Stawka opłaty od"
+      "text": "zwolnieniem dochodowym",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 331.157708,
+       "x1": 174.15060325430892,
+       "y1": 340.158083
+      }
      },
      {
       "id": "b167",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 331.157708,
+       "x1": 387.2936122335698,
+       "y1": 340.158083
+      }
      },
      {
       "id": "b168",
       "kind": "paragraph",
-      "text": "91 zł ="
+      "text": "zwolnienia",
+      "bbox": {
+       "x0": 428.51998875000004,
+       "y0": 331.157708,
+       "x1": 473.8694680789103,
+       "y1": 340.158083
+      }
      },
      {
       "id": "b169",
-      "kind": "paragraph",
-      "text": "63. Wysokość miesięcznej opłaty"
+      "kind": "label",
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 343.277711,
+       "x1": 260.84420475,
+       "y1": 352.278086
+      }
      },
      {
       "id": "b170",
-      "kind": "paragraph",
-      "text": "zł"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 351.65999975,
+       "x1": 169.09142507142855,
+       "y1": 365.75999037500003
+      }
      },
      {
       "id": "b171",
       "kind": "paragraph",
-      "text": "64. Liczba gospodarstw domowych objętych"
+      "text": "- 15 zł 00 gr",
+      "bbox": {
+       "x0": 303.48001125,
+       "y0": 352.157708,
+       "x1": 354.61873569140624,
+       "y1": 361.158083
+      }
      },
      {
       "id": "b172",
       "kind": "paragraph",
-      "text": "zwolnieniem dochodowym"
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 348.5576945,
+       "x1": 401.62520437499995,
+       "y1": 357.5580695
+      }
      },
      {
       "id": "b173",
-      "kind": "heading",
-      "text": "X"
+      "kind": "label",
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 362.59769525,
+       "x1": 563.4811926871173,
+       "y1": 371.59807025
+      }
      },
      {
       "id": "b174",
-      "kind": "paragraph",
-      "text": "65. Stawka zwolnienia od"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 42.527999550000004,
+       "y0": 375.20000068750005,
+       "x1": 403.56001275,
+       "y1": 385.9199945
+      }
      },
      {
       "id": "b175",
       "kind": "paragraph",
-      "text": "gospodarstwa domowego"
+      "text": "51. SUMA poz. 38, 41, 44 i 47",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 376.87770125000003,
+       "x1": 563.625204375,
+       "y1": 385.87807625
+      }
      },
      {
       "id": "b176",
-      "kind": "paragraph",
-      "text": "- 15 zł 00 gr ="
+      "kind": "label",
+      "text": "pomniejszona o kwotę z poz.",
+      "bbox": {
+       "x0": 428.51998875000004,
+       "y0": 387.31771175,
+       "x1": 563.409663619946,
+       "y1": 396.31808674999996
+      }
      },
      {
       "id": "b177",
-      "kind": "paragraph",
-      "text": "66. Wysokość miesięcznego"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 38.755200255,
+       "y0": 375.20000068750005,
+       "x1": 406.86000806250007,
+       "y1": 448.89599825000005
+      }
      },
      {
       "id": "b178",
       "kind": "paragraph",
-      "text": "zwolnienia"
+      "text": "50",
+      "bbox": {
+       "x0": 428.51998875000004,
+       "y0": 397.757699,
+       "x1": 439.05886535156253,
+       "y1": 406.75807399999997
+      }
      },
      {
       "id": "b179",
       "kind": "paragraph",
-      "text": "zł"
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 439.51769300000007,
+       "x1": 563.4811926871173,
+       "y1": 448.518068
+      }
+     },
+     {
+      "id": "b180",
+      "kind": "heading",
+      "text": "E.2 OBLICZENIE WYSOKOŚCI OPŁATY DLA WŁAŚCICIELI NIERUCHOMOŚCI ZABUDOWANYCH BUDYNKAMI",
+      "bbox": {
+       "x0": 42.24,
+       "y0": 450.65083325,
+       "x1": 563.4797070137693,
+       "y1": 460.61120825
+      }
+     },
+     {
+      "id": "b181",
+      "kind": "heading",
+      "text": "MIESZKALNYMI JEDNORODZINNYMI ZWOLNIONYCH Z CZĘŚCI OPŁATY",
+      "bbox": {
+       "x0": 65.76,
+       "y0": 462.2908025,
+       "x1": 366.81175076674765,
+       "y1": 472.2511775
+      }
+     },
+     {
+      "id": "b182",
+      "kind": "paragraph",
+      "text": "(na podstawie oświadczenia zawartego w poz. 35 deklaracji)",
+      "bbox": {
+       "x0": 62.15999775,
+       "y0": 473.71772075,
+       "x1": 307.3986933457031,
+       "y1": 482.71809575
+      }
+     },
+     {
+      "id": "b183",
+      "kind": "paragraph",
+      "text": "52. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 484.6377192500001,
+       "x1": 247.76210386837545,
+       "y1": 493.63809425000005
+      }
+     },
+     {
+      "id": "b184",
+      "kind": "paragraph",
+      "text": "53. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 484.6377192500001,
+       "x1": 315.44316156952726,
+       "y1": 493.63809425000005
+      }
+     },
+     {
+      "id": "b185",
+      "kind": "paragraph",
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 484.6377192500001,
+       "x1": 359.9902012148438,
+       "y1": 493.63809425000005
+      }
+     },
+     {
+      "id": "b186",
+      "kind": "paragraph",
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 484.6377192500001,
+       "x1": 389.21589546836736,
+       "y1": 493.63809425000005
+      }
+     },
+     {
+      "id": "b187",
+      "kind": "paragraph",
+      "text": "54. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 484.6377192500001,
+       "x1": 550.7627655828165,
+       "y1": 493.63809425000005
+      }
+     },
+     {
+      "id": "b188",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 495.07770575000006,
+       "x1": 247.7513807675981,
+       "y1": 504.07808075
+      }
+     },
+     {
+      "id": "b189",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 495.07770575000006,
+       "x1": 387.2936122335698,
+       "y1": 504.07808075
+      }
+     },
+     {
+      "id": "b190",
+      "kind": "paragraph",
+      "text": "nie przekraczającej 45 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 505.51769300000007,
+       "x1": 174.48955878086744,
+       "y1": 514.5180680000001
+      }
+     },
+     {
+      "id": "b191",
+      "kind": "paragraph",
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 510.55771699999997,
+       "x1": 260.84420475,
+       "y1": 519.558092
+      }
+     },
+     {
+      "id": "b192",
+      "kind": "paragraph",
+      "text": "28 zł",
+      "bbox": {
+       "x0": 318.599991,
+       "y0": 516.07770575,
+       "x1": 339.33861289024236,
+       "y1": 525.07808075
+      }
+     },
+     {
+      "id": "b193",
+      "kind": "paragraph",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 515.7177207499999,
+       "x1": 401.62520437499995,
+       "y1": 524.71809575
+      }
+     },
+     {
+      "id": "b194",
+      "kind": "label",
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 516.07770575,
+       "x1": 563.4811926871173,
+       "y1": 525.07808075
+      }
+     },
+     {
+      "id": "b195",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 525.1199988125,
+       "x1": 169.09142507142855,
+       "y1": 540.240001625
+      }
+     },
+     {
+      "id": "b196",
+      "kind": "paragraph",
+      "text": "55. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 547.3977132499999,
+       "x1": 247.76210386837545,
+       "y1": 556.39808825
+      }
+     },
+     {
+      "id": "b197",
+      "kind": "paragraph",
+      "text": "56. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 547.3977132499999,
+       "x1": 315.44316156952726,
+       "y1": 556.39808825
+      }
+     },
+     {
+      "id": "b198",
+      "kind": "paragraph",
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 547.3977132499999,
+       "x1": 359.9902012148438,
+       "y1": 556.39808825
+      }
+     },
+     {
+      "id": "b199",
+      "kind": "paragraph",
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 547.3977132499999,
+       "x1": 389.21589546836736,
+       "y1": 556.39808825
+      }
+     },
+     {
+      "id": "b200",
+      "kind": "paragraph",
+      "text": "57. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 547.3977132499999,
+       "x1": 550.7627655828165,
+       "y1": 556.39808825
+      }
+     },
+     {
+      "id": "b201",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 557.8377005,
+       "x1": 247.7513807675981,
+       "y1": 566.8380755000001
+      }
+     },
+     {
+      "id": "b202",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 557.8377005,
+       "x1": 387.2936122335698,
+       "y1": 566.8380755000001
+      }
+     },
+     {
+      "id": "b203",
+      "kind": "paragraph",
+      "text": "przekraczającej 45 m² jednak nie większej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 568.27768775,
+       "x1": 247.71956301991395,
+       "y1": 577.2780627500001
+      }
+     },
+     {
+      "id": "b204",
+      "kind": "paragraph",
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 573.67769675,
+       "x1": 260.84420475,
+       "y1": 582.6780717500001
+      }
+     },
+     {
+      "id": "b205",
+      "kind": "paragraph",
+      "text": "niż 60 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 578.7177207499999,
+       "x1": 106.45850161759013,
+       "y1": 587.71809575
+      }
+     },
+     {
+      "id": "b206",
+      "kind": "paragraph",
+      "text": "59 zł",
+      "bbox": {
+       "x0": 318.599991,
+       "y0": 578.7177207499999,
+       "x1": 339.33861289024236,
+       "y1": 587.71809575
+      }
+     },
+     {
+      "id": "b207",
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 578.9577260000001,
+       "x1": 401.62520437499995,
+       "y1": 587.958101
+      }
+     },
+     {
+      "id": "b208",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 587.999996,
+       "x1": 169.09142507142855,
+       "y1": 602.8799933750001
+      }
+     },
+     {
+      "id": "b209",
+      "kind": "paragraph",
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 589.157708,
+       "x1": 563.4811926871173,
+       "y1": 598.158083
+      }
+     },
+     {
+      "id": "b210",
+      "kind": "paragraph",
+      "text": "58. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 610.99770425,
+       "x1": 247.76210386837545,
+       "y1": 619.99807925
+      }
+     },
+     {
+      "id": "b211",
+      "kind": "paragraph",
+      "text": "59. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 610.99770425,
+       "x1": 315.44316156952726,
+       "y1": 619.99807925
+      }
+     },
+     {
+      "id": "b212",
+      "kind": "paragraph",
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 610.99770425,
+       "x1": 359.9902012148438,
+       "y1": 619.99807925
+      }
+     },
+     {
+      "id": "b213",
+      "kind": "paragraph",
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 610.99770425,
+       "x1": 389.21589546836736,
+       "y1": 619.99807925
+      }
+     },
+     {
+      "id": "b214",
+      "kind": "paragraph",
+      "text": "60. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 610.99770425,
+       "x1": 550.7627655828165,
+       "y1": 619.99807925
+      }
+     },
+     {
+      "id": "b215",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 621.4376915,
+       "x1": 247.7513807675981,
+       "y1": 630.4380665000001
+      }
+     },
+     {
+      "id": "b216",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 621.4376915,
+       "x1": 387.2936122335698,
+       "y1": 630.4380665000001
+      }
+     },
+     {
+      "id": "b217",
+      "kind": "paragraph",
+      "text": "przekraczającej 60 m² jednak nie większej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 631.8777244999999,
+       "x1": 247.71956301991395,
+       "y1": 640.8780995
+      }
+     },
+     {
+      "id": "b218",
+      "kind": "paragraph",
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 637.27768775,
+       "x1": 260.84420475,
+       "y1": 646.2780627500001
+      }
+     },
+     {
+      "id": "b219",
+      "kind": "paragraph",
+      "text": "niż 80 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 642.31771175,
+       "x1": 106.45850161759013,
+       "y1": 651.31808675
+      }
+     },
+     {
+      "id": "b220",
+      "kind": "paragraph",
+      "text": "71 zł",
+      "bbox": {
+       "x0": 318.599991,
+       "y0": 642.31771175,
+       "x1": 339.33861289024236,
+       "y1": 651.31808675
+      }
+     },
+     {
+      "id": "b221",
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 642.4376915,
+       "x1": 401.62520437499995,
+       "y1": 651.4380665000001
+      }
+     },
+     {
+      "id": "b222",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 651.5399969375,
+       "x1": 169.09142507142855,
+       "y1": 666.480006875
+      }
+     },
+     {
+      "id": "b223",
+      "kind": "paragraph",
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 652.757699,
+       "x1": 563.4811926871173,
+       "y1": 661.7580740000001
+      }
+     },
+     {
+      "id": "b224",
+      "kind": "paragraph",
+      "text": "61. Liczba gospodarstw domowych zajmujących",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 674.4777154999999,
+       "x1": 247.76210386837545,
+       "y1": 683.4780905
+      }
+     },
+     {
+      "id": "b225",
+      "kind": "paragraph",
+      "text": "62. Stawka",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 674.4777154999999,
+       "x1": 315.44316156952726,
+       "y1": 683.4780905
+      }
+     },
+     {
+      "id": "b226",
+      "kind": "paragraph",
+      "text": "opłaty",
+      "bbox": {
+       "x0": 334.8389696945273,
+       "y0": 674.4777154999999,
+       "x1": 359.9902012148438,
+       "y1": 683.4780905
+      }
+     },
+     {
+      "id": "b227",
+      "kind": "paragraph",
+      "text": "od",
+      "bbox": {
+       "x0": 379.4324878433674,
+       "y0": 674.4777154999999,
+       "x1": 389.21589546836736,
+       "y1": 683.4780905
+      }
+     },
+     {
+      "id": "b228",
+      "kind": "paragraph",
+      "text": "63. Wysokość miesięcznej opłaty",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 674.4777154999999,
+       "x1": 550.7627655828165,
+       "y1": 683.4780905
+      }
+     },
+     {
+      "id": "b229",
+      "kind": "paragraph",
+      "text": "lokale mieszkalne o powierzchni użytkowej",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 684.91770275,
+       "x1": 247.7513807675981,
+       "y1": 693.9180777500001
+      }
+     },
+     {
+      "id": "b230",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 684.91770275,
+       "x1": 387.2936122335698,
+       "y1": 693.9180777500001
+      }
+     },
+     {
+      "id": "b231",
+      "kind": "paragraph",
+      "text": "przekraczającej 80 m²",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 695.3576892499999,
+       "x1": 159.29896492382815,
+       "y1": 704.35806425
+      }
+     },
+     {
+      "id": "b232",
+      "kind": "paragraph",
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 701.117684,
+       "x1": 260.84420475,
+       "y1": 710.1180590000001
+      }
+     },
+     {
+      "id": "b233",
+      "kind": "paragraph",
+      "text": "91 zł",
+      "bbox": {
+       "x0": 318.599991,
+       "y0": 705.79772225,
+       "x1": 339.33861289024236,
+       "y1": 714.7980972500001
+      }
+     },
+     {
+      "id": "b234",
+      "kind": "label",
+      "text": "=",
+      "bbox": {
+       "x0": 396.35998499999994,
+       "y0": 706.27768775,
+       "x1": 401.62520437499995,
+       "y1": 715.2780627500001
+      }
+     },
+     {
+      "id": "b235",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 715.2000006875,
+       "x1": 169.09142507142855,
+       "y1": 729.95999525
+      }
+     },
+     {
+      "id": "b236",
+      "kind": "paragraph",
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 716.2377094999999,
+       "x1": 563.4811926871173,
+       "y1": 725.2380845
+      }
+     },
+     {
+      "id": "b237",
+      "kind": "paragraph",
+      "text": "64. Liczba gospodarstw domowych objętych",
+      "bbox": {
+       "x0": 50.28000075,
+       "y0": 738.67769675,
+       "x1": 247.7939215800581,
+       "y1": 747.6780717500001
+      }
+     },
+     {
+      "id": "b238",
+      "kind": "paragraph",
+      "text": "65. Stawka zwolnienia od",
+      "bbox": {
+       "x0": 268.7999955,
+       "y0": 738.67769675,
+       "x1": 389.2507016015625,
+       "y1": 747.6780717500001
+      }
+     },
+     {
+      "id": "b239",
+      "kind": "paragraph",
+      "text": "66. Wysokość",
+      "bbox": {
+       "x0": 410.51998875000004,
+       "y0": 738.67769675,
+       "x1": 468.65396171719954,
+       "y1": 747.6780717500001
+      }
+     },
+     {
+      "id": "b240",
+      "kind": "paragraph",
+      "text": "miesięcznego",
+      "bbox": {
+       "x0": 506.6420132367308,
+       "y0": 738.67769675,
+       "x1": 563.5727250968911,
+       "y1": 747.6780717500001
+      }
+     },
+     {
+      "id": "b241",
+      "kind": "paragraph",
+      "text": "zwolnieniem dochodowym",
+      "bbox": {
+       "x0": 68.28000075,
+       "y0": 749.117684,
+       "x1": 174.15060325430892,
+       "y1": 758.1180590000001
+      }
+     },
+     {
+      "id": "b242",
+      "kind": "paragraph",
+      "text": "gospodarstwa domowego",
+      "bbox": {
+       "x0": 286.7999955,
+       "y0": 749.117684,
+       "x1": 387.2936122335698,
+       "y1": 758.1180590000001
+      }
+     },
+     {
+      "id": "b243",
+      "kind": "label",
+      "text": "zwolnienia",
+      "bbox": {
+       "x0": 428.51998875000004,
+       "y0": 749.117684,
+       "x1": 473.8694680789103,
+       "y1": 758.1180590000001
+      }
+     },
+     {
+      "id": "b244",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 121.46400356250001,
+       "y0": 768.83999225,
+       "x1": 169.09142507142855,
+       "y1": 783.7200124999999
+      }
+     },
+     {
+      "id": "b245",
+      "kind": "paragraph",
+      "text": "X",
+      "bbox": {
+       "x0": 255.83999625,
+       "y0": 764.8377005,
+       "x1": 260.84420475,
+       "y1": 773.8380755000001
+      }
+     },
+     {
+      "id": "b246",
+      "kind": "paragraph",
+      "text": "=",
+      "bbox": {
+       "x0": 397.3200075,
+       "y0": 764.8377005,
+       "x1": 402.585226875,
+       "y1": 773.8380755000001
+      }
+     },
+     {
+      "id": "b247",
+      "kind": "paragraph",
+      "text": "- 15 zł 00 gr",
+      "bbox": {
+       "x0": 303.48001125,
+       "y0": 769.99770425,
+       "x1": 354.61873569140624,
+       "y1": 778.99807925
+      }
+     },
+     {
+      "id": "b248",
+      "kind": "paragraph",
+      "text": "zł",
+      "bbox": {
+       "x0": 556.0800015,
+       "y0": 790.87767875,
+       "x1": 563.4811926871173,
+       "y1": 799.87805375
+      }
+     },
+     {
+      "id": "b249",
+      "kind": "paragraph",
+      "text": "3/6",
+      "bbox": {
+       "x0": 509.03997825,
+       "y0": 809.95836485,
+       "x1": 524.417513781692,
+       "y1": 820.99881485
+      }
      }
     ]
    },
@@ -921,209 +2765,443 @@
     "number": 4,
     "blocks": [
      {
-      "id": "b180",
+      "id": "b250",
+      "kind": "table",
+      "text": "",
+      "bbox": {
+       "x0": 38.750400255,
+       "y0": 64.1999976875,
+       "x1": 566.0814522272727,
+       "y1": 317.560001
+      }
+     },
+     {
+      "id": "b251",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b252",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b253",
+      "kind": "table_cell",
+      "text": "67. SUMA poz. 54, 57, 60 i 63 pomniejszona o kwotę z poz. 66 zł",
+      "table": {
+       "row": 0,
+       "col": 7
+      }
+     },
+     {
+      "id": "b254",
+      "kind": "table_cell",
+      "text": "E.3 WYSOKOŚĆ OPŁATY DLA CZĘŚCI NIERUCHOMOŚCI NA KTÓREJ NIE ZAMIESZKUJĄ MIESZKAŃCY, A POWSTAJĄ ODPADY KOMUNALNE",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b255",
+      "kind": "table_cell",
+      "text": "E.3 WYSOKOŚĆ OPŁATY DLA CZĘŚCI NIERUCHOMOŚCI NA KTÓREJ NIE",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b256",
+      "kind": "table_cell",
+      "text": "68. KWOTA z poz. 29 załącznika A lub B do deklaracji zł",
+      "table": {
+       "row": 1,
+       "col": 7
+      }
+     },
+     {
+      "id": "b257",
+      "kind": "table_cell",
+      "text": "ZAMIESZKUJĄ MIESZKAŃCY, A POWSTAJĄ ODPADY KOMUNALNE",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b258",
+      "kind": "table_cell",
+      "text": "E.4 RAZEM WYSOKOŚĆ MIESIĘCZNEJ OPŁATY",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b259",
+      "kind": "table_cell",
+      "text": "E.4 RAZEM WYSOKOŚĆ MIESIĘCZNEJ OPŁATY",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b260",
+      "kind": "table_cell",
+      "text": "69. SUMA poz. 51 lub 67 oraz 68 zł",
+      "table": {
+       "row": 3,
+       "col": 7
+      }
+     },
+     {
+      "id": "b261",
+      "kind": "table_cell",
+      "text": "F. DANE DO KONTAKTU (pola nieobowiązkowe)",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b262",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 0
+      }
+     },
+     {
+      "id": "b263",
+      "kind": "table_cell",
+      "text": "70. Nr tel./fax",
+      "table": {
+       "row": 5,
+       "col": 2
+      }
+     },
+     {
+      "id": "b264",
+      "kind": "table_cell",
+      "text": "71. Adres e-mail",
+      "table": {
+       "row": 5,
+       "col": 6
+      }
+     },
+     {
+      "id": "b265",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 0
+      }
+     },
+     {
+      "id": "b266",
+      "kind": "table_cell",
+      "text": "72. Wyrażam zgodę na otrzymywanie korespondencji za pośrednictwem adresu poczty elektronicznej wskazanego w poz. 71",
+      "table": {
+       "row": 6,
+       "col": 2
+      }
+     },
+     {
+      "id": "b267",
+      "kind": "table_cell",
+      "text": "72.",
+      "table": {
+       "row": 6,
+       "col": 3
+      }
+     },
+     {
+      "id": "b268",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 4
+      }
+     },
+     {
+      "id": "b269",
+      "kind": "table_cell",
+      "text": "Wyrażam zgodę na otrzymywanie korespondencji za pośrednictwem adresu poczty elektronicznej wskazanego w poz.",
+      "table": {
+       "row": 6,
+       "col": 5
+      }
+     },
+     {
+      "id": "b270",
+      "kind": "table_cell",
+      "text": "71",
+      "table": {
+       "row": 7,
+       "col": 3
+      }
+     },
+     {
+      "id": "b271",
+      "kind": "table",
+      "text": "",
+      "bbox": {
+       "x0": 38.750400255,
+       "y0": 322.1399931875,
+       "x1": 566.0814522272727,
+       "y1": 632.079998
+      }
+     },
+     {
+      "id": "b272",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b273",
+      "kind": "table_cell",
+      "text": "G. INFORMACJA O ZAŁĄCZNIKACH",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b274",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b275",
+      "kind": "table_cell",
+      "text": "73. Rodzaje załączników 1. Załącznik A TAK NIE 2. Załącznik B TAK NIE 3. Dokumenty upoważniające do złożenia deklaracji TAK NIE 4. Inne: (podać jakie) ……………………………………………………………………………………………………………………………………………",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b276",
+      "kind": "table_cell",
+      "text": "H. PODPIS SKŁADAJĄCEGO DEKLARACJĘ / OSOBY REPREZENTUJĄCEJ",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b277",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b278",
+      "kind": "table_cell",
+      "text": "74. Imię",
+      "table": {
+       "row": 3,
+       "col": 2
+      }
+     },
+     {
+      "id": "b279",
+      "kind": "table_cell",
+      "text": "75. Nazwisko",
+      "table": {
+       "row": 3,
+       "col": 6
+      }
+     },
+     {
+      "id": "b280",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b281",
+      "kind": "table_cell",
+      "text": "76. Data wypełnienia",
+      "table": {
+       "row": 4,
+       "col": 2
+      }
+     },
+     {
+      "id": "b282",
+      "kind": "table_cell",
+      "text": "77. Podpis składającego deklarację / osoby reprezentującej",
+      "table": {
+       "row": 4,
+       "col": 3
+      }
+     },
+     {
+      "id": "b283",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 0
+      }
+     },
+     {
+      "id": "b284",
+      "kind": "table_cell",
+      "text": "78. Podpis współmałżonka (wypełnić tylko w przypadku zaznaczenia poz. B 1.1.2)",
+      "table": {
+       "row": 5,
+       "col": 2
+      }
+     },
+     {
+      "id": "b285",
+      "kind": "table_cell",
+      "text": "I. ADNOTACJA ORGANU",
+      "table": {
+       "row": 6,
+       "col": 0
+      }
+     },
+     {
+      "id": "b286",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 0
+      }
+     },
+     {
+      "id": "b287",
+      "kind": "table_cell",
+      "text": "79. Data wpływu do organu",
+      "table": {
+       "row": 7,
+       "col": 2
+      }
+     },
+     {
+      "id": "b288",
+      "kind": "table_cell",
+      "text": "80. Uwagi",
+      "table": {
+       "row": 7,
+       "col": 4
+      }
+     },
+     {
+      "id": "b289",
+      "kind": "table_cell",
+      "text": "80. Uwagi",
+      "table": {
+       "row": 7,
+       "col": 5
+      }
+     },
+     {
+      "id": "b290",
+      "kind": "table_cell",
+      "text": "81. Podpis i pieczęć przyjmującego deklarację",
+      "table": {
+       "row": 8,
+       "col": 2
+      }
+     },
+     {
+      "id": "b291",
+      "kind": "label",
+      "text": "Pouczenie:",
+      "bbox": {
+       "x0": 56.639997750000006,
+       "y0": 644.341242125,
+       "x1": 109.27875096987265,
+       "y1": 654.301617125
+      }
+     },
+     {
+      "id": "b292",
       "kind": "paragraph",
-      "text": "4/6"
+      "text": "1) W przypadku niewykonania w całości lub w części zadeklarowanego zobowiązania, niniejsza deklaracja stanowi podstawę do wystawienia tytułu wykonawczego (art. 3a § 1 i 2 – ustawy z dnia 17 czerwca 1966 r. o postępowaniu egzekucyjnym w administracji – tekst jedn. Dz. U. z 2025r., poz. 132 ze zm.).",
+      "bbox": {
+       "x0": 42.36,
+       "y0": 655.7412511250001,
+       "x1": 559.9138961230929,
+       "y1": 688.7416501250001
+      }
      },
      {
-      "id": "b181",
+      "id": "b293",
       "kind": "paragraph",
-      "text": "67. SUMA poz. 54, 57, 60 i 63"
+      "text": "Objaśnienia dotyczące sposobu wypełniania deklaracji",
+      "bbox": {
+       "x0": 56.639997750000006,
+       "y0": 713.341242125,
+       "x1": 317.1344243840327,
+       "y1": 723.301617125
+      }
      },
      {
-      "id": "b182",
+      "id": "b294",
       "kind": "paragraph",
-      "text": "pomniejszona o kwotę z poz."
+      "text": "1. Deklarację należy wypełnić czytelnie; komputerowo lub ręcznie, drukowanymi literami.",
+      "bbox": {
+       "x0": 52.91999849999999,
+       "y0": 724.7412511250001,
+       "x1": 451.49021884760487,
+       "y1": 734.8111902500001
+      }
      },
      {
-      "id": "b183",
+      "id": "b295",
       "kind": "paragraph",
-      "text": "66"
+      "text": "2. Obowiązek złożenia deklaracji spoczywa na każdym faktycznie władającym nieruchomością lub jej częścią na której zamieszkują mieszkańcy lub nieruchomością na której w części zamieszkują, a w części nie zamieszkują mieszkańcy.",
+      "bbox": {
+       "x0": 52.91999849999999,
+       "y0": 736.2612398750001,
+       "x1": 559.8664524231408,
+       "y1": 769.261638875
+      }
      },
      {
-      "id": "b184",
+      "id": "b296",
       "kind": "paragraph",
-      "text": "zł"
-     },
-     {
-      "id": "b185",
-      "kind": "heading",
-      "text": "E.3 WYSOKOŚĆ OPŁATY DLA CZĘŚCI NIERUCHOMOŚCI NA KTÓREJ NIE"
-     },
-     {
-      "id": "b186",
-      "kind": "heading",
-      "text": "ZAMIESZKUJĄ MIESZKAŃCY, A POWSTAJĄ ODPADY KOMUNALNE"
-     },
-     {
-      "id": "b187",
-      "kind": "paragraph",
-      "text": "68. KWOTA z poz. 29 załącznika A"
-     },
-     {
-      "id": "b188",
-      "kind": "paragraph",
-      "text": "lub B do deklaracji"
-     },
-     {
-      "id": "b189",
-      "kind": "paragraph",
-      "text": "zł"
-     },
-     {
-      "id": "b190",
-      "kind": "paragraph",
-      "text": "E.4 RAZEM WYSOKOŚĆ MIESIĘCZNEJ OPŁATY 69. SUMA poz. 51 lub 67 oraz 68"
-     },
-     {
-      "id": "b191",
-      "kind": "paragraph",
-      "text": "zł"
-     },
-     {
-      "id": "b192",
-      "kind": "paragraph",
-      "text": "F. DANE DO KONTAKTU (pola nieobowiązkowe)"
-     },
-     {
-      "id": "b193",
-      "kind": "paragraph",
-      "text": "70. Nr tel./fax 71. Adres e-mail"
-     },
-     {
-      "id": "b194",
-      "kind": "paragraph",
-      "text": "72. Wyrażam zgodę na otrzymywanie korespondencji za pośrednictwem adresu poczty elektronicznej wskazanego w poz."
-     },
-     {
-      "id": "b195",
-      "kind": "paragraph",
-      "text": "71"
-     },
-     {
-      "id": "b196",
-      "kind": "heading",
-      "text": "G. INFORMACJA O ZAŁĄCZNIKACH"
-     },
-     {
-      "id": "b197",
-      "kind": "paragraph",
-      "text": "73. Rodzaje załączników"
-     },
-     {
-      "id": "b198",
-      "kind": "paragraph",
-      "text": "1. Załącznik A TAK NIE"
-     },
-     {
-      "id": "b199",
-      "kind": "paragraph",
-      "text": "2. Załącznik B TAK NIE"
-     },
-     {
-      "id": "b200",
-      "kind": "paragraph",
-      "text": "3. Dokumenty upoważniające do złożenia deklaracji TAK NIE"
-     },
-     {
-      "id": "b201",
-      "kind": "paragraph",
-      "text": "4. Inne: (podać jakie) ……………………………………………………………………………………………………………………………………………"
-     },
-     {
-      "id": "b202",
-      "kind": "heading",
-      "text": "H. PODPIS SKŁADAJĄCEGO DEKLARACJĘ / OSOBY REPREZENTUJĄCEJ"
-     },
-     {
-      "id": "b203",
-      "kind": "paragraph",
-      "text": "74. Imię 75. Nazwisko"
-     },
-     {
-      "id": "b204",
-      "kind": "paragraph",
-      "text": "76. Data wypełnienia 77. Podpis składającego deklarację / osoby reprezentującej"
-     },
-     {
-      "id": "b205",
-      "kind": "paragraph",
-      "text": "78. Podpis współmałżonka (wypełnić tylko w przypadku zaznaczenia poz. B 1.1.2)"
-     },
-     {
-      "id": "b206",
-      "kind": "heading",
-      "text": "I. ADNOTACJA ORGANU"
-     },
-     {
-      "id": "b207",
-      "kind": "paragraph",
-      "text": "79. Data wpływu do organu 80. Uwagi"
-     },
-     {
-      "id": "b208",
-      "kind": "paragraph",
-      "text": "81. Podpis i pieczęć przyjmującego deklarację"
-     },
-     {
-      "id": "b209",
-      "kind": "paragraph",
-      "text": "Pouczenie:"
-     },
-     {
-      "id": "b210",
-      "kind": "paragraph",
-      "text": "1) W przypadku niewykonania w całości lub w części zadeklarowanego zobowiązania, niniejsza deklaracja"
-     },
-     {
-      "id": "b211",
-      "kind": "paragraph",
-      "text": "stanowi podstawę do wystawienia tytułu wykonawczego (art. 3a § 1 i 2 – ustawy z dnia 17 czerwca 1966 r."
-     },
-     {
-      "id": "b212",
-      "kind": "paragraph",
-      "text": "o postępowaniu egzekucyjnym w administracji – tekst jedn. Dz. U. z 2025r., poz. 132 ze zm.)."
-     },
-     {
-      "id": "b213",
-      "kind": "paragraph",
-      "text": "Objaśnienia dotyczące sposobu wypełniania deklaracji"
-     },
-     {
-      "id": "b214",
-      "kind": "paragraph",
-      "text": "1. Deklarację należy wypełnić czytelnie; komputerowo lub ręcznie, drukowanymi literami."
-     },
-     {
-      "id": "b215",
-      "kind": "paragraph",
-      "text": "2. Obowiązek złożenia deklaracji spoczywa na każdym faktycznie władającym nieruchomością lub jej częścią na"
-     },
-     {
-      "id": "b216",
-      "kind": "paragraph",
-      "text": "której zamieszkują mieszkańcy lub nieruchomością na której w części zamieszkują, a w części nie"
-     },
-     {
-      "id": "b217",
-      "kind": "paragraph",
-      "text": "zamieszkują mieszkańcy."
-     },
-     {
-      "id": "b218",
-      "kind": "paragraph",
-      "text": "3. Jeżeli nieruchomość jest zabudowana budynkiem wielolokalowym, w którym ustanowiono odrębną własność"
-     },
-     {
-      "id": "b219",
-      "kind": "paragraph",
-      "text": "lokalu, obowiązek złożenia deklaracji spoczywający na właścicielach nieruchomości wspólnej oraz"
-     },
-     {
-      "id": "b220",
-      "kind": "paragraph",
-      "text": "właścicielach lokali obciąża wspólnotę mieszkaniową albo spółdzielnię mieszkaniową."
+      "text": "3. Jeżeli nieruchomość jest zabudowana budynkiem wielolokalowym, w którym ustanowiono odrębną własność lokalu, obowiązek złożenia deklaracji spoczywający na właścicielach nieruchomości wspólnej oraz właścicielach lokali obciąża wspólnotę mieszkaniową albo spółdzielnię mieszkaniową. 4/6",
+      "bbox": {
+       "x0": 52.91999849999999,
+       "y0": 770.821252625,
+       "x1": 559.8380108910601,
+       "y1": 820.99881485
+      }
      }
     ]
    },
@@ -1131,294 +3209,312 @@
     "number": 5,
     "blocks": [
      {
-      "id": "b221",
+      "id": "b297",
       "kind": "paragraph",
-      "text": "5/6"
+      "text": "4. Objaśnienie dotyczące punktu B.1.2: Imię i nazwisko podają składający deklarację będący osobami fizycznymi. Pełną nazwę podają składający deklarację nie będący osobami fizycznymi.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 65.34125862500002,
+       "x1": 559.8410340604951,
+       "y1": 86.70163737500002
+      }
      },
      {
-      "id": "b222",
-      "kind": "paragraph",
-      "text": "4. Objaśnienie dotyczące punktu B.1.2: Imię i nazwisko podają składający deklarację będący osobami"
+      "id": "b298",
+      "kind": "label",
+      "text": "5. Objaśnienie dotyczące punktu B.1.3 i 4: W pozycji PESEL oraz NIP/REGON:",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 88.26126312500003,
+       "x1": 410.9073596166493,
+       "y1": 98.33120225000005
+      }
      },
      {
-      "id": "b223",
+      "id": "b299",
       "kind": "paragraph",
-      "text": "fizycznymi. Pełną nazwę podają składający deklarację nie będący osobami fizycznymi."
+      "text": "a) osoby fizyczne nieprowadzące działalności gospodarczej figurujące w rejestrze PESEL wpisują numer PESEL;",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 99.78126312500001,
+       "x1": 559.8405946772419,
+       "y1": 121.26163887500002
+      }
      },
      {
-      "id": "b224",
+      "id": "b300",
       "kind": "paragraph",
-      "text": "5. Objaśnienie dotyczące punktu B.1.3 i 4: W pozycji PESEL oraz NIP/REGON:"
+      "text": "b) osoby fizyczne nieprowadzące działalności gospodarczej i nie posiadające numeru PESEL wpisują numer dokumentu tożsamości i jego rodzaj;",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 122.821263875,
+       "x1": 559.8775570113237,
+       "y1": 144.301639625
+      }
      },
      {
-      "id": "b225",
+      "id": "b301",
       "kind": "paragraph",
-      "text": "a) osoby fizyczne nieprowadzące działalności gospodarczej figurujące w rejestrze PESEL wpisują numer"
+      "text": "c) osoba fizyczna prowadząca działalność gospodarczą jest OSOBĄ FIZYCZNĄ i musi wpisać PESEL",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 145.74126237500002,
+       "x1": 511.3593641849114,
+       "y1": 155.70163737500002
+      }
      },
      {
-      "id": "b226",
-      "kind": "heading",
-      "text": "PESEL;"
+      "id": "b302",
+      "kind": "paragraph",
+      "text": "d) pozostałe podmioty wpisują numer NIP lub REGON.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 157.26126312500003,
+       "x1": 301.9374607271468,
+       "y1": 167.22163812500003
+      }
      },
      {
-      "id": "b227",
+      "id": "b303",
       "kind": "paragraph",
-      "text": "b) osoby fizyczne nieprowadzące działalności gospodarczej i nie posiadające numeru PESEL wpisują numer"
+      "text": "6. Objaśnienie dot. części C.25.1: Obowiązek podatkowy powstaje w dniu zamieszkania na nieruchomości pierwszego mieszkańca lub powstania na nieruchomości pierwszego odpadu komunalnego.",
+      "bbox": {
+       "x0": 52.91999849999999,
+       "y0": 168.781263125,
+       "x1": 559.8433412156228,
+       "y1": 190.26163887500002
+      }
      },
      {
-      "id": "b228",
+      "id": "b304",
       "kind": "paragraph",
-      "text": "dokumentu tożsamości i jego rodzaj;"
+      "text": "7. Objaśnienie dotyczące części D.1: Składający wypełnia odrębną deklarację dla każdej nieruchomości którą włada.",
+      "bbox": {
+       "x0": 52.91999849999999,
+       "y0": 191.82125262500006,
+       "x1": 559.931233755905,
+       "y1": 213.301639625
+      }
      },
      {
-      "id": "b229",
+      "id": "b305",
       "kind": "paragraph",
-      "text": "c) osoba fizyczna prowadząca działalność gospodarczą jest OSOBĄ FIZYCZNĄ i musi wpisać PESEL"
+      "text": "8. Objaśnienie dotyczące punktu D.2: Wypełniamy wyłącznie w przypadku, w którym właściciel nieruchomości zabudowanej budynkiem lub budynkami wielolokalowymi składa deklarację odrębnie na daną część budynku lub odrębnie na dany budynek, stosownie do przepisu art. 6m ust. 1ca ustawy o utrzymaniu czystości i porządku w gminach.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 214.86125337500005,
+       "x1": 559.9608698222139,
+       "y1": 259.261638875
+      }
      },
      {
-      "id": "b230",
+      "id": "b306",
       "kind": "paragraph",
-      "text": "d) pozostałe podmioty wpisują numer NIP lub REGON."
+      "text": "9. Objaśnienie dotyczące punktu D.4.35: Składający deklarację zaznaczają w poz. D.4.35 kratkę jeżeli nieruchomość wyposażona jest w przydomowy kompostownik, w którym kompostowane są bioodpady stanowiące odpady komunalne. Właściciele takich nieruchomość są bowiem zwolnione z części opłaty za gospodarowanie odpadami komunalnymi.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 260.82125262500006,
+       "x1": 559.9155423269509,
+       "y1": 305.221638125
+      }
      },
      {
-      "id": "b231",
+      "id": "b307",
       "kind": "paragraph",
-      "text": "6. Objaśnienie dot. części C.25.1: Obowiązek podatkowy powstaje w dniu zamieszkania na nieruchomości"
+      "text": "10. Objaśnienie dotyczące części E.1 oraz E.2: Przez gospodarstwo domowe należy rozumieć gospodarstwo prowadzone przez osobę samodzielnie zajmującą lokal albo gospodarstwo prowadzone przez tę osobę wspólnie z małżonkiem i innymi osobami stale z nią zamieszkującymi i gospodarującymi, które swoje prawa do zamieszkiwania w lokalu wywodzą z prawa tej osoby.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 306.78125187500007,
+       "x1": 559.8686489474089,
+       "y1": 351.301639625
+      }
      },
      {
-      "id": "b232",
+      "id": "b308",
       "kind": "paragraph",
-      "text": "pierwszego mieszkańca lub powstania na nieruchomości pierwszego odpadu komunalnego."
+      "text": "11. Objaśnienie dotyczące części E.1 oraz E.2: Powierzchnię użytkową lokalu mieszkalnego ustala się na zasadach określonych w ustawie z dnia 7 lipca 1994r. – Prawo budowlane (t.j. Dz.U. z 2025r. poz. 418) oraz w aktach wykonawczych do tej ustawy.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 352.86125337500005,
+       "x1": 559.8768637788562,
+       "y1": 385.74162687500007
+      }
      },
      {
-      "id": "b233",
+      "id": "b309",
       "kind": "paragraph",
-      "text": "7. Objaśnienie dotyczące części D.1: Składający wypełnia odrębną deklarację dla każdej nieruchomości którą"
+      "text": "12. Objaśnienie dotyczące punktu E.3.68: Wypełnić tylko w przypadku złożenia załącznika A lub B do deklaracji.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 387.301263875,
+       "x1": 549.8199923150373,
+       "y1": 397.371203
+      }
      },
      {
-      "id": "b234",
+      "id": "b310",
       "kind": "paragraph",
-      "text": "włada."
+      "text": "13. Objaśnienie dotyczące punktu G.74.4: W przypadku składania deklaracji przez pełnomocnika – należy dołączyć pełnomocnictwo na piśmie i złożyć z deklaracją w oryginale lub formie uwierzytelnionego odpisu wraz z uiszczoną opłatą skarbową (17 zł) na rachunek nr 73 1440 1026 6153 0410 0000 0065.",
+      "bbox": {
+       "x0": 52.8000015,
+       "y0": 398.82125262500006,
+       "x1": 559.8931218875953,
+       "y1": 431.821651625
+      }
      },
      {
-      "id": "b235",
+      "id": "b311",
       "kind": "paragraph",
-      "text": "8. Objaśnienie dotyczące punktu D.2: Wypełniamy wyłącznie w przypadku, w którym właściciel nieruchomości"
+      "text": "Informacja o przetwarzaniu danych osobowych",
+      "bbox": {
+       "x0": 195.95999924999998,
+       "y0": 474.181238375,
+       "x1": 420.15617364946274,
+       "y1": 484.141613375
+      }
      },
      {
-      "id": "b236",
+      "id": "b312",
       "kind": "paragraph",
-      "text": "zabudowanej budynkiem lub budynkami wielolokalowymi składa deklarację odrębnie na daną część budynku"
+      "text": "Stosownie do art. 13 i 14 Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE, dalej RODO, informujemy, że:",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 510.4212436250001,
+       "x1": 559.7809148991191,
+       "y1": 554.821651625
+      }
      },
      {
-      "id": "b237",
+      "id": "b313",
       "kind": "paragraph",
-      "text": "lub odrębnie na dany budynek, stosownie do przepisu art. 6m ust. 1ca ustawy o utrzymaniu czystości i"
+      "text": "1. Administratorem Pani/Pana danych osobowych jest Prezydent Miasta Gdyni z siedzibą przy al. Marsz.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 556.381265375,
+       "x1": 559.8157373263151,
+       "y1": 566.341640375
+      }
      },
      {
-      "id": "b238",
+      "id": "b314",
       "kind": "paragraph",
-      "text": "porządku w gminach."
+      "text": "Piłsudskiego 52/54, 81-382 Gdynia.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 567.9012548750001,
+       "x1": 235.56389976665037,
+       "y1": 577.8616298750001
+      }
      },
      {
-      "id": "b239",
+      "id": "b315",
       "kind": "paragraph",
-      "text": "9. Objaśnienie dotyczące punktu D.4.35: Składający deklarację zaznaczają w poz. D.4.35 kratkę jeżeli"
+      "text": "Z administratorem, w związku ze złożoną Deklaracją, można się kontaktować w następujący sposób:",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 579.4212436250001,
+       "x1": 523.5140611929186,
+       "y1": 589.3816186250001
+      }
      },
      {
-      "id": "b240",
+      "id": "b316",
       "kind": "paragraph",
-      "text": "nieruchomość wyposażona jest w przydomowy kompostownik, w którym kompostowane są bioodpady"
+      "text": "a) listownie: Al. Marsz. Piłsudskiego 52/54, 81-382 Gdynia",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 590.941278125,
+       "x1": 345.26639273085823,
+       "y1": 600.901653125
+      }
      },
      {
-      "id": "b241",
+      "id": "b317",
       "kind": "paragraph",
-      "text": "stanowiące odpady komunalne. Właściciele takich nieruchomość są bowiem zwolnione z części opłaty za"
+      "text": "b) za pośrednictwem poczty elektronicznej: wydz.podatkow@gdynia.pl",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 602.461267625,
+       "x1": 399.2862920072742,
+       "y1": 612.421642625
+      }
      },
      {
-      "id": "b242",
+      "id": "b318",
       "kind": "paragraph",
-      "text": "gospodarowanie odpadami komunalnymi."
+      "text": "c) telefonicznie: +48 58 527 28 00",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 613.861276625,
+       "x1": 238.30733376079093,
+       "y1": 623.821651625
+      }
      },
      {
-      "id": "b243",
+      "id": "b319",
       "kind": "paragraph",
-      "text": "10. Objaśnienie dotyczące części E.1 oraz E.2: Przez gospodarstwo domowe należy rozumieć gospodarstwo"
+      "text": "2. Administrator powołał inspektora ochrony danych, z którym kontakt jest możliwy poprzez e- mail: iod@gdynia.pl lub adres pocztowy: Al. Marsz. Piłsudskiego 52/54, 81-382 Gdynia.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 625.381265375,
+       "x1": 559.7675306651336,
+       "y1": 646.8616298750001
+      }
      },
      {
-      "id": "b244",
+      "id": "b320",
       "kind": "paragraph",
-      "text": "prowadzone przez osobę samodzielnie zajmującą lokal albo gospodarstwo prowadzone przez tę osobę"
+      "text": "3. Będziemy przetwarzać Pani/Pana dane osobowe w celu weryfikacji prawidłowości wysokości miesięcznej opłaty za gospodarowanie odpadami komunalnymi na podstawie art. 6 ust. 1 lit. c RODO w związku z przepisami ustawy z dnia 13 września 1996r. o utrzymaniu czystości i porządku w gminach, ustawy z dnia 8 marca 1990r. o samorządzie gminnym oraz uchwały nr XIV/478/19 Rady Miasta Gdyni z dnia 27 listopada 2019 roku w sprawie wzoru deklaracji o wysokości opłaty za gospodarowanie odpadami komunalnymi ze zmianami.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 648.4212436250001,
+       "x1": 559.9421874045374,
+       "y1": 715.8616298750001
+      }
      },
      {
-      "id": "b245",
+      "id": "b321",
       "kind": "paragraph",
-      "text": "wspólnie z małżonkiem i innymi osobami stale z nią zamieszkującymi i gospodarującymi, które swoje prawa"
+      "text": "W przypadku przekazania niniejszej deklaracji za pomocą środków komunikacji elektronicznej (ePUAP) Pani/Pana dane będą przetwarzane zgodnie z przepisami ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną oraz przepisami ustawy z dnia 18 listopada 2020 r. o doręczeniach elektronicznych.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 717.4212436250001,
+       "x1": 559.8349577324677,
+       "y1": 761.821651625
+      }
      },
      {
-      "id": "b246",
+      "id": "b322",
       "kind": "paragraph",
-      "text": "do zamieszkiwania w lokalu wywodzą z prawa tej osoby."
+      "text": "W przypadku dobrowolnego podania danych kontaktowych, dane te będą przetwarzane w celu ułatwienia kontaktu w związku ze złożoną deklaracją na podstawie Pani/Pana zgody (art. 6 ust. 1 lit. a RODO).",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 763.3812196250001,
+       "x1": 559.7123984257298,
+       "y1": 784.861675625
+      }
      },
      {
-      "id": "b247",
-      "kind": "paragraph",
-      "text": "11. Objaśnienie dotyczące części E.1 oraz E.2: Powierzchnię użytkową lokalu mieszkalnego ustala się na"
+      "id": "b323",
+      "kind": "label",
+      "text": "4. Odbiorcami Pana/Pani danych osobowych mogą być:",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 786.421289375,
+       "x1": 335.91915230126835,
+       "y1": 796.381664375
+      }
      },
      {
-      "id": "b248",
+      "id": "b324",
       "kind": "paragraph",
-      "text": "zasadach określonych w ustawie z dnia 7 lipca 1994r. – Prawo budowlane (t.j. Dz.U. z 2025r. poz. 418) oraz w"
-     },
-     {
-      "id": "b249",
-      "kind": "paragraph",
-      "text": "aktach wykonawczych do tej ustawy."
-     },
-     {
-      "id": "b250",
-      "kind": "paragraph",
-      "text": "12. Objaśnienie dotyczące punktu E.3.68: Wypełnić tylko w przypadku złożenia załącznika A lub B do deklaracji."
-     },
-     {
-      "id": "b251",
-      "kind": "paragraph",
-      "text": "13. Objaśnienie dotyczące punktu G.74.4: W przypadku składania deklaracji przez pełnomocnika – należy"
-     },
-     {
-      "id": "b252",
-      "kind": "paragraph",
-      "text": "dołączyć pełnomocnictwo na piśmie i złożyć z deklaracją w oryginale lub formie uwierzytelnionego odpisu"
-     },
-     {
-      "id": "b253",
-      "kind": "paragraph",
-      "text": "wraz z uiszczoną opłatą skarbową (17 zł) na rachunek nr 73 1440 1026 6153 0410 0000 0065."
-     },
-     {
-      "id": "b254",
-      "kind": "paragraph",
-      "text": "Informacja o przetwarzaniu danych osobowych"
-     },
-     {
-      "id": "b255",
-      "kind": "paragraph",
-      "text": "Stosownie do art. 13 i 14 Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27"
-     },
-     {
-      "id": "b256",
-      "kind": "paragraph",
-      "text": "kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w"
-     },
-     {
-      "id": "b257",
-      "kind": "paragraph",
-      "text": "sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE, dalej RODO,"
-     },
-     {
-      "id": "b258",
-      "kind": "paragraph",
-      "text": "informujemy, że:"
-     },
-     {
-      "id": "b259",
-      "kind": "paragraph",
-      "text": "1. Administratorem Pani/Pana danych osobowych jest Prezydent Miasta Gdyni z siedzibą przy al. Marsz."
-     },
-     {
-      "id": "b260",
-      "kind": "paragraph",
-      "text": "Piłsudskiego 52/54, 81-382 Gdynia."
-     },
-     {
-      "id": "b261",
-      "kind": "paragraph",
-      "text": "Z administratorem, w związku ze złożoną Deklaracją, można się kontaktować w następujący sposób:"
-     },
-     {
-      "id": "b262",
-      "kind": "paragraph",
-      "text": "a) listownie: Al. Marsz. Piłsudskiego 52/54, 81-382 Gdynia"
-     },
-     {
-      "id": "b263",
-      "kind": "paragraph",
-      "text": "b) za pośrednictwem poczty elektronicznej: wydz.podatkow@gdynia.pl"
-     },
-     {
-      "id": "b264",
-      "kind": "paragraph",
-      "text": "c) telefonicznie: +48 58 527 28 00"
-     },
-     {
-      "id": "b265",
-      "kind": "paragraph",
-      "text": "2. Administrator powołał inspektora ochrony danych, z którym kontakt jest możliwy poprzez e￾mail: iod@gdynia.pl lub adres pocztowy: Al. Marsz. Piłsudskiego 52/54, 81-382 Gdynia."
-     },
-     {
-      "id": "b266",
-      "kind": "paragraph",
-      "text": "3. Będziemy przetwarzać Pani/Pana dane osobowe w celu weryfikacji prawidłowości wysokości"
-     },
-     {
-      "id": "b267",
-      "kind": "paragraph",
-      "text": "miesięcznej opłaty za gospodarowanie odpadami komunalnymi na podstawie art. 6 ust. 1 lit. c RODO w"
-     },
-     {
-      "id": "b268",
-      "kind": "paragraph",
-      "text": "związku z przepisami ustawy z dnia 13 września 1996r. o utrzymaniu czystości i porządku w gminach,"
-     },
-     {
-      "id": "b269",
-      "kind": "paragraph",
-      "text": "ustawy z dnia 8 marca 1990r. o samorządzie gminnym oraz uchwały nr XIV/478/19 Rady Miasta Gdyni z"
-     },
-     {
-      "id": "b270",
-      "kind": "paragraph",
-      "text": "dnia 27 listopada 2019 roku w sprawie wzoru deklaracji o wysokości opłaty za gospodarowanie odpadami"
-     },
-     {
-      "id": "b271",
-      "kind": "paragraph",
-      "text": "komunalnymi ze zmianami."
-     },
-     {
-      "id": "b272",
-      "kind": "paragraph",
-      "text": "W przypadku przekazania niniejszej deklaracji za pomocą środków komunikacji elektronicznej (ePUAP)"
-     },
-     {
-      "id": "b273",
-      "kind": "paragraph",
-      "text": "Pani/Pana dane będą przetwarzane zgodnie z przepisami ustawy z dnia 18 lipca 2002 r. o świadczeniu"
-     },
-     {
-      "id": "b274",
-      "kind": "paragraph",
-      "text": "usług drogą elektroniczną oraz przepisami ustawy z dnia 18 listopada 2020 r. o doręczeniach"
-     },
-     {
-      "id": "b275",
-      "kind": "paragraph",
-      "text": "elektronicznych."
-     },
-     {
-      "id": "b276",
-      "kind": "paragraph",
-      "text": "W przypadku dobrowolnego podania danych kontaktowych, dane te będą przetwarzane w celu ułatwienia"
-     },
-     {
-      "id": "b277",
-      "kind": "paragraph",
-      "text": "kontaktu w związku ze złożoną deklaracją na podstawie Pani/Pana zgody (art. 6 ust. 1 lit. a RODO)."
-     },
-     {
-      "id": "b278",
-      "kind": "paragraph",
-      "text": "4. Odbiorcami Pana/Pani danych osobowych mogą być:"
+      "text": "5/6",
+      "bbox": {
+       "x0": 509.03997825,
+       "y0": 809.95836485,
+       "x1": 524.417513781692,
+       "y1": 820.99881485
+      }
      }
     ]
    },
@@ -1426,184 +3522,257 @@
     "number": 6,
     "blocks": [
      {
-      "id": "b279",
+      "id": "b325",
       "kind": "paragraph",
-      "text": "6/6"
+      "text": "a) podmioty upoważnione na podstawie przepisów prawa;",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 65.22126162500001,
+       "x1": 346.42004538618056,
+       "y1": 75.18163662500001
+      }
      },
      {
-      "id": "b280",
+      "id": "b326",
       "kind": "paragraph",
-      "text": "a) podmioty upoważnione na podstawie przepisów prawa;"
+      "text": "b) podmioty świadczące usługi z zakresu utrzymania, serwisu i i asysty technicznej narzędzi i systemów informatycznych wykorzystywanych przy przetwarzaniu danych;",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 76.74126237500002,
+       "x1": 559.6308210804162,
+       "y1": 98.22163812500003
+      }
      },
      {
-      "id": "b281",
+      "id": "b327",
       "kind": "paragraph",
-      "text": "b) podmioty świadczące usługi z zakresu utrzymania, serwisu i i asysty technicznej narzędzi i systemów"
+      "text": "c) operator pocztowy, z którym Urząd Miasta Gdyni zawarł umowę na świadczenie usług pocztowych i kurierskich.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 99.78126312500001,
+       "x1": 559.7679707827107,
+       "y1": 121.26163887500002
+      }
      },
      {
-      "id": "b282",
+      "id": "b328",
       "kind": "paragraph",
-      "text": "informatycznych wykorzystywanych przy przetwarzaniu danych;"
+      "text": "5. Administrator nie przewiduje przekazania uzyskanych danych osobowych do państwa trzeciego lub organizacji międzynarodowej.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 122.821263875,
+       "x1": 559.8155038650857,
+       "y1": 144.181636625
+      }
      },
      {
-      "id": "b283",
+      "id": "b329",
       "kind": "paragraph",
-      "text": "c) operator pocztowy, z którym Urząd Miasta Gdyni zawarł umowę na świadczenie usług pocztowych i"
+      "text": "6. Administrator nie przewiduje zautomatyzowanego podejmowania decyzji ani profilowania w oparciu o otrzymane dane osobowe.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 145.74126237500002,
+       "x1": 559.7172619075158,
+       "y1": 167.22163812500003
+      }
      },
      {
-      "id": "b284",
+      "id": "b330",
       "kind": "paragraph",
-      "text": "kurierskich."
+      "text": "7. Czas przetwarzania danych osobowych obejmować będzie okres wynikający z przepisów prawa upoważniających do zachowania i archiwizacji pozyskanych danych osobowych, w szczególności okres wynikający z przepisów ustawy z dnia 14 lipca 1983 r. o narodowym zasobie archiwalnym i archiwach tj. aktualnie 10 lat.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 168.781263125,
+       "x1": 559.8734374798792,
+       "y1": 213.181636625
+      }
      },
      {
-      "id": "b285",
-      "kind": "paragraph",
-      "text": "5. Administrator nie przewiduje przekazania uzyskanych danych osobowych do państwa trzeciego lub"
+      "id": "b331",
+      "kind": "label",
+      "text": "8. Ma Pani/Pan prawo do:",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 214.74125112500008,
+       "x1": 202.8938697666503,
+       "y1": 224.70162612500008
+      }
      },
      {
-      "id": "b286",
+      "id": "b332",
       "kind": "paragraph",
-      "text": "organizacji międzynarodowej."
+      "text": "a) żądania uzyskania kopii danych osobowych, lub ich udostępnienia w siedzibie administratora (art. 15 RODO),",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 226.26126312500003,
+       "x1": 559.7507225223605,
+       "y1": 247.74162687500007
+      }
      },
      {
-      "id": "b287",
+      "id": "b333",
       "kind": "paragraph",
-      "text": "6. Administrator nie przewiduje zautomatyzowanego podejmowania decyzji ani profilowania w oparciu o"
+      "text": "b) żądania sprostowania danych osobowych (art. 16 RODO),",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 249.30126387500002,
+       "x1": 356.9898198060051,
+       "y1": 259.261638875
+      }
      },
      {
-      "id": "b288",
+      "id": "b334",
       "kind": "paragraph",
-      "text": "otrzymane dane osobowe."
+      "text": "c) żądania usunięcia swoich danych osobowych lub ograniczenia ich przetwarzania w przypadkach przewidzianych prawem (art. 17 i 18 RODO),",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 260.82125262500006,
+       "x1": 559.7423573811002,
+       "y1": 282.181636625
+      }
      },
      {
-      "id": "b289",
+      "id": "b335",
       "kind": "paragraph",
-      "text": "7. Czas przetwarzania danych osobowych obejmować będzie okres wynikający z przepisów prawa"
+      "text": "d) wycofania zgody na przetwarzanie danych osobowych w zakresie, w jakim taka zgoda została udzielona. Cofnięcie zgody nie wpływa na zgodność z prawem przetwarzania danych, którego dokonano na podstawie zgody przed jej cofnięciem.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 283.7412511250001,
+       "x1": 559.6929445583476,
+       "y1": 316.74162687500007
+      }
      },
      {
-      "id": "b290",
+      "id": "b336",
       "kind": "paragraph",
-      "text": "upoważniających do zachowania i archiwizacji pozyskanych danych osobowych, w szczególności okres"
+      "text": "9. Administrator informuje jednocześnie, iż na podstawie art. 77 RODO ma Pani/Pan prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych, 00-193 Warszawa, ul. Stawki 2, w przypadku uznania, iż przetwarzanie danych narusza przepisy RODO.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 318.301263875,
+       "x1": 559.7485826154752,
+       "y1": 351.181636625
+      }
      },
      {
-      "id": "b291",
+      "id": "b337",
       "kind": "paragraph",
-      "text": "wynikający z przepisów ustawy z dnia 14 lipca 1983 r. o narodowym zasobie archiwalnym i archiwach tj."
+      "text": "10. Podanie przez Panią /Pana danych osobowych jest obligatoryjne i wynika z przepisów prawa.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 352.741251125,
+       "x1": 512.6753445178703,
+       "y1": 362.701626125
+      }
      },
      {
-      "id": "b292",
+      "id": "b338",
       "kind": "paragraph",
-      "text": "aktualnie 10 lat."
+      "text": "Niepodanie danych wiązać się będzie z konsekwencjami przewidzianymi prawem.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 364.261263125,
+       "x1": 440.746846652195,
+       "y1": 374.221638125
+      }
      },
      {
-      "id": "b293",
+      "id": "b339",
       "kind": "paragraph",
-      "text": "8. Ma Pani/Pan prawo do:"
+      "text": "11. W przypadku pozyskania danych osobowych z innych źródeł niż bezpośrednio od osoby, której dane dotyczą, Administrator będzie przetwarzał następujące kategorie danych osobowych:",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 375.78125187500007,
+       "x1": 544.3456018872057,
+       "y1": 397.261638875
+      }
      },
      {
-      "id": "b294",
+      "id": "b340",
       "kind": "paragraph",
-      "text": "a) żądania uzyskania kopii danych osobowych, lub ich udostępnienia w siedzibie administratora (art. 15"
+      "text": "a) dane identyfikacyjne,",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 398.70127287500003,
+       "x1": 192.48625060195204,
+       "y1": 408.661647875
+      }
      },
      {
-      "id": "b295",
-      "kind": "heading",
-      "text": "RODO),"
+      "id": "b341",
+      "kind": "paragraph",
+      "text": "b) dane adresowe,",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 410.22126162500007,
+       "x1": 170.16878535761666,
+       "y1": 420.18163662500007
+      }
      },
      {
-      "id": "b296",
+      "id": "b342",
       "kind": "paragraph",
-      "text": "b) żądania sprostowania danych osobowych (art. 16 RODO),"
+      "text": "c) dane kontaktowe,",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 421.741251125,
+       "x1": 177.35698567001927,
+       "y1": 431.701626125
+      }
      },
      {
-      "id": "b297",
+      "id": "b343",
       "kind": "paragraph",
-      "text": "c) żądania usunięcia swoich danych osobowych lub ograniczenia ich przetwarzania w przypadkach"
+      "text": "d) informacje o posiadanej nieruchomości oraz wysokości opłaty,",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 433.26123987500006,
+       "x1": 374.79457372675745,
+       "y1": 443.22161487500006
+      }
      },
      {
-      "id": "b298",
+      "id": "b344",
       "kind": "paragraph",
-      "text": "przewidzianych prawem (art. 17 i 18 RODO),"
+      "text": "e) inne dane niezbędne do rozpatrzenia sprawy.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 444.7812751250001,
+       "x1": 300.82867334589804,
+       "y1": 454.7416501250001
+      }
      },
      {
-      "id": "b299",
+      "id": "b345",
       "kind": "paragraph",
-      "text": "d) wycofania zgody na przetwarzanie danych osobowych w zakresie, w jakim taka zgoda została"
+      "text": "Źródłem pozyskania danych osobowych będzie niniejszy wniosek złożony przez osobę reprezentującą.",
+      "bbox": {
+       "x0": 77.879997,
+       "y0": 456.301263875,
+       "x1": 533.0285537907693,
+       "y1": 466.261638875
+      }
      },
      {
-      "id": "b300",
-      "kind": "paragraph",
-      "text": "udzielona. Cofnięcie zgody nie wpływa na zgodność z prawem przetwarzania danych, którego dokonano na"
+      "id": "b346",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 7.4399999999999995,
+       "y0": 712.0799975,
+       "x1": 592.4399872500001,
+       "y1": 761.51998475
+      }
      },
      {
-      "id": "b301",
+      "id": "b347",
       "kind": "paragraph",
-      "text": "podstawie zgody przed jej cofnięciem."
-     },
-     {
-      "id": "b302",
-      "kind": "paragraph",
-      "text": "9. Administrator informuje jednocześnie, iż na podstawie art. 77 RODO ma Pani/Pan prawo wniesienia"
-     },
-     {
-      "id": "b303",
-      "kind": "paragraph",
-      "text": "skargi do Prezesa Urzędu Ochrony Danych Osobowych, 00-193 Warszawa, ul. Stawki 2, w przypadku"
-     },
-     {
-      "id": "b304",
-      "kind": "paragraph",
-      "text": "uznania, iż przetwarzanie danych narusza przepisy RODO."
-     },
-     {
-      "id": "b305",
-      "kind": "paragraph",
-      "text": "10. Podanie przez Panią /Pana danych osobowych jest obligatoryjne i wynika z przepisów prawa."
-     },
-     {
-      "id": "b306",
-      "kind": "paragraph",
-      "text": "Niepodanie danych wiązać się będzie z konsekwencjami przewidzianymi prawem."
-     },
-     {
-      "id": "b307",
-      "kind": "paragraph",
-      "text": "11. W przypadku pozyskania danych osobowych z innych źródeł niż bezpośrednio od osoby, której dane"
-     },
-     {
-      "id": "b308",
-      "kind": "paragraph",
-      "text": "dotyczą, Administrator będzie przetwarzał następujące kategorie danych osobowych:"
-     },
-     {
-      "id": "b309",
-      "kind": "paragraph",
-      "text": "a) dane identyfikacyjne,"
-     },
-     {
-      "id": "b310",
-      "kind": "paragraph",
-      "text": "b) dane adresowe,"
-     },
-     {
-      "id": "b311",
-      "kind": "paragraph",
-      "text": "c) dane kontaktowe,"
-     },
-     {
-      "id": "b312",
-      "kind": "paragraph",
-      "text": "d) informacje o posiadanej nieruchomości oraz wysokości opłaty,"
-     },
-     {
-      "id": "b313",
-      "kind": "paragraph",
-      "text": "e) inne dane niezbędne do rozpatrzenia sprawy."
-     },
-     {
-      "id": "b314",
-      "kind": "paragraph",
-      "text": "Źródłem pozyskania danych osobowych będzie niniejszy wniosek złożony przez osobę reprezentującą."
+      "text": "6/6",
+      "bbox": {
+       "x0": 509.03997825,
+       "y0": 809.95836485,
+       "x1": 524.417513781692,
+       "y1": 820.99881485
+      }
      }
     ]
    }
@@ -1789,7 +3958,7 @@
      "razem wysokość miesięcznej opłaty",
      "suma"
     ],
-    "optional": false
+    "optional": true
    },
    {
     "label": "Numer działki",

@@ -1,0 +1,1627 @@
+{
+ "name": "wycinka-drzew",
+ "source": "wycinka-drzew.pdf",
+ "document": {
+  "source": {
+   "method": "pdf_text",
+   "pages": 6
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "Warszawa,",
+      "bbox": {
+       "x0": 302.71,
+       "y0": 72.98000000000002,
+       "x1": 351.53991999999994,
+       "y1": 84.01999999999998
+      }
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "r.",
+      "bbox": {
+       "x0": 517.92,
+       "y0": 72.98000000000002,
+       "x1": 524.5420399999999,
+       "y1": 84.01999999999998
+      }
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "[i] Wypełnij drukowanymi literami i zaznacz wybrane opcje krzyżykiem w kratce. Szczegółowe informacje o tym postępowaniu znajdziesz w karcie informacyjnej „Wydawanie zezwoleń na usunięcie drzew i krzewów” na stronie warszawa19115.pl.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 101.77999999999997,
+       "x1": 488.44288000000006,
+       "y1": 146.41999999999996
+      }
+     },
+     {
+      "id": "b4",
+      "kind": "heading",
+      "text": "Urząd m.st. Warszawy",
+      "bbox": {
+       "x0": 325.99,
+       "y0": 164.17999999999995,
+       "x1": 427.76776,
+       "y1": 175.2199999999999
+      }
+     },
+     {
+      "id": "b5",
+      "kind": "heading",
+      "text": "Wydział Ochrony Środowiska",
+      "bbox": {
+       "x0": 325.99,
+       "y0": 180.98000000000002,
+       "x1": 459.17656,
+       "y1": 192.01999999999998
+      }
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "dla Dzielnicy",
+      "bbox": {
+       "x0": 325.99,
+       "y0": 197.77999999999997,
+       "x1": 383.26552,
+       "y1": 208.81999999999994
+      }
+     },
+     {
+      "id": "b7",
+      "kind": "heading",
+      "text": "Wniosek o wydanie zezwolenia na usunięcie drzewa lub krzewu",
+      "bbox": {
+       "x0": 112.58,
+       "y0": 233.24,
+       "x1": 482.35147999999987,
+       "y1": 247.27999999999997
+      }
+     },
+     {
+      "id": "b8",
+      "kind": "heading",
+      "text": "A. Wnioskodawca",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 266.44999999999993,
+       "x1": 174.37632000000002,
+       "y1": 279.40999999999997
+      }
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "[i] Wniosek może złożyć: właściciel nieruchomości, inny posiadacz nieruchomości – za zgodą właściciela tej nieruchomości, właściciel urządzeń służących do doprowadzania lub odprowadzania płynów, pary, gazu, energii elektrycznej – jeżeli drzewo lub krzew zagrażają funkcjonowaniu tych urządzeń.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 285.77,
+       "x1": 510.7017599999999,
+       "y1": 347.09
+      }
+     },
+     {
+      "id": "b10",
+      "kind": "paragraph",
+      "text": "a) Dane wnioskodawcy",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 365.09,
+       "x1": 186.19039999999998,
+       "y1": 377.09
+      }
+     },
+     {
+      "id": "b11",
+      "kind": "label",
+      "text": "• Nazwa firmy lub imię i nazwisko :",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 394.85463999999996,
+       "x1": 237.84872,
+       "y1": 406.2699999999999
+      }
+     },
+     {
+      "id": "b12",
+      "kind": "paragraph",
+      "text": "• Adres lub siedziba",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 422.33464,
+       "x1": 173.07248,
+       "y1": 433.74999999999994
+      }
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "[i] Podaj adres w formie – miejscowość, kod pocztowy, ulica, n umer budynku i lokalu . Jeśli adres jest zagraniczny podaj również: państwo i inne istotne elementy adresu.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 439.51,
+       "x1": 518.68912,
+       "y1": 467.22999999999996
+      }
+     },
+     {
+      "id": "b14",
+      "kind": "paragraph",
+      "text": "• Dane kontaktowe (pole niewymagane)",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 527.00464,
+       "x1": 264.97304,
+       "y1": 538.42
+      }
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "[i] Dane nie są obowiązkowe. Jeśli je podasz, uzupełnij część F formularza wniosku „Zgoda na przetwarzanie danych osobowych w zakresie danych kontaktowych”.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 550.1800000000001,
+       "x1": 471.4056,
+       "y1": 578.02
+      }
+     },
+     {
+      "id": "b16",
+      "kind": "label",
+      "text": "Numer telefonu i/lub adres e-mail:",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 595.66,
+       "x1": 229.4348,
+       "y1": 606.6999999999999
+      }
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "b) Dane właściciela nieruchomości",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 622.54,
+       "x1": 236.90879999999993,
+       "y1": 633.5799999999999
+      }
+     },
+     {
+      "id": "b18",
+      "kind": "paragraph",
+      "text": "[i] Wypełnij, jeśli nie jesteś właścicielem nieruchomości .",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 645.3399999999999,
+       "x1": 320.37208,
+       "y1": 656.3799999999999
+      }
+     },
+     {
+      "id": "b19",
+      "kind": "label",
+      "text": "• Nazwa firmy lub imię i nazwisko:",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 674.36464,
+       "x1": 237.79056,
+       "y1": 685.78
+      }
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "• Adres lub siedziba",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 701.86464,
+       "x1": 173.07248,
+       "y1": 713.28
+      }
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "Wersja 2.0 z 10.06.2025 r.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 795.3599999999999,
+       "x1": 187.18399999999997,
+       "y1": 806.4
+      }
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "blocks": [
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "c) Dane pełnomocnika",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 72.98000000000002,
+       "x1": 183.33247999999998,
+       "y1": 84.01999999999998
+      }
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "[i] Jeśli składasz wniosek jako pełnomocnik, dołącz oryginał lub urzędowo poświadczony odpis pełnomocnictwa wraz z dowodem zapłacenia opłaty skarbowej za udzielenie pełnomocnictwa.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 95.77999999999997,
+       "x1": 492.85287999999986,
+       "y1": 123.62
+      }
+     },
+     {
+      "id": "b24",
+      "kind": "label",
+      "text": "• Imię i nazwisko:",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 141.60464000000002,
+       "x1": 163.17872,
+       "y1": 153.01999999999998
+      }
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "• Adres do korespondencji lub adres p ełnomocnika",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 169.08464000000004,
+       "x1": 312.6236,
+       "y1": 180.5
+      }
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "[i] W ypełni j, jeśli adres do korespondencji w nioskodawcy jest inny niż wskazany w danych wnioskodawcy. Jeśli składasz wniosek przez pełnomocnika , wska ż adres doręczeń do pełnomocnika.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 192.14,
+       "x1": 516.4585599999999,
+       "y1": 218.65999999999997
+      }
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "Podaj adres w formie – państwo, województwo, powiat, gmina, miejscowość, kod pocztowy, ulica, numer budynku i lokalu.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 223.13,
+       "x1": 509.86623999999995,
+       "y1": 249.64999999999998
+      }
+     },
+     {
+      "id": "b28",
+      "kind": "paragraph",
+      "text": "• Dane kontaktowe (pole niewymagane)",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 307.95464000000004,
+       "x1": 264.93415999999996,
+       "y1": 319.37
+      }
+     },
+     {
+      "id": "b29",
+      "kind": "paragraph",
+      "text": "[i] Dane nie są obowiązkowe. Jeśli je podasz, uzupełnij część F formularza wniosku „Zgoda na przetwarzanie danych osobowych w zakresie danych kontaktowych”.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 331.13,
+       "x1": 471.4056,
+       "y1": 358.84999999999997
+      }
+     },
+     {
+      "id": "b30",
+      "kind": "label",
+      "text": "Numer telefonu i/lub adres e-mail:",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 376.63,
+       "x1": 226.08872,
+       "y1": 387.66999999999996
+      }
+     },
+     {
+      "id": "b31",
+      "kind": "heading",
+      "text": "B. Informacje o przedmiocie wniosku",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 403.98999999999995,
+       "x1": 277.59936000000005,
+       "y1": 416.95
+      }
+     },
+     {
+      "id": "b32",
+      "kind": "paragraph",
+      "text": "[i] Jeśli wniosek dotyczy większej liczby drzew lub krzewów wpisz „według załącznika” i dołącz do wniosku wykaz drzew lub krzewów przeznaczonych do wycinki w formie osobnego załącznika.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 429.31,
+       "x1": 503.6208,
+       "y1": 457.15
+      }
+     },
+     {
+      "id": "b33",
+      "kind": "table",
+      "text": "",
+      "bbox": {
+       "x0": 71.064,
+       "y0": 472.99001,
+       "x1": 524.2800199999999,
+       "y1": 689.76001
+      }
+     },
+     {
+      "id": "b34",
+      "kind": "table_cell",
+      "text": "Lp.",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "table_cell",
+      "text": "Drzewo czy krzew?",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "table_cell",
+      "text": "Gatunek (nazwa dwuczłonowa np. brzoza brodawkowata)",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "table_cell",
+      "text": "Obwód pnia [cm] na wysokości 130 cm , wielkość powierzchni krzewów [m 2 ] 1",
+      "table": {
+       "row": 0,
+       "col": 3
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 3
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 2
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 3
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b48",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 2
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 3
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 1
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 2
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 3
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 0
+      }
+     },
+     {
+      "id": "b55",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 1
+      }
+     },
+     {
+      "id": "b56",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 2
+      }
+     },
+     {
+      "id": "b57",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 3
+      }
+     },
+     {
+      "id": "b58",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 0
+      }
+     },
+     {
+      "id": "b59",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 1
+      }
+     },
+     {
+      "id": "b60",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 2
+      }
+     },
+     {
+      "id": "b61",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 3
+      }
+     },
+     {
+      "id": "b62",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 0
+      }
+     },
+     {
+      "id": "b63",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 1
+      }
+     },
+     {
+      "id": "b64",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 2
+      }
+     },
+     {
+      "id": "b65",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 3
+      }
+     },
+     {
+      "id": "b66",
+      "kind": "label",
+      "text": "1 Jeśli na wysokości 130 cm drzewo:",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 732.18,
+       "x1": 229.9632,
+       "y1": 744.12
+      }
+     },
+     {
+      "id": "b67",
+      "kind": "paragraph",
+      "text": "a) ma kilka pni – podaj obwód każdego z tych pni ,",
+      "bbox": {
+       "x0": 88.824,
+       "y0": 746.52,
+       "x1": 316.63,
+       "y1": 757.56
+      }
+     },
+     {
+      "id": "b68",
+      "kind": "paragraph",
+      "text": "b) nie ma pnia – podaj obwód pnia bezpośrednio poniżej korony drzewa .",
+      "bbox": {
+       "x0": 88.824,
+       "y0": 759.8399999999999,
+       "x1": 419.76208,
+       "y1": 770.88
+      }
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "2 / 6",
+      "bbox": {
+       "x0": 509.16,
+       "y0": 795.3599999999999,
+       "x1": 524.59728,
+       "y1": 806.4
+      }
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "blocks": [
+     {
+      "id": "b70",
+      "kind": "heading",
+      "text": "C. Informacja o miejscu, przyczynie i terminie zamierzonego usunięcia drzewa lub",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 73.45999999999992,
+       "x1": 516.7669599999999,
+       "y1": 86.41999999999996
+      }
+     },
+     {
+      "id": "b71",
+      "kind": "paragraph",
+      "text": "krzewu",
+      "bbox": {
+       "x0": 92.064,
+       "y0": 93.37999999999988,
+       "x1": 131.16432,
+       "y1": 106.33999999999992
+      }
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "a) Miejsce planowanych działań )",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 112.69999999999993,
+       "x1": 226.11512000000002,
+       "y1": 123.7399999999999
+      }
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "[i] Podaj lokalizację w formie – miejscowość, ulica, numer porządkowy nieruchomości, obręb ewidencyjny, numer ewidencyjny działki",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 129.5,
+       "x1": 484.68303999999995,
+       "y1": 157.33999999999992
+      }
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "b) Przyczyna",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 201.86,
+       "x1": 136.09008,
+       "y1": 212.89999999999998
+      }
+     },
+     {
+      "id": "b75",
+      "kind": "paragraph",
+      "text": "[i] N a przykład: zagrożenie dla ludzi lub mienia, przebudowa drogi, obumarcie , zły lub nierokujący szansy na przeżycie stan zdrowotny drzewa, zamiar prowadzenia działalności gospodarczej, planowana budowa itp. P odaj numer i datę decyzji zezwalającej na budowę , rozbiórkę itp. , jeśli zostały wydane .",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 218.68999999999994,
+       "x1": 505.9648000000001,
+       "y1": 280.13
+      }
+     },
+     {
+      "id": "b76",
+      "kind": "paragraph",
+      "text": "c) Termin zamierzonego usunięcia drzewa lub krzewu",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 341.45,
+       "x1": 319.9332799999999,
+       "y1": 352.48999999999995
+      }
+     },
+     {
+      "id": "b77",
+      "kind": "paragraph",
+      "text": "[i] Podaj datę w formacie: dzień–miesiąc– rok.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 370.25,
+       "x1": 274.96904,
+       "y1": 381.28999999999996
+      }
+     },
+     {
+      "id": "b78",
+      "kind": "paragraph",
+      "text": "d) Czy usunięcie wynika z celu, który związany jest z prowadzeniem działalności gospodarczej? 2",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 426.9699999999999,
+       "x1": 503.80872,
+       "y1": 438.90999999999997
+      }
+     },
+     {
+      "id": "b79",
+      "kind": "checkbox_option",
+      "text": "Tak",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 444.18663999999995,
+       "x1": 172.81375999999997,
+       "y1": 456.42999999999995
+      }
+     },
+     {
+      "id": "b80",
+      "kind": "checkbox_option",
+      "text": "Nie",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 444.18663999999995,
+       "x1": 172.81375999999997,
+       "y1": 456.42999999999995
+      }
+     },
+     {
+      "id": "b81",
+      "kind": "paragraph",
+      "text": "e) Czy planowane usunięcie wynika z realizacji przedsięwzięcia , dla którego wymagane jest uzyskanie decyzji o środowiskowych uwarunkowaniach albo postanowienia w sprawie uzgodnienia warunków realizacji przedsięwzięcia w zakresie oddziaływania na obszar Natura 2000? 3",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 461.11,
+       "x1": 504.68584000000004,
+       "y1": 522.43
+      }
+     },
+     {
+      "id": "b82",
+      "kind": "checkbox_option",
+      "text": "Tak",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 527.73664,
+       "x1": 175.81375999999997,
+       "y1": 539.98
+      }
+     },
+     {
+      "id": "b83",
+      "kind": "checkbox_option",
+      "text": "Nie",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 527.73664,
+       "x1": 175.81375999999997,
+       "y1": 539.98
+      }
+     },
+     {
+      "id": "b84",
+      "kind": "paragraph",
+      "text": "f) Czy w związku z planowaną wycinką wydane zostało zezwolenie w stosunku do gatunków chronionych na czynności podlegające zakazom ? 4",
+      "bbox": {
+       "x0": 74.184,
+       "y0": 544.66,
+       "x1": 490.8384,
+       "y1": 572.5
+      }
+     },
+     {
+      "id": "b85",
+      "kind": "checkbox_option",
+      "text": "Tak",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 577.77664,
+       "x1": 175.81375999999997,
+       "y1": 590.02
+      }
+     },
+     {
+      "id": "b86",
+      "kind": "checkbox_option",
+      "text": "Nie",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 577.77664,
+       "x1": 175.81375999999997,
+       "y1": 590.02
+      }
+     },
+     {
+      "id": "b87",
+      "kind": "paragraph",
+      "text": "2 Np. planujesz wycinkę, bo masz firmę i chcesz przygotować parking dla klientów albo jesteś rolnikiem i chcesz chronić budynek, który wykorzystujesz w działalności . 3 Jeżeli tak, do wniosku dołącz: decyzję o środowiskowych uwarunkowaniach realizacji przedsięwzięcia, postanowienie w sprawie uzgodnienia warunków realizacji przedsięwzięcia w zakresie oddziaływania na obszar Natura 2000 lub postanowienie uzgadniające wydawane przez właściwego regionalnego dyrektora ochrony środowiska w ramach ponownej oceny oddziaływania na środowisko. 4 Chodzi o zakazy określone w art. 51 ust. 1 pkt 1– 4 i 10 oraz w art. 52 ust. 1 pkt 1, 3, 7, 8, 12, 13 i 15 ustawy z dnia 16 kwietnia 2014 r. o ochronie przyrody. Jeżeli tak, do wniosku dołącz zezwolenie na czynności podlegające zakazom . 3 / 6",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 638.0799999999999,
+       "x1": 524.59728,
+       "y1": 806.4
+      }
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "blocks": [
+     {
+      "id": "b88",
+      "kind": "paragraph",
+      "text": "g) Czy plan owane są nasadzenia zastępcze? 5",
+      "bbox": {
+       "x0": 74.304,
+       "y0": 72.07999999999993,
+       "x1": 278.15872,
+       "y1": 84.01999999999998
+      }
+     },
+     {
+      "id": "b89",
+      "kind": "checkbox_option",
+      "text": "Tak",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 89.29664000000002,
+       "x1": 175.81375999999997,
+       "y1": 101.53999999999996
+      }
+     },
+     {
+      "id": "b90",
+      "kind": "checkbox_option",
+      "text": "Nie",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 89.29664000000002,
+       "x1": 175.81375999999997,
+       "y1": 101.53999999999996
+      }
+     },
+     {
+      "id": "b91",
+      "kind": "heading",
+      "text": "D. Oświadczenia",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 120.13999999999999,
+       "x1": 160.56,
+       "y1": 133.10000000000002
+      }
+     },
+     {
+      "id": "b92",
+      "kind": "paragraph",
+      "text": "Wiem o odpowiedzialności karnej za założenie oświadczenia niezgodnego z prawdą . 6",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 149.95999999999992,
+       "x1": 457.10872,
+       "y1": 161.89999999999998
+      }
+     },
+     {
+      "id": "b93",
+      "kind": "checkbox_option",
+      "text": "W ymienione w części B drzewa lub krzewy, znajdują się na terenie wskazanym w części C wniosku .",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 179.17664000000002,
+       "x1": 523.5820799999999,
+       "y1": 191.41999999999996
+      }
+     },
+     {
+      "id": "b94",
+      "kind": "label",
+      "text": "P rzysługuje mi do nieruchomości tytuł prawny w postaci:",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 197.53999999999996,
+       "x1": 339.0364,
+       "y1": 208.57999999999993
+      }
+     },
+     {
+      "id": "b95",
+      "kind": "paragraph",
+      "text": "[i] Tytułami prawnymi do nieruchomości są np . własność, użytkowani e wieczyste, współwłasność, umowa najmu, umowa dzierżaw y, decyzja o zajęciu pasa drogowego .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 226.37,
+       "x1": 520.8639999999999,
+       "y1": 254.20999999999992
+      }
+     },
+     {
+      "id": "b96",
+      "kind": "paragraph",
+      "text": "podpis wnioskodawcy lub pełnomocnika",
+      "bbox": {
+       "x0": 336.91,
+       "y0": 329.44999999999993,
+       "x1": 517.51792,
+       "y1": 340.48999999999995
+      }
+     },
+     {
+      "id": "b97",
+      "kind": "checkbox_option",
+      "text": "Mam prawo własności urządzeń, które służą do doprowadzania lub odprowadzania płynów, pary,",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 357.76663999999994,
+       "x1": 518.65688,
+       "y1": 370.00999999999993
+      }
+     },
+     {
+      "id": "b98",
+      "kind": "label",
+      "text": "gazu, energii elektrycznej:",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 376.15,
+       "x1": 201.00872,
+       "y1": 387.18999999999994
+      }
+     },
+     {
+      "id": "b99",
+      "kind": "paragraph",
+      "text": "[i] Wpisz rodzaj urządzeń, których funkcjonowanie jest zagrożone przez drzewa lub krzewy objęte wnioskiem.",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 404.95,
+       "x1": 520.3743200000001,
+       "y1": 432.66999999999996
+      }
+     },
+     {
+      "id": "b100",
+      "kind": "paragraph",
+      "text": "podpis wnioskodawcy lub pełnomocnika",
+      "bbox": {
+       "x0": 336.91,
+       "y0": 496.03,
+       "x1": 517.4691999999999,
+       "y1": 507.06999999999994
+      }
+     },
+     {
+      "id": "b101",
+      "kind": "checkbox_option",
+      "text": "Mam zgodę właściciela nieruchomości.",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 524.37664,
+       "x1": 258.12415999999996,
+       "y1": 536.6199999999999
+      }
+     },
+     {
+      "id": "b102",
+      "kind": "checkbox_option",
+      "text": "Informacja o zamiarze złożenia wniosku została udostępniona mieszkańcom w imieniu spółdzielni",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 554.25664,
+       "x1": 519.22,
+       "y1": 566.5
+      }
+     },
+     {
+      "id": "b103",
+      "kind": "paragraph",
+      "text": "lub zarządu wspólnoty mieszkaniowej 7 .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 571.5999999999999,
+       "x1": 259.75208000000003,
+       "y1": 583.54
+      }
+     },
+     {
+      "id": "b104",
+      "kind": "paragraph",
+      "text": "5 J eżeli tak to musisz przedłożyć projekt tych nasadzeń część graficzną i opisową z informacją o miejscu, liczbie nasadzeń nie mniejszej niż liczba usuwanych drzew lub o powierzchni nie mniejszej niż powierzchnia usuwanych krzewów, gatunku lub odmianie drzew lub krzewów i planowanym terminie ich wykonania (w formacie dzień miesiąc rok) . 6 Art. 233 Kodeksu karnego. 7 Zgodnie z art. 83 ust. 4 ustawy z dnia 16 kwietnia 2004 r. o ochronie przyrody: „Spółdzielnia mieszkaniowa informuje, w sposób zwyczajowo przyjęty, członków spółdzielni, właścicieli budynków lub lokali niebędących członkami spółdzielni oraz osoby niebędące członkami spółdzielni, którym przysługują spółdzielcze własnościowe prawa do lokali, a zarząd wspólnoty mieszkaniowej – członków wspólnoty, o zamiarze złożenia wniosku o wydanie zezwolenia na usunięcie drzewa 4 / 6",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 624.64,
+       "x1": 524.59728,
+       "y1": 806.4
+      }
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "blocks": [
+     {
+      "id": "b105",
+      "kind": "heading",
+      "text": "E. Załączniki",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 73.45999999999992,
+       "x1": 140.7,
+       "y1": 86.41999999999996
+      }
+     },
+     {
+      "id": "b106",
+      "kind": "paragraph",
+      "text": "[i] Wybierz o dpowiednie załączniki i dołącz je samodzielnie do wniosku 8 .",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 103.39999999999998,
+       "x1": 393.60208,
+       "y1": 115.33999999999992
+      }
+     },
+     {
+      "id": "b107",
+      "kind": "checkbox_option",
+      "text": "Zgoda właściciela nieruchomości lub oświadczenie o udostępnie niu informacji 9 .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 120.61663999999996,
+       "x1": 452.16208,
+       "y1": 132.8599999999999
+      }
+     },
+     {
+      "id": "b108",
+      "kind": "checkbox_option",
+      "text": "Projekt zagospodarowania działki lub terenu, które określają usytuowanie drzewa lub krzewu",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 144.37664000000007,
+       "x1": 514.78336,
+       "y1": 156.62
+      }
+     },
+     {
+      "id": "b109",
+      "kind": "paragraph",
+      "text": "n a działce 10 .",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 161.83999999999992,
+       "x1": 153.16208,
+       "y1": 173.77999999999997
+      }
+     },
+     {
+      "id": "b110",
+      "kind": "checkbox_option",
+      "text": "Rysunek lub mapa działki lub terenu z lokalizacją drzewa lub krzewu do usunięcia, które określa",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 185.05664000000002,
+       "x1": 523.7919999999999,
+       "y1": 197.29999999999995
+      }
+     },
+     {
+      "id": "b111",
+      "kind": "paragraph",
+      "text": "usytuowanie drzewa lub krzewu n a działce, w odniesieniu do granic nieruchomości i obiektów budowlanych istniejących lub projektowanych 11 .",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 203.29999999999995,
+       "x1": 518.554,
+       "y1": 231.16999999999996
+      }
+     },
+     {
+      "id": "b112",
+      "kind": "checkbox_option",
+      "text": "Projekt planu nasadzeń zastępczych albo przesadzenia drzewa lub krzewu 12 .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 242.44664,
+       "x1": 437.16208,
+       "y1": 254.68999999999994
+      }
+     },
+     {
+      "id": "b113",
+      "kind": "checkbox_option",
+      "text": "Decyzja o środowiskowych uwarunkowaniach realizacji przedsięwzięcia .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 266.32664,
+       "x1": 419.64208,
+       "y1": 278.56999999999994
+      }
+     },
+     {
+      "id": "b114",
+      "kind": "checkbox_option",
+      "text": "Postanowienie w sprawie uzgodnienia warunków realizacji przedsięwzięcia w zakresie",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 290.08664,
+       "x1": 482.0956800000001,
+       "y1": 302.3299999999999
+      }
+     },
+     {
+      "id": "b115",
+      "kind": "paragraph",
+      "text": "oddziaływania na obszar Natura 2000 .",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 308.44999999999993,
+       "x1": 269.47208,
+       "y1": 319.4899999999999
+      }
+     },
+     {
+      "id": "b116",
+      "kind": "checkbox_option",
+      "text": "Postanowienie uzgadniające wydawane przez właściwego regionalnego dyrektora ochrony",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 330.76663999999994,
+       "x1": 502.4092800000001,
+       "y1": 343.00999999999993
+      }
+     },
+     {
+      "id": "b117",
+      "kind": "paragraph",
+      "text": "środowiska w ramach ponownej oceny oddziaływania na środowisko .",
+      "bbox": {
+       "x0": 99.144,
+       "y0": 349.13,
+       "x1": 408.96208,
+       "y1": 360.16999999999996
+      }
+     },
+     {
+      "id": "b118",
+      "kind": "checkbox_option",
+      "text": "Zezwolenie w stosunku do gatunków chronionych na czynności podlegające zakazom .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 371.34664,
+       "x1": 480.36208,
+       "y1": 383.59
+      }
+     },
+     {
+      "id": "b119",
+      "kind": "checkbox_option",
+      "text": "Dokument , który stanowi podstawę do zwolnienia wnioskodawcy z opłaty skarbowej 13 .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 395.22664,
+       "x1": 486.72208,
+       "y1": 407.46999999999997
+      }
+     },
+     {
+      "id": "b120",
+      "kind": "checkbox_option",
+      "text": "Pełnomocnictwo .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 419.10663999999997,
+       "x1": 176.35208,
+       "y1": 431.34999999999997
+      }
+     },
+     {
+      "id": "b121",
+      "kind": "checkbox_option",
+      "text": "Dowód zapłacenia opłaty skarbowej za pełnomocnictwo .",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 442.86663999999996,
+       "x1": 351.81208,
+       "y1": 455.10999999999996
+      }
+     },
+     {
+      "id": "b122",
+      "kind": "paragraph",
+      "text": "lub krzewu, wyznaczając co najmniej 30 - dniowy termin na zgłaszanie uwag. Wniosek może być złożony nie później niż w terminie 12 miesięcy od upływu terminu na zgłaszanie uwag\" . 8 Zgodnie z art. 83b ust. 1 ustawy z dnia 16 kwietnia 2004 r. o ochronie przyrody 9 Zgoda właściciela nieruchomości nie jest wymagana, jeśli wniosek składa : 1) spółdzielni a mieszkaniowa; 2) wspólnot a mieszkaniowa , w której właściciele lokali powierzyli zarząd nieruchomością wspólną zarządowi, zgodnie z ustawą z dnia 24 czerwca 1994 r. o własności lokali;",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 504.66999999999996,
+       "x1": 508.58208000000025,
+       "y1": 582.9399999999999
+      }
+     },
+     {
+      "id": "b123",
+      "kind": "paragraph",
+      "text": "3) zarządc a nieruchomości będącej własnością Skarbu Państwa; 4) użytkownik wieczyst y lub posiadacz nieruchomości o nieuregulowanym stanie prawnym, niebędąc y jednym z podmiotów wymienionych powyżej. Wtedy złożyć należy oświadczenie o udostępnieniu informacji. 10 Projekt zagospodarowania działki lub terenu, wykonany przez projektanta posiadającego odpowiednie uprawnienia budowlane, w przypadku realizacji inwestycji, dla której jest on wymagany zgodnie z ustawą z dnia 7 lipca 1994r. – Prawo budowlane, określających usytuowanie drzewa lub/i krzewów w odniesieniu do granic nieruchomości i obiektów budowlanych istniejących lub/i projektowanych na tej nieruchomości. 11 Rysunek lub mapa powinny określać usytuowanie drzewa lub krzewu w stosunku do granic nieruchomości i obiektów budowlanych istniejących lub budowanych na tej nieruchomości. 12 Jeżeli są planowane. Projekt należy wykona ć w formie rysunku, mapy lub projektu zagospodarowania działki lub terenu, wraz z informacją o liczbie, gatunku lub odmianie drzew lub krzewów oraz miejscu i planowanym terminie ich wykonania . 13 Na podstawie ustawy z dnia 16 listopada 2006 r. o opłacie skarbowej . 5 / 6",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 585.3399999999999,
+       "x1": 524.59728,
+       "y1": 806.4
+      }
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "blocks": [
+     {
+      "id": "b124",
+      "kind": "checkbox_option",
+      "text": "Inne załączniki :",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 72.49663999999996,
+       "x1": 166.20872,
+       "y1": 84.7399999999999
+      }
+     },
+     {
+      "id": "b125",
+      "kind": "paragraph",
+      "text": "podpis wnioskodawcy lub pełnomocnika",
+      "bbox": {
+       "x0": 333.07,
+       "y0": 222.04999999999995,
+       "x1": 513.67648,
+       "y1": 233.08999999999992
+      }
+     },
+     {
+      "id": "b126",
+      "kind": "heading",
+      "text": "F. Zgoda na przetwarzanie danych osobowych w zakresie danych kontaktowych",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 251.32999999999993,
+       "x1": 476.3239999999999,
+       "y1": 264.28999999999996
+      }
+     },
+     {
+      "id": "b127",
+      "kind": "paragraph",
+      "text": "W yrażam zgodę na przetwarzanie przez Prezydenta m.st. Warszawy moich danych osobowych:",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 282.16999999999996,
+       "x1": 508.83232,
+       "y1": 293.2099999999999
+      }
+     },
+     {
+      "id": "b128",
+      "kind": "paragraph",
+      "text": "numeru telefonu i/lub adresu e-mail, aby U rząd m.st. Warszawy mógł mi przekazać istotne informacje o prowadzonym postępowani u. Zgody udzielam na podstawie art. 6 ust. 1 lit a RODO 14 , który dotyczy przetwarzania danych osobowych na podstawie dobrowolnej zgody.",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 298.97,
+       "x1": 523.68,
+       "y1": 343.48999999999995
+      }
+     },
+     {
+      "id": "b129",
+      "kind": "paragraph",
+      "text": "Mam świadomość, że tę zgodę mogę wycofać w każdym czasie.",
+      "bbox": {
+       "x0": 84.984,
+       "y0": 349.25,
+       "x1": 367.44008,
+       "y1": 360.28999999999996
+      }
+     },
+     {
+      "id": "b130",
+      "kind": "paragraph",
+      "text": "podpis osoby, która wyraża zgodę",
+      "bbox": {
+       "x0": 354.43,
+       "y0": 418.87,
+       "x1": 505.58272,
+       "y1": 429.90999999999997
+      }
+     },
+     {
+      "id": "b131",
+      "kind": "paragraph",
+      "text": "14 Rozporządzenie Parlamentu Europejskiego i Rady (UE) 2016/679 z 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu tych danych oraz uchylenia dyrektywy 95/46/WE. 6 / 6",
+      "bbox": {
+       "x0": 70.824,
+       "y0": 732.18,
+       "x1": 524.59728,
+       "y1": 806.4
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o wydanie zezwolenia na usunięcie drzewa lub krzewu",
+  "authority_kind": "URZAD",
+  "authority_name": "Urząd m.st. Warszawy",
+  "fields": [
+   {
+    "label": "Nazwa firmy lub imię i nazwisko właściciela nieruchomości",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "właściciel nieruchomości",
+     "imię i nazwisko właściciela"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Adres lub siedziba właściciela nieruchomości",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "adres właściciela"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Drzewo czy krzew",
+    "kind": [
+     "single_choice",
+     "short_text"
+    ],
+    "aliases": [
+     "rodzaj rośliny"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Gatunek",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "gatunek drzewa lub krzewu",
+     "nazwa gatunku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Obwód pnia lub powierzchnia krzewów",
+    "kind": [
+     "number",
+     "short_text"
+    ],
+    "aliases": [
+     "obwód pnia",
+     "obwód pnia na wysokości 130 cm"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Miejsce planowanych działań",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "miejsce zamierzonego usunięcia",
+     "lokalizacja"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Przyczyna usunięcia",
+    "kind": [
+     "long_text",
+     "short_text"
+    ],
+    "aliases": [
+     "przyczyna"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Termin zamierzonego usunięcia",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "termin usunięcia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Usunięcie związane z działalnością gospodarczą",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "cel związany z prowadzeniem działalności gospodarczej"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Przedsięwzięcie wymagające decyzji o środowiskowych uwarunkowaniach",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "decyzja o środowiskowych uwarunkowaniach"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Zezwolenie w stosunku do gatunków chronionych",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "gatunki chronione"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nasadzenia zastępcze",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "czy planowane są nasadzenia zastępcze"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Dzielnica",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "dla dzielnicy"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Imię i nazwisko pełnomocnika",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "pełnomocnik"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Adres pełnomocnika",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "adres do korespondencji lub adres pełnomocnika"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Tytuł prawny do nieruchomości",
+    "kind": [
+     "short_text",
+     "single_choice"
+    ],
+    "aliases": [
+     "przysługuje mi do nieruchomości tytuł prawny"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Rodzaj urządzeń",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "rodzaj urządzeń zagrożonych"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Załączniki",
+    "kind": [
+     "multi_choice",
+     "file"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Inne załączniki",
+    "kind": [
+     "file",
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": true
+   }
+  ]
+ }
+}

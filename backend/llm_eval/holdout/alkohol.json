@@ -1,0 +1,375 @@
+{
+ "name": "alkohol",
+ "source": "alkohol.docx",
+ "document": {
+  "source": {
+   "method": "docx",
+   "pages": 1
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "[i] Instrukcja wypełniania"
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "Wypełnij wniosek WIELKIMI LITERAMI."
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "W polach wyboru zaznacz właściwą opcję – postaw krzyżyk w kratce."
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "Warszawa,"
+     },
+     {
+      "id": "b5",
+      "kind": "paragraph",
+      "text": "r."
+     },
+     {
+      "id": "b6",
+      "kind": "heading",
+      "text": "Wniosek o wydanie zezwolenia na sprzedaż napojów alkoholowych"
+     },
+     {
+      "id": "b7",
+      "kind": "checkbox_option",
+      "text": "detal – planuję sprzedawać napoje alkoholowe przeznaczone do spożycia poza miejscem sprzedaży."
+     },
+     {
+      "id": "b8",
+      "kind": "checkbox_option",
+      "text": "gastronomia – planuję sprzedawać i podawać napoje alkoholowe przeznaczone do spożycia"
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "w miejscu sprzedaży."
+     },
+     {
+      "id": "b10",
+      "kind": "paragraph",
+      "text": "[i] Zaznacz jaki rodzaj napojów alkoholowych planujesz sprzedawać."
+     },
+     {
+      "id": "b11",
+      "kind": "checkbox_option",
+      "text": "zawierające do 4,5% alkoholu oraz piwo (rodzaj A),"
+     },
+     {
+      "id": "b12",
+      "kind": "checkbox_option",
+      "text": "zawierające powyżej 4,5% do 18% alkoholu – z wyjątkiem piwa (rodzaj B),"
+     },
+     {
+      "id": "b13",
+      "kind": "checkbox_option",
+      "text": "zawierające powyżej 18% alkoholu (rodzaj C)."
+     },
+     {
+      "id": "b14",
+      "kind": "heading",
+      "text": "Dane przedsiębiorcy"
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "[i] Wspólnicy spółki cywilnej powinni podać dane każdego ze wspólników."
+     },
+     {
+      "id": "b16",
+      "kind": "paragraph",
+      "text": "[i] Numer KRS dotyczy tylko przedsiębiorców zarejestrowanych w Krajowym Rejestrze Sądowym."
+     },
+     {
+      "id": "b17",
+      "kind": "label",
+      "text": "Oznaczenie przedsiębiorcy:"
+     },
+     {
+      "id": "b18",
+      "kind": "label",
+      "text": "Siedziba i adres przedsiębiorcy:"
+     },
+     {
+      "id": "b19",
+      "kind": "label",
+      "text": "NIP:"
+     },
+     {
+      "id": "b20",
+      "kind": "label",
+      "text": "KRS:"
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "[i] Wypełnij, jeśli wyznaczasz pełnomocnika."
+     },
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "Imię, nazwisko i adres zamieszkania pełnomocnika"
+     },
+     {
+      "id": "b23",
+      "kind": "heading",
+      "text": "Dane punktu sprzedaży"
+     },
+     {
+      "id": "b24",
+      "kind": "paragraph",
+      "text": "rodzaj punktu sprzedaży"
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "nazwa punktu sprzedaży"
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "adres punktu sprzedaży"
+     },
+     {
+      "id": "b27",
+      "kind": "heading",
+      "text": "Lokalizacja punktu sprzedaży"
+     },
+     {
+      "id": "b28",
+      "kind": "checkbox_option",
+      "text": "budynek mieszkalny wielorodzinny"
+     },
+     {
+      "id": "b29",
+      "kind": "checkbox_option",
+      "text": "inna lokalizacja (podaj jaka)"
+     },
+     {
+      "id": "b30",
+      "kind": "paragraph",
+      "text": "Adres punktu składowania napojów alkoholowych (magazynu dystrybucyjnego)"
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "[czytelny podpis przedsiębiorcy lub pełnomocnika]"
+     },
+     {
+      "id": "b32",
+      "kind": "heading",
+      "text": "Załączniki do wniosku"
+     },
+     {
+      "id": "b33",
+      "kind": "checkbox_option",
+      "text": "Dokument, który potwierdza Twój tytuł prawny do lokalu, w którym będziesz prowadzić sprzedaż lub podawanie napojów alkoholowych."
+     },
+     {
+      "id": "b34",
+      "kind": "checkbox_option",
+      "text": "Zgoda właściciela, użytkownika, zarządcy lub administratora budynku, jeżeli punkt sprzedaży będzie zlokalizowany w budynku mieszkalnym wielorodzinnym."
+     },
+     {
+      "id": "b35",
+      "kind": "checkbox_option",
+      "text": "Decyzja właściwego państwowego inspektora sanitarnego o zatwierdzeniu zakładu."
+     },
+     {
+      "id": "b36",
+      "kind": "paragraph",
+      "text": "[i] Decyzja o zatwierdzeniu zakładu potwierdza, że dany zakład (np. restauracja lub kawiarnia) spełnia wymagania sanitarne określone w przepisach prawa."
+     },
+     {
+      "id": "b37",
+      "kind": "heading",
+      "text": "Dane nieobowiązkowe"
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "[i] Telefon i adresy e-mail oraz adres do korespondencji to dane nieobowiązkowe. Nie musisz ich podawać, ale ułatwi nam to kontakt z Tobą i załatwienie sprawy. Jeśli je podajesz, podpisz oświadczenie o wyrażeniu zgody na przetwarzanie danych osobowych."
+     },
+     {
+      "id": "b39",
+      "kind": "label",
+      "text": "telefon kontaktowy:"
+     },
+     {
+      "id": "b40",
+      "kind": "label",
+      "text": "adres e-mail:"
+     },
+     {
+      "id": "b41",
+      "kind": "label",
+      "text": "adres do korespondencji:"
+     },
+     {
+      "id": "b42",
+      "kind": "heading",
+      "text": "Oświadczenie o wyrażeniu zgody na przetwarzanie danych osobowych"
+     },
+     {
+      "id": "b43",
+      "kind": "paragraph",
+      "text": "Wyrażam zgodę na przetwarzanie przez Prezydenta m.st. Warszawy moich danych osobowych: adresu do korespondencji, adresu e-mail i numeru telefonu, aby Urząd m.st. Warszawy mógł przekazać mi istotne informacje o prowadzonym postępowaniu."
+     },
+     {
+      "id": "b44",
+      "kind": "paragraph",
+      "text": "Zgody udzielam na podstawie art. 6 ust. 1 lit a RODO, który dotyczy przetwarzania danych osobowych na podstawie dobrowolnej zgody."
+     },
+     {
+      "id": "b45",
+      "kind": "paragraph",
+      "text": "[czytelny podpis przedsiębiorcy lub pełnomocnika]"
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o wydanie zezwolenia na sprzedaż napojów alkoholowych",
+  "authority_kind": "ORGAN",
+  "authority_name": "",
+  "fields": [
+   {
+    "label": "Rodzaj sprzedaży",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "detal lub gastronomia",
+     "rodzaj zezwolenia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Rodzaj napojów alkoholowych",
+    "kind": [
+     "multi_choice",
+     "single_choice"
+    ],
+    "aliases": [
+     "rodzaj napojów"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Rodzaj punktu sprzedaży",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Nazwa punktu sprzedaży",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Adres punktu sprzedaży",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Lokalizacja punktu sprzedaży",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Adres punktu składowania napojów alkoholowych",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "adres magazynu dystrybucyjnego",
+     "punkt składowania"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Inna lokalizacja",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "inna lokalizacja (podaj jaka)"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Oznaczenie przedsiębiorcy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Siedziba i adres przedsiębiorcy",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "KRS",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer KRS"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Imię, nazwisko i adres zamieszkania pełnomocnika",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "pełnomocnik"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Załączniki",
+    "kind": [
+     "multi_choice",
+     "file"
+    ],
+    "aliases": [
+     "załączniki do wniosku"
+    ],
+    "optional": true
+   }
+  ]
+ }
+}

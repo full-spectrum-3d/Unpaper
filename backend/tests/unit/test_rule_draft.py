@@ -59,6 +59,7 @@ def _fields(doc: DocumentModel) -> list[tuple[str, str, str]]:
 
 def test_fields_from_placeholders_skip_header_and_signature() -> None:
     assert _fields(SWIETLICA) == [
+        ("Wynajęcie/użyczenie świetlicy wiejskiej", "Wynajęcie lub użyczenie", "single_choice"),
         ("Wynajęcie/użyczenie świetlicy wiejskiej", "Termin", "date"),
         ("Wynajęcie/użyczenie świetlicy wiejskiej", "W terminie do", "date"),
         ("Wynajęcie/użyczenie świetlicy wiejskiej", "Cel wynajęcia świetlicy", "short_text"),

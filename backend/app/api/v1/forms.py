@@ -71,7 +71,8 @@ _CONVERT_RESPONSES: dict[int | str, dict[str, Any]] = {
     413: problem_doc("Plik większy niż MAX_FILE_SIZE_MB"),
     415: problem_doc("Nieobsługiwany format albo zawartość niezgodna z rozszerzeniem"),
     422: problem_doc(
-        "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne `identitySource`"
+        "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne "
+        "`identitySource`; model spoza LLM_MODELS"
     ),
     504: problem_doc("Przekroczono REQUEST_TIMEOUT_S"),
 }
@@ -104,6 +105,10 @@ async def convert(
     settings: Annotated[Settings, Depends(get_settings)],
     client: Annotated[LlmClient, Depends(get_llm_client)],
     report: Annotated[bool, Query(description="Dołącz raport konwersji (spec §6.2)")] = False,
+    model: Annotated[
+        str | None,
+        Query(description="Model LLM z `LLM_MODEL` albo `LLM_MODELS`; domyślnie `LLM_MODEL`"),
+    ] = None,
     identity_source: Annotated[
         Literal["PESEL", "MLPZ"] | None,
         Query(
@@ -115,6 +120,13 @@ async def convert(
 ) -> JSONResponse:
     """Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`)."""
     deadline = time.monotonic() + settings.request_timeout_s
+    if model is not None and model != settings.llm_model:
+        if model not in settings.llm_allowed_models:
+            allowed = ", ".join(settings.llm_allowed_models)
+            raise AppError(
+                ErrorCode.VALIDATION_ERROR, f"Nieznany model {model!r}; dozwolone: {allowed}"
+            )
+        settings = settings.model_copy(update={"llm_model": model})
     try:
         upload = await accept_upload(
             request.stream(), request.headers.get("content-type"), upload_limits(settings)

@@ -63,7 +63,15 @@ class LlmClient(Protocol):
 class OllamaClient:
     def __init__(self, settings: Settings, transport: httpx.AsyncBaseTransport | None = None):
         self._settings = settings
-        self._http = httpx.AsyncClient(base_url=settings.llm_base_url, transport=transport)
+        headers = {}
+        if settings.llm_auth_key and settings.llm_auth_secret:
+            headers = {
+                "Modal-Key": settings.llm_auth_key,
+                "Modal-Secret": settings.llm_auth_secret.get_secret_value(),
+            }
+        self._http = httpx.AsyncClient(
+            base_url=settings.llm_base_url, headers=headers, transport=transport
+        )
 
     async def chat(
         self,
@@ -127,6 +135,7 @@ class OllamaClient:
             "temperature": self._settings.llm_temperature,
             "seed": self._settings.llm_seed,
             "num_ctx": self._settings.llm_num_ctx,
+            "num_predict": self._settings.llm_num_predict,
         }
 
     async def loaded_models(self) -> set[str]:

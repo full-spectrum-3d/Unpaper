@@ -263,3 +263,142 @@ def test_unnamed_attachments_removed(name: str) -> None:
     assert out.attachments == ["Korekta deklaracji"]
     assert _codes(warnings).count("W26_UNNAMED_ATTACHMENT_REMOVED") == 2
     assert len(list(out.iter_fields())) == 4
+
+
+def _section(d: dict[str, Any], title: str, *labels: str) -> None:
+    n = sum(len(sec["fields"]) for page in d["subject_pages"] for sec in page["sections"])
+    fields = [
+        {"id": f"f{n + i}", "label": label, "kind": "short_text", "required": True}
+        for i, label in enumerate(labels, 1)
+    ]
+    d["subject_pages"][0]["sections"].append({"title": title, "repeating": False, "fields": fields})
+
+
+def test_address_parts_in_applicant_section_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _section(d, "Adres zamieszkania wnioskodawcy", "Miejscowość", "Ulica", "Nr domu")
+        _section(d, "Dane pełnomocnika", "Miejscowość", "Ulica")
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert out.subject_pages[0].sections[-1].title == "Dane pełnomocnika"
+    assert _codes(warnings).count("W20_APPLICANT_FIELD_REMOVED") == 3
+
+
+PSY_DOC = _doc_blocks(
+    ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+    ("paragraph", "Oświadczenia :"),
+    ("paragraph", "1. Oświadczam, że psy nie będą wykorzystywane do polowań."),
+    ("paragraph", "hodowanie/utrzymywanie* charta/chartów*"),
+)
+
+
+def test_statement_choice_field_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {"id": "f5", "label": "Oświadczam, że psy nie będą wykorzystywane do polowań",
+             "kind": "single_choice", "required": True, "options": ["Tak", "Nie"]}
+        )  # fmt: skip
+        _fields(d).append(
+            {"id": "f6", "label": "Hodowanie lub utrzymywanie", "kind": "single_choice",
+             "required": True, "options": ["Hodowanie", "Utrzymywanie"]}
+        )  # fmt: skip
+
+    out, warnings = normalize_draft(_make(mutate), PSY_DOC)
+    assert "W17_STATEMENT_REMOVED" in _codes(warnings)
+    assert "W27_VARIANT_CHOICE" not in _codes(warnings)
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4", "f6"]
+
+
+def test_variant_choice_added_when_missing() -> None:
+    out, warnings = normalize_draft(_make(), PSY_DOC)
+    first = out.subject_pages[0].sections[0].fields[0]
+    assert (first.id, first.label, first.kind) == (
+        "f5",
+        "Hodowanie lub utrzymywanie",
+        "single_choice",
+    )
+    assert first.options == ["Hodowanie", "Utrzymywanie"]
+    assert "W27_VARIANT_CHOICE" in _codes(warnings)
+
+
+def test_variant_text_field_becomes_choice() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d)[0]["label"] = "Hodowanie/utrzymywanie"
+
+    out, warnings = normalize_draft(_make(mutate), PSY_DOC)
+    assert _field(out, "f1").kind == "single_choice"
+    assert len(list(out.iter_fields())) == 4
+    assert "W27_VARIANT_CHOICE" in _codes(warnings)
+
+
+def test_purpose_field_mentioning_variants_not_converted() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d)[0]["label"] = "Cel hodowania/utrzymywania psa"
+
+    out, _ = normalize_draft(_make(mutate), PSY_DOC)
+    assert _field(out, "f1").kind == "short_text"
+    assert out.subject_pages[0].sections[0].fields[0].label == "Hodowanie lub utrzymywanie"
+
+
+def test_fields_copied_from_prompt_example_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _section(d, "Drzewa", "Gatunek", "Obwód pnia na wysokości 130 cm (cm)")
+        _fields(d).append(
+            {"id": "f9", "label": "Rodzaj", "kind": "single_choice", "required": True,
+             "options": ["Drzewa", "Krzewy"]}
+        )  # fmt: skip
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert _codes(warnings).count("W28_EXAMPLE_FIELD_REMOVED") == 3
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4"]
+
+
+def test_number_inside_statement_kept() -> None:
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+        ("paragraph", "Oświadczam, że średnia roczna liczba dużych jednostek owiec wynosi"),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {"id": "f5", "label": "Średnia roczna liczba dużych jednostek owiec",
+             "kind": "number", "required": True}
+        )  # fmt: skip
+
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert "W17_STATEMENT_REMOVED" not in _codes(warnings)
+    assert _field(out, "f5").kind == "number"
+
+
+def test_example_choice_with_generic_label_removed() -> None:
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+        ("paragraph", "Rodzaj dokumentu: ……… Nie dotyczy."),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {"id": "f5", "label": "Rodzaj", "kind": "single_choice", "required": True,
+             "options": ["Drzewa", "Krzewy"]}
+        )  # fmt: skip
+        _fields(d).append(
+            {"id": "f6", "label": "Czy planowane są nasadzenia zastępcze?",
+             "kind": "single_choice", "required": True, "options": ["Tak", "Nie"]}
+        )  # fmt: skip
+
+    _, warnings = normalize_draft(_make(mutate), doc)
+    assert _codes(warnings).count("W28_EXAMPLE_FIELD_REMOVED") == 2
+
+
+def test_computed_fields_removed_with_warning() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        d["subject_pages"][0]["sections"][0]["fields"] = [
+            {"id": "f1", "label": "Liczba gospodarstw", "kind": "number", "required": True},
+            {"id": "f2", "label": "Stawka opłaty", "kind": "number", "required": True},
+        ]
+
+    doc = _doc_with("Liczba gospodarstw. Stawka opłaty. Do Wójt Gminy Elbląg")
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert [f.label for _, f in out.iter_fields()] == ["Liczba gospodarstw"]
+    assert _codes(warnings) == ["W33_COMPUTED_FIELD_REMOVED"]
+    assert warnings[0].message.startswith("Usunięto pole „Stawka opłaty”: ")

@@ -334,3 +334,147 @@ Najczęstsze błędy, które zostały:
 
 - Zadanie w tle z postępem w API: `/forms/convert` to wciąż zaślepka, zrobimy to przy podpinaniu całego pipeline'u.
 - GPU: `nvidia-container-toolkit` i profil `gpu` w compose. Na laptopie z GTX 1060 6 GB to największy możliwy zysk czasu, ale wymaga instalacji na hoście.
+
+## 10. Poprawki błędów z §9.2 (2026-11-21, druga runda)
+
+### 10.1. Zmiany
+
+| Błąd z §9.2 | Przyczyna | Zmiana | Gdzie |
+|---|---|---|---|
+| 1. Listy wariantów jako osobne pola | Kratki są rysowane (PDF), są punktorami listy w Wingdings (DOCX, np. zaświadczenie: `numId` → znak `U+F0F0`) albo ich nie ma. Model widzi zwykłe linie. | `annotate_choices()` przed promptem oznacza linie jako `checkbox_option` (`[OPCJA]`): znaki kratek (`❑`, `☐`, Wingdings, `[ ]` z OCR), „TAK NIE” na końcu linii, listę po wstępie zapowiadającym wybór („…o:*”, „postaw „x” w wybranym polu”, „zaznaczyć właściwą kratkę”, „wybierz”, „Rodzaj…:” z numerowanymi pozycjami, nagłówek z dwukropkiem i ≥ 3 krótkie pozycje), opcje numerowane w jednej linii („1. właściciel 2. najemca…”). Wstęp do oświadczeń i załączników to nie wybór. Prompt: kolejne `[OPCJA]` to jedno pole. | `pipeline/doc_hints.py`, `analyze.py`, `system.md` |
+| 1a. „wynajęcie/użyczenie*” pominięte | Model ignorował regułę z promptu | Warianty „X/Y*” (bez odmian jednego słowa, np. „charta/chartów*”) w normalizacji: pole tekstowe z wariantami → wybór, a gdy go nie ma → nowe pole „X lub Y” na początku przedmiotu (`W27_VARIANT_CHOICE`) | `draft_rules.variant_choices`, `draft_normalize` |
+| 2. Składowe adresu wnioskodawcy nieusunięte | Reguła patrzyła tylko na etykietę pola | Kraj/gmina/ulica/nr domu/kod/telefon/e-mail usuwane, gdy tytuł sekcji lub strony to adres lub dane wnioskodawcy („Adres zamieszkania”, „Dane kontaktowe”, „B.4 Adres do korespondencji”), a nie innej osoby (pełnomocnik, współmałżonek) | `draft_rules.applicant_field_reason` |
+| 3. Oświadczenia jako pola wyboru | Usuwane były tylko pola `info` | Pole dowolnego typu z etykietą ≥ 25 znaków, która zaczyna się jak oświadczenie albo pokrywa z oświadczeniem z blankietu → usunięte (`W17`). Wyjątek: oświadczenie z numerem pozycji („35.”) w deklaracji to pole do zaznaczenia, a nie zgoda. | `draft_normalize`, `draft_rules` |
+| 4. Długie dokumenty | Pouczenia, objaśnienia i RODO pod nagłówkiem „Informacja o przetwarzaniu…” trafiały do promptu; stypendium to 3 prawie identyczne wnioski | Wycinane: „Pouczenie”, „Objaśnienia…”, „Instrukcja wypełnienia”, „Informacja o przetwarzaniu danych”, „Stosownie do art. 13”, „Adnotacja organu”/„Wypełnia urząd”, numery stron. Powtórzony ciąg ≥ 4 linii (≥ 120 znaków) → `[POWTÓRZENIE] fragment jak wyżej, od „…”`. Prompt: wiele rodzajów wniosku → pierwsze pole „Rodzaj wniosku” + `visible_when`. Odpady: 14,7 → 8,0 tys. znaków, stypendium: 12,9 → 9,2 tys. Oba mieszczą się w jednym wywołaniu (bez fragmentacji). | `models/document.py`, `system.md` |
+| – Szkic z reguł bez wyborów | `rule_draft` znał tylko wykropkowania | Kolejne `[OPCJA]` → jedno pole wyboru z etykietą z tekstu przed nimi. Reguły: 34/80 → 39/80 pól. | `rule_draft.py` |
+
+### 10.2. Wyniki
+
+Sprzęt i warunki jak w §9.2 (laptop, CPU, jeden przebieg na przypadek). Krótkie i średnie blankiety mierzone przed zmianą fragmentacji (jeden fragment i tak), długie po niej (`LLM_MAX_CHUNK_CHARS=4500`, `LLM_NUM_PREDICT=2048`, budżet 1800 s).
+
+| przypadek | przed (§9.2) | po | czas s | precyzja po |
+|---|---|---|---|---|
+| numer porządkowy | 4/4 | 4/4 | 122 | 67% |
+| nadpłata | 6/6 | 6/6 | 116 | 100% |
+| świetlica | 5/7 | **7/7** | 173 | 100% |
+| zaświadczenie | 1/2 | **2/2** | 106 | 100% |
+| psy | 8/9 | 8/9 | 205 | 90% |
+| zwrot opłaty | 6/7 | **7/7** | 255 | 81% |
+| pas drogowy | 10/12 | **12/12** | 382 | 56% |
+| odpady | 8/18 | **14/18** | 1136 | 39% |
+| stypendium | 4/15 | **13/15** | 1256 | 31% |
+| **razem** | 52/80 (65%) | **73/80 (91%)** | | |
+
+Szkic z reguł (fallback): 35/80 → 39/80.
+
+Co zostało:
+- Długie dokumenty: 19–21 min na CPU (ok. 3000 tokenów odpowiedzi przy 4–5 tok/s). Nie zmieszczą się w żądaniu HTTP; potrzebne zadanie w tle z postępem albo GPU. Na demo przeliczyć wcześniej.
+- Precyzja długich dokumentów 31–39%: lista dyscyplin rozbita na pola, gdy trafia do innego fragmentu niż jej wstęp; te same pola w kilku fragmentach; dane składającego i pozycje wyliczane w deklaracji. Następny krok: cięcie na granicach nagłówków, nigdy wewnątrz listy `[OPCJA]`, i scalanie po złączeniu fragmentów.
+
+Dwa blankiety spoza zestawu, pobrane z internetu, przez cały pipeline (prowizoryczna ekstrakcja PDF):
+
+| blankiet | czas s | wynik | co poprawiono po pierwszym przebiegu |
+|---|---|---|---|
+| Wniosek o udostępnienie informacji publicznej (KBW, 1 str.) | 167 | zakres informacji, nośnik (wybór), forma przekazania (wybór) z polami zależnymi; formularz poprawny | „Osoba wnioskodawca” traktowana jak inna osoba → dane wnioskodawcy zostawały |
+| Oświadczenie do wniosku o zwrot akcyzy, wzór 2023 (2 str., pomieszana kolejność tekstu PDF) | 414 | 4 liczby zwierząt (`number`), dokument tożsamości, obręb; formularz poprawny | model przepisał pola z przykładu few-shot (drzewa) do drugiego fragmentu → `W28_EXAMPLE_FIELD_REMOVED`; liczby w zdaniu „Oświadczam, że… wynosi” usuwane jako oświadczenia → pola `number`/`date`/`file` nie są już oświadczeniami |
+
+Wniosek: przykład few-shot przecieka przy fragmentach z małą ilością treści. Kod to wychwytuje, ale lepszy byłby przykład spoza typowych wniosków gminnych (do pełnego pomiaru w dwóch przebiegach).
+
+### 10.3. Formaty i rodzaje dokumentów bez pomiaru
+
+Zestaw z §9.1 to wyłącznie DOCX i PDF z warstwą tekstową, przepuszczone przez prowizoryczną ekstrakcję. Paczki z materiałami zawierają każdy blankiet też jako `.doc`, `.xlsx`, `.ods`, `.jpg`/`.png` (zdjęcie lub skan). `pipeline/extract/*` to nadal zaślepka, więc poniżej jest to, co zobaczy etap LLM i co już zostało poprawione albo trzeba poprawić.
+
+| Format / rodzaj | Co trafi do LLM | Zrobione w tej zmianie | Do zrobienia (właściciel) |
+|---|---|---|---|
+| `.doc`, `.odt` | Po konwersji LibreOffice (`converter.py`) to samo co DOCX | – | Ekstrakcja DOCX: punktory list w Wingdings/Symbol (`w:numPr` → `numbering.xml`, `lvlText` U+F06F/U+F0A8/U+F0F0) jako `checkbox_option`; `w:sym`; pola `FORMCHECKBOX`, `w14:checkbox`, kontrolki `w:sdt` i `FORMTEXT` jako `input_placeholder` (urzędowe DOCX często nie mają kropek, tylko pola formularza) (ekstrakcja) |
+| `.xlsx`, `.ods` | Etykiety w komórkach bez kropek. Miejscem do wpisania jest pusta komórka z obramowaniem albo podkreśleniem. Numer punktu i treść są w osobnych komórkach („1)” \| „zapoznałem/am się…”), układ ma setki kolumn (świetlica: `A11:CR252`). | Prompt: etykieta z dwukropkiem bez `[POLE]` to też pole. Listy po dwukropku i „TAK NIE” rozpoznaje `doc_hints`. | Ekstrakcja XLSX: wiersz arkusza → jedna linia (sklejenie komórek z wartością), pusty obszar scalony lub z dolną krawędzią → `input_placeholder`, pomijanie ukrytych wierszy i kolumn. `rule_draft` nie znajdzie pól bez wykropkowań, więc fallback da pusty szkic (ekstrakcja, potem ewentualnie `rule_draft`) |
+| `.jpg`/`.png`, skan PDF | Tekst z OCR: kropki jako szum („. . . ,”), kratki jako „[ ]”, „O”, „0”, „□”; literówki w etykietach | Kratka „[ ]” rozpoznawana. Zwijanie kropek działa dla ciągów `.…_`. | Ekstrakcja OCR: wykropkowania z odstępami (`(\.\s?){3,}`) → `input_placeholder`; kratki jako małe kwadraty z obrazu (OpenCV) zamiast tekstu; niski `ocr_confidence` → ostrzeżenie. Normalizacja: próg `LABEL_MATCH_THRESHOLD` niższy dla `source.method == "ocr"`, żeby `W13` nie zalewał raportu (analiza) |
+| PDF z polami AcroForm | Pola formularza (nazwa, podpowiedź, typ checkbox/radio) – najlepsza możliwa informacja | – | Ekstrakcja PDF: `pypdfium2`/`pdfplumber` → widgety jako `input_placeholder`/`checkbox_option` z etykietą z nazwy pola (ekstrakcja) |
+| Deklaracje podatkowe (DN-1, IN-1, odpady) | Numerowane pozycje („36. Liczba…”), sekcje A–I, tabele obliczeń, kilka stron | Wycinanie pouczeń i objaśnień; oświadczenie z numerem pozycji to pole; „TAK NIE”; opcje numerowane w linii | Pozycje wyliczane („SUMA poz. 38, 41…”) jako pola `number` tylko do odczytu albo pominięte (dziś model robi z nich zwykłe pola). Do decyzji z osobą od `build/` |
+| Kilka wniosków w jednym pliku | Powtórzone sekcje | `[POWTÓRZENIE]` + reguła „Rodzaj wniosku” w prompcie | Sprawdzić po pomiarze, czy model ustawia `visible_when` na rodzaju wniosku |
+| Tabele z pustymi wierszami (członkowie gospodarstwa, faktury, podopieczni) | `[TABELA]` z nagłówkami i pustymi wierszami | Prompt: taka tabela to jedna sekcja `repeating: true` | Ekstrakcja: puste komórki tabeli DOCX jako `[POLE]` (dziś prowizoryczna ekstrakcja je pomija). Przypadek pomiarowy z tabelą (np. zwrot podatku akcyzowego) |
+| Blankiet bez słowa „Wniosek” w tytule („Podanie”, „Formularz zgłoszeniowy”, „Karta…”) | Prompt wymusza początek „Wniosek/Zgłoszenie/Deklaracja/Oświadczenie” | – | Zostawić. `verify` daje tylko ostrzeżenie `W05`, a model przeredagowuje tytuł |
+
+### 10.4. Dokumenty do testu na żywo podczas demo
+
+Kryteria: blankiet gminny lub powiatowy, dostępny publicznie w BIP jako DOCX albo PDF z warstwą tekstową, 1–2 strony, kilka pól przedmiotu i co najmniej jeden wybór. Przy obecnym czasie na CPU (§10.2) na żywo pokazujemy krótkie blankiety, a długie mamy przeliczone wcześniej.
+
+**Pewne (krótkie, typowe pola, wybór; ok. 1–2 min na CPU):**
+1. Wniosek o udostępnienie informacji publicznej: opis informacji, sposób udostępnienia (kopia / plik / wgląd) i sposób przekazania (poczta / e-mail / odbiór osobisty). Wybór z warunkiem, np. adres e-mail przy przekazaniu elektronicznym.
+2. Wniosek o wydanie wypisu i/lub wyrysu z miejscowego planu zagospodarowania przestrzennego: „wypis/wyrys*”, numery działek, obręb, liczba egzemplarzy, cel.
+3. Wniosek o wydanie zaświadczenia o przeznaczeniu działki w planie miejscowym albo zaświadczenia o niezaleganiu w podatkach: blisko zaświadczenia i nadpłaty z zestawu.
+4. Zgłoszenie zamiaru usunięcia drzewa (osoba fizyczna) albo wniosek o zezwolenie na usunięcie drzew lub krzewów. Uwaga: przykład few-shot w prompcie dotyczy właśnie drzew, więc wynik będzie dobry, ale jury może to uznać za dopasowanie do przykładu.
+5. Wniosek o wydanie zaświadczenia o zameldowaniu albo o wymeldowanie: krótki, z wyborem rodzaju pobytu (stały / czasowy).
+
+**Średnie (tabela albo kilka sekcji; 2–4 min):**
+6. Wniosek o zwrot podatku akcyzowego zawartego w cenie oleju napędowego (producent rolny): tabela faktur, czyli sekcja powtarzalna, i liczby.
+7. Wniosek o zezwolenie na sprzedaż napojów alkoholowych: kategorie A/B/C (wielokrotny wybór), punkt sprzedaży, załączniki.
+8. Wniosek o wydanie Karty Dużej Rodziny: członkowie rodziny w tabeli (sekcja powtarzalna, dane innych osób muszą zostać).
+
+**Do pokazania odporności, nie trafności (przeliczyć przed demo):**
+9. Deklaracja na podatek od nieruchomości DN-1 lub informacja IN-1: wiele stron, numerowane pozycje, wyliczenia. Na CPU przekroczy budżet albo da wynik częściowy z `W14`. Dobry przykład ostrzeżeń w raporcie.
+10. Wniosek o dodatek mieszkaniowy: tabela członków gospodarstwa, dochody, deklaracja.
+11. Zdjęcie telefonem jednego z blankietów z pkt 1–5: pokazuje ścieżkę OCR i ostrzeżenia o niskiej pewności.
+
+Przygotowanie demo: pobrać 2–3 blankiety z pkt 1–5 z BIP różnych gmin (różne układy, DOCX i PDF), przepuścić przez `llm_eval/extract.py` i dopisać jako przypadki z oczekiwanymi polami (zajmuje to ok. 10 min na blankiet). Zmierzyć przed demo, rozgrzać model przy starcie i mieć zapisane wyniki dla dokumentów z pkt 9–10 na wypadek przekroczenia czasu.
+
+
+## Pomiar 2026-11-21: stan wyjściowy
+
+9 przypadków zestawu `cases` jest teraz budowanych produkcyjnym ekstraktorem (`app/pipeline/extract`). Zestaw `holdout` ma 7 dokumentów bez skanu (lokalnie nie ma Tesseracta). Metryki to średnia z 3 przebiegów, w nawiasie min–max. Surowe wiersze: `backend/llm_eval/baseline_rows.json`, agregat: `backend/llm_eval/baseline.json`.
+
+### Zestaw cases, qwen3.5:35b-a3b
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| nadplata | 89% (83%–100%) | 84% (83%–86%) |
+| numer-porzadkowy | 100% (100%–100%) | 100% (100%–100%) |
+| odpady | 78% (78%–78%) | 32% (32%–32%) |
+| pas-drogowy | 89% (83%–92%) | 49% (48%–50%) |
+| psy | 100% (100%–100%) | 91% (91%–91%) |
+| stypendium | 100% (100%–100%) | 73% (68%–76%) |
+| swietlica | 100% (100%–100%) | 100% (100%–100%) |
+| zaswiadczenie | 100% (100%–100%) | 100% (100%–100%) |
+| zwrot-oplaty | 100% (100%–100%) | 98% (93%–100%) |
+| **średnia** (9) | **95%** | **81%** |
+
+### Zestaw cases, rules
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| nadplata | 100% (100%–100%) | 100% (100%–100%) |
+| numer-porzadkowy | 100% (100%–100%) | 100% (100%–100%) |
+| odpady | 17% (17%–17%) | 33% (33%–33%) |
+| pas-drogowy | 58% (58%–58%) | 88% (88%–88%) |
+| psy | 33% (33%–33%) | 44% (44%–44%) |
+| stypendium | 60% (60%–60%) | 40% (40%–40%) |
+| swietlica | 100% (100%–100%) | 100% (100%–100%) |
+| zaswiadczenie | 50% (50%–50%) | 67% (67%–67%) |
+| zwrot-oplaty | 0% (0%–0%) | 60% (60%–60%) |
+| **średnia** (9) | **58%** | **70%** |
+
+### Zestaw holdout, qwen3.5:35b-a3b
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| alkohol | 86% (86%–86%) | 86% (73%–92%) |
+| deklaracja-dochody | 43% (43%–43%) | 75% (75%–75%) |
+| dodatek-mieszkaniowy | 100% (100%–100%) | 80% (80%–80%) |
+| karta-duzej-rodziny | 93% (93%–93%) | 67% (67%–67%) |
+| podatek-in1 | 77% (77%–77%) | 50% (50%–50%) |
+| wycinka-drzew | 83% (83%–83%) | 60% (60%–60%) |
+| zwrot-akcyzy | 81% (81%–81%) | 47% (47%–47%) |
+| **średnia** (7) | **80%** | **66%** |
+
+### Zestaw holdout, rules
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| alkohol | 14% (14%–14%) | 33% (33%–33%) |
+| deklaracja-dochody | 43% (43%–43%) | 80% (80%–80%) |
+| dodatek-mieszkaniowy | 0% (0%–0%) | 0% (0%–0%) |
+| karta-duzej-rodziny | 50% (50%–50%) | 75% (75%–75%) |
+| podatek-in1 | 0% (0%–0%) | 0% (0%–0%) |
+| wycinka-drzew | 17% (17%–17%) | 29% (29%–29%) |
+| zwrot-akcyzy | 19% (19%–19%) | 43% (43%–43%) |
+| **średnia** (7) | **20%** | **37%** |

@@ -421,7 +421,8 @@ bez modelu), `W12_LOW_OCR_CONFIDENCE` (słaba jakość skanu), `W13_FIELD_NOT_IN
 `W29_FINISH_NOT_INFO` (strona końcowa w układzie wzorców zamiast `INFO_SECTION`),
 `W30_ID_FORMAT` (`id` spoza formatu UUID), `W31_TITLE_LEGAL_REFERENCE` (z tytułu usunięto
 odwołanie do przepisu), `W32_LABEL_NORMALIZED` (etykieta poprawiona, np. „W miejscowości”
-na „Miejscowość”).
+na „Miejscowość”), `W33_COMPUTED_FIELD_REMOVED` (usunięte pole na wartość wyliczaną z innych
+pól albo stawkę z cennika).
 
 ### Walidacja pliku
 

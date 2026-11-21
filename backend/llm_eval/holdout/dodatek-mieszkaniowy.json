@@ -1,0 +1,1310 @@
+{
+ "name": "dodatek-mieszkaniowy",
+ "source": "dodatek-mieszkaniowy.docx",
+ "document": {
+  "source": {
+   "method": "docx",
+   "pages": 1
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "heading",
+      "text": "Wniosek"
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "o przyznanie dodatku mieszkaniowego"
+     },
+     {
+      "id": "b3",
+      "kind": "heading",
+      "text": "Część I – dane o wnioskodawcy i gospodarstwie domowym"
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "Dane osoby wnioskującej"
+     },
+     {
+      "id": "b5",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b6",
+      "kind": "table_cell",
+      "text": "Imię",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b7",
+      "kind": "table_cell",
+      "text": "Nazwisko",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b8",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b9",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b10",
+      "kind": "table_cell",
+      "text": "Numer PESEL",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b11",
+      "kind": "table_cell",
+      "text": "Rodzaj, seria i numer dokumentu potwierdzającego tożsamość (w przypadku braku nr PESEL)",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b12",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b13",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b14",
+      "kind": "paragraph",
+      "text": "Adres zamieszkania wnioskodawcy"
+     },
+     {
+      "id": "b15",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b16",
+      "kind": "table_cell",
+      "text": "Miejscowość",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b17",
+      "kind": "table_cell",
+      "text": "Kod pocztowy",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b18",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b19",
+      "kind": "table_cell",
+      "text": "-",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b20",
+      "kind": "table_cell",
+      "text": "Ulica",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b21",
+      "kind": "table_cell",
+      "text": "Numer domu",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b22",
+      "kind": "table_cell",
+      "text": "Numer lokalu",
+      "table": {
+       "row": 2,
+       "col": 2
+      }
+     },
+     {
+      "id": "b23",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b24",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b25",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 2
+      }
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "Dane kontaktowe osoby wnioskującej (dane nieobowiązkowe*)"
+     },
+     {
+      "id": "b27",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b28",
+      "kind": "table_cell",
+      "text": "Telefon*",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b29",
+      "kind": "table_cell",
+      "text": "Adres poczty elektronicznej*",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b30",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b31",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b32",
+      "kind": "paragraph",
+      "text": "Dane dotyczące gospodarstwa domowego wnioskodawcy"
+     },
+     {
+      "id": "b33",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b34",
+      "kind": "table_cell",
+      "text": "Liczba osób wchodzących w skład gospodarstwa domowego",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 4
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "table_cell",
+      "text": "Liczba osób niepełnosprawnych",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "table_cell",
+      "text": "w tym:",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "table_cell",
+      "text": "poruszających się na wózku inwalidzkim",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 3
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "table_cell",
+      "text": "innych osób, których niepełnosprawność wymaga zamieszkiwania w oddzielnym pokoju",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 3
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "table_cell",
+      "text": "Łączne dochody członków gospodarstwa domowego",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "table_cell",
+      "text": "zł",
+      "table": {
+       "row": 4,
+       "col": 4
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "heading",
+      "text": "Część II – dane o zarządcy i lokalu"
+     },
+     {
+      "id": "b46",
+      "kind": "paragraph",
+      "text": "Dane zarządcy budynku lub innej osoby uprawnionej do pobierania należności za lokal"
+     },
+     {
+      "id": "b47",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b48",
+      "kind": "table_cell",
+      "text": "Nazwa",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "table_cell",
+      "text": "Adres",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "table_cell",
+      "text": "Miejscowość",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "table_cell",
+      "text": "Kod pocztowy",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "table_cell",
+      "text": "-",
+      "table": {
+       "row": 4,
+       "col": 1
+      }
+     },
+     {
+      "id": "b55",
+      "kind": "table_cell",
+      "text": "Ulica",
+      "table": {
+       "row": 5,
+       "col": 0
+      }
+     },
+     {
+      "id": "b56",
+      "kind": "table_cell",
+      "text": "Numer domu",
+      "table": {
+       "row": 5,
+       "col": 1
+      }
+     },
+     {
+      "id": "b57",
+      "kind": "table_cell",
+      "text": "Numer lokalu",
+      "table": {
+       "row": 5,
+       "col": 2
+      }
+     },
+     {
+      "id": "b58",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 0
+      }
+     },
+     {
+      "id": "b59",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 1
+      }
+     },
+     {
+      "id": "b60",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 2
+      }
+     },
+     {
+      "id": "b61",
+      "kind": "paragraph",
+      "text": "Dane dotyczące zajmowanego lokalu"
+     },
+     {
+      "id": "b62",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b63",
+      "kind": "table_cell",
+      "text": "Tytuł prawny do lokalu",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b64",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b65",
+      "kind": "table_cell",
+      "text": "najem/podnajem",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b66",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b67",
+      "kind": "table_cell",
+      "text": "spółdzielcze prawo do lokalu (lokatorskie lub własnościowe)",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b68",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b69",
+      "kind": "table_cell",
+      "text": "własność lokalu mieszkalnego",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b70",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b71",
+      "kind": "table_cell",
+      "text": "własność domu jednorodzinnego",
+      "table": {
+       "row": 4,
+       "col": 1
+      }
+     },
+     {
+      "id": "b72",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 5,
+       "col": 0
+      }
+     },
+     {
+      "id": "b73",
+      "kind": "table_cell",
+      "text": "inny tytuł prawny (proszę podać jaki)",
+      "table": {
+       "row": 5,
+       "col": 1
+      }
+     },
+     {
+      "id": "b74",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 3
+      }
+     },
+     {
+      "id": "b75",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 6,
+       "col": 0
+      }
+     },
+     {
+      "id": "b76",
+      "kind": "table_cell",
+      "text": "bez tytułu prawnego, ale oczekujący na dostarczenie przysługującego lokalu zamiennego lub zawarcie umowy najmu socjalnego",
+      "table": {
+       "row": 6,
+       "col": 1
+      }
+     },
+     {
+      "id": "b77",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 7,
+       "col": 0
+      }
+     },
+     {
+      "id": "b78",
+      "kind": "table_cell",
+      "text": "bez tytułu prawnego",
+      "table": {
+       "row": 7,
+       "col": 1
+      }
+     },
+     {
+      "id": "b79",
+      "kind": "table_cell",
+      "text": "Powierzchnia lokalu",
+      "table": {
+       "row": 8,
+       "col": 0
+      }
+     },
+     {
+      "id": "b80",
+      "kind": "table_cell",
+      "text": "powierzchnia użytkowa lokalu",
+      "table": {
+       "row": 9,
+       "col": 0
+      }
+     },
+     {
+      "id": "b81",
+      "kind": "table_cell",
+      "text": "m2",
+      "table": {
+       "row": 9,
+       "col": 2
+      }
+     },
+     {
+      "id": "b82",
+      "kind": "table_cell",
+      "text": "w tym:",
+      "table": {
+       "row": 9,
+       "col": 6
+      }
+     },
+     {
+      "id": "b83",
+      "kind": "table_cell",
+      "text": "łączna powierzchnia pokoi i kuchni",
+      "table": {
+       "row": 10,
+       "col": 0
+      }
+     },
+     {
+      "id": "b84",
+      "kind": "table_cell",
+      "text": "m2",
+      "table": {
+       "row": 10,
+       "col": 4
+      }
+     },
+     {
+      "id": "b85",
+      "kind": "table_cell",
+      "text": "powierzchnia zajmowana przez wnioskodawcę w przypadku najmu albo podnajmu części lokalu",
+      "table": {
+       "row": 11,
+       "col": 0
+      }
+     },
+     {
+      "id": "b86",
+      "kind": "table_cell",
+      "text": "m2",
+      "table": {
+       "row": 11,
+       "col": 4
+      }
+     },
+     {
+      "id": "b87",
+      "kind": "table_cell",
+      "text": "Techniczne wyposażenie lokalu mieszkalnego",
+      "table": {
+       "row": 12,
+       "col": 0
+      }
+     },
+     {
+      "id": "b88",
+      "kind": "table_cell",
+      "text": "sposób ogrzewania lokalu (wyposażenie w centralne ogrzewanie)",
+      "table": {
+       "row": 13,
+       "col": 0
+      }
+     },
+     {
+      "id": "b89",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 13,
+       "col": 4
+      }
+     },
+     {
+      "id": "b90",
+      "kind": "table_cell",
+      "text": "jest",
+      "table": {
+       "row": 13,
+       "col": 5
+      }
+     },
+     {
+      "id": "b91",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 13,
+       "col": 7
+      }
+     },
+     {
+      "id": "b92",
+      "kind": "table_cell",
+      "text": "brak",
+      "table": {
+       "row": 13,
+       "col": 8
+      }
+     },
+     {
+      "id": "b93",
+      "kind": "table_cell",
+      "text": "sposób przygotowywania ciepłej wody użytkowej (wyposażenie w centralną instalację ciepłej wody)",
+      "table": {
+       "row": 14,
+       "col": 0
+      }
+     },
+     {
+      "id": "b94",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 14,
+       "col": 4
+      }
+     },
+     {
+      "id": "b95",
+      "kind": "table_cell",
+      "text": "jest",
+      "table": {
+       "row": 14,
+       "col": 5
+      }
+     },
+     {
+      "id": "b96",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 14,
+       "col": 7
+      }
+     },
+     {
+      "id": "b97",
+      "kind": "table_cell",
+      "text": "brak",
+      "table": {
+       "row": 14,
+       "col": 8
+      }
+     },
+     {
+      "id": "b98",
+      "kind": "table_cell",
+      "text": "instalacja gazu przewodowego",
+      "table": {
+       "row": 15,
+       "col": 0
+      }
+     },
+     {
+      "id": "b99",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 15,
+       "col": 4
+      }
+     },
+     {
+      "id": "b100",
+      "kind": "table_cell",
+      "text": "jest",
+      "table": {
+       "row": 15,
+       "col": 5
+      }
+     },
+     {
+      "id": "b101",
+      "kind": "table_cell",
+      "text": "☐",
+      "table": {
+       "row": 15,
+       "col": 7
+      }
+     },
+     {
+      "id": "b102",
+      "kind": "table_cell",
+      "text": "brak",
+      "table": {
+       "row": 15,
+       "col": 8
+      }
+     },
+     {
+      "id": "b103",
+      "kind": "table_cell",
+      "text": "Łączna kwota wydatków na lokal mieszkalny, ustalanymi zgodnie z art. 6 ust. 3-4a ustawy, za ostatni miesiąc",
+      "table": {
+       "row": 16,
+       "col": 0
+      }
+     },
+     {
+      "id": "b104",
+      "kind": "table_cell",
+      "text": "zł",
+      "table": {
+       "row": 16,
+       "col": 4
+      }
+     },
+     {
+      "id": "b105",
+      "kind": "heading",
+      "text": "Część III – potwierdzenia, podpisy i oświadczenia"
+     },
+     {
+      "id": "b106",
+      "kind": "paragraph",
+      "text": "Potwierdzenie informacji przez zarządcę budynku lub inną osobę uprawnioną4"
+     },
+     {
+      "id": "b107",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b108",
+      "kind": "table_cell",
+      "text": "Potwierdzam informacje zawarte w pkt. 2, 6 i 7 wniosku",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b109",
+      "kind": "table_cell",
+      "text": "- -",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b110",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b111",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b112",
+      "kind": "table_cell",
+      "text": "(data)",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b113",
+      "kind": "table_cell",
+      "text": "(podpis zarządcy budynku albo innej osoby uprawnionej do pobierania należności za lokal mieszkalny4)",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b114",
+      "kind": "paragraph",
+      "text": "Podpis wnioskodawcy"
+     },
+     {
+      "id": "b115",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b116",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b117",
+      "kind": "table_cell",
+      "text": "- -",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b118",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b119",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b120",
+      "kind": "table_cell",
+      "text": "(data)",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b121",
+      "kind": "table_cell",
+      "text": "(podpis wnioskodawcy)",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b122",
+      "kind": "paragraph",
+      "text": "Oświadczenie odnośnie danych nadmiarowych (dla osób, które wypełniły pkt 3 w części I wniosku)"
+     },
+     {
+      "id": "b123",
+      "kind": "paragraph",
+      "text": "Wyrażam zgodę na przetwarzanie przez Prezydenta m.st. Warszawy moich danych osobowych w zakresie: numeru telefonu i/lub adresu e-mail, w celu przekazywania przez Urząd informacji w związku z prowadzonym postępowaniem w sprawie przyznania dodatku mieszkaniowego."
+     },
+     {
+      "id": "b124",
+      "kind": "paragraph",
+      "text": "Zgody udzielam na podstawie z art. 6 ust. 1 lit. a RODO."
+     },
+     {
+      "id": "b125",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b126",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b127",
+      "kind": "table_cell",
+      "text": "- -",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b128",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b129",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b130",
+      "kind": "table_cell",
+      "text": "(data)",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b131",
+      "kind": "table_cell",
+      "text": "(podpis wnioskodawcy)",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b132",
+      "kind": "heading",
+      "text": "Część IV – dodatkowe wyjaśnienia"
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o przyznanie dodatku mieszkaniowego",
+  "authority_kind": "ORGAN",
+  "authority_name": "Prezydent m.st. Warszawy",
+  "fields": [
+   {
+    "label": "Liczba osób wchodzących w skład gospodarstwa domowego",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba osób w gospodarstwie domowym"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba osób niepełnosprawnych",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Liczba osób niepełnosprawnych poruszających się na wózku inwalidzkim",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "poruszających się na wózku inwalidzkim"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba innych osób, których niepełnosprawność wymaga zamieszkiwania w oddzielnym pokoju",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "niepełnosprawność wymaga oddzielnego pokoju"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Łączne dochody członków gospodarstwa domowego",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "łączne dochody"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwa zarządcy budynku",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwa zarządcy"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Miejscowość zarządcy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "miejscowość"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Kod pocztowy zarządcy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "kod pocztowy"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Ulica zarządcy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "ulica"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer domu zarządcy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer domu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer lokalu zarządcy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "numer lokalu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Tytuł prawny do lokalu",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Powierzchnia użytkowa lokalu",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Łączna powierzchnia pokoi i kuchni",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Powierzchnia zajmowana przez wnioskodawcę w przypadku najmu albo podnajmu części lokalu",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "powierzchnia zajmowana przez wnioskodawcę"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Centralne ogrzewanie",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "sposób ogrzewania lokalu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Centralna instalacja ciepłej wody",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "sposób przygotowywania ciepłej wody użytkowej"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Instalacja gazu przewodowego",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "gaz przewodowy"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Łączna kwota wydatków na lokal mieszkalny za ostatni miesiąc",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "łączna kwota wydatków",
+     "wydatki na lokal"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Inny tytuł prawny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "inny tytuł prawny (proszę podać jaki)"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Dodatkowe wyjaśnienia",
+    "kind": [
+     "long_text",
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   }
+  ]
+ }
+}

@@ -1,6 +1,6 @@
 {
  "name": "Wniosek o zwrot opłaty skarbowej",
- "source": "Wniosek o zwrot opłaty skarbowej.pdf",
+ "source": "zwrot-oplaty.pdf",
  "document": {
   "source": {
    "method": "pdf_text",
@@ -13,122 +13,519 @@
      {
       "id": "b1",
       "kind": "paragraph",
-      "text": "strona 1/2"
+      "text": "Urząd Gminy Stawiguda",
+      "bbox": {
+       "x0": 426.7,
+       "y0": 107.97276377952801,
+       "x1": 523.3159999999999,
+       "y1": 115.97276377952801
+      }
      },
      {
       "id": "b2",
-      "kind": "paragraph",
-      "text": "Urząd Gminy Stawiguda"
+      "kind": "heading",
+      "text": "Wniosek o zwrot opłaty skarbowej",
+      "bbox": {
+       "x0": 209.4,
+       "y0": 229.80876377952802,
+       "x1": 442.428,
+       "y1": 241.80876377952802
+      }
      },
      {
       "id": "b3",
-      "kind": "paragraph",
-      "text": "Wniosek o zwrot opłaty skarbowej"
+      "kind": "heading",
+      "text": "1. Instrukcja wypełnienia dokumentu",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 257.07276377952803,
+       "x1": 245.14800000000005,
+       "y1": 265.07276377952803
+      }
      },
      {
       "id": "b4",
-      "kind": "paragraph",
-      "text": "1. Instrukcja wypełnienia dokumentu"
+      "kind": "heading",
+      "text": "1. WYPEŁNIJ WIELKIMI LITERAMI.",
+      "bbox": {
+       "x0": 215.2,
+       "y0": 283.7727637795281,
+       "x1": 361.39599999999996,
+       "y1": 291.7727637795281
+      }
      },
      {
       "id": "b5",
-      "kind": "heading",
-      "text": "1. WYPEŁNIJ WIELKIMI LITERAMI."
+      "kind": "paragraph",
+      "text": "2. Pola wyboru oznaczaj lub",
+      "bbox": {
+       "x0": 215.2,
+       "y0": 311.67276377952805,
+       "x1": 348.57599999999996,
+       "y1": 319.7727637795281
+      }
      },
      {
       "id": "b6",
       "kind": "paragraph",
-      "text": "2. Pola wyboru oznaczaj lub ."
+      "text": ".",
+      "bbox": {
+       "x0": 367.8,
+       "y0": 311.67276377952805,
+       "x1": 370.704,
+       "y1": 319.67276377952805
+      }
      },
      {
       "id": "b7",
       "kind": "paragraph",
-      "text": "3. Wypełniaj kolorem czarnym lub niebieskim."
+      "text": "3. Wypełniaj kolorem czarnym lub niebieskim .",
+      "bbox": {
+       "x0": 215.2,
+       "y0": 332.2727637795281,
+       "x1": 419.204,
+       "y1": 340.2727637795281
+      }
      },
      {
       "id": "b8",
-      "kind": "paragraph",
-      "text": "2. Dane wnioskodawcy"
+      "kind": "heading",
+      "text": "2. Dane wnioskodawcy",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 352.97276377952807,
+       "x1": 179.41999999999996,
+       "y1": 360.97276377952807
+      }
      },
      {
       "id": "b9",
-      "kind": "paragraph",
-      "text": "2.1. Dane identyfikacyjne"
+      "kind": "heading",
+      "text": "2.1. Dane identyfikacyjne",
+      "bbox": {
+       "x0": 234.1,
+       "y0": 377.97276377952807,
+       "x1": 348.716,
+       "y1": 385.97276377952807
+      }
      },
      {
       "id": "b10",
-      "kind": "paragraph",
-      "text": "Nazwa /Imię i nazwisko"
+      "kind": "label",
+      "text": "Nazwa /Imię i nazwisko",
+      "bbox": {
+       "x0": 128.0,
+       "y0": 404.7727637795281,
+       "x1": 222.96800000000002,
+       "y1": 412.7727637795281
+      }
      },
      {
       "id": "b11",
-      "kind": "heading",
-      "text": "NIP"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 396.6257637795281,
+       "x1": 580.975,
+       "y1": 417.72576377952805
+      }
      },
      {
       "id": "b12",
-      "kind": "paragraph",
-      "text": "2.2. Adres siedziby lub miejsca zamieszkania wnioskodawcy"
+      "kind": "label",
+      "text": "NIP",
+      "bbox": {
+       "x0": 209.0,
+       "y0": 431.5727637795281,
+       "x1": 223.11200000000002,
+       "y1": 439.5727637795281
+      }
      },
      {
       "id": "b13",
-      "kind": "paragraph",
-      "text": "Miejscowość"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 423.37576377952803,
+       "x1": 401.7416666666666,
+       "y1": 444.37576377952803
+      }
      },
      {
       "id": "b14",
-      "kind": "paragraph",
-      "text": "Ulica"
+      "kind": "heading",
+      "text": "2.2. Adres siedziby lub miejsca zamieszkania wnioskodawcy",
+      "bbox": {
+       "x0": 234.1,
+       "y0": 452.67276377952805,
+       "x1": 505.1240000000002,
+       "y1": 460.67276377952805
+      }
      },
      {
       "id": "b15",
-      "kind": "paragraph",
-      "text": "Nr domu Nr lokalu Kod pocztowy -"
+      "kind": "label",
+      "text": "Miejscowość",
+      "bbox": {
+       "x0": 173.9,
+       "y0": 479.37276377952804,
+       "x1": 223.20399999999998,
+       "y1": 487.37276377952804
+      }
      },
      {
       "id": "b16",
-      "kind": "paragraph",
-      "text": "2.3. Dane kontaktowe wnioskodawcy (dane kontaktowe nie są obowiązkowe,"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 471.2007637795281,
+       "x1": 580.975,
+       "y1": 492.35076377952805
+      }
      },
      {
       "id": "b17",
-      "kind": "paragraph",
-      "text": "ale ułatwią kontakt w sprawie wniosku)"
+      "kind": "label",
+      "text": "Ulica",
+      "bbox": {
+       "x0": 204.1,
+       "y0": 506.0727637795281,
+       "x1": 223.276,
+       "y1": 514.072763779528
+      }
      },
      {
       "id": "b18",
-      "kind": "paragraph",
-      "text": "Numer telefonu"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 497.950763779528,
+       "x1": 580.975,
+       "y1": 519.025763779528
+      }
      },
      {
       "id": "b19",
-      "kind": "paragraph",
-      "text": "Adres poczty elektronicznej"
+      "kind": "label",
+      "text": "Nr domu",
+      "bbox": {
+       "x0": 188.4,
+       "y0": 532.872763779528,
+       "x1": 223.232,
+       "y1": 540.872763779528
+      }
      },
      {
       "id": "b20",
-      "kind": "paragraph",
-      "text": "2.4. Dane pełnomocnika"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 524.675763779528,
+       "x1": 281.35,
+       "y1": 545.850763779528
+      }
      },
      {
       "id": "b21",
-      "kind": "paragraph",
-      "text": "Imię i nazwisko"
+      "kind": "label",
+      "text": "Nr lokalu",
+      "bbox": {
+       "x0": 292.8,
+       "y0": 532.872763779528,
+       "x1": 328.728,
+       "y1": 540.872763779528
+      }
      },
      {
       "id": "b22",
-      "kind": "paragraph",
-      "text": "Miejscowość"
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 334.38392857142856,
+       "y0": 524.675763779528,
+       "x1": 386.85,
+       "y1": 545.850763779528
+      }
      },
      {
       "id": "b23",
-      "kind": "paragraph",
-      "text": "Ulica"
+      "kind": "label",
+      "text": "Kod pocztowy",
+      "bbox": {
+       "x0": 414.3,
+       "y0": 532.872763779528,
+       "x1": 469.684,
+       "y1": 540.872763779528
+      }
      },
      {
       "id": "b24",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 475.225,
+       "y0": 524.675763779528,
+       "x1": 510.525,
+       "y1": 545.850763779528
+      }
+     },
+     {
+      "id": "b25",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 516.1,
+       "y0": 532.872763779528,
+       "x1": 519.732,
+       "y1": 540.872763779528
+      }
+     },
+     {
+      "id": "b26",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 528.1,
+       "y0": 524.675763779528,
+       "x1": 580.975,
+       "y1": 545.850763779528
+      }
+     },
+     {
+      "id": "b27",
       "kind": "paragraph",
-      "text": "Nr domu Nr lokalu Kod pocztowy -"
+      "text": "2.3. Dane kontaktowe wnioskodawcy (dane kontaktowe nie są obowiązkowe, ale ułatwią kontakt w sprawie wniosku)",
+      "bbox": {
+       "x0": 234.1,
+       "y0": 553.9727637795281,
+       "x1": 562.676,
+       "y1": 571.672763779528
+      }
+     },
+     {
+      "id": "b28",
+      "kind": "label",
+      "text": "Numer telefonu",
+      "bbox": {
+       "x0": 160.8,
+       "y0": 588.472763779528,
+       "x1": 223.20000000000002,
+       "y1": 596.472763779528
+      }
+     },
+     {
+      "id": "b29",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 580.400763779528,
+       "x1": 580.975,
+       "y1": 601.5507637795281
+      }
+     },
+     {
+      "id": "b30",
+      "kind": "label",
+      "text": "Adres poczty elektronicznej",
+      "bbox": {
+       "x0": 112.7,
+       "y0": 615.2727637795281,
+       "x1": 223.13200000000003,
+       "y1": 623.2727637795281
+      }
+     },
+     {
+      "id": "b31",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 607.125763779528,
+       "x1": 580.975,
+       "y1": 628.125763779528
+      }
+     },
+     {
+      "id": "b32",
+      "kind": "heading",
+      "text": "2.4. Dane pełnomocnika",
+      "bbox": {
+       "x0": 234.1,
+       "y0": 636.2727637795281,
+       "x1": 342.34799999999996,
+       "y1": 644.2727637795281
+      }
+     },
+     {
+      "id": "b33",
+      "kind": "label",
+      "text": "Imię i nazwisko",
+      "bbox": {
+       "x0": 160.8,
+       "y0": 663.072763779528,
+       "x1": 223.08800000000002,
+       "y1": 671.072763779528
+      }
+     },
+     {
+      "id": "b34",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 654.9507637795281,
+       "x1": 580.975,
+       "y1": 676.025763779528
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "label",
+      "text": "Miejscowość",
+      "bbox": {
+       "x0": 173.9,
+       "y0": 689.872763779528,
+       "x1": 223.20399999999998,
+       "y1": 697.872763779528
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 681.6757637795281,
+       "x1": 580.975,
+       "y1": 702.775763779528
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "label",
+      "text": "Ulica",
+      "bbox": {
+       "x0": 204.1,
+       "y0": 716.572763779528,
+       "x1": 223.276,
+       "y1": 724.572763779528
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 708.4257637795281,
+       "x1": 580.975,
+       "y1": 729.4257637795281
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "label",
+      "text": "Nr domu",
+      "bbox": {
+       "x0": 188.4,
+       "y0": 743.372763779528,
+       "x1": 223.232,
+       "y1": 751.372763779528
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.5940476190476,
+       "y0": 735.0757637795281,
+       "x1": 281.35,
+       "y1": 756.1757637795282
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "label",
+      "text": "Nr lokalu",
+      "bbox": {
+       "x0": 292.8,
+       "y0": 743.372763779528,
+       "x1": 328.728,
+       "y1": 751.372763779528
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 334.38392857142856,
+       "y0": 735.0757637795281,
+       "x1": 386.85,
+       "y1": 756.1757637795282
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "label",
+      "text": "Kod pocztowy",
+      "bbox": {
+       "x0": 414.3,
+       "y0": 743.372763779528,
+       "x1": 469.684,
+       "y1": 751.372763779528
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 475.225,
+       "y0": 735.0757637795281,
+       "x1": 510.525,
+       "y1": 756.1757637795282
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 517.6,
+       "y0": 743.372763779528,
+       "x1": 521.232,
+       "y1": 751.372763779528
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 528.1,
+       "y0": 735.0757637795281,
+       "x1": 580.975,
+       "y1": 756.1757637795282
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "paragraph",
+      "text": "strona 1/2",
+      "bbox": {
+       "x0": 525.2,
+       "y0": 825.572763779528,
+       "x1": 567.2560000000001,
+       "y1": 833.572763779528
+      }
      }
     ]
    },
@@ -136,119 +533,433 @@
     "number": 2,
     "blocks": [
      {
-      "id": "b25",
-      "kind": "paragraph",
-      "text": "strona 2/2"
-     },
-     {
-      "id": "b26",
-      "kind": "paragraph",
-      "text": "3. Informacje o opłacie skarbowej"
-     },
-     {
-      "id": "b27",
-      "kind": "paragraph",
-      "text": "Data uiszczenia opłaty - -"
-     },
-     {
-      "id": "b28",
+      "id": "b48",
       "kind": "heading",
-      "text": "DD-MM-RRRR"
+      "text": "3. Informacje o opłacie skarbowej",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 92.8727637795281,
+       "x1": 230.16399999999996,
+       "y1": 100.8727637795281
+      }
      },
      {
-      "id": "b29",
+      "id": "b49",
+      "kind": "label",
+      "text": "Data uiszczenia opłaty",
+      "bbox": {
+       "x0": 133.0,
+       "y0": 119.67276377952805,
+       "x1": 222.952,
+       "y1": 127.67276377952805
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.48660714285714,
+       "y0": 111.42576377952804,
+       "x1": 263.775,
+       "y1": 132.57576377952802
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 269.3,
+       "y0": 119.67276377952805,
+       "x1": 272.932,
+       "y1": 127.67276377952805
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 281.35,
+       "y0": 111.42576377952804,
+       "x1": 316.57500000000005,
+       "y1": 132.57576377952802
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 322.2,
+       "y0": 119.67276377952805,
+       "x1": 325.832,
+       "y1": 127.67276377952805
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 334.25,
+       "y0": 111.42576377952804,
+       "x1": 404.7749999999999,
+       "y1": 132.57576377952802
+      }
+     },
+     {
+      "id": "b55",
       "kind": "paragraph",
-      "text": "Wysokość opłaty"
+      "text": "DD-MM-RRRR",
+      "bbox": {
+       "x0": 242.5,
+       "y0": 141.17276377952805,
+       "x1": 297.62,
+       "y1": 149.17276377952805
+      }
      },
      {
-      "id": "b30",
+      "id": "b56",
+      "kind": "label",
+      "text": "Wysokość opłaty",
+      "bbox": {
+       "x0": 156.1,
+       "y0": 167.8727637795281,
+       "x1": 222.876,
+       "y1": 175.8727637795281
+      }
+     },
+     {
+      "id": "b57",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.48660714285714,
+       "y0": 159.67576377952804,
+       "x1": 580.975,
+       "y1": 180.82576377952802
+      }
+     },
+     {
+      "id": "b58",
       "kind": "paragraph",
-      "text": "Nazwa organu, `"
+      "text": "Nazwa organu, `",
+      "bbox": {
+       "x0": 163.1,
+       "y0": 188.67276377952805,
+       "x1": 239.18,
+       "y1": 196.972763779528
+      }
      },
      {
-      "id": "b31",
+      "id": "b59",
       "kind": "paragraph",
-      "text": "w którym zapłacono opłatę"
+      "text": "w którym zapłacono opłatę",
+      "bbox": {
+       "x0": 114.8,
+       "y0": 198.3727637795281,
+       "x1": 223.184,
+       "y1": 206.3727637795281
+      }
      },
      {
-      "id": "b32",
+      "id": "b60",
       "kind": "paragraph",
-      "text": "4. Uzasadnienie wniosku (opisz w polu poniżej dlaczego opłata skarbowa, której dotyczy wniosek została błędnie uiszczona"
+      "text": "4. Uzasadnienie wniosku (opisz w polu poniżej dlaczego opłata skarbowa, której dotyczy wniosek została błędnie uiszczona",
+      "bbox": {
+       "x0": 72.2,
+       "y0": 216.27276377952808,
+       "x1": 579.716,
+       "y1": 224.27276377952808
+      }
      },
      {
-      "id": "b33",
+      "id": "b61",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.48660714285714,
+       "y0": 240.925763779528,
+       "x1": 580.975,
+       "y1": 282.72576377952805
+      }
+     },
+     {
+      "id": "b62",
       "kind": "paragraph",
-      "text": "5. Informacje dotyczące sposobu zwrotu opłaty skarbowej (postaw „x” w wybranym polu)"
+      "text": "5. Informacje dotyczące sposobu zwrotu opłaty skarbowej (postaw „x” w wybranym polu)",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 290.8727637795281,
+       "x1": 467.536,
+       "y1": 298.8727637795281
+      }
      },
      {
-      "id": "b34",
+      "id": "b63",
+      "kind": "checkbox_option",
+      "text": "Gotówką w kasie organu",
+      "bbox": {
+       "x0": 251.8,
+       "y0": 317.57276377952803,
+       "x1": 350.67199999999997,
+       "y1": 325.57276377952803
+      }
+     },
+     {
+      "id": "b64",
+      "kind": "checkbox_option",
+      "text": "Przelewem na rachunek w banku",
+      "bbox": {
+       "x0": 251.8,
+       "y0": 344.2727637795281,
+       "x1": 384.152,
+       "y1": 352.2727637795281
+      }
+     },
+     {
+      "id": "b65",
       "kind": "paragraph",
-      "text": "Gotówką w kasie organu"
+      "text": "Jeśli wybierzesz tę formę, wpisz poniżej nr rachunku i dane jego właściciela",
+      "bbox": {
+       "x0": 228.5,
+       "y0": 365.7727637795281,
+       "x1": 532.5719999999999,
+       "y1": 373.7727637795281
+      }
      },
      {
-      "id": "b35",
+      "id": "b66",
+      "kind": "label",
+      "text": "Nr rachunku",
+      "bbox": {
+       "x0": 173.6,
+       "y0": 392.5727637795281,
+       "x1": 222.92000000000002,
+       "y1": 400.5727637795281
+      }
+     },
+     {
+      "id": "b67",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.48660714285714,
+       "y0": 384.3757637795281,
+       "x1": 580.975,
+       "y1": 405.47576377952805
+      }
+     },
+     {
+      "id": "b68",
       "kind": "paragraph",
-      "text": "Przelewem na rachunek w banku"
+      "text": "Dane właściciela",
+      "bbox": {
+       "x0": 173.6,
+       "y0": 411.97276377952807,
+       "x1": 239.416,
+       "y1": 419.97276377952807
+      }
      },
      {
-      "id": "b36",
-      "kind": "paragraph",
-      "text": "Jeśli wybierzesz tę formę, wpisz poniżej nr rachunku i dane jego właściciela"
-     },
-     {
-      "id": "b37",
-      "kind": "paragraph",
-      "text": "Nr rachunku"
-     },
-     {
-      "id": "b38",
-      "kind": "paragraph",
-      "text": "6. Podstawa prawna"
-     },
-     {
-      "id": "b39",
-      "kind": "paragraph",
-      "text": "Art. 9 ustawy z dnia 16 listopada 2006 r. o opłacie skarbowej"
-     },
-     {
-      "id": "b40",
-      "kind": "paragraph",
-      "text": "7. Załączniki (postaw „x” w wybranym polu)"
-     },
-     {
-      "id": "b41",
-      "kind": "paragraph",
-      "text": "1. Dokument stwierdzający udzielenie pełnomocnictwa"
-     },
-     {
-      "id": "b42",
-      "kind": "paragraph",
-      "text": "2. Dowód uiszczenia opłaty skarbowej za pełnomocnictwo"
-     },
-     {
-      "id": "b43",
-      "kind": "paragraph",
-      "text": "8. Data i podpis wnioskodawcy"
-     },
-     {
-      "id": "b44",
-      "kind": "paragraph",
-      "text": "Data - -"
-     },
-     {
-      "id": "b45",
+      "id": "b69",
       "kind": "heading",
-      "text": "DD-MM-RRRR"
+      "text": "6. Podstawa prawna",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 424.7727637795281,
+       "x1": 168.06,
+       "y1": 432.7727637795281
+      }
      },
      {
-      "id": "b46",
+      "id": "b70",
       "kind": "paragraph",
-      "text": "Podpis"
+      "text": "Art. 9 ustawy z dnia 16 listopada 2006 r. o opłacie skarbowej",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 448.37276377952804,
+       "x1": 322.628,
+       "y1": 456.37276377952804
+      }
      },
      {
-      "id": "b47",
+      "id": "b71",
       "kind": "paragraph",
-      "text": "Dane właściciela"
+      "text": "7. Załączniki (postaw „x” w wybranym polu)",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 468.97276377952807,
+       "x1": 260.336,
+       "y1": 476.97276377952807
+      }
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "1.",
+      "bbox": {
+       "x0": 183.4,
+       "y0": 495.7727637795281,
+       "x1": 191.4,
+       "y1": 503.7727637795281
+      }
+     },
+     {
+      "id": "b73",
+      "kind": "checkbox_option",
+      "text": "Dokument stwierdzający udzielenie pełnomocnictwa",
+      "bbox": {
+       "x0": 234.1,
+       "y0": 495.17276377952805,
+       "x1": 443.372,
+       "y1": 503.17276377952805
+      }
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "2.",
+      "bbox": {
+       "x0": 183.4,
+       "y0": 522.372763779528,
+       "x1": 191.4,
+       "y1": 530.372763779528
+      }
+     },
+     {
+      "id": "b75",
+      "kind": "checkbox_option",
+      "text": "Dowód uiszczenia opłaty skarbowej za pełnomocnictwo",
+      "bbox": {
+       "x0": 234.1,
+       "y0": 521.9727637795281,
+       "x1": 455.65200000000004,
+       "y1": 529.9727637795281
+      }
+     },
+     {
+      "id": "b76",
+      "kind": "heading",
+      "text": "8. Data i podpis wnioskodawcy",
+      "bbox": {
+       "x0": 76.5,
+       "y0": 549.4727637795281,
+       "x1": 215.26799999999994,
+       "y1": 557.4727637795281
+      }
+     },
+     {
+      "id": "b77",
+      "kind": "label",
+      "text": "Data",
+      "bbox": {
+       "x0": 204.3,
+       "y0": 576.2727637795281,
+       "x1": 223.18000000000004,
+       "y1": 584.2727637795281
+      }
+     },
+     {
+      "id": "b78",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.48660714285714,
+       "y0": 568.150763779528,
+       "x1": 263.775,
+       "y1": 589.125763779528
+      }
+     },
+     {
+      "id": "b79",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 270.8,
+       "y0": 576.2727637795281,
+       "x1": 274.432,
+       "y1": 584.2727637795281
+      }
+     },
+     {
+      "id": "b80",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 281.35,
+       "y0": 568.150763779528,
+       "x1": 316.57500000000005,
+       "y1": 589.125763779528
+      }
+     },
+     {
+      "id": "b81",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 323.8,
+       "y0": 576.2727637795281,
+       "x1": 327.432,
+       "y1": 584.2727637795281
+      }
+     },
+     {
+      "id": "b82",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 334.25,
+       "y0": 568.150763779528,
+       "x1": 404.7749999999999,
+       "y1": 589.125763779528
+      }
+     },
+     {
+      "id": "b83",
+      "kind": "label",
+      "text": "DD-MM-RRRR",
+      "bbox": {
+       "x0": 242.5,
+       "y0": 594.7727637795281,
+       "x1": 297.62,
+       "y1": 602.7727637795281
+      }
+     },
+     {
+      "id": "b84",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 228.48660714285714,
+       "y0": 610.275763779528,
+       "x1": 580.975,
+       "y1": 645.1757637795281
+      }
+     },
+     {
+      "id": "b85",
+      "kind": "paragraph",
+      "text": "Podpis",
+      "bbox": {
+       "x0": 197.2,
+       "y0": 625.372763779528,
+       "x1": 222.93599999999998,
+       "y1": 633.372763779528
+      }
+     },
+     {
+      "id": "b86",
+      "kind": "paragraph",
+      "text": "strona 2/2",
+      "bbox": {
+       "x0": 525.2,
+       "y0": 825.572763779528,
+       "x1": 567.2560000000001,
+       "y1": 833.572763779528
+      }
      }
     ]
    }

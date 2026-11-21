@@ -1,6 +1,6 @@
 {
  "name": "Wniosek o wydanie zezwolenia na zajęcie pasa drogowego",
- "source": "Wniosek o wydanie zezwolenia na zajęcie pasa drogowego.docx",
+ "source": "pas-drogowy.docx",
  "document": {
   "source": {
    "method": "docx",
@@ -18,7 +18,7 @@
      {
       "id": "b2",
       "kind": "input_placeholder",
-      "text": "…………………………….."
+      "text": ""
      },
      {
       "id": "b3",
@@ -27,13 +27,13 @@
      },
      {
       "id": "b4",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "(Imię i nazwisko lub nazwa firmy)"
      },
      {
       "id": "b5",
       "kind": "input_placeholder",
-      "text": "……………………………………."
+      "text": ""
      },
      {
       "id": "b6",
@@ -43,7 +43,7 @@
      {
       "id": "b7",
       "kind": "input_placeholder",
-      "text": "……….……………………………."
+      "text": ""
      },
      {
       "id": "b8",
@@ -52,7 +52,7 @@
      },
      {
       "id": "b9",
-      "kind": "paragraph",
+      "kind": "heading",
       "text": "Urząd Miasta i Gminy Miasteczko"
      },
      {
@@ -78,7 +78,7 @@
      {
       "id": "b14",
       "kind": "input_placeholder",
-      "text": ".…………………………………………………………………………………………………………….."
+      "text": ""
      },
      {
       "id": "b15",
@@ -88,7 +88,7 @@
      {
       "id": "b16",
       "kind": "paragraph",
-      "text": "w miejscowości  ………………………………………………… działka nr ewid."
+      "text": "w miejscowości ………………………………………………… działka nr ewid."
      },
      {
       "id": "b17",
@@ -98,11 +98,11 @@
      {
       "id": "b18",
       "kind": "input_placeholder",
-      "text": "……………………………………………………….…………………………………………………….."
+      "text": ""
      },
      {
       "id": "b19",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "/ rodzaj robót i sposób wykonania /"
      },
      {
@@ -118,161 +118,316 @@
      {
       "id": "b22",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "długość"
      },
      {
       "id": "b23",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "szerokość"
      },
      {
       "id": "b24",
       "kind": "paragraph",
-      "text": "b/ jezdnia (przy zajęciu powyżej 20% do 50% szerokości)"
+      "text": "razem"
      },
      {
       "id": "b25",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "m2"
      },
      {
       "id": "b26",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "długość"
      },
      {
       "id": "b27",
       "kind": "paragraph",
-      "text": "c/ jezdnia (przy zajęciu powyżej 50% szerokości)"
+      "text": "szerokość"
      },
      {
       "id": "b28",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "razem"
      },
      {
       "id": "b29",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "m2"
      },
      {
       "id": "b30",
       "kind": "paragraph",
-      "text": "d/ chodnik"
+      "text": "b/ jezdnia (przy zajęciu powyżej 20% do 50% szerokości)"
      },
      {
       "id": "b31",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "długość"
      },
      {
       "id": "b32",
       "kind": "paragraph",
-      "text": "długośćszerokośćrazemm2"
+      "text": "szerokość"
      },
      {
       "id": "b33",
       "kind": "paragraph",
-      "text": "Całkowita powierzchnia zajęcia: ………………………m2"
+      "text": "razem"
      },
      {
       "id": "b34",
       "kind": "paragraph",
-      "text": "2.Roboty będą realizowane w terminie od dniado dnia"
+      "text": "m2"
      },
      {
       "id": "b35",
       "kind": "paragraph",
-      "text": "tj. …………dni, zgodnie z załączonym harmonogramem."
+      "text": "długość"
      },
      {
       "id": "b36",
       "kind": "paragraph",
-      "text": "3.Wykonawcą Robót będzie"
+      "text": "szerokość"
      },
      {
       "id": "b37",
       "kind": "paragraph",
-      "text": "nazwa przedsiębiorstwa lub osoby fizycznej"
+      "text": "razem"
      },
      {
       "id": "b38",
       "kind": "paragraph",
-      "text": "a osobą odpowiedzialną za wykonanie robót zgodnie z projektem i odtworzenie pasa drogowego zgodnie z warunkami określonymi w wydanej decyzji będzie ………………...."
+      "text": "m2"
      },
      {
       "id": "b39",
       "kind": "paragraph",
-      "text": "……………………………………………..zam. …………………………………………………….. tel. …………………………………………………………."
+      "text": "c/ jezdnia (przy zajęciu powyżej 50% szerokości)"
      },
      {
       "id": "b40",
       "kind": "paragraph",
-      "text": "4.Załączniki do wniosku:"
+      "text": "długość"
      },
      {
       "id": "b41",
       "kind": "paragraph",
-      "text": "Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego."
+      "text": "szerokość"
      },
      {
       "id": "b42",
       "kind": "paragraph",
-      "text": "Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego."
+      "text": "razem"
      },
      {
       "id": "b43",
       "kind": "paragraph",
-      "text": "Szczegółowy harmonogram robót."
+      "text": "m2"
      },
      {
       "id": "b44",
       "kind": "paragraph",
-      "text": "Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazdów lub pieszych."
+      "text": "długość"
      },
      {
       "id": "b45",
       "kind": "paragraph",
-      "text": "Informację o sposobie zabezpieczenia robót, jeżeli nie jest wymagany projekt organizacji ruchu."
+      "text": "szerokość"
      },
      {
       "id": "b46",
       "kind": "paragraph",
-      "text": "Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł  w przypadku, gdy w sprawie występuje pełnomocnik"
+      "text": "razem"
      },
      {
       "id": "b47",
       "kind": "paragraph",
-      "text": "Zgodnie z art. 13 ust. 1 i 2 rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych, dalej: RODO) (Dz. Urz. UE L119/1) informujemy, że:Administratorem Pana/Pani danych osobowych jest Urząd Miasta i Gminy w Daleszycach z siedzibą                        w Daleszycach, Plac Staszica 9, 26-021 Daleszyce, kontakt e-mail pod adresem: gmina@daleszyce.pl"
+      "text": "m2"
      },
      {
       "id": "b48",
       "kind": "paragraph",
-      "text": "Pani/Pana dane osobowe przetwarzane będą w celu wydania zezwolenia na zajęcie pasa drogowego/ prowadzenie robót/ przez Burmistrza Miasta i Gminy w Daleszycach."
+      "text": "d/ chodnik"
      },
      {
       "id": "b49",
       "kind": "paragraph",
-      "text": "Przysługuje Panu/Pani prawo żądania od administratora dostępu do danych osobowych Pana/Pani dotyczących, ich sprostowania, usunięcia, ograniczenia przetwarzania oraz przenoszenia danych.Przysługuje Panu/Pani prawo do cofnięcia zgody w każdym czasie."
+      "text": "długość"
      },
      {
       "id": "b50",
       "kind": "paragraph",
-      "text": "Na działania Administratora przysługuje Panu/Pani skarga do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa."
+      "text": "szerokość"
      },
      {
       "id": "b51",
       "kind": "paragraph",
-      "text": "Wyrażam zgodę na przetwarzanie przez Urząd Miasta i Gminy w Daleszycach, moich danych osobowych."
+      "text": "razem"
      },
      {
       "id": "b52",
-      "kind": "input_placeholder",
-      "text": "…………………………………………."
+      "kind": "paragraph",
+      "text": "m2"
      },
      {
       "id": "b53",
+      "kind": "paragraph",
+      "text": "długość"
+     },
+     {
+      "id": "b54",
+      "kind": "paragraph",
+      "text": "szerokość"
+     },
+     {
+      "id": "b55",
+      "kind": "paragraph",
+      "text": "razem"
+     },
+     {
+      "id": "b56",
+      "kind": "paragraph",
+      "text": "m2"
+     },
+     {
+      "id": "b57",
+      "kind": "paragraph",
+      "text": "Całkowita powierzchnia zajęcia: ………………………m2"
+     },
+     {
+      "id": "b58",
+      "kind": "paragraph",
+      "text": "2."
+     },
+     {
+      "id": "b59",
+      "kind": "paragraph",
+      "text": "Roboty będą realizowane w terminie od dnia"
+     },
+     {
+      "id": "b60",
+      "kind": "paragraph",
+      "text": "do dnia"
+     },
+     {
+      "id": "b61",
+      "kind": "paragraph",
+      "text": "tj. …………dni, zgodnie z załączonym harmonogramem."
+     },
+     {
+      "id": "b62",
+      "kind": "paragraph",
+      "text": "3."
+     },
+     {
+      "id": "b63",
+      "kind": "paragraph",
+      "text": "Wykonawcą Robót będzie"
+     },
+     {
+      "id": "b64",
+      "kind": "paragraph",
+      "text": "nazwa przedsiębiorstwa lub osoby fizycznej"
+     },
+     {
+      "id": "b65",
+      "kind": "paragraph",
+      "text": "a osobą odpowiedzialną za wykonanie robót zgodnie z projektem i odtworzenie pasa drogowego zgodnie z warunkami określonymi w wydanej decyzji będzie ………………...."
+     },
+     {
+      "id": "b66",
+      "kind": "paragraph",
+      "text": "……………………………………………..zam. …………………………………………………….. tel. …………………………………………………………."
+     },
+     {
+      "id": "b67",
+      "kind": "paragraph",
+      "text": "4."
+     },
+     {
+      "id": "b68",
       "kind": "label",
+      "text": "Załączniki do wniosku:"
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego."
+     },
+     {
+      "id": "b70",
+      "kind": "paragraph",
+      "text": "Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego."
+     },
+     {
+      "id": "b71",
+      "kind": "paragraph",
+      "text": "Szczegółowy harmonogram robót."
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazdów lub pieszych."
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "Informację o sposobie zabezpieczenia robót, jeżeli nie jest wymagany projekt organizacji ruchu."
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł w przypadku, gdy w sprawie występuje pełnomocnik"
+     },
+     {
+      "id": "b75",
+      "kind": "paragraph",
+      "text": "Zgodnie z art. 13 ust. 1 i 2 rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych, dalej: RODO) (Dz. Urz. UE L119/1) informujemy, że:"
+     },
+     {
+      "id": "b76",
+      "kind": "paragraph",
+      "text": "Administratorem Pana/Pani danych osobowych jest Urząd Miasta i Gminy w Daleszycach z siedzibą"
+     },
+     {
+      "id": "b77",
+      "kind": "paragraph",
+      "text": "w Daleszycach, Plac Staszica 9, 26-021 Daleszyce, kontakt e-mail pod adresem: gmina@daleszyce.pl"
+     },
+     {
+      "id": "b78",
+      "kind": "paragraph",
+      "text": "Pani/Pana dane osobowe przetwarzane będą w celu wydania zezwolenia na zajęcie pasa drogowego/ prowadzenie robót/ przez Burmistrza Miasta i Gminy w Daleszycach."
+     },
+     {
+      "id": "b79",
+      "kind": "paragraph",
+      "text": "Przysługuje Panu/Pani prawo żądania od administratora dostępu do danych osobowych Pana/Pani dotyczących, ich sprostowania, usunięcia, ograniczenia przetwarzania oraz przenoszenia danych."
+     },
+     {
+      "id": "b80",
+      "kind": "paragraph",
+      "text": "Przysługuje Panu/Pani prawo do cofnięcia zgody w każdym czasie."
+     },
+     {
+      "id": "b81",
+      "kind": "paragraph",
+      "text": "Na działania Administratora przysługuje Panu/Pani skarga do Prezesa Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa."
+     },
+     {
+      "id": "b82",
+      "kind": "paragraph",
+      "text": "Wyrażam zgodę na przetwarzanie przez Urząd Miasta i Gminy w Daleszycach, moich danych osobowych."
+     },
+     {
+      "id": "b83",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b84",
+      "kind": "paragraph",
       "text": "/ podpis Wnioskodawcy/"
      }
     ]
