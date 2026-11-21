@@ -2,7 +2,7 @@
   <h1 class="text-title font-semibold">Import formularzy</h1>
   <app-file-drop [maxSizeMb]="maxSizeMb" (filesSelected)="onFiles($event)" />
   <app-card>
-    <h2 cardTitle id="queue-title">Kolejka</h2>
+    <h2 cardTitle id="queue-title" tabindex="-1">Kolejka</h2>
     <span cardActions class="flex items-center gap-[12px]">
       <span class="text-fg-muted">{{ summary() }}</span>
       <button
@@ -68,17 +68,18 @@
                       Ponów
                     </button>
                   }
-                  @if (i.status !== 'processing') {
-                    <button
-                      appButton
-                      type="button"
-                      [attr.aria-label]="'Usuń ' + i.name"
-                      [attr.aria-describedby]="i.error ? 'err-' + i.id : null"
-                      (click)="remove(i.id)"
-                    >
-                      Usuń
-                    </button>
-                  }
+                  <button
+                    appButton
+                    type="button"
+                    [id]="'remove-' + i.id"
+                    [attr.aria-label]="'Usuń ' + i.name"
+                    [attr.aria-describedby]="i.error ? 'err-' + i.id : null"
+                    [attr.aria-disabled]="i.status === 'processing' ? 'true' : null"
+                    class="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                    (click)="remove(i)"
+                  >
+                    Usuń
+                  </button>
                 </span>
               </td>
             </tr>

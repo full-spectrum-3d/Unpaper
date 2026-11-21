@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { Component, ElementRef, Injector, afterNextRender, computed, effect, inject, signal, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Badge } from '../../shared/ui/badge/badge';
@@ -18,7 +18,7 @@ import { downloadBlob } from './download';
 import { FileRegistry } from './file-registry';
 import { MAX_FILE_SIZE_MB, validateFile } from './file-validation';
 import { formatSize, queueSummary } from './format';
-import { buildResultsZip } from './zip-results';
+import { newId } from './new-id';
 
 @Component({
   selector: 'app-import-page',
@@ -26,7 +26,7 @@ import { buildResultsZip } from './zip-results';
   templateUrl: './import-page.html',
   host: {
     class: 'block p-section',
-    '(window:dragover)': '$event.preventDefault()',
+    '(window:dragover)': 'onWindowDragOver($event)',
     '(window:drop)': '$event.preventDefault()',
     '(window:beforeunload)': 'warnOnUnload($event)',
   },
@@ -34,6 +34,8 @@ import { buildResultsZip } from './zip-results';
 export class ImportPage {
   private readonly store = inject(Store);
   private readonly registry = inject(FileRegistry);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly injector = inject(Injector);
 
   protected readonly maxSizeMb = MAX_FILE_SIZE_MB;
   protected readonly formatSize = formatSize;
@@ -44,6 +46,7 @@ export class ImportPage {
   protected readonly announcement = signal('');
 
   private previous: Map<string, QueueItem['status']> | null = null;
+  private announceToggle = false;
 
   constructor() {
     effect(() => {
@@ -52,18 +55,23 @@ export class ImportPage {
         const prev = this.previous;
         this.previous = new Map(items.map((i) => [i.id, i.status]));
         if (!prev) return; // no announcement for the initial render
+        const messages: string[] = [];
         for (const i of items) {
           if (prev.get(i.id) === i.status) continue;
-          if (i.status === 'done') this.announcement.set(`${i.name}: gotowe`);
-          else if (i.status === 'error') this.announcement.set(`${i.name}: błąd – ${i.error}`);
+          if (i.status === 'done') messages.push(`${i.name}: gotowe`);
+          else if (i.status === 'error') messages.push(`${i.name}: błąd – ${i.error}`);
         }
+        if (!messages.length) return;
+        // Toggling an invisible character makes an identical message change the text, so it is announced again.
+        this.announceToggle = !this.announceToggle;
+        this.announcement.set(messages.join('. ') + (this.announceToggle ? '\u200B' : ''));
       });
     });
   }
 
   protected onFiles(files: File[]): void {
     const items: QueueItem[] = files.map((file) => {
-      const id = crypto.randomUUID();
+      const id = newId();
       const error = validateFile(file);
       if (!error) this.registry.add(id, file);
       return {
@@ -83,15 +91,43 @@ export class ImportPage {
 
   protected retry(id: string): void {
     this.store.dispatch(ImportQueueActions.retry({ id }));
+    this.focusAfterRender([`remove-${id}`]);
   }
 
-  protected remove(id: string): void {
-    this.store.dispatch(ImportQueueActions.removed({ id }));
-    this.registry.delete(id);
+  protected remove(item: QueueItem): void {
+    if (item.status === 'processing') return; // aria-disabled: still focusable, but inert
+    const items = this.items();
+    const index = items.findIndex((i) => i.id === item.id);
+    const neighbours = [items[index + 1], items[index - 1]].filter(Boolean);
+    this.store.dispatch(ImportQueueActions.removed({ id: item.id }));
+    this.focusAfterRender(neighbours.map((i) => `remove-${i.id}`));
   }
 
-  protected downloadZip(): void {
+  protected async downloadZip(): Promise<void> {
+    const { buildResultsZip } = await import('./zip-results');
     downloadBlob(buildResultsZip(this.doneItems()), 'wyniki-konwersji.zip');
+  }
+
+  protected onWindowDragOver(event: DragEvent): void {
+    event.preventDefault();
+    // Show a "not allowed" cursor anywhere outside the drop zone.
+    if (event.dataTransfer && !(event.target instanceof Element && event.target.closest('app-file-drop'))) {
+      event.dataTransfer.dropEffect = 'none';
+    }
+  }
+
+  /** Focuses the first existing element id, else the queue heading (the focused button may have left the DOM). */
+  private focusAfterRender(ids: string[]): void {
+    afterNextRender(
+      () => {
+        const root = this.host.nativeElement;
+        const target =
+          ids.map((id) => root.querySelector<HTMLElement>(`[id="${id}"]`)).find(Boolean) ??
+          root.querySelector<HTMLElement>('#queue-title');
+        target?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
   protected seconds(ms: number | null): string {

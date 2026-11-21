@@ -1,6 +1,7 @@
+import { inject, provideEnvironmentInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { ActionsSubject } from '@ngrx/store';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { ImportQueueActions } from '../../store/import-queue/import-queue.actions';
@@ -12,7 +13,14 @@ import { FileRegistry } from './file-registry';
 import { ImportPage } from './import-page';
 
 const dispatched = fn();
-const registryDelete = fn();
+let mockStore: MockStore;
+
+const stateOf = (items: QueueItem[]) => ({
+  [importQueueFeatureKey]: {
+    ids: items.map((i) => i.id),
+    entities: Object.fromEntries(items.map((i) => [i.id, i])),
+  },
+});
 
 const item = (p: Partial<QueueItem> & Pick<QueueItem, 'id' | 'name'>): QueueItem => ({
   size: 84 * 1024,
@@ -29,13 +37,9 @@ function withQueue(items: QueueItem[]) {
   return applicationConfig({
     providers: [
       provideRouter([]),
-      provideMockStore({
-        initialState: {
-          [importQueueFeatureKey]: {
-            ids: items.map((i) => i.id),
-            entities: Object.fromEntries(items.map((i) => [i.id, i])),
-          },
-        },
+      provideMockStore({ initialState: stateOf(items) }),
+      provideEnvironmentInitializer(() => {
+        mockStore = inject(MockStore);
       }),
       {
         provide: ActionsSubject,
@@ -45,7 +49,7 @@ function withQueue(items: QueueItem[]) {
           return s;
         },
       },
-      { provide: FileRegistry, useValue: { add: fn(), get: fn(), delete: registryDelete } },
+      { provide: FileRegistry, useValue: { add: fn(), get: fn(), delete: fn() } },
     ],
   });
 }
@@ -67,7 +71,6 @@ const meta: Meta<ImportPage> = {
   component: ImportPage,
   beforeEach: () => {
     dispatched.mockClear();
-    registryDelete.mockClear();
   },
 };
 export default meta;
@@ -98,9 +101,29 @@ export const Mixed: Story = {
     );
     await userEvent.click(c.getByRole('button', { name: 'Usuń formularz.jpe' }));
     expect(dispatched).toHaveBeenCalledWith(ImportQueueActions.removed({ id: 'e1' }));
-    expect(registryDelete).toHaveBeenCalledWith('e1');
     const card = c.getByRole('table').closest('app-card') as HTMLElement;
     expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+  },
+};
+
+export const AnnouncesEveryChange: Story = {
+  decorators: [withQueue([])],
+  play: async ({ canvasElement }) => {
+    const region = canvasElement.querySelector('[aria-live=polite]')!;
+    const text = () => region.textContent ?? '';
+    const bad = (n: string) => item({ id: n, name: `${n}.exe`, status: 'error', error: 'Zły typ' });
+    // three invalid files arriving at once: nothing is lost
+    mockStore.setState(stateOf([bad('a'), bad('b'), bad('c')]));
+    await waitFor(() => {
+      for (const n of ['a', 'b', 'c']) expect(text()).toContain(`${n}.exe: błąd – Zły typ`);
+    });
+    // the same error twice in a row still changes the text
+    const first = text();
+    mockStore.setState(stateOf([bad('a'), bad('b'), bad('c'), bad('d')]));
+    await waitFor(() => expect(text()).not.toBe(first));
+    const second = text();
+    mockStore.setState(stateOf([bad('a'), bad('b'), bad('c'), bad('d'), bad('e')]));
+    await waitFor(() => expect(text()).not.toBe(second));
   },
 };
 
