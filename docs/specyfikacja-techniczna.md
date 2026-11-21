@@ -177,15 +177,20 @@ backend/
       normalize.py           # LibreOffice: DOC→DOCX, ODS→XLSX (timeout, sandbox)
       extract/               # pdf.py, docx.py, xlsx.py, image.py → DocumentModel
       analyze.py             # prompt + wywołanie LLM → FormDraft
-      build/
-        sections.py          # sekcje predefiniowane (szablony)
-        fields.py            # mapowanie typów, walidatory, techName
-        dictionaries.py      # powiązania słowników + propozycje nowych
-        initial_data.py      # PESEL / PESEL_ADDRESS / MLPZ
-        states.py            # generator zapytań JSONata
-        layout.py            # x, y, rows, cols, questionOrder
-        pages.py             # podział na strony + flow.links
-      verify.py              # JSON Schema + reguły biznesowe + autonaprawa
+      issues.py              # Issue + kody ostrzeżeń/błędów (W01…, R01…)
+      build/                 # build_form / build_fallback → BuildResult
+        ir.py                #   reprezentacja pośrednia: strony → sekcje → pola, warunki
+        catalogs.py          #   ładowanie katalogów słowników, danych inicjalnych, schematu
+        html.py              #   opisy HTML (escape tekstu ze szkicu, linki zewnętrzne)
+        sections.py          #   sekcje predefiniowane (szablony) + BuildOptions
+        fields.py            #   mapowanie typów, walidatory, techName
+        dictionaries.py      #   powiązania słowników + propozycje nowych
+        initial_data.py      #   PESEL / PESEL_ADDRESS / MLPZ
+        states.py            #   generator i tester zapytań JSONata
+        layout.py            #   x, y, rows, cols (questionOrder = y)
+        pages.py             #   strony przedmiotu, rozwiązywanie warunków, flow.links
+        serialize.py         #   IR → FormDefinition (kształt wzorców)
+      verify.py              # JSON Schema + reguły R01–R15 + autonaprawa
     models/
       document.py            # DocumentModel (wynik ekstrakcji)
       draft.py               # FormDraft (wynik LLM, schemat structured output)
@@ -448,6 +453,12 @@ FormDefinition
 | D8 | Standard: `FILE_UPLOADER` ma formaty, limit rozmiaru i liczbę plików, ale schemat nie ma na to pól | Wartości wpisujemy do `description` pola (czytelne dla obywatela). Dedykowane klucze tylko po potwierdzeniu (Q4) |
 | D9 | Standard wymienia walidację telefonu i wzorzec regex (KRS `^\d{10}$`), lista walidatorów ich nie ma | Telefon: słownik numerów kierunkowych + pole tekstowe bez walidatora. KRS: opis z formatem. Regex tylko po potwierdzeniu klucza (Q5) |
 | D10 | Wzorce: pola adresu i kontaktu z `MLPZ.*` nie są `readOnly`, a „Dane inicjalne” wymagają `readOnly` | „Twoje dane” i dane z PESEL: `readOnly`. Adres i kontakt z MLPZ: edytowalne jak we wzorcu, bo standard mówi „możesz je zmienić lub usunąć” (Q6) |
+| D11 | Standard opisuje checkboxy „Brak nazwy ulicy / numeru lokalu / kodu pocztowego”, wzorce ich nie mają | Szablon adresu 1:1 ze wzorców, bez checkboxów (opcja renderera). Osobne pola dla Polski i zagranicy (`ulica` / `ulica_zagranica`), sufiks kontekstu przed `_zagranica` |
+| D12 | D9 zakładała osobny numer kierunkowy w „Danych do kontaktu”, wzorce i standard go nie mają | Tylko „Numer telefonu” i „Adres e-mail” (MLPZ). `NUMERY_KIERUNKOWE` tylko dla pól z semantyką prefiksu |
+| D13 | Wzorce różnią się szczegółami sekcji predefiniowanych (PESEL innej osoby, REGON/KRS, `TERYT_DOWODOWY` vs `TERYT_4G_DOWODOWY`, etykiety uploadów, literówka „pełnomonictwo”) | Źródło główne: wzorzec nadpłaty, uzupełniony o standard (PESEL innej osoby, REGON, KRS). Wszystkie adresy: `TERYT_4G_DOWODOWY` z `multiLevelTree`. Lista odstępstw w `tests/golden/test_reference_forms.py` (`RENAMES`, `DICTIONARY_DEVIATIONS`, `SECTION_RENAMES`) |
+| D14 | Układ i opisy we wzorcach | `questionOrder = y`; `rows` sekcji = liczba pól + 1; `description` sekcji zawsze dokumentem HTML (także pustym), niepusty opis pola też HTML; tytuł `TEXT_BLOCK` i `CONSENT_SECTION` pusty |
+| D15 | jsonata-python nie obsługuje `\'` w literałach | Tytuł strony lub `techName` z apostrofem trafia do zapytania w cudzysłowie `"…"` (JSONata traktuje oba rodzaje literałów tak samo) |
+| D16 | Przykład `FormDraft` w §5.4 jest szerszy niż kontrakt LLM (`docs/superpowers/specs/2026-11-21-llm-models-design.md` §5.2) | Obowiązuje kontrakt LLM: bez `semantic`, `addresses`, `summaryInfo`; `visibleWhen` przez `field_id`. `build/` wykrywa semantykę (walidatory, `Kraje`, `NUMERY_KIERUNKOWE`) z etykiety; adres wnioskodawcy to zawsze „Adres zamieszkania”, siedziby i innej osoby wynikają z `applicant_kinds`; strona końcowa bez „Podsumowania”; propozycje słowników (O2) do czasu nowego źródła nie powstają |
 
 ---
 

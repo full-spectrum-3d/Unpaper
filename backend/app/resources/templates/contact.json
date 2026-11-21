@@ -1,0 +1,26 @@
+{
+  "key": "dane_do_kontaktu",
+  "type": "SECTION",
+  "title": "Dane do kontaktu",
+  "techName": "dane_do_kontaktu",
+  "descriptionHtml": "<p>Wpisanie danych do kontaktu może przyspieszyć załatwienie sprawy. Urzędnik będzie mógł skontaktować się z Tobą w przypadku pytań lub wątpliwości.</p><p>Jeśli widzisz uzupełnione dane, sprawdź, czy są poprawne. Możesz je zmienić lub usunąć.</p>",
+  "fields": [
+    {
+      "key": "numer_telefonu",
+      "type": "TEXT_FIELD",
+      "title": "Numer telefonu",
+      "techName": "numer_telefonu",
+      "initialData": "MLPZ.phoneNumber"
+    },
+    {
+      "key": "adres_e_mail",
+      "type": "TEXT_FIELD",
+      "title": "Adres e-mail",
+      "techName": "adres_e_mail",
+      "validation": [
+        "EMAIL"
+      ],
+      "initialData": "MLPZ.email"
+    }
+  ]
+}

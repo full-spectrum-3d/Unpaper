@@ -1,0 +1,36 @@
+{
+  "key": "dane_innej_osoby",
+  "type": "SECTION",
+  "title": "Dane innej osoby",
+  "techName": "dane_innej_osoby",
+  "fields": [
+    {
+      "key": "imie_inna_osoba",
+      "type": "TEXT_FIELD",
+      "title": "Imię",
+      "techName": "imie_inna_osoba",
+      "validation": [
+        "REQUIRED"
+      ]
+    },
+    {
+      "key": "nazwisko_inna_osoba",
+      "type": "TEXT_FIELD",
+      "title": "Nazwisko",
+      "techName": "nazwisko_inna_osoba",
+      "validation": [
+        "REQUIRED"
+      ]
+    },
+    {
+      "key": "numer_pesel_inna_osoba",
+      "type": "TEXT_FIELD",
+      "title": "Numer PESEL",
+      "techName": "numer_pesel_inna_osoba",
+      "validation": [
+        "REQUIRED",
+        "PESEL"
+      ]
+    }
+  ]
+}

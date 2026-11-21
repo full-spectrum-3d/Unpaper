@@ -1,0 +1,42 @@
+{
+  "key": "twoje_dane",
+  "type": "SECTION",
+  "title": "Twoje dane",
+  "techName": "twoje_dane",
+  "fields": [
+    {
+      "key": "imie",
+      "type": "TEXT_FIELD",
+      "title": "Imię",
+      "techName": "imie",
+      "validation": [
+        "REQUIRED"
+      ],
+      "readOnly": true,
+      "initialData": "IDENTITY.name"
+    },
+    {
+      "key": "nazwisko",
+      "type": "TEXT_FIELD",
+      "title": "Nazwisko",
+      "techName": "nazwisko",
+      "validation": [
+        "REQUIRED"
+      ],
+      "readOnly": true,
+      "initialData": "IDENTITY.surname"
+    },
+    {
+      "key": "numer_pesel",
+      "type": "TEXT_FIELD",
+      "title": "Numer PESEL",
+      "techName": "numer_pesel",
+      "validation": [
+        "REQUIRED",
+        "PESEL"
+      ],
+      "readOnly": true,
+      "initialData": "IDENTITY.pesel"
+    }
+  ]
+}
