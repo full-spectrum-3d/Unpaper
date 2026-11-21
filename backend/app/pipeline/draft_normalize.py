@@ -29,6 +29,19 @@ _FILL = re.compile(r"[.…_]{3,}")
 _UNNAMED_ATTACHMENT = re.compile(r"(?i)^\s*(załącznik|zał\.?)?\s*(nr\.?\s*)?\d*\s*[.)]?\s*$")
 _WHITESPACE = re.compile(r"\s+")
 _WORD = re.compile(r"\w+")
+_LABEL_EDGES = re.compile(r"^[\s.…_:;,]+|[\s:;,]+$")
+
+# Etykieta zdaniowa z blankietu („W miejscowości”) → rzeczownik w mianowniku.
+# Przyimek zdejmujemy tylko wtedy, gdy reszta to jedno słowo z tego słownika.
+_PREPOSITIONS = frozenset({"w", "we", "przy", "na", "do", "z", "ze"})
+_NOMINATIVES = {
+    "miejscowości": "Miejscowość", "ulicy": "Ulica", "obrębie": "Obręb", "gminie": "Gmina",
+    "powiecie": "Powiat", "województwie": "Województwo", "mieście": "Miasto", "wsi": "Wieś",
+    "dzielnicy": "Dzielnica", "osiedlu": "Osiedle", "działce": "Działka", "dniu": "Data",
+    "dnia": "Data", "terminie": "Termin", "kwocie": "Kwota", "roku": "Rok",
+}  # fmt: skip
+# Skróty na początku etykiety; standard zakazuje skrótów w etykietach.
+_ABBREVIATIONS = {"nr": "Numer", "tel": "Telefon", "ul": "Ulica"}
 
 
 def matches_text(needle: str, haystack: str, threshold: float) -> bool:
@@ -56,6 +69,7 @@ def normalize_draft(
     repair_conditions(data, warnings)
     _normalize_title_case(data, warnings)
     _check_labels(data, doc_text, warnings)
+    _normalize_labels(data, warnings)
     _check_authority(draft, doc_text, warnings)
     remove_empty_containers(data, warnings)
 
@@ -234,6 +248,34 @@ def _normalize_title_case(data: dict[str, Any], warnings: list[ConversionWarning
             path="title",
         )
     )
+
+
+def normalize_label(label: str) -> str:
+    """Etykieta w formie rzeczownikowej: bez przyimka, skrótu i znaków brzegowych."""
+    text = _LABEL_EDGES.sub("", label)
+    words = text.split()
+    if len(words) == 2 and words[0].casefold() in _PREPOSITIONS:
+        noun = _NOMINATIVES.get(words[1].casefold())
+        if noun:
+            return noun
+    if words and (full := _ABBREVIATIONS.get(words[0].casefold().removesuffix("."))):
+        words[0] = full
+    text = " ".join(words)
+    return text[:1].upper() + text[1:]
+
+
+def _normalize_labels(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    for path, field in iter_field_dicts(data):
+        fixed = normalize_label(field["label"])
+        if fixed and fixed != field["label"]:
+            warnings.append(
+                ConversionWarning(
+                    code="W32_LABEL_NORMALIZED",
+                    message=f"Etykietę „{field['label']}” poprawiono na „{fixed}”.",
+                    path=path,
+                )
+            )
+            field["label"] = fixed
 
 
 def _check_labels(data: dict[str, Any], doc_text: str, warnings: list[ConversionWarning]) -> None:

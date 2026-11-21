@@ -66,6 +66,11 @@ SECTION_RENAMES: dict[tuple[str, str], str] = {
     ("numer_porzadkowy", "zgoda_sekcja"): "zgoda_wyrazenie"
 }
 
+# Pola adresu, które zasłania checkbox „Brak …” (standard; wzorce go nie zawierają).
+NO_DATA_GUARDED = re.compile(
+    r"(ulica|kod_pocztowy|numer_lokalu)(_(siedziba|inna_osoba))?(_zagranica)?"
+)
+
 _DICT_KEYS = ("dictionaryName", "multiLevelTree", "searchEnabled")
 # Minimalne liczby faktycznie porównanych elementów (ochrona przed pustymi testami).
 MIN_COUNTS = {
@@ -220,7 +225,15 @@ def test_states_match_reference(sample: str) -> None:
         if not item.ref.get("states"):
             continue
         assert item.ours is not None, (sample, item.key)
-        assert _states(item.ours) == _states(item.ref), (sample, item.key)
+        ours, ref = _states(item.ours), _states(item.ref)
+        if NO_DATA_GUARDED.fullmatch(item.key[1]):
+            # checkbox „Brak …” (standard) dokłada do warunku wzorca drugi człon
+            assert len(ours) == len(ref), (sample, item.key)
+            for (o_type, o_query), (r_type, r_query) in zip(ours, ref, strict=True):
+                assert o_type == r_type
+                assert r_query in o_query and "Brak" in o_query, (sample, item.key)
+        else:
+            assert ours == ref, (sample, item.key)
         compared += 1
     assert compared >= MIN_COUNTS[sample]["states"]
 

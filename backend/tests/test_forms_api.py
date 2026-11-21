@@ -189,3 +189,52 @@ def test_initial_data_sources() -> None:
     mlpz = next(s for s in sources if s["source"] == "MLPZ")
     assert mlpz["name"] == "Dane zalogowanego użytkownika"
     assert {"attribute": "name", "ref": "MLPZ.name"}.items() <= mlpz["attributes"][0].items()
+
+
+def _identity_prefixes(source: str | None, default: str = "MLPZ") -> set[str]:
+    client, _ = _client(initial_data_identity_source=default)
+    params = {} if source is None else {"identitySource": source}
+    with client:
+        response = _post(client, **params)
+    assert response.status_code == 200, response.text
+    refs: set[str] = set()
+    for tab in response.json()["tabs"]:
+        for question in tab["questions"]:
+            field = question["field"]
+            if field["techName"] != "twoje_dane":
+                continue
+            for child in field["repeatingSectionGrid"]:
+                data = child["field"].get("defaultValue")
+                if isinstance(data, str) and data.startswith(("PESEL.", "MLPZ.")):
+                    refs.add(data.split(".")[0])
+    return refs
+
+
+@pytest.mark.parametrize("source", ["PESEL", "MLPZ"])
+def test_identity_source_per_request(source: str) -> None:
+    other = "MLPZ" if source == "PESEL" else "PESEL"
+    assert _identity_prefixes(source, default=other) == {source}
+
+
+def test_identity_source_defaults_to_settings() -> None:
+    assert _identity_prefixes(None, default="PESEL") == {"PESEL"}
+    assert _identity_prefixes(None, default="MLPZ") == {"MLPZ"}
+
+
+def test_identity_source_invalid_is_validation_error() -> None:
+    client, _ = _client([])
+    with client:
+        response = _post(client, identitySource="ZUS")
+    assert response.status_code == 422
+    assert response.json()["code"] == "VALIDATION_ERROR"
+
+
+def test_missing_rodo_url_warns_in_report() -> None:
+    def codes(**settings: Any) -> set[str]:
+        client, _ = _client(**settings)
+        with client:
+            body = _post(client, report="true").json()
+        return {w["code"] for w in body["report"]["warnings"]}
+
+    assert "W28_RODO_CLAUSE_URL_MISSING" in codes()
+    assert "W28_RODO_CLAUSE_URL_MISSING" not in codes(rodo_clause_url="https://bip.example.org/r")

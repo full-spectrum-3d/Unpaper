@@ -19,7 +19,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
-from typing import Any
+from typing import Any, Literal
 
 import anyio.to_thread
 
@@ -71,6 +71,7 @@ async def convert_upload(
     deadline: float,
     clock: Callable[[], float] = time.monotonic,
     ocr: OcrEngine | None = None,
+    identity_source: Literal["MLPZ", "PESEL"] | None = None,
 ) -> ConversionResult:
     """Plik po walidacji → formularz i raport. Błędy pliku i timeouty to `AppError`."""
     started = clock()
@@ -94,7 +95,7 @@ async def convert_upload(
     analysis = await analyze(extraction.document, settings, client, deadline=deadline, clock=clock)
     mark = lap("analyzeMs", mark)
 
-    options = BuildOptions.from_settings(settings)
+    options = BuildOptions.from_settings(settings, identity_source)
     built, checked, rebuilt = await anyio.to_thread.run_sync(
         partial(_build_and_verify, analysis.draft, options)
     )

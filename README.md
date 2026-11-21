@@ -309,7 +309,7 @@ sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
 | `INITIAL_DATA_IDENTITY_SOURCE` | `MLPZ` | źródło danych „Twoje dane”: `MLPZ` albo `PESEL` |
 | `FINISH_PAGE_STYLE` | `sample` | strona końcowa jak we wzorcach (`sample`) albo `info_section` |
 | `MAX_SECTIONS_PER_PAGE` | `8` | powyżej tej liczby sekcji przedmiot wniosku dzielony jest na kolejne strony |
-| `RODO_CLAUSE_URL` | — | adres klauzuli informacyjnej RODO linkowanej w sekcji zgód |
+| `RODO_CLAUSE_URL` | — | adres klauzuli informacyjnej RODO (np. w BIP) linkowanej w sekcji zgód; bez niego zgoda jest zwykłym tekstem bez linku, a raport konwersji ma ostrzeżenie `W28_RODO_CLAUSE_URL_MISSING` |
 
 ### Aplikacja i HTTP
 
@@ -336,6 +336,7 @@ Zmiana hasła: `make password-hash`, wklej hash do `.env` i wykonaj `docker comp
 | POST | `/auth/token` | `application/x-www-form-urlencoded`: `username`, `password` | `200 {access_token, token_type: "bearer", expires_in}`; 401 przy złych danych |
 | POST | `/forms/convert` | `multipart/form-data`: `file` (dokładnie jeden plik), opcjonalnie `password` dla dokumentu z hasłem | `200` JSON w formacie importu; nagłówek `X-Conversion-Warnings: <liczba>` |
 | POST | `/forms/convert?report=true` | jak wyżej | `200 {form, report}` |
+| POST | `/forms/convert?identitySource=PESEL` | jak wyżej; opcjonalny parametr query `identitySource` (`PESEL` albo `MLPZ`) wybiera źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; brak = `INITIAL_DATA_IDENTITY_SOURCE`; inna wartość: 422 `VALIDATION_ERROR` | jak wyżej |
 | POST | `/forms/validate` | `application/json`: JSON formularza | `200 {valid, errors[], warnings[]}` (bez autonaprawy) |
 | GET | `/dictionaries` | — | słowniki: predefiniowane (`PREDEFINED`) i proponowane (`PROPOSED`) |
 | GET | `/initial-data-sources` | — | źródła danych inicjalnych (`PESEL`, `PESEL_ADDRESS`, `MLPZ`) z atrybutami i referencją do `defaultValue` |
@@ -404,7 +405,12 @@ Raport (`report=true`):
 
 Najczęstsze ostrzeżenia: `W01_LLM_FALLBACK` i `W24_RULE_BASED_DRAFT` (szkic z reguł,
 bez modelu), `W12_LOW_OCR_CONFIDENCE` (słaba jakość skanu), `W13_FIELD_NOT_IN_DOCUMENT`
-(pole, którego etykiety nie ma w dokumencie), `W27_FORM_REBUILT` (formularz zastępczy).
+(pole, którego etykiety nie ma w dokumencie), `W27_FORM_REBUILT` (formularz zastępczy),
+`W28_RODO_CLAUSE_URL_MISSING` (zgoda RODO bez linku: ustaw `RODO_CLAUSE_URL`),
+`W29_FINISH_NOT_INFO` (strona końcowa w układzie wzorców zamiast `INFO_SECTION`),
+`W30_ID_FORMAT` (`id` spoza formatu UUID), `W31_TITLE_LEGAL_REFERENCE` (z tytułu usunięto
+odwołanie do przepisu), `W32_LABEL_NORMALIZED` (etykieta poprawiona, np. „W miejscowości”
+na „Miejscowość”).
 
 ### Walidacja pliku
 

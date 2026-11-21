@@ -67,3 +67,26 @@ def test_schema_rejects_numeric_default_in_nested_grid() -> None:
         ]
     }
     assert list(Draft202012Validator(load_form_schema()).iter_errors(form))
+
+
+def test_external_link_keeps_accessible_name() -> None:
+    link = external_link("https://x.pl", "Tekst <linku>")
+    assert 'target="_blank"' in link and 'rel="noopener noreferrer"' in link
+    assert 'aria-label="Tekst &lt;linku&gt; – link otwiera się w nowej karcie"' in link  # noqa: RUF001
+    assert 'title="Tekst &lt;linku&gt;"' in link
+
+
+def test_accessible_links_rewrites_template_labels() -> None:
+    from app.pipeline.build.html import accessible_links
+
+    old = (
+        '<p><a href="https://x.pl" rel="noopener noreferrer" target="_blank" '
+        'aria-label="Link otwiera się w nowej karcie" title="x">'
+        '<b>Urząd</b> Miasta</a> i <a href="#kotwica">wewn.</a> '
+        '<a href="https://y.pl" target="_blank">bez rel</a></p>'
+    )
+    fixed = accessible_links(old)
+    assert 'aria-label="Link otwiera się w nowej karcie"' not in fixed
+    assert 'aria-label="Urząd Miasta – link otwiera się w nowej karcie"' in fixed  # noqa: RUF001
+    assert '<a href="#kotwica">wewn.</a>' in fixed
+    assert 'rel="noopener noreferrer"' in fixed.split("bez rel")[0].rsplit("<a", 1)[1]
