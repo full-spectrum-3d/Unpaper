@@ -3,13 +3,19 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, asapScheduler, catchError, filter, from, map, mergeMap, observeOn, of, tap, withLatestFrom } from 'rxjs';
-import { toUserMessage } from '../../core/api-error';
+import { errorCode, toUserMessage } from '../../core/api-error';
 import { BATCH_CONCURRENCY, CONVERT_FILE } from '../../features/import/convert-file';
 import { FileRegistry } from '../../features/import/file-registry';
 import { AuthActions } from '../auth/auth.actions';
 import { selectToken } from '../auth/auth.selectors';
 import { ImportQueueActions as A } from './import-queue.actions';
+import { PasswordState } from './import-queue.reducer';
 import { selectQueueItems } from './import-queue.selectors';
+
+const PASSWORD_STATES: Record<string, PasswordState> = {
+  DOCUMENT_PASSWORD_REQUIRED: 'required',
+  DOCUMENT_PASSWORD_INVALID: 'invalid',
+};
 
 @Injectable()
 export class ImportQueueEffects {
@@ -22,7 +28,15 @@ export class ImportQueueEffects {
 
   schedule$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(A.filesAdded, A.convertSucceeded, A.convertFailed, A.retry, A.removed, AuthActions.loginSuccess),
+      ofType(
+        A.filesAdded,
+        A.convertSucceeded,
+        A.convertFailed,
+        A.retry,
+        A.passwordSubmitted,
+        A.removed,
+        AuthActions.loginSuccess,
+      ),
       // Decide only once the dispatch queue has drained: inside it the state still lacks
       // already-queued actions (e.g. a synchronous failure), which caused duplicate starts.
       observeOn(asapScheduler),
@@ -87,17 +101,21 @@ export class ImportQueueEffects {
       mergeMap(([{ id, startedAt }]) => {
         const file = this.registry.get(id);
         if (!file) return of(A.convertFailed({ id, error: 'Plik niedostępny – dodaj go ponownie' }));
-        return this.convert(file).pipe(
+        return this.convert(file, this.registry.password(id)).pipe(
           tap(() => this.registry.delete(id)),
           map((result) => A.convertSucceeded({ id, result, durationMs: Date.now() - startedAt })),
-          catchError((e: unknown) =>
-            of(
+          catchError((e: unknown) => {
+            const passwordState = PASSWORD_STATES[errorCode(e) ?? ''] ?? null;
+            // A rejected password is never resent; the user types it again.
+            if (passwordState) this.registry.deletePassword(id);
+            return of(
               A.convertFailed({
                 id,
                 error: e instanceof HttpErrorResponse ? toUserMessage(e) : 'Wystąpił nieoczekiwany błąd',
+                passwordState,
               }),
-            ),
-          ),
+            );
+          }),
         );
       }),
     ),

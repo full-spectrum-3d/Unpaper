@@ -35,6 +35,44 @@
                 @if (i.error) {
                   <div [id]="'err-' + i.id" class="text-danger text-[12px]">{{ i.error }}</div>
                 }
+                @if (i.status === 'error' && i.passwordState) {
+                  <form
+                    novalidate
+                    class="mt-[6px] flex flex-wrap items-center gap-[8px]"
+                    (submit)="submitPassword($event, i, pw)"
+                  >
+                    <label [for]="'pw-' + i.id" class="sr-only">Hasło do {{ i.name }}</label>
+                    <input
+                      #pw
+                      [id]="'pw-' + i.id"
+                      type="password"
+                      autocomplete="off"
+                      required
+                      [attr.aria-describedby]="
+                        'err-' + i.id + (passwordHint()?.id === i.id ? ' pwhint-' + i.id : '')
+                      "
+                      [attr.aria-invalid]="
+                        i.passwordState === 'invalid' || passwordHint()?.id === i.id ? 'true' : null
+                      "
+                      class="border border-border-input rounded-field px-field-x py-field-y bg-surface text-fg text-body focus-ring"
+                    />
+                    <button
+                      appButton
+                      variant="primary"
+                      type="submit"
+                      [attr.aria-label]="'Odblokuj ' + i.name"
+                    >
+                      Odblokuj
+                    </button>
+                  </form>
+                  @if (passwordHint(); as hint) {
+                    @if (hint.id === i.id) {
+                      <div [id]="'pwhint-' + i.id" class="text-danger text-[12px]">
+                        {{ hint.text }}
+                      </div>
+                    }
+                  }
+                }
               </td>
               <td class="w-px whitespace-nowrap">{{ formatSize(i.size) }}</td>
               <td class="w-px whitespace-nowrap">
@@ -57,7 +95,7 @@
                       Otwórz wynik
                     </a>
                   }
-                  @if (i.status === 'error' && i.retryable) {
+                  @if (i.status === 'error' && i.retryable && !i.passwordState) {
                     <button
                       appButton
                       type="button"

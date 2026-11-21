@@ -109,8 +109,50 @@ describe('ImportQueueEffects', () => {
       A.convertFailed({
         id: '1',
         error: 'Usługa analizy formularzy jest chwilowo niedostępna. Spróbuj ponownie.',
+        passwordState: null,
       }),
     );
+  });
+
+  it('sends the stored password and forgets it after success', () => {
+    const convert = vi.fn<ConvertFileFn>(() => of({ ok: 1 }));
+    const { actions$, registry } = setup([running('1')], convert);
+    registry.add('1', new File(['x'], '1.pdf'));
+    registry.setPassword('1', 'tajne');
+    actions$.next(A.convertStarted({ id: '1', startedAt: 0 }));
+    expect(convert).toHaveBeenCalledWith(expect.any(File), 'tajne');
+    expect(registry.password('1')).toBeUndefined();
+  });
+
+  it.each([
+    ['DOCUMENT_PASSWORD_REQUIRED', 'required', 'Dokument jest zabezpieczony hasłem. Podaj hasło, aby go przetworzyć.'],
+    ['DOCUMENT_PASSWORD_INVALID', 'invalid', 'Hasło jest niepoprawne. Spróbuj ponownie.'],
+  ] as const)('maps %s to passwordState %s', (code, passwordState, error) => {
+    const err = new HttpErrorResponse({ status: 422, error: { code } });
+    const { actions$, out, registry } = setup([running('1')], () => throwError(() => err) as Observable<never>);
+    registry.add('1', new File(['x'], '1.pdf'));
+    registry.setPassword('1', 'zle');
+    actions$.next(A.convertStarted({ id: '1', startedAt: 0 }));
+    expect(out[0]).toEqual(A.convertFailed({ id: '1', error, passwordState }));
+    // The rejected password is dropped; the file stays for the next attempt.
+    expect(registry.password('1')).toBeUndefined();
+    expect(registry.get('1')).toBeDefined();
+  });
+
+  it('keeps the password after a non-password failure, so Ponów resends it', () => {
+    const err = new HttpErrorResponse({ status: 503, error: { code: 'LLM_UNAVAILABLE' } });
+    const { actions$, registry } = setup([running('1')], () => throwError(() => err) as Observable<never>);
+    registry.add('1', new File(['x'], '1.pdf'));
+    registry.setPassword('1', 'tajne');
+    actions$.next(A.convertStarted({ id: '1', startedAt: 0 }));
+    expect(registry.password('1')).toBe('tajne');
+  });
+
+  it('schedules a file again after passwordSubmitted', async () => {
+    const { actions$, out } = setup([item('1', 'pending')]);
+    actions$.next(A.passwordSubmitted({ id: '1' }));
+    await tick();
+    expect(out[0].type).toBe(A.convertStarted.type);
   });
 
   it('missing file fails', () => {
