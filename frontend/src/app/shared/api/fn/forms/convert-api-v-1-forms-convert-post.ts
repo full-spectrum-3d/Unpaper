@@ -9,15 +9,32 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface ConvertApiV1FormsConvertPost$Params {
+
+/**
+ * Dołącz raport konwersji (spec §6.2)
+ */
   report?: boolean;
+      body: {
+
+/**
+ * Dokładnie jeden plik: pdf, doc, docx, ods, xlsx, jpg, jpeg albo png
+ */
+'file': Blob;
+
+/**
+ * Hasło do dokumentu zabezpieczonego hasłem (po odpowiedzi DOCUMENT_PASSWORD_REQUIRED)
+ */
+'password'?: string;
+}
 }
 
-export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, params?: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: any;
 }>> {
   const rb = new RequestBuilder(rootUrl, convertApiV1FormsConvertPost.PATH, 'post');
   if (params) {
     rb.query('report', params.report, {});
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(

@@ -338,32 +338,177 @@
     },
     "/api/v1/forms/convert": {
       "post": {
-        "description": "Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).",
+        "description": "Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).",
         "operationId": "convert_api_v1_forms_convert_post",
         "parameters": [
           {
+            "description": "Dołącz raport konwersji (spec §6.2)",
             "in": "query",
             "name": "report",
             "required": false,
             "schema": {
               "default": false,
+              "description": "Dołącz raport konwersji (spec §6.2)",
               "title": "Report",
               "type": "boolean"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "file": {
+                    "description": "Dokładnie jeden plik: pdf, doc, docx, ods, xlsx, jpg, jpeg albo png",
+                    "format": "binary",
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "Hasło do dokumentu zabezpieczonego hasłem (po odpowiedzi DOCUMENT_PASSWORD_REQUIRED)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
                   "additionalProperties": true,
-                  "title": "Response Convert Api V1 Forms Convert Post",
                   "type": "object"
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Konfiguracja formularza w formacie importu (spec §7) albo, przy `report=true`, obiekt `{form, report}`. Nagłówek `X-Conversion-Warnings` podaje liczbę ostrzeżeń.",
+            "headers": {
+              "X-Conversion-Warnings": {
+                "description": "Liczba ostrzeżeń",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Brak pliku, kilka plików albo niedozwolona nazwa pliku"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Brak lub nieprawidłowy token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Token bez wymaganej roli"
+          },
+          "413": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Plik większy niż MAX_FILE_SIZE_MB"
+          },
+          "415": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Nieobsługiwany format albo zawartość niezgodna z rozszerzeniem"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem"
+          },
+          "504": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Przekroczono REQUEST_TIMEOUT_S"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Convert",
+        "tags": [
+          "forms"
+        ]
+      }
+    },
+    "/api/v1/forms/validate": {
+      "post": {
+        "description": "Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`.",
+        "operationId": "validate_api_v1_forms_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "description": "Konfiguracja formularza w formacie importu (spec §7)",
+                "title": "Form",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Validate Api V1 Forms Validate Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Wynik weryfikacji: JSON Schema i reguły R01-R15, bez autonaprawy"
           },
           "401": {
             "content": {
@@ -389,60 +534,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Convert",
-        "tags": [
-          "forms"
-        ]
-      }
-    },
-    "/api/v1/forms/validate": {
-      "post": {
-        "description": "Walidacja dowolnego JSON-a formularza → {valid, errors[], warnings[]}.",
-        "operationId": "validate_api_v1_forms_validate_post",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": true,
-                  "title": "Response Validate Api V1 Forms Validate Post",
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak lub nieprawidłowy token"
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetail"
-                }
-              }
-            },
-            "description": "Token bez wymaganej roli"
+            "description": "Ciało nie jest obiektem JSON"
           }
         },
         "security": [
@@ -507,6 +603,7 @@
     },
     "/api/v1/initial-data-sources": {
       "get": {
+        "description": "Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`.",
         "operationId": "list_initial_data_sources_api_v1_initial_data_sources_get",
         "responses": {
           "200": {

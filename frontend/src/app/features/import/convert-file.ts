@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 
 export const BATCH_CONCURRENCY = 2;
 
-// NOTE: the generated FormsService.convertApiV1FormsConvertPost has no request body yet, so a real provider needs the
-// backend OpenAPI to declare a multipart file upload (then regenerate) or a hand-written HttpClient.post with FormData.
+// NOTE: FormsService.convertApiV1FormsConvertPost now declares the multipart body ({file, password?}); a real provider
+// can call it instead of the mock (see provideMockConvertFile in app.config.ts).
 export type ConvertFileFn = (file: File) => Observable<unknown>;
 
 export const CONVERT_FILE = new InjectionToken<ConvertFileFn>('CONVERT_FILE');

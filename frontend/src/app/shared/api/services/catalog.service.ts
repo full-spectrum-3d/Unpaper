@@ -70,7 +70,7 @@ export class CatalogService extends BaseService {
   /**
    * List Initial Data Sources.
    *
-   *
+   * Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `listInitialDataSourcesApiV1InitialDataSourcesGet()` instead.
@@ -87,7 +87,7 @@ export class CatalogService extends BaseService {
   /**
    * List Initial Data Sources.
    *
-   *
+   * Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `listInitialDataSourcesApiV1InitialDataSourcesGet$Response()` instead.

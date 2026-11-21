@@ -332,15 +332,20 @@ Domyślna odpowiedź `/forms/convert` to **czysty JSON w formacie importu**, bez
 
 ```json
 {
-  "sourceFile": { "name": "Wniosek o zwrot opłaty skarbowej.pdf", "mime": "application/pdf", "sizeBytes": 183211, "pages": 2 },
-  "extraction": { "method": "pdf_text|ocr|docx|xlsx", "ocrMeanConfidence": null },
-  "llm": { "model": "qwen3:8b", "durationMs": 21430, "retries": 0, "fallback": false },
+  "sourceFile": { "name": "Wniosek o zwrot opłaty skarbowej.pdf", "mime": "application/pdf", "sizeBytes": 183211, "pages": 2, "decrypted": false },
+  "extraction": { "method": "pdf_text|ocr|docx|xlsx", "convertedToOpenXml": false, "ocrMeanConfidence": null, "blocks": 87 },
+  "llm": { "model": "qwen3:8b", "durationMs": 21430, "retries": 0, "fallback": false, "fallbackReason": null,
+           "ruleBasedDraft": false, "promptTokens": 2192, "outputTokens": 318 },
   "stats": { "tabs": 4, "sections": 15, "fields": 62, "states": 27 },
-  "dictionaryProposals": [ { "name": "RODZAJE_PODATKOW", "items": ["…"], "usedBy": ["nazwa_podatku"] } ],
+  "dictionaryProposals": [ { "name": "RODZAJE_PODATKOW", "title": "…", "items": [ { "code": "…", "name": "…", "techName": "…" } ], "usedBy": ["nazwa_podatku"] } ],
   "warnings": [ { "code": "W12_LOW_OCR_CONFIDENCE", "message": "…", "path": "tabs[1].questions[0]" } ],
+  "fixes": [ { "code": "R12_DUPLICATE_TECH_NAME", "message": "…", "path": "…" } ],
+  "timings": { "normalizeMs": 0, "extractMs": 140, "analyzeMs": 21430, "buildMs": 310 },
   "durationMs": 25110
 }
 ```
+
+Implementacja: `pipeline/convert.py` (`convert_upload`) łączy etapy [2]–[6]; endpoint (`api/v1/forms.py`) odbiera plik strumieniowo, waliduje go ([1]), czeka na miejsce w `MAX_CONCURRENT_JOBS` i liczy `REQUEST_TIMEOUT_S` od wejścia żądania (czekanie na semafor też się wlicza; po terminie 504 `PROCESSING_TIMEOUT`). `fixes` to poprawki autonaprawy z kroku [6]. Gdy formularz po autonaprawie nadal ma błędy, zwracamy formularz zastępczy z ostrzeżeniem `W27_FORM_REBUILT`.
 
 ### 6.3. Walidacja pliku (wymóg M4)
 

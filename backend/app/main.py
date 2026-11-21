@@ -65,6 +65,8 @@ def create_app(
     app.state.settings = settings
     app.state.llm_client = llm_client
     app.state.converter = find_converter(settings) if converter == "auto" else converter
+    # Limit równoległych konwersji (spec §10.2): Ollama na CPU i tak liczy po kolei.
+    app.state.job_semaphore = asyncio.Semaphore(settings.max_concurrent_jobs)
 
     install_error_handlers(app)
     app.add_middleware(

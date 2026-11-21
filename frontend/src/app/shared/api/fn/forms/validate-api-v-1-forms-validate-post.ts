@@ -9,13 +9,17 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface ValidateApiV1FormsValidatePost$Params {
+      body: {
+[key: string]: any;
+}
 }
 
-export function validateApiV1FormsValidatePost(http: HttpClient, rootUrl: string, params?: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function validateApiV1FormsValidatePost(http: HttpClient, rootUrl: string, params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: any;
 }>> {
   const rb = new RequestBuilder(rootUrl, validateApiV1FormsValidatePost.PATH, 'post');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
