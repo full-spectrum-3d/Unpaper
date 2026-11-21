@@ -154,9 +154,12 @@ export class FormRenderer {
         const host = [...document.querySelectorAll<HTMLElement>('[data-field-id]')].find((h) =>
           errors.has(h.dataset['fieldId']!),
         );
-        const control = host?.querySelector<HTMLElement>(
-          'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])',
-        );
+        // The invalid control first: a tooltip button may precede it in the label row.
+        const control =
+          host?.querySelector<HTMLElement>('[aria-invalid="true"]:not([disabled])') ??
+          host?.querySelector<HTMLElement>(
+            'input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])',
+          );
         control?.focus();
         control?.scrollIntoView?.({ block: 'center' }); // absent in jsdom
       },

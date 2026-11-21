@@ -1,23 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { FieldBase } from './field-base';
+import { FieldLabel } from './field-label';
 
 @Component({
   selector: 'app-file-uploader-field',
+  imports: [FieldLabel],
   template: `
     @if (hasDescription()) {
       <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
     }
-    <span [id]="id() + '-label'" [class]="labelClass()">{{ label() }}</span>
+    <app-field-label
+      [label]="label()"
+      [labelId]="id() + '-label'"
+      [hidden]="!hasTitle()"
+      [tooltip]="tooltip()"
+      [tag]="tag()"
+    />
     <div
-      class="border border-border-input rounded-field bg-surface p-section"
+      class="border rounded-field bg-surface p-section"
+      [class]="error() ? 'border-danger' : 'border-border-input'"
       (dragover)="$event.preventDefault()"
-      (drop)="$event.preventDefault(); pick($any($event).dataTransfer.files)"
+      (drop)="$event.preventDefault(); readOnly() || pick($any($event).dataTransfer.files)"
     >
       <div class="flex justify-center">
         <button
           type="button"
-          class="border border-primary text-primary rounded-field px-field-x py-field-y font-semibold focus-ring"
-          [attr.aria-describedby]="id() + '-label'"
+          class="border border-primary text-primary rounded-field px-field-x py-field-y font-semibold focus-ring disabled:opacity-60 disabled:cursor-not-allowed"
+          [disabled]="readOnly()"
+          [attr.aria-describedby]="buttonDescribedBy()"
+          [attr.aria-invalid]="error() ? 'true' : null"
           (click)="input.click()"
         >
           Dodaj lub przeciągnij plik
@@ -56,10 +67,18 @@ import { FieldBase } from './field-base';
         </tbody>
       </table>
     </div>
+    @if (error(); as text) {
+      <small [id]="errorId()" class="block text-danger"
+        ><span aria-hidden="true">✕</span> {{ text }}</small
+      >
+    }
   `,
   host: { class: 'block' },
 })
 export class FileUploaderField extends FieldBase<string[]> {
+  protected readonly buttonDescribedBy = computed(() =>
+    [this.id() + '-label', this.describedBy()].filter(Boolean).join(' '),
+  );
   protected pick(files: FileList | null) {
     if (files?.length) this.set(Array.from(files, (f) => f.name));
   }

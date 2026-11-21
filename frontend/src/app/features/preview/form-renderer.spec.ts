@@ -146,7 +146,8 @@ describe('FormRenderer step validation', () => {
             id: 'sek',
             type: 'SECTION',
             repeatingSectionGrid: [
-              q({ id: 'imie', validation: ['REQUIRED'] }, 0),
+              // The tooltip button precedes the input; focus must still land on the input.
+              q({ id: 'imie', validation: ['REQUIRED'], tooltipMessage: 'Pomoc' }, 0),
               q({ id: 'nip', validation: ['NIP'] }, 1),
               q(
                 {
