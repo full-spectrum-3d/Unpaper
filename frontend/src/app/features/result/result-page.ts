@@ -20,15 +20,16 @@ import { resultFileName } from '../import/zip-results';
 import { isFormDefinition } from '../preview/form-definition';
 import { FormRenderer } from '../preview/form-renderer';
 import { formatJson } from './json-lines';
-import { asReport } from './report';
+import { asReport, fieldPaths, formatPercent } from './report';
 import { ReportView } from './report-view';
+import { ReviewPanel } from './review-panel';
 
 type Tab = 'preview' | 'json' | 'report';
 const TAB_LABELS: Record<Tab, string> = { preview: 'Podgląd formularza', json: 'JSON', report: 'Raport' };
 
 @Component({
   selector: 'app-result-page',
-  imports: [Card, Button, RouterLink, FormRenderer, ReportView],
+  imports: [Card, Button, RouterLink, FormRenderer, ReportView, ReviewPanel],
   templateUrl: './result-page.html',
   host: { class: 'block p-section' },
 })
@@ -55,6 +56,14 @@ export class ResultPage {
   readonly highlightPath = signal<string | null>(null);
   protected readonly report = computed(() => asReport(this.item()?.report));
   protected readonly json = computed(() => formatJson(this.item()?.result));
+  protected readonly fieldPaths = computed(() => fieldPaths(this.item()?.result));
+  /** One-line confidence summary above the tabs; null when the report has no confidence. */
+  protected readonly summary = computed(() => {
+    const confidence = this.report()?.confidence;
+    if (typeof confidence?.score !== 'number') return null;
+    const toReview = typeof confidence.toReview === 'number' ? confidence.toReview : 0;
+    return { score: formatPercent(confidence.score), toReview };
+  });
   /** JSON lines split into plain runs and the one highlighted range; newlines kept so textContent stays exact. */
   protected readonly segments = computed(() => {
     const { lines, ranges } = this.json();

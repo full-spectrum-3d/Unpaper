@@ -1,0 +1,163 @@
+@let v = view();
+@if (v) {
+  <div class="flex flex-col gap-section">
+    <section aria-labelledby="review-confidence">
+      <h2 id="review-confidence" class="text-section-title font-semibold">Pewność konwersji</h2>
+      <p class="mt-2 flex flex-wrap items-center gap-2">
+        <span
+          class="rounded-full px-[8px] py-px text-[12px] font-semibold {{
+            levels[v.level].classes
+          }}"
+        >
+          {{ percent(v.score) }} · {{ levels[v.level].label }}
+        </span>
+        <span>
+          {{ v.fromDocument.length }}
+          {{
+            pluralPl(v.fromDocument.length, 'pole odczytane', 'pola odczytane', 'pól odczytanych')
+          }}
+          z dokumentu, {{ v.templates }} {{ pluralPl(v.templates, 'pole', 'pola', 'pól') }} z sekcji
+          standardowych.
+        </span>
+      </p>
+      <p class="mt-1 text-fg-muted">
+        Ocena wskazuje, co sprawdzić w pierwszej kolejności. Nie zastępuje przeglądu formularza.
+      </p>
+    </section>
+
+    <section aria-labelledby="review-list">
+      <h2 id="review-list" class="text-section-title font-semibold">
+        Do sprawdzenia ({{ v.review.length }})
+      </h2>
+      @if (v.review.length) {
+        <ul class="mt-2 flex flex-col gap-3">
+          @for (item of v.review; track $index) {
+            <li class="flex flex-wrap items-start gap-3">
+              @if (item.source?.mark; as mark) {
+                <ng-container
+                  *ngTemplateOutlet="miniature; context: { mark, page: item.source!.page }"
+                />
+              }
+              <div class="min-w-0 flex-1">
+                <span
+                  class="rounded-full px-[8px] py-px text-[12px] font-semibold {{
+                    levels[item.level].classes
+                  }}"
+                >
+                  @if (item.confidence !== undefined) {
+                    {{ percent(item.confidence) }} ·
+                  }
+                  {{ item.level === 'low' ? 'ważne' : 'do przejrzenia' }}
+                </span>
+                <span class="font-semibold [overflow-wrap:anywhere]">{{ item.title }}</span>
+                @if (item.tab) {
+                  <span class="text-fg-muted"> · strona „{{ item.tab }}”</span>
+                }
+                @for (message of item.messages; track $index) {
+                  <div>{{ message }}</div>
+                }
+                @if (item.source; as source) {
+                  <div class="text-fg-muted [overflow-wrap:anywhere]">
+                    Źródło: strona {{ source.page }} dokumentu, „{{ source.text }}”
+                  </div>
+                } @else if (item.isField) {
+                  <div class="text-fg-muted">Źródło: nie znaleziono w dokumencie</div>
+                }
+                @if (item.path; as path) {
+                  <button
+                    appButton
+                    type="button"
+                    class="mt-1"
+                    [attr.aria-label]="'Pokaż w JSON: ' + item.title"
+                    (click)="showInJson.emit(path)"
+                  >
+                    Pokaż w JSON
+                  </button>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="text-fg-muted">Brak. Każde pole z dokumentu ma w nim potwierdzenie.</p>
+      }
+    </section>
+
+    <section aria-labelledby="review-origin">
+      <h2 id="review-origin" class="text-section-title font-semibold">
+        Pochodzenie pól ({{ v.fromDocument.length }})
+      </h2>
+      @if (v.fromDocument.length) {
+        <details class="mt-2">
+          <summary class="cursor-pointer text-primary focus-ring rounded-field">
+            Pokaż, skąd w dokumencie pochodzi każde pole
+          </summary>
+          <ul class="mt-2 flex flex-col gap-3">
+            @for (f of v.fromDocument; track f.techName) {
+              <li class="flex flex-wrap items-start gap-3">
+                @if (f.source?.mark; as mark) {
+                  <ng-container
+                    *ngTemplateOutlet="miniature; context: { mark, page: f.source!.page }"
+                  />
+                }
+                <div class="min-w-0 flex-1">
+                  <span
+                    class="rounded-full px-[8px] py-px text-[12px] font-semibold {{
+                      levels[f.level].classes
+                    }}"
+                  >
+                    {{ percent(f.confidence) }}
+                  </span>
+                  <span class="font-semibold [overflow-wrap:anywhere]">{{ f.title }}</span>
+                  @if (f.tab) {
+                    <span class="text-fg-muted"> · strona „{{ f.tab }}”</span>
+                  }
+                  @if (f.source; as source) {
+                    <div class="text-fg-muted [overflow-wrap:anywhere]">
+                      Strona {{ source.page }} dokumentu, „{{ source.text }}”
+                    </div>
+                  } @else {
+                    <div class="text-fg-muted">Nie znaleziono w dokumencie</div>
+                  }
+                  @if (f.path; as path) {
+                    <button
+                      appButton
+                      type="button"
+                      class="mt-1"
+                      [attr.aria-label]="'Pokaż w JSON: ' + f.title"
+                      (click)="showInJson.emit(path)"
+                    >
+                      Pokaż w JSON
+                    </button>
+                  }
+                </div>
+              </li>
+            }
+          </ul>
+        </details>
+      } @else {
+        <p class="text-fg-muted">
+          Żadne pole nie pochodzi z dokumentu: formularz zawiera tylko sekcje standardowe.
+        </p>
+      }
+    </section>
+  </div>
+
+  <ng-template #miniature let-mark="mark" let-page="page">
+    <span
+      role="img"
+      class="relative block shrink-0 border border-border bg-surface"
+      [style.width.px]="mark.width"
+      [style.height.px]="mark.height"
+      [attr.aria-label]="'Położenie na stronie ' + page + ' dokumentu'"
+    >
+      <span
+        class="absolute bg-warning"
+        [style.left.px]="mark.left"
+        [style.top.px]="mark.top"
+        [style.width.px]="mark.markWidth"
+        [style.height.px]="mark.markHeight"
+      ></span>
+    </span>
+  </ng-template>
+}
