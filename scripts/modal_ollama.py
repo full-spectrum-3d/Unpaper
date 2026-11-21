@@ -50,10 +50,13 @@ def _start_ollama() -> subprocess.Popen[bytes]:
 
 
 @app.function(volumes={MODELS_DIR: models}, timeout=1800)
-def pull() -> None:
-    """Pobiera modele do Volume, żeby zimny start GPU go nie ściągał."""
+def pull(names: str = "") -> None:
+    """Pobiera modele do Volume, żeby zimny start GPU ich nie ściągał.
+
+    `--names a,b` pobiera inne modele (np. do porównania w llm_eval).
+    """
     _start_ollama()
-    for name in [MODEL, *EXTRA_MODELS]:
+    for name in names.split(",") if names else [MODEL, *EXTRA_MODELS]:
         subprocess.run(["ollama", "pull", name], check=True)
     models.commit()
 
