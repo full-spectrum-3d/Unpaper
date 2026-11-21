@@ -1,0 +1,178 @@
+{
+ "source": {
+  "method": "docx",
+  "pages": 1
+ },
+ "pages": [
+  {
+   "number": 1,
+   "blocks": [
+    {
+     "id": "b1",
+     "kind": "paragraph",
+     "text": "Ulan-Majorat, dnia...................................."
+    },
+    {
+     "id": "b2",
+     "kind": "paragraph",
+     "text": "Wnioskodawca:"
+    },
+    {
+     "id": "b3",
+     "kind": "input_placeholder",
+     "text": "................................................................"
+    },
+    {
+     "id": "b4",
+     "kind": "paragraph",
+     "text": "Nazwisko i imię/Nazwa firmy"
+    },
+    {
+     "id": "b5",
+     "kind": "input_placeholder",
+     "text": "................................................................"
+    },
+    {
+     "id": "b6",
+     "kind": "paragraph",
+     "text": "adres zamieszkania/siedziba firmy"
+    },
+    {
+     "id": "b7",
+     "kind": "heading",
+     "text": "PESEL *................................................."
+    },
+    {
+     "id": "b8",
+     "kind": "heading",
+     "text": "NIP * ......................................................"
+    },
+    {
+     "id": "b9",
+     "kind": "input_placeholder",
+     "text": "......................................................."
+    },
+    {
+     "id": "b10",
+     "kind": "paragraph",
+     "text": "Urząd Gminy"
+    },
+    {
+     "id": "b11",
+     "kind": "paragraph",
+     "text": "Ulan-Majorat"
+    },
+    {
+     "id": "b12",
+     "kind": "paragraph",
+     "text": "Ulan-Majorat 57"
+    },
+    {
+     "id": "b13",
+     "kind": "paragraph",
+     "text": "21-307 Ulan-Majorat"
+    },
+    {
+     "id": "b14",
+     "kind": "heading",
+     "text": "WNIOSEK"
+    },
+    {
+     "id": "b15",
+     "kind": "paragraph",
+     "text": "o stwierdzenie nadpłaty podatku"
+    },
+    {
+     "id": "b16",
+     "kind": "paragraph",
+     "text": "Na podstawie art. 75 ustawy z dnia 29 sierpnia 1997 r. - Ordynacja podatkowa(Dz. U. z 2025 r. poz. 111 ze zm.) wnoszę o stwierdzenie nadpłaty z tytułu .......……………."
+    },
+    {
+     "id": "b17",
+     "kind": "paragraph",
+     "text": "........................................................................ w kwocie …..................................................."
+    },
+    {
+     "id": "b18",
+     "kind": "label",
+     "text": "(rodzaj podatku)"
+    },
+    {
+     "id": "b19",
+     "kind": "paragraph",
+     "text": "Uzasadnienie:"
+    },
+    {
+     "id": "b20",
+     "kind": "input_placeholder",
+     "text": "................................................................................................................................................"
+    },
+    {
+     "id": "b21",
+     "kind": "input_placeholder",
+     "text": "................................................................................................................................................"
+    },
+    {
+     "id": "b22",
+     "kind": "input_placeholder",
+     "text": "................................................................................................................................................"
+    },
+    {
+     "id": "b23",
+     "kind": "paragraph",
+     "text": "Kwotę nadpłaty proszę:"
+    },
+    {
+     "id": "b24",
+     "kind": "paragraph",
+     "text": "1) zaliczyć na poczet  przyszłego zobowiązania podatkowego z tytułu  ……….……………"
+    },
+    {
+     "id": "b25",
+     "kind": "input_placeholder",
+     "text": "…………………………………………………………………………………………………….."
+    },
+    {
+     "id": "b26",
+     "kind": "paragraph",
+     "text": "2) zwrócić przelewem na wskazany rachunek"
+    },
+    {
+     "id": "b27",
+     "kind": "table",
+     "text": ""
+    },
+    {
+     "id": "b28",
+     "kind": "input_placeholder",
+     "text": "....................……..............................."
+    },
+    {
+     "id": "b29",
+     "kind": "paragraph",
+     "text": "podpis wnioskodawcy lub osoby upoważnionej"
+    },
+    {
+     "id": "b30",
+     "kind": "paragraph",
+     "text": "w załączeniu:"
+    },
+    {
+     "id": "b31",
+     "kind": "paragraph",
+     "text": "1) korekta deklaracji"
+    },
+    {
+     "id": "b32",
+     "kind": "paragraph",
+     "text": "2) .................................................................."
+    },
+    {
+     "id": "b33",
+     "kind": "paragraph",
+     "text": "3) .................................................................."
+    }
+   ]
+  }
+ ]
+}
