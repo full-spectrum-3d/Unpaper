@@ -11,6 +11,7 @@ const item = (id: string, over: Partial<QueueItem> = {}): QueueItem => ({
   error: null,
   retryable: false,
   result: null,
+  report: null,
   startedAt: null,
   durationMs: null,
   ...over,
@@ -35,7 +36,7 @@ describe('importQueueReducer', () => {
     const processing = withItems(item('a', { status: 'processing' }));
     expect(importQueueReducer(processing, convertStarted({ id: 'a', startedAt: 1 }))).toBe(processing);
     const pending = withItems(item('a'));
-    expect(importQueueReducer(pending, convertSucceeded({ id: 'a', result: 1, durationMs: 1 }))).toBe(pending);
+    expect(importQueueReducer(pending, convertSucceeded({ id: 'a', result: 1, report: null, durationMs: 1 }))).toBe(pending);
     expect(importQueueReducer(pending, convertFailed({ id: 'a', error: 'x' }))).toBe(pending);
   });
 
@@ -43,9 +44,9 @@ describe('importQueueReducer', () => {
     const before = withItems(item('a', { status: 'processing', error: 'x' }));
     const state = importQueueReducer(
       before,
-      ImportQueueActions.convertSucceeded({ id: 'a', result: { k: 1 }, durationMs: 9 }),
+      ImportQueueActions.convertSucceeded({ id: 'a', result: { k: 1 }, report: { w: 1 }, durationMs: 9 }),
     );
-    expect(state.entities['a']).toMatchObject({ status: 'done', result: { k: 1 }, durationMs: 9, error: null });
+    expect(state.entities['a']).toMatchObject({ status: 'done', result: { k: 1 }, report: { w: 1 }, durationMs: 9, error: null });
   });
 
   it('convertFailed sets error, message, retryable true', () => {
@@ -134,6 +135,6 @@ describe('importQueueReducer session handling', () => {
 
   it('late result for a cleared item is a no-op', () => {
     const cleared = importQueueReducer(withItems(item('1', { status: 'processing' })), ImportQueueActions.cleared());
-    expect(importQueueReducer(cleared, ImportQueueActions.convertSucceeded({ id: '1', result: {}, durationMs: 1 }))).toBe(cleared);
+    expect(importQueueReducer(cleared, ImportQueueActions.convertSucceeded({ id: '1', result: {}, report: null, durationMs: 1 }))).toBe(cleared);
   });
 });

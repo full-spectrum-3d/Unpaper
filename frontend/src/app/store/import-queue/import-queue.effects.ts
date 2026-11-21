@@ -103,7 +103,7 @@ export class ImportQueueEffects {
         if (!file) return of(A.convertFailed({ id, error: 'Plik niedostępny – dodaj go ponownie' }));
         return this.convert(file, this.registry.password(id)).pipe(
           tap(() => this.registry.delete(id)),
-          map((result) => A.convertSucceeded({ id, result, durationMs: Date.now() - startedAt })),
+          map(({ form, report }) => A.convertSucceeded({ id, result: form, report, durationMs: Date.now() - startedAt })),
           catchError((e: unknown) => {
             const passwordState = PASSWORD_STATES[errorCode(e) ?? ''] ?? null;
             // A rejected password is never resent; the user types it again.

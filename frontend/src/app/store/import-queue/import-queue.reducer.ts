@@ -18,6 +18,8 @@ export interface QueueItem {
   /** false for client validation errors (retrying gives the same result), true for conversion errors */
   retryable: boolean;
   result: unknown | null;
+  /** Backend conversion report; null when absent. Never part of the downloaded files. */
+  report: unknown | null;
   startedAt: number | null;
   durationMs: number | null;
   passwordState?: PasswordState | null;
@@ -38,10 +40,10 @@ export const importQueueReducer = createReducer(
       ? state
       : adapter.updateOne({ id, changes: { status: 'processing', startedAt } }, state),
   ),
-  on(ImportQueueActions.convertSucceeded, (state, { id, result, durationMs }) =>
+  on(ImportQueueActions.convertSucceeded, (state, { id, result, report, durationMs }) =>
     state.entities[id]?.status !== 'processing'
       ? state
-      : adapter.updateOne({ id, changes: { status: 'done', result, durationMs, error: null } }, state),
+      : adapter.updateOne({ id, changes: { status: 'done', result, report, durationMs, error: null } }, state),
   ),
   on(ImportQueueActions.convertFailed, (state, { id, error, passwordState }) =>
     state.entities[id]?.status !== 'processing'

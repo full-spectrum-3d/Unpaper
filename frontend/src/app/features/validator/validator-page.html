@@ -1,0 +1,121 @@
+<main class="flex flex-col gap-section w-full max-w-[960px] mx-auto">
+  <div>
+    <h1 class="text-title font-semibold">Walidator JSON</h1>
+    <p class="text-fg-muted">Sprawdź, czy JSON formularza spełnia reguły COI.</p>
+  </div>
+  @if (missingItem()) {
+    <p role="status" class="text-fg-muted">
+      Nie znaleziono wyniku do sprawdzenia. Wklej JSON ręcznie.
+    </p>
+  }
+
+  <div class="flex flex-col gap-2">
+    <label for="validator-input" class="font-semibold">JSON formularza</label>
+    <textarea
+      #field
+      id="validator-input"
+      rows="16"
+      spellcheck="false"
+      class="border border-border-input rounded-field px-field-x py-field-y bg-surface text-fg font-mono focus-ring w-full"
+      [value]="text()"
+      [attr.aria-invalid]="inputError() ? 'true' : null"
+      [attr.aria-describedby]="inputError() ? 'validator-input-error' : null"
+      (input)="onInput($event)"
+    ></textarea>
+    @if (inputError(); as message) {
+      <p id="validator-input-error" class="text-danger">{{ message }}</p>
+    }
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <button appButton type="button" variant="secondary" (click)="file.click()">
+      Wgraj plik .json
+    </button>
+    <input #file type="file" accept=".json,application/json" hidden (change)="onFile($event)" />
+    <button
+      appButton
+      type="button"
+      variant="primary"
+      data-check
+      [disabled]="checking() || !text().trim()"
+      (click)="check()"
+    >
+      {{ checking() ? 'Sprawdzanie…' : 'Sprawdź' }}
+    </button>
+  </div>
+
+  @if (httpError(); as message) {
+    <p role="alert" class="text-danger">{{ message }}</p>
+  }
+
+  @if (result(); as r) {
+    <section class="flex flex-col gap-section" aria-labelledby="validator-result">
+      <h2
+        #resultHeading
+        id="validator-result"
+        tabindex="-1"
+        class="text-section-title font-semibold focus-ring"
+      >
+        Wynik
+      </h2>
+      @if (stale()) {
+        <p class="text-warning">JSON zmieniono po sprawdzeniu. Sprawdź ponownie.</p>
+      }
+      <p role="status" [class]="r.valid ? 'text-success' : ''">
+        @if (r.valid) {
+          <span aria-hidden="true">✓ </span>
+        }
+        {{ summary() }}
+      </p>
+
+      @for (
+        section of [
+          { title: 'Błędy', items: r.errors },
+          { title: 'Ostrzeżenia', items: r.warnings },
+        ];
+        track section.title
+      ) {
+        <section>
+          <h3 class="font-semibold">{{ section.title }} ({{ section.items.length }})</h3>
+          @if (section.items.length) {
+            <ul class="mt-2 flex flex-col gap-2">
+              @for (issue of section.items; track $index) {
+                <li>
+                  <span class="font-mono">{{ issue.code }}</span>
+                  {{ issue.message }}
+                  @if (issue.linked) {
+                    <button
+                      appButton
+                      type="button"
+                      class="ml-2"
+                      [attr.aria-label]="'Pokaż w JSON: ' + issue.code"
+                      (click)="showInJson(issue.path!)"
+                    >
+                      Pokaż w JSON
+                    </button>
+                  } @else if (issue.path) {
+                    <span class="text-fg-muted font-mono">{{ issue.path }}</span>
+                  }
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="text-fg-muted">Brak</p>
+          }
+        </section>
+      }
+
+      @if (checkedLines(); as lines) {
+        <section class="flex flex-col gap-2">
+          <h3 class="font-semibold">Sformatowany JSON</h3>
+          <app-json-view
+            class="block bg-surface border border-border rounded-card"
+            [lines]="lines"
+            [highlight]="highlight()"
+            label="Sprawdzany JSON"
+          />
+        </section>
+      }
+    </section>
+  }
+</main>

@@ -14,6 +14,11 @@ export interface ConvertApiV1FormsConvertPost$Params {
  * Dołącz raport konwersji (spec §6.2)
  */
   report?: boolean;
+
+/**
+ * Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; domyślnie INITIAL_DATA_IDENTITY_SOURCE
+ */
+  identitySource?: ('PESEL' | 'MLPZ' | null);
       body: {
 
 /**
@@ -34,6 +39,7 @@ export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, 
   const rb = new RequestBuilder(rootUrl, convertApiV1FormsConvertPost.PATH, 'post');
   if (params) {
     rb.query('report', params.report, {});
+    rb.query('identitySource', params.identitySource, {});
     rb.body(params.body, 'multipart/form-data');
   }
 

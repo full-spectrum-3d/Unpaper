@@ -16,10 +16,13 @@ class DocumentBuilder:
     def __init__(self, method: ExtractionMethod) -> None:
         self.method: ExtractionMethod = method
         self._pages: list[list[Block]] = []
+        self._sizes: list[tuple[float, float] | None] = []
         self._next_id = 1
 
-    def new_page(self) -> None:
+    def new_page(self, size: tuple[float, float] | None = None) -> None:
+        """`size` to (szerokość, wysokość) strony w jednostkach `bbox`, jeśli format je zna."""
         self._pages.append([])
+        self._sizes.append(size if size and size[0] > 0 and size[1] > 0 else None)
 
     def ensure_new_page(self) -> None:
         """Nowa strona, chyba że bieżąca jest jeszcze pusta (dwa podziały z rzędu)."""
@@ -58,7 +61,16 @@ class DocumentBuilder:
             pages.pop()
         if not pages:
             pages = [[]]
+        sizes = [*self._sizes, None][: len(pages)]
         return DocumentModel(
             source=SourceInfo(method=self.method, pages=len(pages)),
-            pages=[Page(number=i, blocks=blocks) for i, blocks in enumerate(pages, start=1)],
+            pages=[
+                Page(
+                    number=i,
+                    blocks=blocks,
+                    width=size[0] if size else None,
+                    height=size[1] if size else None,
+                )
+                for i, (blocks, size) in enumerate(zip(pages, sizes, strict=True), start=1)
+            ],
         )

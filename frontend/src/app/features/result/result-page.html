@@ -5,41 +5,61 @@
       <app-card>
         <h1 cardTitle class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
         <span cardActions class="flex flex-wrap items-center gap-2">
-          @if (form()) {
-            <span role="group" aria-label="Widok wyniku" class="flex gap-2">
+          <span role="tablist" aria-label="Widok wyniku" class="flex gap-2">
+            @for (t of tabs(); track t) {
               <button
                 appButton
                 type="button"
-                [variant]="jsonVisible() ? 'secondary' : 'primary'"
-                [attr.aria-pressed]="!jsonVisible()"
-                (click)="showJson.set(false)"
+                role="tab"
+                [id]="'result-tab-' + t"
+                [attr.aria-controls]="'result-panel-' + t"
+                [attr.aria-selected]="activeTab() === t"
+                [attr.tabindex]="activeTab() === t ? 0 : -1"
+                [variant]="activeTab() === t ? 'primary' : 'secondary'"
+                (click)="selectTab(t)"
+                (keydown)="onTabKeydown($event)"
               >
-                Podgląd formularza
+                {{ tabLabels[t] }}
               </button>
-              <button
-                appButton
-                type="button"
-                [variant]="jsonVisible() ? 'primary' : 'secondary'"
-                [attr.aria-pressed]="jsonVisible()"
-                (click)="showJson.set(true)"
-              >
-                JSON
-              </button>
-            </span>
-          }
+            }
+          </span>
           <button appButton type="button" variant="secondary" (click)="download()">Pobierz .json</button>
+          <a
+            routerLink="/validator"
+            [queryParams]="{ item: i.id }"
+            class="border rounded-field px-[12px] py-field-y font-semibold text-body focus-ring bg-surface text-primary border-primary hover:bg-primary-subtle"
+          >
+            Sprawdź w walidatorze
+          </a>
         </span>
+        @if (summary(); as s) {
+          <p class="flex flex-wrap items-center gap-2">
+            <span>Pewność konwersji: <strong>{{ s.score }}</strong>.</span>
+            @if (s.toReview) {
+              <button type="button" class="text-primary underline focus-ring rounded-field" (click)="selectTab('report')">
+                Do sprawdzenia: {{ s.toReview }}
+              </button>
+            } @else {
+              <span class="text-fg-muted">Nic do sprawdzenia.</span>
+            }
+          </p>
+        }
         @if (!form()) {
           <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
         }
-        @if (jsonVisible()) {
-          <pre
-            role="region"
-            tabindex="0"
-            aria-label="Wynik konwersji w formacie JSON"
-            class="overflow-auto p-[10px] text-[13px] font-mono focus-ring"
-          >{{ json() }}</pre>
-        }
+        <div id="result-panel-json" role="tabpanel" aria-labelledby="result-tab-json" [hidden]="activeTab() !== 'json'">
+          <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
+        </div>
+        <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
+          <app-review-panel
+            class="mb-section"
+            [report]="report()"
+            [ranges]="json().ranges"
+            [paths]="fieldPaths()"
+            (showInJson)="onShowInJson($event)"
+          />
+          <app-report-view [report]="report()" [ranges]="json().ranges" (showInJson)="onShowInJson($event)" />
+        </div>
       </app-card>
     } @else {
       <h1 class="text-title font-semibold">Wynik</h1>
@@ -47,8 +67,15 @@
     }
   </div>
   @if (form(); as f) {
-    <!-- Stays mounted while JSON is shown so answers and the current step survive the toggle. -->
-    <div data-theme="preview" class="bg-bg p-section" [hidden]="jsonVisible()">
+    <!-- Stays mounted on other tabs so answers and the current step survive switching. -->
+    <div
+      id="result-panel-preview"
+      role="tabpanel"
+      aria-labelledby="result-tab-preview"
+      data-theme="preview"
+      class="bg-bg p-section"
+      [hidden]="activeTab() !== 'preview'"
+    >
       <app-form-renderer [definition]="f" />
     </div>
   }

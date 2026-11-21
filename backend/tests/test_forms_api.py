@@ -75,6 +75,13 @@ def test_convert_with_report() -> None:
     assert report["stats"]["fields"] > 0 and report["durationMs"] >= 0
     assert set(report["timings"]) == {"normalizeMs", "extractMs", "analyzeMs", "buildMs"}
     assert int(response.headers["X-Conversion-Warnings"]) == len(report["warnings"])
+    # Mapa pochodzenia i lista „do sprawdzenia”.
+    assert 0 <= report["confidence"]["score"] <= 1
+    assert report["confidence"]["fieldsTotal"] == len(report["fields"]) > 0
+    assert report["confidence"]["toReview"] == len(report["review"])
+    assert {field["origin"] for field in report["fields"]} <= {"document", "template"}
+    names = {field["techName"] for field in report["fields"]}
+    assert all(item["techName"] in names for item in report["review"] if item["kind"] == "field")
 
 
 def test_llm_unavailable_still_returns_form() -> None:

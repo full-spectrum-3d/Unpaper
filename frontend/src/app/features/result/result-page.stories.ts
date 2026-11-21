@@ -1,8 +1,10 @@
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
+import { mockReport } from '../import/mock-report';
+import { formatJson } from './json-lines';
 import { QueueItem, importQueueFeatureKey } from '../../store/import-queue/import-queue.reducer';
 import { ResultPage } from './result-page';
 
@@ -14,11 +16,13 @@ const done: QueueItem = {
   error: null,
   retryable: false,
   result: nadplata,
+  report: null,
   startedAt: 0,
   durationMs: 12000,
 };
 
 const notAForm: QueueItem = { ...done, id: 'n1', result: { foo: 1 } };
+const withReport: QueueItem = { ...done, id: 'r1', report: mockReport(nadplata) };
 
 const meta: Meta<ResultPage> = {
   title: 'Ekrany/Wynik',
@@ -30,8 +34,8 @@ const meta: Meta<ResultPage> = {
         provideMockStore({
           initialState: {
             [importQueueFeatureKey]: {
-              ids: [done.id, notAForm.id],
-              entities: { [done.id]: done, [notAForm.id]: notAForm },
+              ids: [done.id, notAForm.id, withReport.id],
+              entities: { [done.id]: done, [notAForm.id]: notAForm, [withReport.id]: withReport },
             },
           },
         }),
@@ -47,6 +51,10 @@ const backPath = (c: ReturnType<typeof within>, name: string) =>
 
 const previewMessage = 'Nie można wyświetlić podglądu: wynik nie ma struktury formularza.';
 
+const tab = (c: ReturnType<typeof within>, name: string) => c.getByRole('tab', { name });
+// Found by label so the check also works while the JSON panel is hidden.
+const jsonRegion = (c: ReturnType<typeof within>) => c.getByLabelText('Wynik konwersji w formacie JSON');
+
 export const Done: Story = {
   args: { id: 'd1' },
   play: async ({ canvasElement }) => {
@@ -55,31 +63,99 @@ export const Done: Story = {
     const title = await c.findByRole('heading', { level: 2, name: nadplata.title });
     expect(title.closest('[data-theme="preview"]')).not.toBeNull();
     expect(title.closest('main')).not.toBeNull();
-    expect(c.getByRole('group', { name: 'Widok wyniku' })).toBeVisible();
     expect(c.queryByText(previewMessage)).toBeNull();
-    const previewBtn = c.getByRole('button', { name: 'Podgląd formularza' });
-    const jsonBtn = c.getByRole('button', { name: 'JSON' });
-    expect(previewBtn).toHaveAttribute('aria-pressed', 'true');
-    expect(jsonBtn).toHaveAttribute('aria-pressed', 'false');
-    expect(c.queryByLabelText('Wynik konwersji w formacie JSON')).toBeNull();
+    expect(c.queryByRole('button', { name: 'Podgląd formularza' })).toBeNull();
 
-    await userEvent.click(jsonBtn);
-    expect(jsonBtn).toHaveAttribute('aria-pressed', 'true');
-    const pre = c.getByLabelText('Wynik konwersji w formacie JSON');
-    expect(pre.tagName).toBe('PRE');
-    expect(pre).toHaveAttribute('tabindex', '0');
-    expect(pre.textContent).toContain('"title"');
-    expect(c.getByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(pre);
-    expect(
-      c.getByRole('heading', { level: 2, name: nadplata.title, hidden: true }),
-    ).not.toBeVisible();
-    expect(c.getByRole('button', { name: 'Pobierz .json' })).toBeVisible();
-    expect(backPath(c, '← Wróć do importu')).toBe('/import');
+    const tablist = c.getByRole('tablist', { name: 'Widok wyniku' });
+    const tabs = within(tablist).getAllByRole('tab');
+    expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Podgląd formularza', 'JSON', 'Raport']);
+    for (const t of tabs) {
+      const panel = canvasElement.querySelector(`#${t.getAttribute('aria-controls')}`)!;
+      expect(panel).toHaveAttribute('role', 'tabpanel');
+      expect(panel).toHaveAttribute('aria-labelledby', t.id);
+    }
+    const [preview, json, report] = tabs;
+    expect(preview).toHaveAttribute('aria-selected', 'true');
+    expect(preview).toHaveAttribute('tabindex', '0');
+    expect(json).toHaveAttribute('aria-selected', 'false');
+    expect(json).toHaveAttribute('tabindex', '-1');
+    expect(jsonRegion(c)).not.toBeVisible();
 
-    await userEvent.click(previewBtn);
-    expect(previewBtn).toHaveAttribute('aria-pressed', 'true');
+    // Answers survive leaving the preview tab.
+    const input = (c.getAllByRole('textbox') as HTMLInputElement[]).find((t) => !t.readOnly && !t.disabled)!;
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Jan');
+    expect(input.value).toBe('Jan');
+
+    preview.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(json).toHaveAttribute('aria-selected', 'true');
+    expect(json).toHaveFocus();
+    expect(c.getByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(jsonRegion(c));
+    expect(jsonRegion(c).tagName).toBe('PRE');
+    expect(jsonRegion(c).textContent).toBe(JSON.stringify(nadplata, null, 2));
+    expect(c.getByRole('heading', { level: 2, name: nadplata.title, hidden: true })).not.toBeVisible();
+    await userEvent.keyboard('{End}');
+    expect(report).toHaveAttribute('aria-selected', 'true');
+    expect(report).toHaveFocus();
+    expect(c.getByText('Raport niedostępny dla tego wyniku.')).toBeVisible();
+    await userEvent.keyboard('{Home}');
+    expect(preview).toHaveAttribute('aria-selected', 'true');
+    expect(preview).toHaveFocus();
+    expect(input.value).toBe('Jan');
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(report).toHaveAttribute('aria-selected', 'true');
+    expect(report).toHaveFocus();
+    await userEvent.click(preview);
     expect(c.getByRole('heading', { level: 2, name: nadplata.title })).toBeVisible();
-    expect(c.queryByLabelText('Wynik konwersji w formacie JSON')).toBeNull();
+    expect(input).toBeVisible();
+    expect(input.value).toBe('Jan');
+
+    expect(c.getByRole('button', { name: 'Pobierz .json' })).toBeVisible();
+    const validator = new URL((c.getByRole('link', { name: 'Sprawdź w walidatorze' }) as HTMLAnchorElement).href);
+    expect(validator.pathname + validator.search).toBe('/validator?item=d1');
+    expect(backPath(c, '← Wróć do importu')).toBe('/import');
+  },
+};
+
+export const ZRaportem: Story = {
+  args: { id: 'r1' },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const { ranges } = formatJson(nadplata);
+    const expectHighlighted = (path: string) => {
+      const fragment = c.getByLabelText(`Fragment JSON: ${path}`);
+      expect(fragment).toHaveFocus();
+      expect(fragment).toHaveClass('bg-warning-subtle');
+      const { start, end } = ranges.get(path)!;
+      const lines = [...fragment.querySelectorAll('[data-line]')].map((l) => Number(l.getAttribute('data-line')));
+      expect(lines).toEqual(Array.from({ length: end - start + 1 }, (_, i) => start + i));
+      expect(jsonRegion(c).querySelectorAll('.bg-warning-subtle')).toHaveLength(1);
+    };
+
+    const scroll = spyOn(Element.prototype, 'scrollIntoView');
+    try {
+      await userEvent.click(tab(c, 'Raport'));
+      await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W07_CHOICE_OPTIONS' }));
+      expect(tab(c, 'JSON')).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() => expectHighlighted('tabs[0].questions[1].field.repeatingSectionGrid[0]'));
+      // The first line of the range is centred, not the whole block.
+      const first = c.getByLabelText('Fragment JSON: tabs[0].questions[1].field.repeatingSectionGrid[0]').querySelector('[data-line]');
+      expect(scroll).toHaveBeenCalledWith({ block: 'center' });
+      expect(scroll.mock.contexts.at(-1)).toBe(first);
+    } finally {
+      scroll.mockRestore();
+    }
+    expect(c.getByRole('group', { name: 'Fragment JSON: tabs[0].questions[1].field.repeatingSectionGrid[0]' })).toHaveFocus();
+
+    // Leaving the JSON tab clears the highlight.
+    await userEvent.click(tab(c, 'Podgląd formularza'));
+    expect(jsonRegion(c).querySelector('.bg-warning-subtle')).toBeNull();
+
+    await userEvent.click(tab(c, 'Raport'));
+    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W02_LABEL_TOO_LONG' }));
+    // Ends with the highlight on screen so the a11y scan checks the fragment too.
+    await waitFor(() => expectHighlighted('tabs[1].questions[0].field.repeatingSectionGrid[1]'));
   },
 };
 
@@ -88,8 +164,11 @@ export const NotAForm: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     expect(c.getByText(previewMessage)).toBeVisible();
-    expect(c.queryByRole('button', { name: 'Podgląd formularza' })).toBeNull();
-    expect(c.getByLabelText('Wynik konwersji w formacie JSON').textContent).toContain('"foo"');
+    expect(c.queryByRole('tab', { name: 'Podgląd formularza' })).toBeNull();
+    expect(tab(c, 'JSON')).toHaveAttribute('aria-selected', 'true');
+    expect(jsonRegion(c).textContent).toBe(JSON.stringify({ foo: 1 }, null, 2));
+    await userEvent.click(tab(c, 'Raport'));
+    expect(c.getByText('Raport niedostępny dla tego wyniku.')).toBeVisible();
     expect(c.getByRole('button', { name: 'Pobierz .json' })).toBeVisible();
   },
 };

@@ -1,0 +1,96 @@
+@let v = view();
+@if (!v) {
+  <p class="text-fg-muted">Raport niedostępny dla tego wyniku.</p>
+} @else {
+  <div class="flex flex-col gap-section">
+    @for (section of [{ title: 'Ostrzeżenia', items: v.warnings }, { title: 'Poprawki autonaprawy', items: v.fixes }]; track section.title) {
+      <section>
+        <h2 class="text-section-title font-semibold">{{ section.title }} ({{ section.items.length }})</h2>
+        @if (section.items.length) {
+          <ul class="mt-2 flex flex-col gap-2">
+            @for (row of section.items; track $index) {
+              <li>
+                <span class="font-mono">{{ row.issue.code }}</span>
+                {{ row.issue.message }}
+                @switch (row.target) {
+                  @case ('link') {
+                    <button
+                      appButton
+                      type="button"
+                      class="ml-2"
+                      [attr.aria-label]="'Pokaż w JSON: ' + row.issue.code"
+                      (click)="showInJson.emit(row.issue.path!)"
+                    >
+                      Pokaż w JSON
+                    </button>
+                  }
+                  @case ('draft') {
+                    <span class="text-fg-muted font-mono">{{ row.issue.path }}</span>
+                    <span class="text-fg-muted"> (miejsce w szkicu, nie w wyniku)</span>
+                  }
+                  @case ('missing') {
+                    <span class="text-fg-muted font-mono">{{ row.issue.path }}</span>
+                    <span class="text-fg-muted"> (element nie występuje w wyniku)</span>
+                  }
+                }
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="text-fg-muted">Brak</p>
+        }
+      </section>
+    }
+
+    <section>
+      <h2 class="text-section-title font-semibold">Propozycje słowników ({{ v.dictionaries.length }})</h2>
+      @if (v.dictionaries.length) {
+        <ul class="mt-2 flex flex-col gap-2">
+          @for (d of v.dictionaries; track $index) {
+            <li>
+              <span class="font-mono">{{ d.name }}</span>
+              @if (d.title) { {{ d.title }} }
+              · {{ d.count }} {{ pluralPl(d.count, 'pozycja', 'pozycje', 'pozycji') }}
+              @if (d.description) {
+                <div class="text-fg-muted">{{ d.description }}</div>
+              }
+              @if (d.usedBy.length) {
+                <div class="text-fg-muted">Używa: {{ d.usedBy.join(', ') }}</div>
+              }
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="text-fg-muted">Brak</p>
+      }
+    </section>
+
+    <section>
+      <h2 class="text-section-title font-semibold">Statystyki</h2>
+      @if (v.stats.length) {
+        <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-4">
+          @for (s of v.stats; track s[0]) {
+            <dt class="text-fg-muted">{{ s[0] }}</dt>
+            <dd>{{ s[1] }}</dd>
+          }
+        </dl>
+      } @else {
+        <p class="text-fg-muted">Brak</p>
+      }
+    </section>
+
+    <section>
+      <h2 class="text-section-title font-semibold">Przetwarzanie</h2>
+      @if (v.rows.length) {
+        <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-4">
+          @for (row of v.rows; track row[0]) {
+            <dt class="text-fg-muted">{{ row[0] }}</dt>
+            <dd>{{ row[1] }}</dd>
+          }
+        </dl>
+      } @else {
+        <p class="text-fg-muted">Brak</p>
+      }
+    </section>
+  </div>
+}

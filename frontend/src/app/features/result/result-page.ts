@@ -1,4 +1,12 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Button } from '../../shared/ui/button/button';
@@ -8,10 +16,18 @@ import { downloadJson } from '../import/download';
 import { resultFileName } from '../import/zip-results';
 import { isFormDefinition } from '../preview/form-definition';
 import { FormRenderer } from '../preview/form-renderer';
+import { formatJson } from './json-lines';
+import { JsonView } from './json-view';
+import { asReport, fieldPaths, formatPercent } from './report';
+import { ReportView } from './report-view';
+import { ReviewPanel } from './review-panel';
+
+type Tab = 'preview' | 'json' | 'report';
+const TAB_LABELS: Record<Tab, string> = { preview: 'Podgląd formularza', json: 'JSON', report: 'Raport' };
 
 @Component({
   selector: 'app-result-page',
-  imports: [Card, Button, RouterLink, FormRenderer],
+  imports: [Card, Button, RouterLink, FormRenderer, ReportView, ReviewPanel, JsonView],
   templateUrl: './result-page.html',
   host: { class: 'block p-section' },
 })
@@ -30,9 +46,44 @@ export class ResultPage {
     const result = this.item()?.result;
     return isFormDefinition(result) ? result : null;
   });
-  protected readonly showJson = signal(false);
-  protected readonly jsonVisible = computed(() => this.showJson() || !this.form());
-  protected readonly json = computed(() => JSON.stringify(this.item()?.result, null, 2));
+  protected readonly tabs = computed<Tab[]>(() => (this.form() ? ['preview', 'json', 'report'] : ['json', 'report']));
+  protected readonly tabLabels = TAB_LABELS;
+  // Resets to the default tab when the result changes; no preview tab for a non-form result.
+  readonly activeTab = linkedSignal<Tab>(() => (this.form() ? 'preview' : 'json'));
+  readonly highlightPath = signal<string | null>(null);
+  protected readonly report = computed(() => asReport(this.item()?.report));
+  protected readonly json = computed(() => formatJson(this.item()?.result));
+  protected readonly fieldPaths = computed(() => fieldPaths(this.item()?.result));
+  /** One-line confidence summary above the tabs; null when the report has no confidence. */
+  protected readonly summary = computed(() => {
+    const confidence = this.report()?.confidence;
+    if (typeof confidence?.score !== 'number') return null;
+    const toReview = typeof confidence.toReview === 'number' ? confidence.toReview : 0;
+    return { score: formatPercent(confidence.score), toReview };
+  });
+  private readonly jsonView = viewChild.required(JsonView);
+
+  protected selectTab(tab: Tab): void {
+    if (tab !== 'json') this.highlightPath.set(null);
+    this.activeTab.set(tab);
+  }
+
+  protected onTabKeydown(event: KeyboardEvent): void {
+    const tabs = this.tabs();
+    const i = tabs.indexOf(this.activeTab());
+    const next = { ArrowRight: i + 1, ArrowLeft: i - 1 + tabs.length, Home: 0, End: tabs.length - 1 }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    const tab = tabs[next % tabs.length];
+    this.selectTab(tab);
+    document.getElementById(`result-tab-${tab}`)?.focus();
+  }
+
+  protected onShowInJson(path: string): void {
+    this.highlightPath.set(path);
+    this.activeTab.set('json');
+    this.jsonView().reveal();
+  }
 
   protected download(): void {
     const i = this.item();

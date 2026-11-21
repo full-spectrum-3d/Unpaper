@@ -401,7 +401,18 @@ Raport (`report=true`):
 | `dictionaryProposals` | propozycje nowych słowników z pozycjami i polami, które ich używają |
 | `warnings` | ostrzeżenia `{code, message, path?}`: miejsca do sprawdzenia przez urzędnika |
 | `fixes` | poprawki wprowadzone przez autonaprawę |
+| `confidence` | ocena całej konwersji: `score` (0–1), `level` (`high`, `medium`, `low`), liczba pól z dokumentu i liczba pozycji do sprawdzenia |
+| `fields` | pochodzenie każdego pola: `origin` (`document` albo `template`), a dla pól z dokumentu `source` (strona, tekst bloku, położenie jako ułamki strony) oraz `confidence`, `level` i `reasons` |
+| `review` | lista „do sprawdzenia”: pola o obniżonej pewności i ostrzeżenia dotyczące całego formularza, najważniejsze na początku |
 | `timings`, `durationMs` | czasy etapów i całości w ms |
+
+Pewność pola to jawna heurystyka, nie prawdopodobieństwo. Obniżają ją: etykieta, której nie ma
+w treści dokumentu (`LABEL_NOT_IN_DOCUMENT`), słabo odczytany fragment skanu
+(`LOW_OCR_CONFIDENCE`), opcje wyboru nieobecne w dokumencie (`OPTIONS_NOT_IN_DOCUMENT`)
+i ostrzeżenia budowy dotyczące pola. Pola sekcji predefiniowanych pochodzą ze standardu
+i nie są oceniane. Położenie (`source.box`) jest dostępne dla PDF i obrazów; dokumenty DOCX
+i XLSX nie mają stałych stron, więc mają tylko numer strony i tekst. We frontendzie zakładka
+„Raport” pokazuje te dane jako listę „Do sprawdzenia” z cytatem źródła i miniaturą strony.
 
 Najczęstsze ostrzeżenia: `W01_LLM_FALLBACK` i `W24_RULE_BASED_DRAFT` (szkic z reguł,
 bez modelu), `W12_LOW_OCR_CONFIDENCE` (słaba jakość skanu), `W13_FIELD_NOT_IN_DOCUMENT`

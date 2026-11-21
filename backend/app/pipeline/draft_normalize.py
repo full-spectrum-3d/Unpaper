@@ -447,6 +447,25 @@ def normalize_label(label: str) -> str:
     return text[:1].upper() + text[1:]
 
 
+def label_variants(label: str) -> list[str]:
+    """Etykieta i jej możliwe zapisy w blankiecie sprzed `normalize_label`.
+
+    „Miejscowość” mogła być „w miejscowości”, „Numer …” mogło być „Nr …”. Służy do szukania
+    źródła pola w dokumencie.
+    """
+    variants = [label]
+    words = label.split()
+    if len(words) == 1:
+        variants += [form for form, noun in _NOMINATIVES.items() if noun == label]
+    if len(words) > 1:
+        variants += [
+            " ".join([short, *words[1:]])
+            for short, full in _ABBREVIATIONS.items()
+            if full == words[0]
+        ]
+    return variants
+
+
 def _normalize_labels(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
     for path, field in iter_field_dicts(data):
         fixed = normalize_label(field["label"])
