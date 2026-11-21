@@ -15,7 +15,7 @@ const evaluator: typeof evaluateStates = async (...args) => {
   return result;
 };
 
-describe('FormRenderer visibility', () => {
+describe('FormRenderer states', () => {
   let fixture: ComponentFixture<FormRenderer>;
   const el = () => fixture.nativeElement as HTMLElement;
   const radio = (name: string) =>

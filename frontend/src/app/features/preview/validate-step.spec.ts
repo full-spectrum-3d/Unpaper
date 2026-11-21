@@ -55,4 +55,17 @@ describe('validateStep', () => {
     ];
     expect(run(qs).size).toBe(0);
   });
+
+  it('skips unknown types and option-less SELECTs the user cannot fill', () => {
+    const qs = [
+      q({ id: 'u', type: 'EMAIL_FIELD' }),
+      q({ id: 's', type: 'SELECT', dictionaryName: 'Nieznany' }),
+    ];
+    expect(run(qs).size).toBe(0);
+  });
+
+  it('still validates a SELECT backed by a dictionary', () => {
+    const qs = [q({ id: 's', type: 'SELECT', dictionaryName: 'Kraje' })];
+    expect([...run(qs).keys()]).toEqual(['s']);
+  });
 });

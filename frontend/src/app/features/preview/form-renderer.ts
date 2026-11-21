@@ -63,6 +63,7 @@ export class FormRenderer {
   private readonly injector = inject(Injector);
   private readonly evaluate = inject(STATES_EVALUATOR);
   private readonly pending = inject(PendingTasks);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly heading = viewChild<ElementRef<HTMLElement>>('stepHeading');
 
   protected readonly pages = computed(() => orderTabs(this.definition()));
@@ -126,7 +127,7 @@ export class FormRenderer {
           if (id === this.request) this.evaluated.set(result);
         } catch (e) {
           // Fail-open like visibility.ts: better to show every field than to hide them forever.
-          console.warn('Visibility evaluation failed', e);
+          console.warn('State evaluation failed', e);
           if (id === this.request) this.evaluated.set({ hidden: new Set(), readOnly: new Set() });
         } finally {
           done();
@@ -151,9 +152,9 @@ export class FormRenderer {
     this.showErrorsFor.set(this.index());
     afterNextRender(
       () => {
-        const host = [...document.querySelectorAll<HTMLElement>('[data-field-id]')].find((h) =>
-          errors.has(h.dataset['fieldId']!),
-        );
+        const host = [
+          ...this.host.nativeElement.querySelectorAll<HTMLElement>('[data-field-id]'),
+        ].find((h) => errors.has(h.dataset['fieldId']!));
         // The invalid control first: a tooltip button may precede it in the label row.
         const control =
           host?.querySelector<HTMLElement>('[aria-invalid="true"]:not([disabled])') ??
