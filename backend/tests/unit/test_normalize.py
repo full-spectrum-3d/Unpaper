@@ -1,4 +1,5 @@
 import asyncio
+import time
 import zipfile
 from io import BytesIO
 from pathlib import Path
@@ -152,6 +153,40 @@ async def test_oserror_on_copy_cleans_up(tmp_path: Path, monkeypatch: pytest.Mon
     with pytest.raises(OSError, match="No space"):
         await normalize(_upload(), _converter(FakeRunner()), UploadLimits(), tmp_dir=str(tmp_path))
     assert _empty(tmp_path)
+
+
+@pytest.mark.parametrize("phase", ["_write_input", "_load_output"])
+async def test_cancel_waits_for_worker_thread(
+    phase: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Anulowanie w trakcie pracy wątku: katalog znika dopiero po jego zakończeniu."""
+    original = getattr(normalize_module, phase)
+    entered = asyncio.Event()
+    loop = asyncio.get_running_loop()
+    workdir_alive_at_end: list[bool] = []
+    spools: list[object] = []
+
+    def slow(*args: object) -> object:
+        loop.call_soon_threadsafe(entered.set)
+        time.sleep(0.3)
+        workdir_alive_at_end.append(any(tmp_path.iterdir()))
+        result = original(*args)
+        spools.append(result)
+        return result
+
+    monkeypatch.setattr(normalize_module, phase, slow)
+    task = asyncio.create_task(
+        normalize(_upload(), _converter(FakeRunner()), UploadLimits(), tmp_dir=str(tmp_path))
+    )
+    await asyncio.wait_for(entered.wait(), 5)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    assert workdir_alive_at_end == [True]
+    assert _empty(tmp_path)
+    for spool in spools:
+        if spool is not None:
+            assert spool.closed  # type: ignore[attr-defined]
 
 
 def test_close_ownership() -> None:

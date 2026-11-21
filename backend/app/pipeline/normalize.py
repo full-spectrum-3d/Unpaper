@@ -6,8 +6,10 @@ usuwamy od razu, także przy błędzie, timeoucie i anulowaniu (spec §10.3). Wy
 LibreOffice to nadal dane niezaufane, więc przechodzi tę samą kontrolę ZIP co upload.
 """
 
+import asyncio
 import shutil
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from types import TracebackType
@@ -76,10 +78,10 @@ async def normalize(
     with tempfile.TemporaryDirectory(prefix="coi-conv-", dir=tmp_dir) as workdir_name:
         workdir = Path(workdir_name)
         source = workdir / "in" / f"input.{ext}"
-        await anyio.to_thread.run_sync(_write_input, upload.file, source)
+        await _in_thread(_write_input, upload.file, source)
         try:
             output = await converter.convert(source, target, workdir)
-            spool = await anyio.to_thread.run_sync(_load_output, output, target, limits, tmp_dir)
+            spool = await _in_thread(_load_output, output, target, limits, tmp_dir)
         except ConverterTimeoutError as exc:
             raise AppError(ErrorCode.PROCESSING_TIMEOUT, "Przekroczono czas konwersji") from exc
         except (ConversionError, UploadError) as exc:
@@ -87,6 +89,26 @@ async def normalize(
                 ErrorCode.DOCUMENT_UNREADABLE, f"Nie udało się przekonwertować pliku .{ext}"
             ) from exc
     return NormalizedDocument(target, spool, converted=True)
+
+
+async def _in_thread[T](func: Callable[..., T], *args: object) -> T:
+    """Uruchamia `func` w wątku; przy anulowaniu czeka na jego koniec, zanim je przepuści.
+
+    Bez tego `TemporaryDirectory` usunąłby katalog, w którym wątek jeszcze pisze (pliki na
+    tmpfs mogłyby przetrwać żądanie), a gotowy wynik zostałby niezamknięty.
+    """
+    task = asyncio.ensure_future(anyio.to_thread.run_sync(func, *args))
+    try:
+        return await asyncio.shield(task)
+    except asyncio.CancelledError:
+        try:
+            result = await task
+        except Exception:  # noqa: S110 - anulowanie ma pierwszeństwo przed błędem wątku
+            pass
+        else:
+            if hasattr(result, "close"):
+                result.close()
+        raise
 
 
 def _write_input(file: IO[bytes], source: Path) -> None:
