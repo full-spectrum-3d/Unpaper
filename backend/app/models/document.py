@@ -21,15 +21,15 @@ FIELD_MARKER = "[POLE]"
 _FILL_RUN = re.compile(r"[.…_]{3,}")
 _WHITESPACE = re.compile(r"\s+")
 _BOILERPLATE = re.compile(
-    r"(?i)klauzula informacyjna|\bRODO\b|ochron\w* danych osobowych"
+    r"(?i)klauzula informacyjna|obowiązek informacyjny|\bRODO\b|ochron\w* danych osobowych"
     r"|przetwarzani\w* (twoich |pani/pana |pana/pani )?danych osobowych"
     r"|^\W*([a-z0-9]{1,2}[.)]\s*)?(pouczeni|objaśnieni|instrukcj\w* wypełni)"
     r"|adnotacj\w* (organu|urzędu)|wypełnia (organ|urząd|pracownik)"
 )
 _BOILERPLATE_PARAGRAPH = re.compile(
-    r"(?i)^\W*([a-z0-9]{1,2}[.)]\s*)?(klauzula informacyjna"
+    r"(?i)^\W*([a-z0-9]{1,2}[.)]\s*)?(klauzula informacyjna|obowiązek informacyjny\s*:?\s*$"
     r"|informacj\w* (o|dotycząc\w*) przetwarzani\w* (twoich |pani/pana |pana/pani )?danych"
-    r"|(zgodnie z|stosownie do) art\. ?13\b"
+    r"|(zgodnie z|stosownie do) (art\. ?13\b|rozporządzeni\w* parlamentu europejskiego)"
     r"|pouczenie\s*:?\s*$|objaśnienia\b|instrukcj\w* wypełni\w*( \w+)?\s*:?\s*$)"
 )
 # Nagłówek lub stopka strony: „1/6”, „strona 1/2”, „Wersja styczeń 2026 r. | Strona 1 z 2”.

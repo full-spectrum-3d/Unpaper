@@ -205,6 +205,8 @@ def test_page_numbers_dropped() -> None:
         _p("Objaśnienia dotyczące sposobu wypełniania deklaracji"),
         _p("Informacja o przetwarzaniu danych osobowych"),
         _p("Stosownie do art. 13 i 14 Rozporządzenia Parlamentu Europejskiego"),
+        _p("Obowiązek informacyjny"),
+        _p("Zgodnie z rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679"),
         _h("I. ADNOTACJA ORGANU"),
         _h("Wypełnia urząd"),
     ],
