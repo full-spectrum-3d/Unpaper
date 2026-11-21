@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Fundamenty/Tokeny" />
+
+# Tokeny
+
+Jedno źródło prawdy: `src/styles/tokens.css`. Komponenty używają wyłącznie klas semantycznych (`bg-bg`, `text-body`, `p-section`), nigdy kolorów ani rozmiarów wpisanych na sztywno. Motyw przełączasz ikoną „Motyw” na pasku Storybooka.
+
+## Motywy
+
+- `tool`: narzędzie urzędnika, zwarte (domyślny).
+- `preview`: podgląd e-usługi, wierne odwzorowanie materiałów COI.
+
+`[data-theme="preview"]` zmienia tylko wartości zmiennych. Element nie przejmuje motywu automatycznie: zmienia wygląd dopiero wtedy, gdy użyje klasy semantycznej (np. `text-body`, `bg-bg`). Tekst bez takiej klasy wygląda tak samo w obu motywach.
+
+## Kolory semantyczne
+
+W kolumnie „Kontrast” podano współczynnik WCAG 2.1 (AA: 4,5:1 dla tekstu, 3:1 dla elementów interfejsu).
+
+<table className="text-body text-fg border-collapse">
+  <thead>
+    <tr><th>Próbka</th><th>Token</th><th>tool</th><th>preview</th><th>Kontrast</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><div className="bg-bg border-border h-6 w-12 rounded-field border" /></td><td><code>bg</code></td><td><code>#F7F8FA</code></td><td><code>#F2F5F9</code></td><td>fg na bg: 14,9:1</td></tr>
+    <tr><td><div className="bg-surface border-border h-6 w-12 rounded-field border" /></td><td><code>surface</code></td><td><code>#FFFFFF</code></td><td>to samo</td><td>tło pól i kart</td></tr>
+    <tr><td><div className="bg-surface-readonly border-border h-6 w-12 rounded-field border" /></td><td><code>surface-readonly</code></td><td><code>#F4F6F8</code></td><td>to samo</td><td>pola tylko do odczytu</td></tr>
+    <tr><td><div className="bg-fg border-border h-6 w-12 rounded-field border" /></td><td><code>fg</code></td><td><code>ink-900 #1F2328</code></td><td>to samo</td><td>14,9:1 na bg</td></tr>
+    <tr><td><div className="bg-fg-secondary border-border h-6 w-12 rounded-field border" /></td><td><code>fg-secondary</code></td><td><code>ink-700 #34383F</code></td><td>to samo</td><td>11,8:1 na surface</td></tr>
+    <tr><td><div className="bg-fg-muted border-border h-6 w-12 rounded-field border" /></td><td><code>fg-muted</code></td><td><code>ink-500 #5B6470</code></td><td>to samo</td><td>6,0:1 na surface</td></tr>
+    <tr><td><div className="bg-primary border-border h-6 w-12 rounded-field border" /></td><td><code>primary</code></td><td><code>blue-700 #0052A5</code></td><td>to samo</td><td>7,6:1 na surface</td></tr>
+    <tr><td><div className="bg-primary-hover border-border h-6 w-12 rounded-field border" /></td><td><code>primary-hover</code></td><td><code>blue-800 #003F80</code></td><td>to samo</td><td>10,4:1 na surface</td></tr>
+    <tr><td><div className="bg-primary-subtle border-border h-6 w-12 rounded-field border" /></td><td><code>primary-subtle</code></td><td><code>blue-50 #EAF2FB</code></td><td>to samo</td><td>6,8:1 z primary</td></tr>
+    <tr><td><div className="bg-on-primary border-border h-6 w-12 rounded-field border" /></td><td><code>on-primary</code></td><td><code>#FFFFFF</code></td><td>to samo</td><td>7,6:1 na primary</td></tr>
+    <tr><td><div className="bg-border border-border h-6 w-12 rounded-field border" /></td><td><code>border</code></td><td><code>line #D5DBE2</code></td><td>to samo</td><td>dekoracyjna, 1,4:1</td></tr>
+    <tr><td><div className="bg-border-input border-border h-6 w-12 rounded-field border" /></td><td><code>border-input</code></td><td><code>ink-400 #6E7781</code></td><td>to samo</td><td>4,5:1 na surface (WCAG 1.4.11: min. 3:1)</td></tr>
+    <tr><td><div className="bg-success border-border h-6 w-12 rounded-field border" /></td><td><code>success</code></td><td><code>green #136C2E</code></td><td>to samo</td><td>5,8:1 na success-subtle</td></tr>
+    <tr><td><div className="bg-success-subtle border-border h-6 w-12 rounded-field border" /></td><td><code>success-subtle</code></td><td><code>#E6F4EA</code></td><td>to samo</td><td>tło komunikatu</td></tr>
+    <tr><td><div className="bg-warning border-border h-6 w-12 rounded-field border" /></td><td><code>warning</code></td><td><code>amber #7A4F00</code></td><td>to samo</td><td>6,5:1 na warning-subtle</td></tr>
+    <tr><td><div className="bg-warning-subtle border-border h-6 w-12 rounded-field border" /></td><td><code>warning-subtle</code></td><td><code>#FFF4D6</code></td><td>to samo</td><td>tło komunikatu</td></tr>
+    <tr><td><div className="bg-danger border-border h-6 w-12 rounded-field border" /></td><td><code>danger</code></td><td><code>red #B3261E</code></td><td>to samo</td><td>5,5:1 na danger-subtle</td></tr>
+    <tr><td><div className="bg-danger-subtle border-border h-6 w-12 rounded-field border" /></td><td><code>danger-subtle</code></td><td><code>#FCE8E6</code></td><td>to samo</td><td>tło komunikatu</td></tr>
+    <tr><td><div className="bg-topbar border-border h-6 w-12 rounded-field border" /></td><td><code>topbar</code></td><td><code>navy #14233C</code></td><td>nieużywane</td><td>15,7:1 z on-topbar</td></tr>
+    <tr><td><div className="bg-on-topbar border-border h-6 w-12 rounded-field border" /></td><td><code>on-topbar</code></td><td><code>#FFFFFF</code></td><td>nieużywane</td><td>tekst na pasku</td></tr>
+  </tbody>
+</table>
+
+## Typografia
+
+<div className="grid grid-cols-2 gap-4">
+  <div className="bg-bg p-section font-sans">
+    <p className="text-label text-fg-muted">tool</p>
+    <p className="text-title text-fg">Tytuł 16px</p>
+    <p className="text-body text-fg">Treść 13px</p>
+    <p className="text-label text-fg-secondary">Etykieta 13px</p>
+    <p className="font-mono text-body text-fg">JetBrains Mono (JSON)</p>
+  </div>
+  <div data-theme="preview" className="bg-bg p-section font-sans">
+    <p className="text-label text-fg-muted">preview</p>
+    <p className="text-title text-fg">Tytuł 24px</p>
+    <p className="text-body text-fg">Treść 15px</p>
+    <p className="text-label text-fg-secondary">Etykieta 14px</p>
+    <p className="font-mono text-body text-fg">JetBrains Mono (JSON)</p>
+  </div>
+</div>
+
+Czcionki: Open Sans (tekst) i JetBrains Mono (JSON), self-hosted przez `@fontsource/*`.
+
+## Odstępy
+
+| Token | tool | preview |
+|---|---|---|
+| `field-y` | 5px | 9px |
+| `field-x` | 8px | 12px |
+| `section` | 12px | 16px |
+
+## Promienie
+
+| Token | tool | preview |
+|---|---|---|
+| `rounded-field` | 4px | 4px |
+| `rounded-card` | 6px | 8px |
+
+<div className="flex gap-4">
+  <div className="bg-surface border-border-input text-body rounded-field border px-field-x py-field-y">rounded-field</div>
+  <div className="bg-surface border-border-input text-body rounded-card border px-field-x py-field-y">rounded-card</div>
+</div>
+
+## Fokus
+
+Klasa `focus-ring` rysuje obrys 3px w kolorze `primary` z odstępem 2px, tylko przy `:focus-visible`. Ten sam w obu motywach.
+
+<button className="focus-ring bg-primary text-on-primary text-body rounded-field px-field-x py-field-y">Przycisk z fokusem (Tab)</button>

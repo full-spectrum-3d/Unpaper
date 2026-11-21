@@ -1,0 +1,83 @@
+/* Primitives are prefixed --palette- so they never collide with Tailwind's --color-* namespace. */
+:root {
+  --palette-blue-700: #0052A5;
+  --palette-blue-800: #003F80;
+  --palette-blue-50: #EAF2FB;
+  --palette-ink-900: #1F2328;
+  --palette-ink-700: #34383F;
+  --palette-ink-500: #5B6470;
+  --palette-ink-400: #6E7781;
+  --palette-line: #D5DBE2;
+  --palette-page: #F2F5F9;
+  --palette-navy: #14233C;
+  --palette-green: #136C2E;
+  --palette-green-subtle: #E6F4EA;
+  --palette-amber: #7A4F00;
+  --palette-amber-subtle: #FFF4D6;
+  --palette-red: #B3261E;
+  --palette-red-subtle: #FCE8E6;
+}
+
+/* Theme "tool" (default). */
+@theme {
+  --color-*: initial;
+  --color-bg: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-surface-readonly: #F4F6F8;
+  --color-fg: var(--palette-ink-900);
+  --color-fg-secondary: var(--palette-ink-700);
+  --color-fg-muted: var(--palette-ink-500);
+  --color-primary: var(--palette-blue-700);
+  --color-on-primary: #FFFFFF;
+  --color-primary-hover: var(--palette-blue-800);
+  --color-primary-subtle: var(--palette-blue-50);
+  --color-border: var(--palette-line);
+  --color-border-input: var(--palette-ink-400);
+  --color-success: var(--palette-green);
+  --color-success-subtle: var(--palette-green-subtle);
+  --color-warning: var(--palette-amber);
+  --color-warning-subtle: var(--palette-amber-subtle);
+  --color-danger: var(--palette-red);
+  --color-danger-subtle: var(--palette-red-subtle);
+  --color-topbar: var(--palette-navy);
+  --color-on-topbar: #FFFFFF;
+
+  --text-body: 13px;
+  --text-label: 13px;
+  --text-title: 16px;
+
+  --spacing-field-y: 5px;
+  --spacing-field-x: 8px;
+  --spacing-section: 12px;
+
+  --radius-field: 4px;
+  --radius-card: 6px;
+
+  --font-sans: "Open Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Theme "preview": overrides only its subtree. */
+[data-theme="preview"] {
+  --color-bg: var(--palette-page);
+  --text-body: 15px;
+  --text-label: 14px;
+  --text-title: 24px;
+  --spacing-field-y: 9px;
+  --spacing-field-x: 12px;
+  --spacing-section: 16px;
+  --radius-card: 8px;
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-fg font-sans text-body;
+  }
+}
