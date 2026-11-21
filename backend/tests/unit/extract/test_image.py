@@ -130,3 +130,12 @@ def test_dotted_leader_detected() -> None:
     frames = frames_from_image(image, 200)
     assert len(frames) == 1
     assert 600 * 72 / 200 - 5 < frames[0].x0 < 600 * 72 / 200 + 5
+
+
+def test_page_size_matches_bbox_units() -> None:
+    # 144 dpi to 2 piksele na punkt: strona 400 na 200 px ma 200 na 100 pt.
+    doc, _ = extract_image(png(400, 200, dpi=(144, 144)), FakeOcr(), max_pages=30, check=no_check)
+    page = doc.pages[0]
+    assert page.width is not None and page.height is not None
+    # PNG zapisuje rozdzielczość w pikselach na metr, stąd niewielkie zaokrąglenie.
+    assert (round(page.width), round(page.height)) == (200, 100)

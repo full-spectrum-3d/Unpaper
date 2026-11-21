@@ -68,3 +68,11 @@ def test_render_scale_capped() -> None:
     assert render_scale(595, 842, 300, 60_000_000) == 300 / 72
     a0 = render_scale(2384, 3370, 300, 60_000_000)
     assert 2384 * 3370 * a0 * a0 <= 60_000_000 * 1.0001
+
+
+def test_page_carries_its_size_in_points() -> None:
+    doc, _ = run([PdfPage().text(50, 100, "Miejscowosc wnioskodawcy")])
+    page = doc.pages[0]
+    assert page.width and page.height
+    box = page.blocks[0].bbox
+    assert box is not None and 0 < box.x1 <= page.width and 0 < box.y1 <= page.height
