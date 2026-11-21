@@ -19,7 +19,7 @@ export function mockReport(form: unknown): unknown {
     sourceFile: { name: 'wniosek.pdf', sizeBytes: 86016, pages: 4 },
     extraction: { method: 'pdf_text', ocrUsed: false, ocrConfidence: null },
     llm: { model: 'claude-sonnet-4-5', fallback: false },
-    stats: { tabs: 4, questions: 18, fields: 31, dictionaries: 1 },
+    stats: { tabs: 4, sections: 9, fields: 31, states: 2 },
     dictionaryProposals: [
       {
         name: 'rodzaj_podmiotu',

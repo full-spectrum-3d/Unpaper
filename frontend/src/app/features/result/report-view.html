@@ -50,9 +50,12 @@
             <li>
               <span class="font-mono">{{ d.name }}</span>
               @if (d.title) { {{ d.title }} }
-              · {{ d.items?.length ?? 0 }} {{ pluralPl(d.items?.length ?? 0, 'pozycja', 'pozycje', 'pozycji') }}
-              @if (d.usedBy?.length) {
-                <div class="text-fg-muted">Używa: {{ d.usedBy!.join(', ') }}</div>
+              · {{ d.count }} {{ pluralPl(d.count, 'pozycja', 'pozycje', 'pozycji') }}
+              @if (d.description) {
+                <div class="text-fg-muted">{{ d.description }}</div>
+              }
+              @if (d.usedBy.length) {
+                <div class="text-fg-muted">Używa: {{ d.usedBy.join(', ') }}</div>
               }
             </li>
           }
@@ -78,39 +81,16 @@
 
     <section>
       <h2 class="text-section-title font-semibold">Przetwarzanie</h2>
-      <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-4">
-        @if (v.file?.name) {
-          <dt class="text-fg-muted">Plik</dt>
-          <dd>
-            {{ v.file!.name }}@if (v.file!.pages) {, {{ v.file!.pages }} {{ pluralPl(v.file!.pages!, 'strona', 'strony', 'stron') }}}@if (v.file!.decrypted) {, odszyfrowany}
-          </dd>
-        }
-        @if (v.method) {
-          <dt class="text-fg-muted">Ekstrakcja</dt>
-          <dd>{{ v.method }}</dd>
-        }
-        @if (v.ocr != null) {
-          <dt class="text-fg-muted">Pewność OCR</dt>
-          <dd>{{ (v.ocr * 100).toFixed(0) }}%</dd>
-        }
-        @if (v.model || v.ruleBased) {
-          <dt class="text-fg-muted">Model LLM</dt>
-          <dd>
-            @if (v.ruleBased) {
-              szkic regułowy (bez LLM)@if (v.fallbackReason) {: {{ v.fallbackReason }}}
-            } @else {
-              {{ v.model }}
-            }
-          </dd>
-        }
-        @if (v.total != null || v.stages.length) {
-          <dt class="text-fg-muted">Czas</dt>
-          <dd>
-            @if (v.total != null) { {{ formatSeconds(v.total) }} łącznie }
-            @for (st of v.stages; track st[0]) { · {{ st[0] }} {{ formatSeconds(st[1]) }} }
-          </dd>
-        }
-      </dl>
+      @if (v.rows.length) {
+        <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-4">
+          @for (row of v.rows; track row[0]) {
+            <dt class="text-fg-muted">{{ row[0] }}</dt>
+            <dd>{{ row[1] }}</dd>
+          }
+        </dl>
+      } @else {
+        <p class="text-fg-muted">Brak</p>
+      }
     </section>
   </div>
 }

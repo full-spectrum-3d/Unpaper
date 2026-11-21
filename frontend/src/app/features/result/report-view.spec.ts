@@ -56,6 +56,7 @@ describe('ReportView', () => {
     expect(text()).toContain('Rodzaj podmiotu');
     expect(text()).toContain('Używa: tabs[0].questions[1]');
     expect(text()).toContain('2 pozycje');
+    expect(text()).toContain('Lista rodzajów podmiotów składających wniosek.');
   });
 
   it('shows processing details', () => {
@@ -74,6 +75,30 @@ describe('ReportView', () => {
   it('shows Brak for malformed fields without throwing', () => {
     const { text } = render({ warnings: 'x', stats: null });
     expect(text().match(/Brak/g)!.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('tolerates malformed entries and values', () => {
+    const { el, text } = render({
+      warnings: [null, 'x', { code: 1, message: {}, path: 5 }, { code: 'W1', message: 'ok', path: 'tabs[0]' }],
+      fixes: [null],
+      dictionaryProposals: [null, { name: 'd', items: 'x', usedBy: 'y' }],
+      stats: { tabs: {}, fields: NaN, sections: 2 },
+      timings: { analyzeMs: 'x', buildMs: 1000 },
+      durationMs: {},
+    });
+    expect(el.querySelectorAll('h2')[0].textContent).toContain('(2)');
+    expect(text()).toContain('Sekcje2');
+    expect(text()).not.toMatch(/object|NaN/);
+    expect(text()).toContain('budowa 1,0 s');
+    expect(text()).not.toContain('analiza');
+    expect(text()).toContain('0 pozycji');
+  });
+
+  it('shows Brak in Przetwarzanie when there is nothing to show', () => {
+    const { el } = render({ timings: { x: 'a' } });
+    const section = [...el.querySelectorAll('section')].find((s) => s.querySelector('h2')!.textContent === 'Przetwarzanie')!;
+    expect(section.textContent).toContain('Brak');
+    expect(section.querySelector('dd')).toBeNull();
   });
 
   it('shows a message when there is no report', () => {

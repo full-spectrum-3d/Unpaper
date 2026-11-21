@@ -4,10 +4,15 @@ import { formatJson } from './json-lines';
 import { asReport, formatSeconds, pathTarget } from './report';
 
 describe('asReport', () => {
-  it('returns the same object with list fields always arrays', () => {
-    const r = { warnings: 'x', fixes: [{ code: 'A', message: 'm' }], stats: null };
+  it('returns the same object when it is already fine', () => {
+    const r = { warnings: [], fixes: [], dictionaryProposals: [] };
+    expect(asReport(r)).toBe(r);
+  });
+
+  it('fixes list fields without mutating a frozen input', () => {
+    const r = Object.freeze({ warnings: 'x', fixes: [{ code: 'A', message: 'm' }], stats: null });
     const out = asReport(r)!;
-    expect(out).toBe(r);
+    expect(r.warnings).toBe('x');
     expect(out.warnings).toEqual([]);
     expect(out.fixes).toHaveLength(1);
     expect(out.dictionaryProposals).toEqual([]);

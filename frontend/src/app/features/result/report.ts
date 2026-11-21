@@ -17,7 +17,7 @@ export interface ConversionReport {
     ruleBasedDraft?: boolean;
   };
   stats?: { tabs?: number; sections?: number; fields?: number; states?: number };
-  dictionaryProposals?: { name: string; title?: string; items?: unknown[]; usedBy?: string[] }[];
+  dictionaryProposals?: { name: string; title?: string; description?: string; items?: unknown[]; usedBy?: string[] }[];
   warnings?: ReportIssue[];
   fixes?: ReportIssue[];
   timings?: Record<string, number>;
@@ -27,20 +27,21 @@ export interface ConversionReport {
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
-// Mutates and returns the input: the report comes from our own response and is not reused.
+// Never mutates (NgRx state is frozen): returns the input when it is fine, else a shallow copy.
 export function asReport(value: unknown): ConversionReport | null {
   if (!isObject(value)) return null;
+  const fixed: Record<string, unknown> = {};
   for (const key of ['warnings', 'fixes', 'dictionaryProposals']) {
-    if (!Array.isArray(value[key])) value[key] = [];
+    if (!Array.isArray(value[key])) fixed[key] = [];
   }
-  return value as ConversionReport;
+  return (Object.keys(fixed).length ? { ...value, ...fixed } : value) as ConversionReport;
 }
 
 export type PathTarget = { kind: 'link' } | { kind: 'draft' } | { kind: 'missing' } | { kind: 'none' };
 
 export function pathTarget(issue: ReportIssue, ranges: ReadonlyMap<string, LineRange>): PathTarget {
   const { path, code } = issue;
-  if (!path) return { kind: 'none' };
+  if (typeof path !== 'string' || !path) return { kind: 'none' };
   if (!path.startsWith('tabs[')) return { kind: 'draft' };
   return ranges.has(path) && code !== 'R03_EMPTY_PAGE' ? { kind: 'link' } : { kind: 'missing' };
 }

@@ -5,6 +5,9 @@ import type { LineRange } from './json-lines';
 import { ConversionReport, formatSeconds, pathTarget, ReportIssue } from './report';
 
 const METHODS: Record<string, string> = { pdf_text: 'tekst z PDF', ocr: 'OCR', docx: 'DOCX', xlsx: 'XLSX' };
+const isObject = (v: unknown): v is Record<string, unknown> =>
+  typeof v === 'object' && v !== null && !Array.isArray(v);
+
 const STAGES: Record<string, string> = {
   normalizeMs: 'normalizacja',
   extractMs: 'ekstrakcja',
@@ -30,29 +33,65 @@ export class ReportView {
     const r = this.report();
     if (!r) return null;
     const ranges = this.ranges();
-    const withTarget = (list: ReportIssue[] | undefined) =>
-      (list ?? []).map((issue) => ({ issue, target: pathTarget(issue, ranges).kind }));
-    const stats = r.stats && typeof r.stats === 'object' ? r.stats : {};
-    const timings = r.timings && typeof r.timings === 'object' ? r.timings : {};
-    const llm = r.llm ?? {};
+    const obj = (v: unknown): Record<string, unknown> => (isObject(v) ? v : {});
+    const str = (v: unknown): string | undefined => (typeof v === 'string' && v ? v : undefined);
+    const num = (v: unknown): number | undefined => (typeof v === 'number' && isFinite(v) ? v : undefined);
+    const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
+    const issues = (v: unknown) =>
+      list(v)
+        .filter(isObject)
+        .map((o) => {
+          const issue: ReportIssue = { code: str(o['code']) ?? '', message: str(o['message']) ?? '', path: str(o['path']) };
+          return { issue, target: pathTarget(issue, ranges).kind };
+        });
+    const stats = obj(r.stats);
+    const timings = obj(r.timings);
+    const llm = obj(r.llm);
+    const file = obj(r.sourceFile);
+    const extraction = obj(r.extraction);
+    const method = str(extraction['method']);
+    const ocr = num(extraction['ocrMeanConfidence']);
+    const rows: [string, string][] = [];
+    const add = (label: string, value: string | undefined) => value && rows.push([label, value]);
+    const pages = num(file['pages']);
+    const fileName = str(file['name']);
+    add(
+      'Plik',
+      fileName &&
+        fileName +
+          (pages ? `, ${pages} ${pluralPl(pages, 'strona', 'strony', 'stron')}` : '') +
+          (file['decrypted'] === true ? ', odszyfrowany' : ''),
+    );
+    add('Ekstrakcja', method && (METHODS[method] ?? method));
+    add('Pewność OCR', ocr !== undefined ? `${Math.round(ocr * 100)}%` : undefined);
+    const ruleBased = llm['fallback'] === true || llm['ruleBasedDraft'] === true;
+    const reason = str(llm['fallbackReason']);
+    add('Model LLM', ruleBased ? `szkic regułowy (bez LLM)${reason ? `: ${reason}` : ''}` : str(llm['model']));
+    const total = num(r.durationMs);
+    const stages = Object.entries(timings).flatMap(([k, v]) => {
+      const ms = num(v);
+      return ms === undefined ? [] : [`${STAGES[k] ?? k.replace(/Ms$/, '')} ${formatSeconds(ms)}`];
+    });
+    add('Czas', [...(total === undefined ? [] : [`${formatSeconds(total)} łącznie`]), ...stages].join(' · '));
     return {
-      warnings: withTarget(r.warnings),
-      fixes: withTarget(r.fixes),
-      dictionaries: r.dictionaryProposals ?? [],
+      warnings: issues(r.warnings),
+      fixes: issues(r.fixes),
+      dictionaries: list(r.dictionaryProposals)
+        .filter(isObject)
+        .map((d) => ({
+          name: str(d['name']) ?? '',
+          title: str(d['title']),
+          description: str(d['description']),
+          count: list(d['items']).length,
+          usedBy: list(d['usedBy']).filter((u): u is string => typeof u === 'string'),
+        })),
       stats: [
-        ['Strony', stats.tabs],
-        ['Sekcje', stats.sections],
-        ['Pola', stats.fields],
-        ['Stany', stats.states],
+        ['Strony', num(stats['tabs'])],
+        ['Sekcje', num(stats['sections'])],
+        ['Pola', num(stats['fields'])],
+        ['Stany', num(stats['states'])],
       ].filter(([, v]) => v !== undefined),
-      file: r.sourceFile,
-      method: r.extraction?.method ? (METHODS[r.extraction.method] ?? r.extraction.method) : null,
-      ocr: r.extraction?.ocrMeanConfidence,
-      model: llm.model,
-      ruleBased: !!(llm.fallback || llm.ruleBasedDraft),
-      fallbackReason: llm.fallbackReason,
-      total: r.durationMs,
-      stages: Object.entries(timings).map(([k, ms]) => [STAGES[k] ?? k.replace(/Ms$/, ''), ms] as const),
+      rows,
     };
   });
 }
