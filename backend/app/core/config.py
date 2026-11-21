@@ -1,7 +1,9 @@
 """Konfiguracja aplikacji ze zmiennych środowiskowych (spec §12).
 
-Sekrety można podać jako zmienne środowiskowe albo jako Docker secrets
-(plik `/run/secrets/<nazwa_pola>`, np. `/run/secrets/jwt_private_key`).
+Źródła, od najwyższego priorytetu: zmienne środowiskowe, plik `.env` (lokalne
+uruchomienie: `backend/.env`, potem `.env` w katalogu głównym repo), Docker secrets
+(plik `/run/secrets/<nazwa_pola>`, np. `/run/secrets/jwt_private_key`), wartości domyślne.
+W Dockerze plik `.env` nie trafia do obrazu - zmienne wstrzykuje docker compose.
 Konfiguracja jest walidowana przy starcie - błędna lub niebezpieczna
 konfiguracja zatrzymuje aplikację.
 """
@@ -17,6 +19,9 @@ from pydantic import Field, PositiveInt, SecretStr, field_validator, model_valid
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 _SECRETS_DIR = Path("/run/secrets")
+_BACKEND_DIR = Path(__file__).resolve().parents[2]
+# Późniejszy plik ma wyższy priorytet; nieistniejące pliki są pomijane.
+_ENV_FILES = (_BACKEND_DIR.parent / ".env", _BACKEND_DIR / ".env")
 _MIN_HS256_SECRET_BYTES = 32  # RFC 7518 §3.2: klucz co najmniej tak długi jak skrót (256 bitów)
 _ARGON2ID_PREFIX = "$argon2id$"
 _CLAIM_PATH_PATTERN = r"^[A-Za-z0-9_:-]+(\.[A-Za-z0-9_:-]+)*$"
@@ -28,6 +33,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
         extra="ignore",
+        env_file=_ENV_FILES,
+        env_file_encoding="utf-8",
         secrets_dir=_SECRETS_DIR if _SECRETS_DIR.is_dir() else None,
     )
 
