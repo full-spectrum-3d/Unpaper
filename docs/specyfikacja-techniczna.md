@@ -614,9 +614,13 @@ Do repozytorium dołączamy makiety trzech głównych widoków (Import, Wynik/Po
 ## 10. Bezpieczeństwo
 
 ### 10.1. Uwierzytelnianie
-- JWT (HS256 domyślnie, RS256 opcjonalnie przez `JWT_PUBLIC_KEY`/`JWT_PRIVATE_KEY`). Konfigurowalne: `JWT_SECRET`, `JWT_ALGORITHM`, `JWT_ISSUER`, `JWT_AUDIENCE`, `JWT_EXPIRES_MIN`.
-- Weryfikujemy podpis, `exp`, `iss`, `aud`. Algorytm z konfiguracji, nigdy z nagłówka tokenu (`alg=none` odrzucane).
-- Konto techniczne: `API_USER` + `API_PASSWORD_HASH` (bcrypt lub argon2 przez passlib/argon2-cffi, licencje MIT). Hasło nie trafia do obrazu, tylko do zmiennych środowiskowych w runtime.
+- JWT (HS256 domyślnie, RS256 opcjonalnie przez `JWT_PUBLIC_KEY`/`JWT_PRIVATE_KEY`). Konfigurowalne: `JWT_SECRET`, `JWT_ALGORITHM`, `JWT_ISSUER`, `JWT_AUDIENCE`, `JWT_EXPIRES_MIN`, `JWT_LEEWAY_S`.
+- RS256 z samym kluczem publicznym = tryb tylko weryfikacji: tokeny wydaje inny system (np. COI), `/auth/token` nie jest rejestrowany. Klucz podawany statycznie (env lub Docker secret) – bez JWKS i bez ruchu sieciowego (§14, Q10).
+- Weryfikujemy podpis, `exp`, `nbf`, `iat`, `iss`, `aud`, `sub`. Algorytm z konfiguracji, nigdy z nagłówka tokenu (`alg=none` odrzucane).
+- Konto techniczne: `API_USER` + `API_PASSWORD_HASH` (argon2id przez `argon2-cffi`, MIT; hash generuje `make password-hash`). Hasło nie trafia do obrazu, tylko do zmiennych środowiskowych w runtime.
+- Mapowanie claimów tokenów z brokera tożsamości: `JWT_SUBJECT_CLAIM` (domyślnie `sub`), `JWT_ROLES_CLAIM` (domyślnie `roles`, ścieżka z kropkami dla claimów zagnieżdżonych) i `JWT_REQUIRED_ROLE` (pusta = brak wymogu; brak roli w tokenie → 403 `FORBIDDEN`).
+- Ścieżka wdrożenia z Węzłem Krajowym (login.gov.pl) przez broker tożsamości: `docs/architecture/wezel-krajowy.md`.
+- Szczegóły: `docs/superpowers/specs/2026-11-21-auth-core-design.md`.
 - Opcjonalnie `AUTH_ENABLED=false` dla lokalnego dewelopmentu. W trybie produkcyjnym aplikacja odmawia startu z tym ustawieniem.
 
 ### 10.2. Plik wejściowy jako dane niezaufane
@@ -712,6 +716,10 @@ Wszystkie parametry przez zmienne środowiskowe (pydantic-settings). Plik `.env.
 | `JWT_PUBLIC_KEY` / `JWT_PRIVATE_KEY` | — | dla RS256 |
 | `JWT_ISSUER` / `JWT_AUDIENCE` | `coi-cf` / `coi-cf-api` | |
 | `JWT_EXPIRES_MIN` | `60` | |
+| `JWT_LEEWAY_S` | `30` | tolerancja różnicy zegarów (exp/nbf/iat) |
+| `JWT_SUBJECT_CLAIM` | `sub` | claim z identyfikatorem użytkownika (np. `preferred_username`) |
+| `JWT_ROLES_CLAIM` | `roles` | claim z rolami, ścieżka z kropkami (np. `realm_access.roles`) |
+| `JWT_REQUIRED_ROLE` | — | rola wymagana do korzystania z API; pusta = brak wymogu |
 | `API_USER` / `API_PASSWORD_HASH` | — (wymagane) | konto techniczne |
 | `CORS_ORIGINS` | `http://localhost:8080` | |
 | `LLM_BASE_URL` | `http://llm:11434` | parametr integracyjny |
@@ -783,6 +791,8 @@ Skrypt `scripts/convert_all.py` przepuszcza wszystkie formularze z katalogu wej�
 | Q7 | Czy LibreOffice (MPL-2.0, osobny proces) jest akceptowalny? | tak, z uzasadnieniem w README |
 | Q8 | Czy akceptować `.jpe` / `.jfif`? | nie (415) |
 | Q9 | Czy `flow.links` może mieć warunki (strony alternatywne)? | nie, zamiast tego `SHOW` na sekcjach |
+| Q10 | Czy weryfikacja tokenów RS256 wydanych przez system COI (klucz publiczny w konfiguracji) jest pożądana? | wspieramy konfiguracją; domyślnie HS256 i własne tokeny |
+| Q11 | Czy Generator Formularzy COI ma już logowanie (SSO, Węzeł Krajowy), pod które powinno się podpiąć nasze API? | ścieżka przez broker tożsamości, `docs/architecture/wezel-krajowy.md` |
 
 ### 14.2. Ryzyka
 
