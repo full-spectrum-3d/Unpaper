@@ -78,7 +78,7 @@ class Settings(BaseSettings):
     llm_timeout_s: PositiveInt = 240
     llm_temperature: Annotated[float, Field(ge=0, le=2)] = 0
     llm_seed: int = 42
-    llm_num_ctx: PositiveInt = 16384
+    llm_num_ctx: PositiveInt = 8192
     extraction_vlm_enabled: bool = False
     vlm_model: str = "qwen2.5vl:7b"
 

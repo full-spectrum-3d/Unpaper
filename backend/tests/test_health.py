@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 from app.core.config import Settings
 from app.main import create_app
 from app.pipeline import converter as converter_module
+from app.pipeline.analyze import load_system_prompt
 from app.pipeline.converter import LibreOfficeConverter
 from app.pipeline.llm_client import LlmUnavailableError
 from tests.unit.fakes import FakeLlmClient, FakeRunner
@@ -34,6 +35,7 @@ def test_ready_ok() -> None:
     response, fake = _ready({"qwen3:8b"})
     assert response.status_code == 200 and response.json() == {"status": "ok"}
     assert fake.warmed == ["qwen3:8b"]
+    assert fake.warm_prompts == [load_system_prompt()]
 
 
 def test_ready_degraded_converter() -> None:

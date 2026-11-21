@@ -53,7 +53,7 @@ async def test_chat_sends_contract_body() -> None:
     assert body["think"] is False and body["stream"] is False
     assert body["format"] == SCHEMA and body["model"] == "qwen3:8b"
     assert body["messages"] == MESSAGES and body["keep_alive"] == "30m"
-    assert body["options"] == {"temperature": 0, "seed": 42, "num_ctx": 16384}
+    assert body["options"] == {"temperature": 0, "seed": 42, "num_ctx": 8192}
 
 
 async def test_chat_parses_reply() -> None:
@@ -111,12 +111,32 @@ async def test_list_models() -> None:
     assert await _client(handler).list_models() == {"qwen3:8b", "qwen3:4b"}
 
 
-async def test_warm_up_posts_empty_chat() -> None:
-    seen: list[dict[str, Any]] = []
-
+def _record(seen: list[dict[str, Any]]) -> Callable[[httpx.Request], httpx.Response]:
     def handler(request: httpx.Request) -> httpx.Response:
         seen.append(json.loads(request.content))
         return httpx.Response(200, json={"done": True})
 
-    await _client(handler).warm_up("qwen3:4b")
-    assert seen == [{"model": "qwen3:4b", "messages": [], "keep_alive": "30m"}]
+    return handler
+
+
+async def test_warm_up_loads_model_with_chat_options() -> None:
+    seen: list[dict[str, Any]] = []
+    await _client(_record(seen)).warm_up("qwen3:4b")
+    assert seen == [
+        {
+            "model": "qwen3:4b",
+            "messages": [],
+            "stream": False,
+            "think": False,
+            "keep_alive": "30m",
+            "options": {"temperature": 0, "seed": 42, "num_ctx": 8192},
+        }
+    ]
+
+
+async def test_warm_up_prefills_system_prompt() -> None:
+    seen: list[dict[str, Any]] = []
+    await _client(_record(seen)).warm_up("qwen3:4b", "PROMPT")
+    assert seen[0]["messages"][0] == {"role": "system", "content": "PROMPT"}
+    assert seen[0]["options"]["num_predict"] == 1
+    assert seen[0]["options"]["num_ctx"] == 8192

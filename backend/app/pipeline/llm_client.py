@@ -55,7 +55,7 @@ class LlmClient(Protocol):
 
     async def list_models(self) -> set[str]: ...
 
-    async def warm_up(self, model: str) -> None: ...
+    async def warm_up(self, model: str, system_prompt: str = "") -> None: ...
 
     async def aclose(self) -> None: ...
 
@@ -80,11 +80,7 @@ class OllamaClient:
             "stream": False,
             "think": False,
             "keep_alive": KEEP_ALIVE,
-            "options": {
-                "temperature": self._settings.llm_temperature,
-                "seed": self._settings.llm_seed,
-                "num_ctx": self._settings.llm_num_ctx,
-            },
+            "options": self._options(),
         }
         started = time.perf_counter()
         data = await self._request("POST", "/api/chat", timeout_s, json=body)
@@ -107,9 +103,36 @@ class OllamaClient:
         models = data.get("models", [])
         return {m["name"] for m in models if isinstance(m, dict) and "name" in m}
 
-    async def warm_up(self, model: str) -> None:
-        body = {"model": model, "messages": [], "keep_alive": KEEP_ALIVE}
+    async def warm_up(self, model: str, system_prompt: str = "") -> None:
+        """Ładuje model z tymi samymi `options` co `chat` (inny `num_ctx` = przeładowanie).
+
+        Z `system_prompt` model przetwarza go raz z góry, a Ollama trzyma ten prefiks
+        w pamięci podręcznej, więc kolejne żądania liczą tylko tekst dokumentu.
+        """
+        messages: list[ChatMessage] = []
+        options = self._options()
+        if system_prompt:
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": "<dokument>\n</dokument>"},
+            ]
+            options["num_predict"] = 1
+        body = {
+            "model": model,
+            "messages": messages,
+            "stream": False,
+            "think": False,
+            "keep_alive": KEEP_ALIVE,
+            "options": options,
+        }
         await self._request("POST", "/api/chat", self._settings.llm_timeout_s, json=body)
+
+    def _options(self) -> dict[str, Any]:
+        return {
+            "temperature": self._settings.llm_temperature,
+            "seed": self._settings.llm_seed,
+            "num_ctx": self._settings.llm_num_ctx,
+        }
 
     async def aclose(self) -> None:
         await self._http.aclose()
