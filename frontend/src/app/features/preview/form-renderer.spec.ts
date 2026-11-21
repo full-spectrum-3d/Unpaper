@@ -280,3 +280,43 @@ describe('FormRenderer step validation', () => {
     expect(error('imie')).toBeNull();
   });
 });
+
+describe('FormRenderer on the "Nadpłata podatku" mock', () => {
+  const fields: FormField[] = [];
+  const collect = (list: { field: FormField }[]) =>
+    list.forEach(({ field }) => {
+      fields.push(field);
+      collect(field.repeatingSectionGrid ?? []);
+    });
+  (nadplata as unknown as FormDefinition).tabs.forEach((t) => collect(t.questions));
+  const validation = (techName: string) => fields.find((f) => f.techName === techName)?.validation;
+
+  it('has backend-style validators', () => {
+    expect(validation('nip')).toEqual(['REQUIRED', 'NIP']);
+    expect(validation('kod_pocztowy')).toEqual(['REQUIRED', 'ZIP_CODE']);
+    expect(validation('adres_e_mail')).toEqual(['EMAIL']);
+    expect(validation('kwota')).toEqual(['REQUIRED']);
+    expect(validation('numer_lokalu')).toEqual([]);
+  });
+
+  it('blocks "Dalej" on step 1, focuses the first invalid field and accepts registry values', async () => {
+    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    const fixture = TestBed.createComponent(FormRenderer);
+    fixture.componentRef.setInput('definition', nadplata as unknown as FormDefinition);
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    [...el.querySelectorAll('button')].find((b) => b.textContent?.trim() === 'Dalej')!.click();
+    await fixture.whenStable();
+
+    expect(el.querySelector('h3')?.textContent?.trim()).toBe('Krok 1 z 3: Dane');
+    const invalid = el.querySelector<HTMLElement>('[aria-invalid="true"]');
+    expect(invalid).not.toBeNull();
+    expect(document.activeElement).toBe(invalid);
+    const postCode = fields.find((f) => f.techName === 'kod_pocztowy')!.id;
+    expect(el.querySelector(`[data-field-id="${postCode}"] input`)).toHaveProperty(
+      'value',
+      '00-001',
+    );
+    expect(el.querySelector(`[data-field-id="${postCode}"] [aria-invalid="true"]`)).toBeNull();
+  });
+});
