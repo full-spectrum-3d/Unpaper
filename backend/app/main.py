@@ -21,7 +21,7 @@ from app.core.errors import (
     request_id_middleware,
 )
 from app.core.security import require_auth
-from app.pipeline.analyze import load_system_prompt
+from app.pipeline.analyze import prompt_messages
 from app.pipeline.converter import Converter, find_converter
 from app.pipeline.llm_client import LlmClient, LlmError, OllamaClient
 
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 async def _warm_up(client: LlmClient, model: str) -> None:
     """Ładuje model trybu domyślnego do pamięci; błąd nie blokuje startu."""
     try:
-        await client.warm_up(model, load_system_prompt())
+        await client.warm_up(model, prompt_messages(""))
     except LlmError as exc:
         logger.warning("nie udało się rozgrzać modelu %s: %s", model, exc)
 

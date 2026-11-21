@@ -55,7 +55,7 @@ class LlmClient(Protocol):
 
     async def list_models(self) -> set[str]: ...
 
-    async def warm_up(self, model: str, system_prompt: str = "") -> None: ...
+    async def warm_up(self, model: str, messages: list[ChatMessage] | None = None) -> None: ...
 
     async def aclose(self) -> None: ...
 
@@ -103,23 +103,18 @@ class OllamaClient:
         models = data.get("models", [])
         return {m["name"] for m in models if isinstance(m, dict) and "name" in m}
 
-    async def warm_up(self, model: str, system_prompt: str = "") -> None:
+    async def warm_up(self, model: str, messages: list[ChatMessage] | None = None) -> None:
         """Ładuje model z tymi samymi `options` co `chat` (inny `num_ctx` = przeładowanie).
 
-        Z `system_prompt` model przetwarza go raz z góry, a Ollama trzyma ten prefiks
+        Z `messages` model przetwarza je raz z góry, a Ollama trzyma ten prefiks
         w pamięci podręcznej, więc kolejne żądania liczą tylko tekst dokumentu.
         """
-        messages: list[ChatMessage] = []
         options = self._options()
-        if system_prompt:
-            messages = [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": "<dokument>\n</dokument>"},
-            ]
+        if messages:
             options["num_predict"] = 1
         body = {
             "model": model,
-            "messages": messages,
+            "messages": messages or [],
             "stream": False,
             "think": False,
             "keep_alive": KEEP_ALIVE,

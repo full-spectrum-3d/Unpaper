@@ -4,8 +4,9 @@ from typing import Any
 
 from app.core.config import Settings
 from app.models.document import DocumentModel
-from app.models.draft import llm_schema
-from app.pipeline.analyze import AnalysisResult, analyze, load_system_prompt
+from app.models.draft import LlmDraft, llm_schema
+from app.pipeline.analyze import AnalysisResult, analyze, load_system_prompt, prompt_messages
+from app.pipeline.draft_repair import repair_draft
 from app.pipeline.llm_client import LlmReply, LlmTimeoutError, LlmUnavailableError
 from tests.unit.fakes import FakeClock, FakeLlmClient, fixture_reply, reply
 
@@ -64,9 +65,10 @@ async def test_request_contains_document_and_schema() -> None:
     _, client = await _run([_valid()])
     messages = client.calls[0]["messages"]
     assert messages[0] == {"role": "system", "content": load_system_prompt()}
-    assert messages[1]["role"] == "user"
-    assert messages[1]["content"].startswith("<dokument>\n=== strona 1")
-    assert messages[1]["content"].endswith("\n</dokument>")
+    assert messages[:3] == prompt_messages("x")[:3]
+    assert [m["role"] for m in messages] == ["system", "user", "assistant", "user"]
+    assert messages[3]["content"].startswith("<dokument>\n=== strona 1")
+    assert messages[3]["content"].endswith("\n</dokument>")
     assert client.calls[0]["schema"] == llm_schema()
 
 
@@ -172,13 +174,13 @@ def _long_doc(pages: int = 3, chars: int = 2500) -> DocumentModel:
     )
 
 
-CHUNKED = _settings(llm_num_ctx=4096)
+CHUNKED = _settings(llm_num_ctx=5120)  # ok. 4300 znaków na fragment = 1 strona
 
 
 async def test_long_document_chunked() -> None:
     r, client = await _run([_valid(), _valid(), _valid()], settings=CHUNKED, doc=_long_doc())
     assert len(client.calls) == 3
-    assert "Fragment 2 z 3" in client.calls[1]["messages"][1]["content"]
+    assert "Fragment 2 z 3" in client.calls[1]["messages"][3]["content"]
     assert r.draft is not None and not r.fallback and r.retries == 0
     assert len(list(r.draft.iter_fields())) == 4
 
@@ -213,3 +215,11 @@ async def test_merge_failure_is_invalid_output_not_exception(monkeypatch: Any) -
     monkeypatch.setattr(module, "merge_drafts", broken)
     r, _ = await _run([_valid(), _valid(), _valid()], settings=CHUNKED, doc=_long_doc())
     assert (r.fallback, r.fallback_reason) == (True, "invalid_output")
+
+
+def test_prompt_example_is_a_clean_draft() -> None:
+    example = prompt_messages("")[2]["content"]
+    assert "\n" not in example and ": " not in example
+    draft, warnings = repair_draft(LlmDraft.model_validate_json(example))
+    assert warnings == [] and len(list(draft.iter_fields())) == 9
+    assert "Oświadczam" in prompt_messages("")[1]["content"] and draft.statements == []

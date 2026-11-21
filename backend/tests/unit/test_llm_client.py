@@ -136,7 +136,7 @@ async def test_warm_up_loads_model_with_chat_options() -> None:
 
 async def test_warm_up_prefills_system_prompt() -> None:
     seen: list[dict[str, Any]] = []
-    await _client(_record(seen)).warm_up("qwen3:4b", "PROMPT")
-    assert seen[0]["messages"][0] == {"role": "system", "content": "PROMPT"}
+    await _client(_record(seen)).warm_up("qwen3:4b", MESSAGES)
+    assert seen[0]["messages"] == MESSAGES
     assert seen[0]["options"]["num_predict"] == 1
     assert seen[0]["options"]["num_ctx"] == 8192

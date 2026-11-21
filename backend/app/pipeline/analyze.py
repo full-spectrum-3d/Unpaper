@@ -80,9 +80,31 @@ class AnalysisResult:
 
 
 @cache
+def _prompt_resource(name: str) -> str:
+    return (files("app") / "resources" / "prompts" / name).read_text(encoding="utf-8").strip()
+
+
 def load_system_prompt() -> str:
     """Prompt systemowy z `app/resources/prompts/system.md`."""
-    return (files("app") / "resources" / "prompts" / "system.md").read_text(encoding="utf-8")
+    return _prompt_resource("system.md")
+
+
+def prompt_messages(text: str, note: str = "") -> list[ChatMessage]:
+    """Wiadomości dla modelu: prompt, przykład (dokument → zwarty JSON) i dokument.
+
+    Przykład jako poprzednia tura rozmowy uczy formatu odpowiedzi skuteczniej niż opis.
+    Prefiks jest stały, więc Ollama przetwarza go raz (rozgrzewanie przy starcie).
+    """
+    return [
+        {"role": "system", "content": load_system_prompt()},
+        {"role": "user", "content": _document(_prompt_resource("example_document.txt"))},
+        {"role": "assistant", "content": _prompt_resource("example_reply.json")},
+        {"role": "user", "content": f"{note}{_document(text)}"},
+    ]
+
+
+def _document(text: str) -> str:
+    return f"<dokument>\n{text}\n</dokument>"
 
 
 async def analyze(
@@ -121,13 +143,13 @@ async def _analyze(
     if not text.strip():
         return result._fail("empty_document")
 
-    system = load_system_prompt()
-    max_chars = (settings.llm_num_ctx - RESPONSE_RESERVE_TOKENS) * CHARS_PER_TOKEN - len(system)
+    prefix_chars = sum(len(m["content"]) for m in prompt_messages(""))
+    max_chars = (settings.llm_num_ctx - RESPONSE_RESERVE_TOKENS) * CHARS_PER_TOKEN - prefix_chars
     chunks = split_prompt_text(text, max(max_chars, MIN_CHUNK_CHARS))
     if len(chunks) == 1:
-        outcome = await _single(client, settings, result, system, text, deadline, clock)
+        outcome = await _single(client, settings, result, text, deadline, clock)
     else:
-        outcome = await _chunked(client, settings, result, system, chunks, deadline, clock)
+        outcome = await _chunked(client, settings, result, chunks, deadline, clock)
     if isinstance(outcome, str):
         return result._fail(outcome)
 
@@ -140,18 +162,10 @@ async def _analyze(
     return result
 
 
-def _messages(system: str, text: str, note: str = "") -> list[ChatMessage]:
-    return [
-        {"role": "system", "content": system},
-        {"role": "user", "content": f"{note}<dokument>\n{text}\n</dokument>"},
-    ]
-
-
 async def _single(
     client: LlmClient,
     settings: Settings,
     result: AnalysisResult,
-    system: str,
     text: str,
     deadline: float,
     clock: Callable[[], float],
@@ -161,7 +175,7 @@ async def _single(
     Ponawiamy tylko odpowiedź niezgodną ze schematem (np. ucięty JSON). Błędy
     odwołań między polami poprawia `repair_draft` bez kolejnego wywołania.
     """
-    messages = _messages(system, text)
+    messages = prompt_messages(text)
     outcome = await _call(client, settings, result, messages, deadline, clock)
     if isinstance(outcome, str):
         return outcome
@@ -189,7 +203,6 @@ async def _chunked(
     client: LlmClient,
     settings: Settings,
     result: AnalysisResult,
-    system: str,
     chunks: list[str],
     deadline: float,
     clock: Callable[[], float],
@@ -199,7 +212,7 @@ async def _chunked(
     for i, chunk in enumerate(chunks):
         note = f"Fragment {i + 1} z {len(chunks)} dokumentu.\n"
         outcome = await _call(
-            client, settings, result, _messages(system, chunk, note), deadline, clock
+            client, settings, result, prompt_messages(chunk, note), deadline, clock
         )
         failure: FallbackReason | None = None
         if isinstance(outcome, str):

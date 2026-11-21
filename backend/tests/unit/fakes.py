@@ -52,7 +52,7 @@ class FakeLlmClient:
         self.models = {"qwen3:8b", "qwen3:4b"} if models is None else models
         self.calls: list[dict[str, Any]] = []
         self.warmed: list[str] = []
-        self.warm_prompts: list[str] = []
+        self.warm_messages: list[list[ChatMessage] | None] = []
 
     async def chat(
         self,
@@ -76,9 +76,9 @@ class FakeLlmClient:
             raise self.models
         return self.models
 
-    async def warm_up(self, model: str, system_prompt: str = "") -> None:
+    async def warm_up(self, model: str, messages: list[ChatMessage] | None = None) -> None:
         self.warmed.append(model)
-        self.warm_prompts.append(system_prompt)
+        self.warm_messages.append(messages)
 
     async def aclose(self) -> None:
         return None

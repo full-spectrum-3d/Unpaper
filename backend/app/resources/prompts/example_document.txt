@@ -1,0 +1,24 @@
+=== strona 1
+[POLE]
+(miejscowość, data)
+[POLE]
+(imię i nazwisko / nazwa wnioskodawcy)
+[POLE]
+(adres, telefon)
+[NAGŁÓWEK] BURMISTRZ MIASTA KOZIEGŁOWY
+[NAGŁÓWEK] WNIOSEK
+o wydanie zezwolenia na usunięcie drzew/krzewów*
+Gatunek: [POLE] Obwód pnia na wysokości 130 cm: [POLE] cm
+Nr działki: [POLE] obręb: [POLE]
+Przyczyna usunięcia: [POLE]
+[POLE]
+Planowany termin usunięcia: [POLE]
+Czy planowane są nasadzenia zastępcze? [OPCJA] tak [OPCJA] nie
+Jeśli tak, liczba drzew do posadzenia: [POLE]
+Oświadczam, że posiadam tytuł prawny do władania nieruchomością.
+Załączniki:
+1) rysunek z lokalizacją drzew
+2) zgoda właściciela nieruchomości
+[POLE]
+(podpis wnioskodawcy)
+* niepotrzebne skreślić
