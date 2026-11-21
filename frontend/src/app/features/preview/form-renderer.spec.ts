@@ -83,4 +83,18 @@ describe('FormRenderer visibility', () => {
     expect(hasHeading('Dane innej osoby')).toBe(true);
     warn.mockRestore();
   });
+
+  it('hides the TERYT cascade when the country is cleared', async () => {
+    await create();
+    const combo = (name: string) =>
+      [...el().querySelectorAll<HTMLInputElement>('input[role=combobox]')].find(
+        (i) => el().querySelector(`label[for="${i.id}"]`)?.textContent?.trim() === name,
+      );
+    expect(combo('Kraj')?.value).toBe('Polska');
+    expect(combo('Województwo')).toBeDefined();
+
+    el().querySelector<HTMLButtonElement>('button[aria-label="Wyczyść: Kraj"]')!.click();
+    await fixture.whenStable();
+    expect(combo('Województwo')).toBeUndefined();
+  });
 });

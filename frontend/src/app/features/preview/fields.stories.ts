@@ -54,7 +54,18 @@ const allTypes: Question[] = [
     options: opts,
   }),
   f('sel', 'SELECT', { title: 'Wybór', options: opts }),
-  f('dict', 'SELECT', { title: 'Kraj', dictionaryName: 'Kraje' }),
+  f('dict', 'SELECT', {
+    title: 'Kraj',
+    dictionaryName: 'Kraje',
+    defaultValue: ['Polska'],
+    searchEnabled: true,
+  }),
+  f('teryt', 'SELECT', {
+    title: 'TERYT_4G_DOWODOWY',
+    dictionaryName: 'TERYT_4G_DOWODOWY',
+    searchEnabled: true,
+    defaultValue: [],
+  }),
   f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
   f('data', 'DATEPICKER', { title: 'Data' }),
   f('plik', 'FILE_UPLOADER', { title: 'Załącznik' }),
@@ -94,9 +105,17 @@ export const AllTypes: Story = {
     expect(c.getAllByRole('option').length).toBeGreaterThan(0);
     await userEvent.keyboard('{Escape}');
 
-    await userEvent.click(c.getByRole('combobox', { name: 'Kraj' }));
+    const kraj = c.getByRole('combobox', { name: 'Kraj' });
+    expect(kraj).toHaveValue('Polska');
+    await userEvent.click(kraj);
     expect(c.getByRole('option', { name: 'Polska' })).toBeVisible();
     await userEvent.keyboard('{Escape}');
+
+    expect(c.queryByText('TERYT_4G_DOWODOWY')).toBeNull();
+    expect(c.queryByRole('combobox', { name: 'Powiat' })).toBeNull();
+    await userEvent.click(c.getByRole('combobox', { name: 'Województwo' }));
+    await userEvent.click(c.getByRole('option', { name: 'mazowieckie' }));
+    expect(c.getByRole('combobox', { name: 'Powiat' })).toBeVisible();
 
     const chk = c.getByRole('checkbox', { name: 'Zgoda ogólna' });
     await userEvent.click(chk);
