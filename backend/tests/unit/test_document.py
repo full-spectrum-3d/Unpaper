@@ -191,3 +191,68 @@ def test_rodo_heading_about_processing_your_data_skipped() -> None:
         }
     )
     assert doc.to_prompt_text() == "=== strona 1\nRasa psa: [POLE]"
+
+
+def test_page_numbers_dropped() -> None:
+    doc = _doc([_p("1/6"), _p("Wersja styczeń 2026 r. | Strona 1 z 2"), _p("strona 2/2"), _p("A")])
+    assert doc.to_prompt_text() == "=== strona 1\nA"
+
+
+@pytest.mark.parametrize(
+    "start",
+    [
+        _p("Pouczenie:"),
+        _p("Objaśnienia dotyczące sposobu wypełniania deklaracji"),
+        _p("Informacja o przetwarzaniu danych osobowych"),
+        _p("Stosownie do art. 13 i 14 Rozporządzenia Parlamentu Europejskiego"),
+        _h("I. ADNOTACJA ORGANU"),
+        _h("Wypełnia urząd"),
+    ],
+)
+def test_instructions_and_office_notes_skipped(start: dict[str, Any]) -> None:
+    doc = _doc(
+        [
+            _p("Rasa psa ………"),
+            start,
+            _p("1. Deklarację należy wypełnić czytelnie."),
+            _h("PESEL;"),
+            _p("Administrator nie przewiduje profilowania."),
+        ]
+    )
+    assert doc.to_prompt_text() == "=== strona 1\nRasa psa [POLE]"
+
+
+def test_heading_after_instructions_resumes() -> None:
+    doc = _doc(
+        [_p("Pouczenie:"), _p("Opłatę wnosi się…"), _h("Dane nieruchomości"), _p("Obręb ………")]
+    )
+    assert doc.to_prompt_text().splitlines()[1:] == [
+        "[NAGŁÓWEK] Dane nieruchomości",
+        "Obręb [POLE]",
+    ]
+
+
+def test_repeated_fragment_collapsed() -> None:
+    form = [
+        _h("Dane klubu sportowego"),
+        _p("Nazwa klubu ………"),
+        _p("Telefon kontaktowy ………"),
+        _p("Adres siedziby klubu sportowego ………"),
+        _p("Skrzynka ePUAP - adres skrzynki: ………"),
+    ]
+    doc = _doc([_h("Wniosek o stypendium"), *form], [_h("Wniosek o nagrodę"), *form, _p("Inne")])
+    lines = doc.to_prompt_text().splitlines()
+    assert lines[-3:] == [
+        "[NAGŁÓWEK] Wniosek o nagrodę",
+        "[POWTÓRZENIE] fragment jak wyżej, od „[NAGŁÓWEK] Dane klubu sportowego”",
+        "Inne",
+    ]
+    assert lines.count("Nazwa klubu [POLE]") == 1
+    assert doc.to_prompt_text(collapse_repeats=False).count("Nazwa klubu [POLE]") == 2
+
+
+def test_short_repeats_kept() -> None:
+    doc = _doc(
+        [_p("Imię ………"), _p("Nazwisko ………"), _h("Kandydat"), _p("Imię ………"), _p("Nazwisko ………")]
+    )
+    assert doc.to_prompt_text().count("Imię [POLE]") == 2
