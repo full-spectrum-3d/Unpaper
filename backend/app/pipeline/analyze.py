@@ -19,6 +19,7 @@ from app.core.config import LlmMode, Settings
 from app.models.document import DocumentModel
 from app.models.draft import FormDraft, llm_schema
 from app.models.warning import ConversionWarning
+from app.pipeline.draft_normalize import normalize_draft
 from app.pipeline.llm_client import (
     ChatMessage,
     LlmClient,
@@ -149,7 +150,8 @@ async def _analyze(
         if isinstance(parsed, ValidationError):
             return result._fail("invalid_output")
 
-    result.draft = parsed
+    result.draft, warnings = normalize_draft(parsed, doc)
+    result.warnings.extend(warnings)
     return result
 
 

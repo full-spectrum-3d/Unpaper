@@ -138,3 +138,14 @@ async def test_unavailable_falls_back() -> None:
 async def test_default_mode_from_settings() -> None:
     r, client = await _run([_valid()], settings=_settings(llm_default_mode="fast"))
     assert r.mode == "fast" and client.calls[0]["model"] == "qwen3:4b"
+
+
+async def test_normalization_warnings_in_result() -> None:
+    import json
+
+    content = json.loads(_valid().content)
+    content["title"] = "WNIOSEK O USTALENIE NUMERU PORZĄDKOWEGO NIERUCHOMOŚCI"
+    r, _ = await _run([reply(json.dumps(content, ensure_ascii=False))])
+    assert r.draft is not None
+    assert r.draft.title == "Wniosek o ustalenie numeru porządkowego nieruchomości"
+    assert [w.code for w in r.warnings] == ["W16_TITLE_CASE_NORMALIZED"]
