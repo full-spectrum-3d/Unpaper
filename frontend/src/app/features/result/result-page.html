@@ -29,13 +29,7 @@
           <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
         }
         <div id="result-panel-json" role="tabpanel" aria-labelledby="result-tab-json" [hidden]="activeTab() !== 'json'">
-          <!-- Whitespace inside <pre> is significant: keep the content on one line. -->
-          <pre
-            role="region"
-            tabindex="0"
-            aria-label="Wynik konwersji w formacie JSON"
-            class="overflow-auto p-[10px] text-[13px] font-mono focus-ring"
-          >@for (seg of segments(); track $index) {@if (seg.highlight) {<span #fragment role="group" tabindex="-1" class="block bg-warning-subtle focus-ring" [attr.aria-label]="'Fragment JSON: ' + highlightPath()">@for (l of seg.lines; track l.n) {<span [attr.data-line]="l.n">{{ l.text }}</span>}</span>} @else {@for (l of seg.lines; track l.n) {<span [attr.data-line]="l.n">{{ l.text }}</span>}}}</pre>
+          <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
         </div>
         <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
           <app-report-view [report]="report()" [ranges]="json().ranges" (showInJson)="onShowInJson($event)" />

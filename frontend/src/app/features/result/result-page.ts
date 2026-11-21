@@ -1,8 +1,5 @@
 import {
   Component,
-  ElementRef,
-  Injector,
-  afterNextRender,
   computed,
   inject,
   input,
@@ -20,6 +17,7 @@ import { resultFileName } from '../import/zip-results';
 import { isFormDefinition } from '../preview/form-definition';
 import { FormRenderer } from '../preview/form-renderer';
 import { formatJson } from './json-lines';
+import { JsonView } from './json-view';
 import { asReport } from './report';
 import { ReportView } from './report-view';
 
@@ -28,13 +26,12 @@ const TAB_LABELS: Record<Tab, string> = { preview: 'Podgląd formularza', json: 
 
 @Component({
   selector: 'app-result-page',
-  imports: [Card, Button, RouterLink, FormRenderer, ReportView],
+  imports: [Card, Button, RouterLink, FormRenderer, ReportView, JsonView],
   templateUrl: './result-page.html',
   host: { class: 'block p-section' },
 })
 export class ResultPage {
   private readonly store = inject(Store);
-  private readonly injector = inject(Injector);
 
   readonly id = input.required<string>();
 
@@ -55,20 +52,7 @@ export class ResultPage {
   readonly highlightPath = signal<string | null>(null);
   protected readonly report = computed(() => asReport(this.item()?.report));
   protected readonly json = computed(() => formatJson(this.item()?.result));
-  /** JSON lines split into plain runs and the one highlighted range; newlines kept so textContent stays exact. */
-  protected readonly segments = computed(() => {
-    const { lines, ranges } = this.json();
-    const path = this.highlightPath();
-    const range = path === null ? undefined : ranges.get(path);
-    const cuts = range ? [0, range.start, range.end + 1, lines.length] : [0, lines.length];
-    return cuts.slice(1).map((end, i) => ({
-      highlight: !!range && i === 1,
-      lines: lines
-        .slice(cuts[i], end)
-        .map((text, j) => ({ n: cuts[i] + j, text: cuts[i] + j < lines.length - 1 ? text + '\n' : text })),
-    }));
-  });
-  private readonly fragment = viewChild<ElementRef<HTMLElement>>('fragment');
+  private readonly jsonView = viewChild.required(JsonView);
 
   protected selectTab(tab: Tab): void {
     if (tab !== 'json') this.highlightPath.set(null);
@@ -89,15 +73,7 @@ export class ResultPage {
   protected onShowInJson(path: string): void {
     this.highlightPath.set(path);
     this.activeTab.set('json');
-    afterNextRender(
-      () => {
-        const el = this.fragment()?.nativeElement;
-        // Centre the first line, not the block: a tall range would push its start off-screen.
-        el?.querySelector('[data-line]')?.scrollIntoView?.({ block: 'center' });
-        el?.focus({ preventScroll: true });
-      },
-      { injector: this.injector },
-    );
+    this.jsonView().reveal();
   }
 
   protected download(): void {
