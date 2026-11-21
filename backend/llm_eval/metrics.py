@@ -14,6 +14,7 @@ from app.models.draft import FormDraft
 
 MATCH_THRESHOLD = 0.6
 TITLE_THRESHOLD = 0.8
+KIND_BONUS = 0.15  # przy podobnych etykietach wygrywa pole zgodnego typu
 STEM = 4
 _WORD = re.compile(r"\w+")
 _STOP = frozenset({"i", "w", "z", "o", "na", "do", "od", "lub", "oraz", "nr", "numer", "się"})
@@ -61,19 +62,18 @@ def score_draft(draft: FormDraft | None, expected: dict[str, Any]) -> CaseScore:
     fields = [f for _, f in draft.iter_fields()] if draft else []
     pairs = sorted(
         (
-            (max(similarity(f.label, name) for name in [s["label"], *s["aliases"]]), i, j)
+            (_label_score(f.label, s), f.kind in s["kind"], i, j)
             for i, f in enumerate(fields)
             for j, s in enumerate(specs)
         ),
+        key=lambda p: (p[0] + (KIND_BONUS if p[1] else 0.0), p[2], p[3]),
         reverse=True,
     )
     used_f: set[int] = set()
     used_s: set[int] = set()
     matches: list[tuple[int, int]] = []
-    for value, i, j in pairs:
-        if value < MATCH_THRESHOLD:
-            break
-        if i in used_f or j in used_s:
+    for value, _, i, j in pairs:
+        if value < MATCH_THRESHOLD or i in used_f or j in used_s:
             continue
         used_f.add(i)
         used_s.add(j)
@@ -103,6 +103,10 @@ def score_draft(draft: FormDraft | None, expected: dict[str, Any]) -> CaseScore:
             if (i, j) not in kind_ok
         ],
     )
+
+
+def _label_score(label: str, spec: dict[str, Any]) -> float:
+    return max(similarity(label, name) for name in [spec["label"], *spec["aliases"]])
 
 
 def _ok(actual: str, wanted: str | None, threshold: float) -> bool | None:

@@ -21,6 +21,7 @@ from typing import Any
 
 from app.core.config import Settings
 from app.models.document import DocumentModel
+from app.models.draft import FormDraft
 from app.models.warning import ConversionWarning
 from app.pipeline.analyze import analyze, prompt_messages
 from app.pipeline.build import build_form
@@ -97,6 +98,37 @@ async def run_case(
     return row
 
 
+def rescore(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Metryki pól od nowa z zapisanych etykiet i typów (po zmianie oczekiwań lub metryk)."""
+    cases = {c["slug"]: c for c in load_cases()}
+    for row in rows:
+        fields = [
+            {"id": f"f{i}", "label": label, "kind": kind, "required": True}
+            for i, (label, kind) in enumerate(row["fields"], 1)
+        ]
+        draft = FormDraft.model_validate(
+            {
+                "title": "x",
+                "authority_kind": "URZAD",
+                "authority_name": "x",
+                "applicant_kinds": ["SELF"],
+                "subject_pages": [
+                    {
+                        "title": "x",
+                        "sections": [{"title": "x", "repeating": False, "fields": fields}],
+                    }
+                ]
+                if fields
+                else [],
+            }
+        )
+        score = score_draft(draft, cases[row["case"]]["expected"])
+        keep = {"title_ok": row["title_ok"], "authority_ok": row["authority_ok"]}
+        row.update(asdict(score), **keep)
+        row.update(recall=round(score.recall, 2), precision=round(score.precision, 2))
+    return rows
+
+
 def table(rows: list[dict[str, Any]]) -> str:
     head = (
         "| przypadek | model | czas s | wyj. tok | pola ok | trafność | precyzja | typy ok "
@@ -137,10 +169,17 @@ def summary(rows: list[dict[str, Any]]) -> str:
 
 async def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("--model", action="append", required=True, help="rules lub nazwa modelu")
+    parser.add_argument("--model", action="append", help="rules lub nazwa modelu")
+    parser.add_argument("--rescore", type=Path, help="przelicz metryki zapisanego wyniku")
     parser.add_argument("--case", action="append", help="slug przypadku (domyślnie wszystkie)")
     parser.add_argument("--budget", type=float, default=900, help="budżet sekund na przypadek")
     args = parser.parse_args()
+    if args.rescore:
+        rescored = rescore(json.loads(args.rescore.read_text(encoding="utf-8")))
+        print(table(rescored) + "\n\n" + summary(rescored))
+        return
+    if not args.model:
+        parser.error("podaj --model albo --rescore")
 
     settings = Settings(
         app_env="development",
