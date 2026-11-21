@@ -65,11 +65,11 @@ def test_ready_llm_down() -> None:
     assert response.status_code == 503 and response.json()["code"] == "LLM_UNAVAILABLE"
 
 
-def test_convert_has_no_mode_param() -> None:
+def test_convert_has_only_report_and_identity_source_params() -> None:
     with TestClient(create_app(_settings(), llm_client=FakeLlmClient())) as client:
         spec = client.get("/openapi.json").json()
     params = spec["paths"]["/api/v1/forms/convert"]["post"]["parameters"]
-    assert [p["name"] for p in params] == ["report"]
+    assert [p["name"] for p in params] == ["report", "identitySource"]
 
 
 def test_openapi_documents_ready_failure() -> None:

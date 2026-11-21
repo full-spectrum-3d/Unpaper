@@ -51,9 +51,12 @@ class BuildOptions:
     id_factory: Callable[[], str] = _new_uuid
 
     @classmethod
-    def from_settings(cls, settings: Settings) -> Self:
+    def from_settings(
+        cls, settings: Settings, identity_source: Literal["MLPZ", "PESEL"] | None = None
+    ) -> Self:
+        """`identity_source` (np. z parametru żądania) ma pierwszeństwo przed ustawieniem."""
         return cls(
-            identity_source=settings.initial_data_identity_source,
+            identity_source=identity_source or settings.initial_data_identity_source,
             finish_page_style=settings.finish_page_style,
             max_sections_per_page=settings.max_sections_per_page,
             rodo_clause_url=settings.rodo_clause_url,
