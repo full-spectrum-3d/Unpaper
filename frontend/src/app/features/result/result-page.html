@@ -24,6 +24,13 @@
             }
           </span>
           <button appButton type="button" variant="secondary" (click)="download()">Pobierz .json</button>
+          <a
+            routerLink="/validator"
+            [queryParams]="{ item: i.id }"
+            class="border rounded-field px-[12px] py-field-y font-semibold text-body focus-ring bg-surface text-primary border-primary hover:bg-primary-subtle"
+          >
+            Sprawdź w walidatorze
+          </a>
         </span>
         @if (!form()) {
           <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>

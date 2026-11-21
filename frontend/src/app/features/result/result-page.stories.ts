@@ -112,6 +112,8 @@ export const Done: Story = {
     expect(input.value).toBe('Jan');
 
     expect(c.getByRole('button', { name: 'Pobierz .json' })).toBeVisible();
+    const validator = new URL((c.getByRole('link', { name: 'Sprawdź w walidatorze' }) as HTMLAnchorElement).href);
+    expect(validator.pathname + validator.search).toBe('/validator?item=d1');
     expect(backPath(c, '← Wróć do importu')).toBe('/import');
   },
 };

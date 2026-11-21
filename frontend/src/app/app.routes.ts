@@ -13,5 +13,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/result/result-page').then((m) => m.ResultPage),
   },
+  {
+    path: 'validator',
+    title: 'Walidator',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/validator/validator-page').then((m) => m.ValidatorPage),
+  },
   { path: '**', redirectTo: 'import' },
 ];
