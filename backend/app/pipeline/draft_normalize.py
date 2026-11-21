@@ -25,6 +25,8 @@ UPPERCASE_TITLE_RATIO = 0.8
 ABBREVIATIONS = frozenset({"NIP", "PESEL", "REGON", "KRS", "RODO", "CEIDG", "VAT"})
 
 _FILL = re.compile(r"[.…_]{3,}")
+# „Załącznik 2”, „Zał. nr 3”, „2)”: pozycja listy załączników bez nazwy.
+_UNNAMED_ATTACHMENT = re.compile(r"(?i)^\s*(załącznik|zał\.?)?\s*(nr\.?\s*)?\d*\s*[.)]?\s*$")
 _WHITESPACE = re.compile(r"\s+")
 _WORD = re.compile(r"\w+")
 
@@ -47,6 +49,8 @@ def normalize_draft(
 
     _downgrade_choices_without_options(draft, data, warnings)
     _remove_applicant_fields(data, warnings)
+    _remove_duplicate_fields(data, warnings)
+    _remove_unnamed_attachments(data, warnings)
     data["statements"] = statements_from_document(doc)
     _remove_statement_fields(data, warnings)
     repair_conditions(data, warnings)
@@ -126,6 +130,65 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
                     )
                 )
             section["fields"] = kept
+
+
+def _remove_duplicate_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Pole o tej samej etykiecie co wcześniejsze w tej samej sekcji to powtórzenie modelu."""
+    id_map: dict[str, str] = {}
+    for i, page in enumerate(data["subject_pages"]):
+        for j, section in enumerate(page["sections"]):
+            first: dict[str, str] = {}
+            kept = []
+            for k, field in enumerate(section["fields"]):
+                key = _normalize(field["label"])
+                if key not in first:
+                    first[key] = field["id"]
+                    kept.append(field)
+                    continue
+                id_map[field["id"]] = first[key]
+                warnings.append(
+                    ConversionWarning(
+                        code="W25_DUPLICATE_FIELD_REMOVED",
+                        message=f"Usunięto powtórzone pole „{field['label']}”.",
+                        path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                    )
+                )
+            section["fields"] = kept
+    for _, field in iter_field_dicts(data):
+        for cond in field["visible_when"]:
+            cond["field_id"] = id_map.get(cond["field_id"], cond["field_id"])
+
+
+def _remove_unnamed_attachments(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Załączniki bez nazwy („Załącznik 2”) - z listy załączników i pola typu `file`."""
+    kept = []
+    for i, name in enumerate(data["attachments"]):
+        if _UNNAMED_ATTACHMENT.match(name):
+            warnings.append(
+                ConversionWarning(
+                    code="W26_UNNAMED_ATTACHMENT_REMOVED",
+                    message=f"Usunięto załącznik bez nazwy „{name}”.",
+                    path=f"attachments[{i}]",
+                )
+            )
+        else:
+            kept.append(name)
+    data["attachments"] = kept
+    for i, page in enumerate(data["subject_pages"]):
+        for j, section in enumerate(page["sections"]):
+            fields = []
+            for k, field in enumerate(section["fields"]):
+                if field["kind"] == "file" and _UNNAMED_ATTACHMENT.match(field["label"]):
+                    warnings.append(
+                        ConversionWarning(
+                            code="W26_UNNAMED_ATTACHMENT_REMOVED",
+                            message=f"Usunięto pole załącznika bez nazwy „{field['label']}”.",
+                            path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                        )
+                    )
+                else:
+                    fields.append(field)
+            section["fields"] = fields
 
 
 def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:

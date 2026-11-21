@@ -221,7 +221,8 @@
     ],
     "aliases": [
      "sposób rozliczenia nadpłaty",
-     "kwotę nadpłaty proszę"
+     "rozliczenie nadpłaty",
+     "co zrobić z nadpłatą"
     ],
     "optional": false
    },

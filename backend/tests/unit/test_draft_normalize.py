@@ -2,6 +2,8 @@ import copy
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from app.models.document import DocumentModel
 from app.models.draft import DraftField, FormDraft
 from app.pipeline.draft_normalize import matches_text, normalize_draft
@@ -56,7 +58,7 @@ def test_valid_draft_unchanged() -> None:
 def test_condition_on_downgraded_choice_is_dropped() -> None:
     def mutate(d: dict[str, Any]) -> None:
         _fields(d).append(
-            {"id": "f5", "label": "Obręb", "kind": "single_choice", "required": True,
+            {"id": "f5", "label": "Numer ewidencyjny", "kind": "single_choice", "required": True,
              "options": ["Tak"]}
         )  # fmt: skip
         _fields(d)[3]["visible_when"] = [{"field_id": "f5", "op": "equals", "value": "Tak"}]
@@ -221,3 +223,43 @@ def test_inflected_authority_accepted() -> None:
         _make(lambda d: d.update(authority_name="Urząd Gminy Elbląg")), doc
     )
     assert warnings == []
+
+
+def test_duplicate_field_in_section_removed_and_conditions_redirected() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).extend(
+            [
+                {
+                    "id": "f5",
+                    "label": "Czy budować?",
+                    "kind": "single_choice",
+                    "required": True,
+                    "options": ["Tak", "Nie"],
+                },
+                {
+                    "id": "f6",
+                    "label": "czy  budować?",
+                    "kind": "single_choice",
+                    "required": True,
+                    "options": ["Tak", "Nie"],
+                },
+            ]
+        )
+        _fields(d)[0]["visible_when"] = [{"field_id": "f6", "op": "equals", "value": "Tak"}]
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert _codes(warnings).count("W25_DUPLICATE_FIELD_REMOVED") == 1
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4", "f5"]
+    assert out.subject_pages[0].sections[0].fields[0].visible_when[0].field_id == "f5"
+
+
+@pytest.mark.parametrize("name", ["Załącznik 2", "Zał. nr 3", "2)", "załącznik"])
+def test_unnamed_attachments_removed(name: str) -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        d["attachments"] = ["Korekta deklaracji", name]
+        _fields(d).append({"id": "f5", "label": name, "kind": "file", "required": True})
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert out.attachments == ["Korekta deklaracji"]
+    assert _codes(warnings).count("W26_UNNAMED_ATTACHMENT_REMOVED") == 2
+    assert len(list(out.iter_fields())) == 4
