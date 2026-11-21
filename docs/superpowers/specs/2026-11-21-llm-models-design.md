@@ -228,6 +228,7 @@ Wywołujący wybiera tryb dla każdego żądania: `POST /forms/convert?mode=accu
 | fragmentacja długich dokumentów | tak | tak |
 | zmierzony czas, Wniosek 1, CPU, szkic przed odchudzeniem | 181–195 s | 109–131 s |
 | cel po odchudzeniu (do pomiaru) | ≤ 120 s | ≤ 70 s |
+| **zmierzony po implementacji, Wniosek 1 (DOCX), 2026-11-21** | **99,5 s** (wej. 1022 / wyj. 283 tok), 4/4 pola | **70,4 s** (wej. 1016 / wyj. 308 tok), 4/4 pola + 1 dodatkowe, przekręcona nazwa adresata („Elusing”) |
 
 Cel spec §13.2 (p50 ≤ 60 s) na CPU nie jest osiągalny w żadnym trybie. Proponowana zmiana spec §13.2: tryb `fast` p50 ≤ 70 s, p95 ≤ 150 s; tryb `accurate` p50 ≤ 120 s, p95 ≤ 300 s. Do akceptacji przez zespół.
 
