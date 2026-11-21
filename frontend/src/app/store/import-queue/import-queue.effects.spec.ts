@@ -8,6 +8,8 @@ import { CONVERT_FILE, ConvertFileFn } from '../../features/import/convert-file'
 import { FileRegistry } from '../../features/import/file-registry';
 import { ImportQueueActions as A } from './import-queue.actions';
 import { ImportQueueEffects } from './import-queue.effects';
+import { AuthActions } from '../auth/auth.actions';
+import { authFeatureKey } from '../auth/auth.reducer';
 import { QueueItem, importQueueFeatureKey } from './import-queue.reducer';
 
 const item = (id: string, status: QueueItem['status']): QueueItem => ({
@@ -25,20 +27,21 @@ const item = (id: string, status: QueueItem['status']): QueueItem => ({
 const running = (id: string, startedAt = 0): QueueItem => ({ ...item(id, 'processing'), startedAt });
 const tick = () => new Promise((r) => setTimeout(r));
 
-const stateOf = (items: QueueItem[]) => ({
+const stateOf = (items: QueueItem[], token: string | null = 't') => ({
+  [authFeatureKey]: { token },
   [importQueueFeatureKey]: {
     ids: items.map((i) => i.id),
     entities: Object.fromEntries(items.map((i) => [i.id, i])),
   },
 });
 
-function setup(items: QueueItem[], convert: ConvertFileFn = () => of({ ok: 1 })) {
+function setup(items: QueueItem[], convert: ConvertFileFn = () => of({ ok: 1 }), token: string | null = 't') {
   const actions$ = new Subject<Action>();
   TestBed.configureTestingModule({
     providers: [
       ImportQueueEffects,
       provideMockActions(() => actions$),
-      provideMockStore({ initialState: stateOf(items) }),
+      provideMockStore({ initialState: stateOf(items, token) }),
       { provide: CONVERT_FILE, useValue: convert },
     ],
   });
@@ -47,6 +50,8 @@ function setup(items: QueueItem[], convert: ConvertFileFn = () => of({ ok: 1 }))
   const out: Action[] = [];
   effects.schedule$.subscribe((a) => out.push(a));
   effects.convert$.subscribe((a) => out.push(a));
+  effects.session$.subscribe((a) => out.push(a));
+  effects.cleanup$.subscribe();
   return { actions$, out, registry, effects, store: TestBed.inject(MockStore) };
 }
 
@@ -128,5 +133,51 @@ describe('ImportQueueEffects', () => {
     registry.add('1', new File(['x'], '1.pdf'));
     actions$.next(A.convertStarted({ id: '1', startedAt: 0 }));
     expect(registry.get('1')).toBeUndefined();
+  });
+
+  it('does not start files without a token, resumes after loginSuccess', async () => {
+    const { actions$, out, store } = setup([item('1', 'pending')], undefined, null);
+    actions$.next(A.filesAdded({ items: [] }));
+    await tick();
+    expect(out).toEqual([]);
+    store.setState({ ...stateOf([item('1', 'pending')]) });
+    actions$.next(AuthActions.loginSuccess({ token: 't', expiresAt: 1, username: 'a' }));
+    await tick();
+    expect(out[0]).toEqual(expect.objectContaining({ type: A.convertStarted.type, id: '1' }));
+  });
+
+  it('clears the registry on manual logout only', () => {
+    const { actions$, registry } = setup([]);
+    registry.add('1', new File(['x'], '1.pdf'));
+    actions$.next(AuthActions.logout({ reason: 'expired' }));
+    expect(registry.get('1')).toBeDefined();
+    actions$.next(AuthActions.logout({ reason: 'manual' }));
+    expect(registry.get('1')).toBeUndefined();
+  });
+
+  it('keeps the queue when the same user logs back in, clears it for another user', () => {
+    const { actions$, out, registry } = setup([]);
+    const login = (username: string) => AuthActions.loginSuccess({ token: 't', expiresAt: 1, username });
+    registry.add('1', new File(['x'], '1.pdf'));
+    actions$.next(login('a'));
+    actions$.next(AuthActions.logout({ reason: 'expired' }));
+    actions$.next(login('a'));
+    expect(registry.get('1')).toBeDefined();
+    expect(out).toEqual([]);
+    actions$.next(AuthActions.logout({ reason: 'expired' }));
+    actions$.next(login('b'));
+    expect(registry.get('1')).toBeUndefined();
+    expect(out).toEqual([A.cleared()]);
+  });
+
+  it('removal releases the file unless the item is still in the queue', async () => {
+    const { actions$, registry } = setup([running('2')]);
+    registry.add('1', new File(['x'], '1.pdf'));
+    registry.add('2', new File(['x'], '2.pdf'));
+    actions$.next(A.removed({ id: '1' }));
+    actions$.next(A.removed({ id: '2' }));
+    await tick();
+    expect(registry.get('1')).toBeUndefined();
+    expect(registry.get('2')).toBeDefined();
   });
 });

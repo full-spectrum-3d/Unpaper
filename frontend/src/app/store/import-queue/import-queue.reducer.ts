@@ -1,6 +1,7 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { FileStatus } from '../../shared/ui/badge/badge';
+import { AuthActions } from '../auth/auth.actions';
 import { ImportQueueActions } from './import-queue.actions';
 
 export const importQueueFeatureKey = 'importQueue';
@@ -51,4 +52,7 @@ export const importQueueReducer = createReducer(
   on(ImportQueueActions.removed, (state, { id }) =>
     state.entities[id]?.status === 'processing' ? state : adapter.removeOne(id, state),
   ),
+  // Late results of in-flight conversions then hit the missing-id guards above and are no-ops.
+  on(ImportQueueActions.cleared, (state) => adapter.removeAll(state)),
+  on(AuthActions.logout, (state, { reason }) => (reason === 'manual' ? adapter.removeAll(state) : state)),
 );

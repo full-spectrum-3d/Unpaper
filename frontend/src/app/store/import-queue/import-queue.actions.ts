@@ -1,4 +1,4 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { QueueItem } from './import-queue.reducer';
 
 export const ImportQueueActions = createActionGroup({
@@ -10,5 +10,7 @@ export const ImportQueueActions = createActionGroup({
     convertFailed: props<{ id: string; error: string }>(),
     retry: props<{ id: string }>(),
     removed: props<{ id: string }>(),
+    /** A different user signed in: drop the previous user's queue. */
+    cleared: emptyProps(),
   },
 });

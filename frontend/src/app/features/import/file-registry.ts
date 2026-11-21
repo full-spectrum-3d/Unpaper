@@ -16,4 +16,8 @@ export class FileRegistry {
   delete(id: string): void {
     this.files.delete(id);
   }
+
+  clear(): void {
+    this.files.clear();
+  }
 }

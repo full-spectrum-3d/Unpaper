@@ -6,6 +6,8 @@ import { CONVERT_FILE, ConvertFileFn } from '../../features/import/convert-file'
 import { FileRegistry } from '../../features/import/file-registry';
 import { ImportQueueActions } from './import-queue.actions';
 import { ImportQueueEffects } from './import-queue.effects';
+import { authFeatureKey, authReducer } from '../auth/auth.reducer';
+import { AuthActions } from '../auth/auth.actions';
 import { QueueItem, importQueueFeatureKey, importQueueReducer } from './import-queue.reducer';
 import { selectQueueCounts, selectQueueItems } from './import-queue.selectors';
 
@@ -24,13 +26,14 @@ const pending = (id: string): QueueItem => ({
 function setup(convert: ConvertFileFn, ids: string[], withFile: (id: string) => boolean = () => true) {
   TestBed.configureTestingModule({
     providers: [
-      provideStore({ [importQueueFeatureKey]: importQueueReducer }),
+      provideStore({ [importQueueFeatureKey]: importQueueReducer, [authFeatureKey]: authReducer }),
       provideEffects(ImportQueueEffects),
       { provide: CONVERT_FILE, useValue: convert },
     ],
   });
   const store = TestBed.inject(Store);
   const registry = TestBed.inject(FileRegistry);
+  store.dispatch(AuthActions.loginSuccess({ token: 't', expiresAt: Date.now() + 1e6, username: 'u' }));
   const started: string[] = [];
   TestBed.inject(ScannedActionsSubject).subscribe((a) => {
     if (a.type === ImportQueueActions.convertStarted.type) started.push((a as unknown as { id: string }).id);

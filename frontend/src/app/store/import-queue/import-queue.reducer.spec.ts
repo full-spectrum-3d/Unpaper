@@ -1,3 +1,4 @@
+import { AuthActions } from '../auth/auth.actions';
 import { ImportQueueActions } from './import-queue.actions';
 import { QueueItem, importQueueFeatureKey, importQueueReducer, initialImportQueueState } from './import-queue.reducer';
 import { selectDoneItems, selectQueueCounts, selectQueueItems } from './import-queue.selectors';
@@ -98,5 +99,22 @@ describe('importQueue selectors', () => {
 
   it('selectDoneItems returns only done', () => {
     expect(selectDoneItems(root).map((i) => i.id)).toEqual(['c', 'e']);
+  });
+});
+
+describe('importQueueReducer session handling', () => {
+  it('manual logout clears the queue', () => {
+    const state = importQueueReducer(withItems(item('1'), item('2')), AuthActions.logout({ reason: 'manual' }));
+    expect(state.ids).toEqual([]);
+  });
+
+  it.each(['expired', 'unauthorized'] as const)('%s logout keeps the queue', (reason) => {
+    const before = withItems(item('1'));
+    expect(importQueueReducer(before, AuthActions.logout({ reason }))).toBe(before);
+  });
+
+  it('late result for a cleared item is a no-op', () => {
+    const cleared = importQueueReducer(withItems(item('1', { status: 'processing' })), ImportQueueActions.cleared());
+    expect(importQueueReducer(cleared, ImportQueueActions.convertSucceeded({ id: '1', result: {}, durationMs: 1 }))).toBe(cleared);
   });
 });
