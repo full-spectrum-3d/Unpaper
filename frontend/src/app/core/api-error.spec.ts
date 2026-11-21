@@ -25,6 +25,10 @@ describe('toUserMessage', () => {
     );
   });
 
+  it('does not treat 404 on other endpoints as disabled login', () => {
+    expect(toUserMessage(err(404, null, { url: '/api/v1/forms' }))).toBe('Wystąpił nieoczekiwany błąd');
+  });
+
   it('falls back to detail', () => {
     expect(toUserMessage(err(500, { code: 'OTHER', detail: 'Coś poszło nie tak' }))).toBe('Coś poszło nie tak');
   });

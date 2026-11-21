@@ -66,4 +66,13 @@ describe('interceptors', () => {
     expect(dispatch).not.toHaveBeenCalled();
     expect(onError).toHaveBeenCalled();
   });
+
+  it('500 does not logout', () => {
+    const { http, ctrl, dispatch } = setup('t1');
+    const onError = vi.fn();
+    http.get('/api/v1/dictionaries').subscribe({ error: onError });
+    ctrl.expectOne('/api/v1/dictionaries').flush({}, { status: 500, statusText: 'Server Error' });
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
+  });
 });
