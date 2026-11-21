@@ -100,6 +100,14 @@ def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> Bu
         PageNode("koniec", "Strona końcowa", TabType.FINISH, finish_page_sections(draft, options))
     )
 
+    if not options.rodo_clause_url:
+        warnings.append(
+            ConversionWarning(
+                code=IssueCode.W28_RODO_CLAUSE_URL_MISSING,
+                message="Zgoda RODO nie ma linku do klauzuli informacyjnej: ustaw "
+                "RODO_CLAUSE_URL (np. adres w BIP) albo dodaj link w Generatorze.",
+            )
+        )
     _make_links_accessible(pages)
     assign_unique_tech_names(pages)
     apply_dictionaries(pages)
