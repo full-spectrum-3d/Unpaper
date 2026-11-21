@@ -94,13 +94,17 @@ Transliterację do `techName` (ą→a, ł→l…) robimy w bibliotece standardow
 | Obszar | Wybór | Licencja |
 |---|---|---|
 | Framework | Angular, najnowsza stabilna (≥ 21): komponenty standalone, signals, nowy control flow | MIT |
-| Komponenty UI | Angular CDK + Angular Material (stepper, drag & drop, tree) | MIT |
+| Stan aplikacji | NgRx Store + Effects + Entity (+ Store DevTools w trybie dev) | MIT |
+| Style | Tailwind CSS (konfiguracja przez `@tailwindcss/postcss`, tokeny kolorów i typografii w jednym pliku motywu) | MIT |
+| Prymitywy UI i dostępność | Angular CDK (a11y/focus trap, drag & drop, overlay); bez Angular Material | MIT |
 | Ewaluacja warunków | `jsonata` (npm) | MIT |
 | HTTP | `HttpClient` z interceptorem JWT | MIT |
 | Testy | Vitest (jednostkowe), Playwright (e2e) | MIT / Apache-2.0 |
 | Serwowanie | nginx (statyczne pliki + reverse proxy `/api`) | BSD-2 |
 
-Stan aplikacji trzymamy w signals i serwisach. NgRx nie jest potrzebny.
+Stan globalny trzyma NgRx Store w trzech slice'ach: `auth` (token, wygaśnięcie), `importQueue` (EntityAdapter: plik, status, błąd, wynik, raport) i `catalog` (słowniki, źródła danych inicjalnych). Wywołania API i kolejkę batch obsługują Effects: `mergeMap` z limitem `BATCH_CONCURRENCY`, ponowienie i anulowanie. Komponenty czytają stan przez `store.selectSignal()`. Odpowiedzi wpisywane w podglądzie formularza są stanem lokalnym komponentu renderera (signals). Nie trafiają do Store, bo zmieniają się przy każdym naciśnięciu klawisza i nie są współdzielone.
+
+Tailwind odpowiada za layout i wygląd: siatkę formularza `grid-cols-3` z `grid-area` z JSON, stany fokusu i błędów oraz tryb wysokiego kontrastu. Komponenty pól są własne, oparte na natywnych elementach HTML i CDK, dzięki czemu kontrolujemy dostępność (WCAG 2.1 AA).
 
 ### 3.3. Model AI (lokalnie)
 
@@ -568,7 +572,7 @@ Przykłady z dostarczonych blankietów (do potwierdzenia przy implementacji):
 
 | Widok | Funkcje |
 |---|---|
-| Logowanie | formularz login/hasło → JWT trzymany w pamięci (signal) i w `sessionStorage`, bez localStorage. Automatyczne wylogowanie po wygaśnięciu |
+| Logowanie | formularz login/hasło → JWT w NgRx Store (slice `auth`), kopia w `sessionStorage` przywracana przy starcie (meta-reducer), bez localStorage. Automatyczne wylogowanie po wygaśnięciu |
 | Import (batch) | drag & drop wielu plików, walidacja po stronie klienta (te same reguły co §6.3 pkt 2–5), kolejka ze statusem pliku (oczekuje / przetwarzanie / gotowe / błąd), równoległość ograniczona do `BATCH_CONCURRENCY` (domyślnie 2), ponowienie pojedynczego pliku, pobranie wszystkich wyników jako ZIP (generowany w przeglądarce) |
 | Wynik | 3 zakładki: **Podgląd formularza**, **JSON** (drzewo + surowy tekst, kopiuj, pobierz `.json`), **Raport** (ostrzeżenia z linkiem do miejsca w JSON, propozycje słowników, statystyki, czas) |
 | Walidator | wklejenie lub wgranie JSON → `/forms/validate` → lista błędów |
@@ -579,10 +583,14 @@ Batch to sekwencja pojedynczych wywołań `/forms/convert`, więc API pozostaje 
 
 ```
 frontend/src/app/
-  core/       auth.service.ts, auth.interceptor.ts, api.service.ts, error.interceptor.ts
+  core/       auth.interceptor.ts, api.service.ts, error.interceptor.ts
+  store/
+    auth/          auth.actions.ts, auth.reducer.ts, auth.effects.ts, auth.selectors.ts
+    import-queue/  import-queue.actions.ts, .reducer.ts (EntityAdapter), .effects.ts (batch, concurrency), .selectors.ts
+    catalog/       catalog.actions.ts, .reducer.ts, .effects.ts, .selectors.ts
   features/
     login/
-    import/    import-page, file-queue (signals), file-drop.directive
+    import/    import-page, file-queue (selectSignal z import-queue), file-drop.directive
     result/    result-page, json-viewer, report-panel
     preview/   form-renderer, tab-stepper, section, field-host + komponent na typ pola,
                states.service.ts (jsonata), validators.ts (PESEL, NIP, REGON, kod, e-mail…),
@@ -735,7 +743,7 @@ Aplikacja waliduje konfigurację przy starcie i nie uruchamia się bez wymaganyc
 | Golden | 2 formularze z wzorcowymi JSON-ami: wynik vs wzorzec, metryka podobieństwa strukturalnego (pokrycie sekcji po tytule, pokrycie pól po `techName`/etykiecie, zgodność typów, zgodność `states`). Próg regresji w CI | pytest + własny skrypt `scripts/compare.py` |
 | Kontraktowe | każdy wynik przechodzi JSON Schema i reguły R01–R15 | pytest |
 | E2E API | wszystkie pliki z `` (9 formularzy × do 8 formatów) → 200 + poprawny JSON. Błędne pliki → właściwe kody | pytest + httpx |
-| Frontend | komponenty renderera, ewaluacja `states`, walidatory | Vitest |
+| Frontend | reducery i selektory (czyste funkcje), effects (`provideMockActions`), komponenty renderera, ewaluacja `states`, walidatory | Vitest + `@ngrx/store/testing` |
 | E2E UI | logowanie → upload → podgląd → przełączenie opcji pokazuje sekcję | Playwright |
 | Licencje | brak GPL/AGPL/LGPL/SSPL | pip-licenses, license-checker |
 | Statyczna analiza | lint, typy, formatowanie | ruff, mypy (strict), ESLint, Prettier |
