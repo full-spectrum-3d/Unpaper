@@ -15,7 +15,7 @@ from typing import Any
 import docx
 import pypdfium2 as pdfium
 from docx.oxml.ns import qn
-from lxml import etree  # type: ignore[import-untyped]
+from lxml import etree
 
 from app.models.document import Block, DocumentModel, Page, SourceInfo, TablePos
 

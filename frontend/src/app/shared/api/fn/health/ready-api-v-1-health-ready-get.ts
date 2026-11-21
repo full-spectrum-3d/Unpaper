@@ -7,13 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { ReadyResponse } from '../../models/ready-response';
 
 export interface ReadyApiV1HealthReadyGet$Params {
 }
 
-export function readyApiV1HealthReadyGet(http: HttpClient, rootUrl: string, params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
+export function readyApiV1HealthReadyGet(http: HttpClient, rootUrl: string, params?: ReadyApiV1HealthReadyGet$Params, context?: HttpContext): Observable<StrictHttpResponse<ReadyResponse>> {
   const rb = new RequestBuilder(rootUrl, readyApiV1HealthReadyGet.PATH, 'get');
   if (params) {
   }
@@ -23,9 +22,7 @@ export function readyApiV1HealthReadyGet(http: HttpClient, rootUrl: string, para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      [key: string]: any;
-      }>;
+      return r as StrictHttpResponse<ReadyResponse>;
     })
   );
 }

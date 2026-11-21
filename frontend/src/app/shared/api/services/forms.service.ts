@@ -27,14 +27,14 @@ export class FormsService extends BaseService {
   /**
    * Convert.
    *
-   * Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).
+   * Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `convertApiV1FormsConvertPost()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  convertApiV1FormsConvertPost$Response(params?: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  convertApiV1FormsConvertPost$Response(params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: any;
 }>> {
     const obs = convertApiV1FormsConvertPost(this.http, this.rootUrl, params, context);
@@ -44,14 +44,14 @@ export class FormsService extends BaseService {
   /**
    * Convert.
    *
-   * Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).
+   * Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `convertApiV1FormsConvertPost$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  convertApiV1FormsConvertPost(params?: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<{
+  convertApiV1FormsConvertPost(params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<{
 [key: string]: any;
 }> {
     const resp = this.convertApiV1FormsConvertPost$Response(params, context);
@@ -70,14 +70,14 @@ export class FormsService extends BaseService {
   /**
    * Validate.
    *
-   * Walidacja dowolnego JSON-a formularza → {valid, errors[], warnings[]}.
+   * Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `validateApiV1FormsValidatePost()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  validateApiV1FormsValidatePost$Response(params?: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  validateApiV1FormsValidatePost$Response(params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: any;
 }>> {
     const obs = validateApiV1FormsValidatePost(this.http, this.rootUrl, params, context);
@@ -87,14 +87,14 @@ export class FormsService extends BaseService {
   /**
    * Validate.
    *
-   * Walidacja dowolnego JSON-a formularza → {valid, errors[], warnings[]}.
+   * Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `validateApiV1FormsValidatePost$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  validateApiV1FormsValidatePost(params?: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<{
+  validateApiV1FormsValidatePost(params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<{
 [key: string]: any;
 }> {
     const resp = this.validateApiV1FormsValidatePost$Response(params, context);

@@ -30,17 +30,21 @@ class ErrorCode(StrEnum):
     INVALID_TOKEN = "INVALID_TOKEN"  # noqa: S105 - kod błędu, nie sekret
     INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
     FORBIDDEN = "FORBIDDEN"
-    # Walidacja pliku (spec §6.3)
+    # Walidacja pliku (spec §6.3); te same wartości co `UploadErrorCode`
+    MALFORMED_REQUEST = "MALFORMED_REQUEST"
     FILE_MISSING = "FILE_MISSING"
     TOO_MANY_FILES = "TOO_MANY_FILES"
     FILENAME_TOO_LONG = "FILENAME_TOO_LONG"
     FILENAME_FORBIDDEN_CHARS = "FILENAME_FORBIDDEN_CHARS"
     FILE_TOO_LARGE = "FILE_TOO_LARGE"
+    FILE_EMPTY = "FILE_EMPTY"
     UNSUPPORTED_EXTENSION = "UNSUPPORTED_EXTENSION"
     MIME_MISMATCH = "MIME_MISMATCH"
     ARCHIVE_TOO_LARGE = "ARCHIVE_TOO_LARGE"
     DOCUMENT_TOO_COMPLEX = "DOCUMENT_TOO_COMPLEX"
     DOCUMENT_UNREADABLE = "DOCUMENT_UNREADABLE"
+    DOCUMENT_PASSWORD_REQUIRED = "DOCUMENT_PASSWORD_REQUIRED"  # noqa: S105 - kod, nie hasło
+    DOCUMENT_PASSWORD_INVALID = "DOCUMENT_PASSWORD_INVALID"  # noqa: S105 - kod, nie hasło
     # Przetwarzanie (spec §6.4)
     LLM_UNAVAILABLE = "LLM_UNAVAILABLE"
     PROCESSING_TIMEOUT = "PROCESSING_TIMEOUT"
@@ -57,6 +61,7 @@ _ERROR_META: dict[ErrorCode, tuple[HTTPStatus, str]] = {
     ErrorCode.INVALID_TOKEN: (HTTPStatus.UNAUTHORIZED, "Nieprawidłowy lub wygasły token"),
     ErrorCode.INVALID_CREDENTIALS: (HTTPStatus.UNAUTHORIZED, "Nieprawidłowy login lub hasło"),
     ErrorCode.FORBIDDEN: (HTTPStatus.FORBIDDEN, "Brak uprawnień"),
+    ErrorCode.MALFORMED_REQUEST: (HTTPStatus.BAD_REQUEST, "Niepoprawne żądanie multipart"),
     ErrorCode.FILE_MISSING: (HTTPStatus.BAD_REQUEST, "Brak pliku w żądaniu"),
     ErrorCode.TOO_MANY_FILES: (HTTPStatus.BAD_REQUEST, "Przesłano więcej niż jeden plik"),
     ErrorCode.FILENAME_TOO_LONG: (HTTPStatus.BAD_REQUEST, "Zbyt długa nazwa pliku"),
@@ -65,6 +70,7 @@ _ERROR_META: dict[ErrorCode, tuple[HTTPStatus, str]] = {
         "Niedozwolone znaki w nazwie pliku",
     ),
     ErrorCode.FILE_TOO_LARGE: (HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "Plik jest zbyt duży"),
+    ErrorCode.FILE_EMPTY: (HTTPStatus.BAD_REQUEST, "Plik jest pusty"),
     ErrorCode.UNSUPPORTED_EXTENSION: (
         HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
         "Nieobsługiwany format pliku",
@@ -84,6 +90,14 @@ _ERROR_META: dict[ErrorCode, tuple[HTTPStatus, str]] = {
     ErrorCode.DOCUMENT_UNREADABLE: (
         HTTPStatus.UNPROCESSABLE_CONTENT,
         "Nie można odczytać dokumentu",
+    ),
+    ErrorCode.DOCUMENT_PASSWORD_REQUIRED: (
+        HTTPStatus.UNPROCESSABLE_CONTENT,
+        "Dokument jest zabezpieczony hasłem",
+    ),
+    ErrorCode.DOCUMENT_PASSWORD_INVALID: (
+        HTTPStatus.UNPROCESSABLE_CONTENT,
+        "Niepoprawne hasło do dokumentu",
     ),
     ErrorCode.LLM_UNAVAILABLE: (HTTPStatus.SERVICE_UNAVAILABLE, "Model AI jest niedostępny"),
     ErrorCode.PROCESSING_TIMEOUT: (
@@ -109,6 +123,14 @@ class ProblemDetail(BaseModel):
     instance: str | None = None
     request_id: str | None = None
     errors: list[dict[str, Any]] | None = None
+
+
+def problem_doc(description: str) -> dict[str, Any]:
+    """Opis odpowiedzi błędu do `responses=` endpointu: problem+json ze schematem ProblemDetail."""
+    return {
+        "description": description,
+        "content": {PROBLEM_MEDIA_TYPE: {"schema": {"$ref": "#/components/schemas/ProblemDetail"}}},
+    }
 
 
 class AppError(Exception):

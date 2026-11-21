@@ -4,7 +4,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from app.pipeline.build.catalogs import load_dictionary_catalog
+from app.pipeline.build.catalogs import load_dictionary_catalog, load_initial_data_catalog
 from app.pipeline.build.proposals import load_proposal_catalog
 
 router = APIRouter(tags=["catalog"])
@@ -27,6 +27,33 @@ async def list_dictionaries() -> list[dict[str, Any]]:
     return predefined + proposed
 
 
+_SOURCE_NAMES = {
+    "PESEL": "Rejestr PESEL",
+    "PESEL_ADDRESS": "Dane zameldowania",
+    "MLPZ": "Dane zalogowanego użytkownika",
+}
+
+
 @router.get("/initial-data-sources")
-async def list_initial_data_sources() -> list[dict[str, object]]:
-    raise NotImplementedError
+async def list_initial_data_sources() -> list[dict[str, Any]]:
+    """Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`."""
+    sources: dict[str, dict[str, Any]] = {}
+    for attr in load_initial_data_catalog().values():
+        source = sources.setdefault(
+            attr.source,
+            {
+                "source": attr.source,
+                "name": _SOURCE_NAMES.get(attr.source, attr.source),
+                "attributes": [],
+            },
+        )
+        source["attributes"].append(
+            {
+                "attribute": attr.attribute,
+                "ref": attr.ref,
+                "label": attr.label,
+                "fieldType": attr.field_type,
+                "editable": attr.editable,
+            }
+        )
+    return list(sources.values())
