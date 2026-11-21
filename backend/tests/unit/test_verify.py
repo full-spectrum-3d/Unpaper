@@ -1,6 +1,8 @@
 import copy
 import itertools
 import json
+import re
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -9,7 +11,12 @@ import pytest
 from app.pipeline.issues import IssueCode
 from app.pipeline.verify import verify_form
 
+UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 SAMPLES = sorted((Path(__file__).parents[3] / "wymagania").glob("konfiguracja_form_*.json"))
+
+
+def _u(n: int) -> str:
+    return str(uuid.UUID(int=n))
 
 
 def _field(ftype: str, tech: str, fid: str, **extra: Any) -> dict[str, Any]:
@@ -44,19 +51,19 @@ def _form() -> dict[str, Any]:
         "title": "Wniosek o test",
         "tabs": [
             {
-                "id": "t1",
+                "id": _u(1),
                 "title": "Dane",
                 "type": "MAIN",
-                "questions": [_section("s1", "a1", _field("TEXT_FIELD", "f1", "a2"))],
+                "questions": [_section("s1", _u(3), _field("TEXT_FIELD", "f1", _u(4)))],
             },
             {
-                "id": "t2",
+                "id": _u(2),
                 "title": "Koniec",
                 "type": "FINISH",
-                "questions": [_section("s2", "b1", _field("TEXT_BLOCK", "tb", "b2"))],
+                "questions": [_section("s2", _u(5), _field("TEXT_BLOCK", "tb", _u(6)))],
             },
         ],
-        "flow": {"links": [{"id": "l1", "source": "t1", "target": "t2"}]},
+        "flow": {"links": [{"id": _u(7), "source": _u(1), "target": _u(2)}]},
     }
 
 
@@ -83,12 +90,12 @@ def test_broken_manual_json():
     form = _form()
     page = form["tabs"][0]
     page["questions"] = [
-        _q(_field("TEXT_FIELD", "dup", "same")),
-        _q(_field("TEXT_FIELD", "dup", "same")),
+        _q(_field("TEXT_FIELD", "dup", _u(9))),
+        _q(_field("TEXT_FIELD", "dup", _u(9))),
     ]
     for q in page["questions"]:
         del q["field"]["validation"]
-    form["tabs"].insert(1, {"id": "t3", "title": "Pusta", "type": "MAIN", "questions": []})
+    form["tabs"].insert(1, {"id": _u(8), "title": "Pusta", "type": "MAIN", "questions": []})
     del form["flow"]
 
     broken = verify_form(form, autofix=False)
@@ -120,7 +127,7 @@ def test_broken_manual_json():
 
 def test_nested_section_is_flattened():
     form = _form()
-    inner = _section("inner", "n1", _field("TEXT_FIELD", "deep", "n2"))
+    inner = _section("inner", _u(10), _field("TEXT_FIELD", "deep", _u(11)))
     form["tabs"][0]["questions"][0]["field"]["repeatingSectionGrid"].append(inner)
     assert IssueCode.R04_NESTED_SECTION in _codes(verify_form(form, autofix=False).errors)
     fixed = verify_form(form)
@@ -173,7 +180,7 @@ def test_disallowed_validator_removed():
 def test_finish_input_is_error():
     form = _form()
     form["tabs"][1]["questions"][0]["field"]["repeatingSectionGrid"].append(
-        _q(_field("TEXT_FIELD", "wpis", "b3"))
+        _q(_field("TEXT_FIELD", "wpis", _u(12)))
     )
     for autofix in (False, True):
         assert IssueCode.R05_FINISH_INPUT in _codes(verify_form(form, autofix=autofix).errors)
@@ -281,9 +288,123 @@ def test_blank_dictionary_name_keeps_options_and_is_dropped(blank: str | None):
 )
 def test_wrapper_tech_name_never_has_junk_prefix(tech: Any, expected: str):
     form = _form()
-    loose = _field("TEXT_FIELD", "x", "z1", title="")
+    loose = _field("TEXT_FIELD", "x", _u(13), title="")
     loose["techName"] = tech
     form["tabs"][0]["questions"].append(_q(loose))
     fixed = verify_form(form)
     wrapper = fixed.form["tabs"][0]["questions"][-1]["field"]
     assert wrapper["techName"] == expected
+
+
+# --- C1: strona końcowa tylko z INFO_SECTION (ostrzeżenie) ---
+
+
+def test_finish_page_non_info_section_is_warning():
+    result = verify_form(_form())
+    assert result.valid
+    warned = [w for w in result.warnings if w.code == IssueCode.W11_FINISH_NOT_INFO]
+    assert [w.path for w in warned] == ["tabs[1].questions[0].field.repeatingSectionGrid[0]"]
+
+
+def test_finish_page_info_section_has_no_warning():
+    form = _form()
+    finish = form["tabs"][1]["questions"][0]["field"]["repeatingSectionGrid"][0]["field"]
+    finish.update(type="INFO_SECTION", description="<p>Podgląd</p>")
+    result = verify_form(form)
+    assert result.valid, result.errors
+    assert IssueCode.W11_FINISH_NOT_INFO not in _codes(result.warnings)
+
+
+def test_finish_input_is_error_not_extra_warning():
+    form = _form()
+    form["tabs"][1]["questions"][0]["field"]["repeatingSectionGrid"].append(
+        _q(_field("TEXT_FIELD", "wpis", _u(12)))
+    )
+    warned = [w for w in verify_form(form).warnings if w.code == IssueCode.W11_FINISH_NOT_INFO]
+    assert len(warned) == 1  # tylko TEXT_BLOCK; pole wejściowe to błąd R05
+
+
+# --- C3: niepusty tytuł sekcji ---
+
+
+def _section_field(form: dict[str, Any]) -> dict[str, Any]:
+    return form["tabs"][0]["questions"][0]["field"]
+
+
+@pytest.mark.parametrize("blank", ["", "   ", None, 5])
+def test_blank_section_title_is_error_and_fixed_from_first_field(blank: Any):
+    form = _form()
+    _section_field(form)["title"] = blank
+    _first_field(form)["title"] = "Imię"
+    assert IssueCode.R16_SECTION_TITLE in _codes(verify_form(form, autofix=False).errors)
+    fixed = verify_form(form)
+    assert fixed.valid, fixed.errors
+    assert _section_field(fixed.form)["title"] == "Imię"
+    assert IssueCode.R16_SECTION_TITLE in _codes(fixed.fixes)
+
+
+def test_blank_section_title_falls_back_to_dane():
+    form = _form()
+    _section_field(form)["title"] = " "
+    _first_field(form)["title"] = ""
+    assert _section_field(verify_form(form).form)["title"] == "Dane"
+    form = _form()
+    _section_field(form).update(title="", repeatingSectionGrid=[])
+    assert _section_field(verify_form(form).form)["title"] == "Dane"
+
+
+def test_blank_repeating_section_title_is_error():
+    form = _form()
+    _section_field(form).update(type="REPEATING_SECTION", title="")
+    assert IssueCode.R16_SECTION_TITLE in _codes(verify_form(form, autofix=False).errors)
+
+
+def test_non_section_blank_title_is_not_flagged():
+    form = _form()
+    _first_field(form)["title"] = ""
+    assert IssueCode.R16_SECTION_TITLE not in _codes(verify_form(form, autofix=False).errors)
+
+
+def test_section_title_fix_keeps_states_valid():
+    form = _form()
+    _section_field(form)["title"] = ""
+    form["tabs"][1]["questions"][0]["field"]["states"] = [{"type": "SHOW", "query": _query("f1")}]
+    fixed = verify_form(form)
+    assert fixed.valid
+    assert IssueCode.W06_STATE_REMOVED not in _codes(fixed.warnings)
+
+
+# --- C4: format UUID ---
+
+
+def _id_warnings(result: Any) -> list[Any]:
+    return [w for w in result.warnings if w.code == IssueCode.W12_ID_FORMAT]
+
+
+def test_non_uuid_ids_warn_and_are_replaced_consistently():
+    form = _form()
+    form["tabs"][0]["id"] = "strona-1"
+    form["tabs"][1]["id"] = "strona-2"
+    form["flow"]["links"][0].update(id="link-1", source="strona-1", target="strona-2")
+    _first_field(form)["id"] = "pole-1"
+    warned = verify_form(form, autofix=False)
+    assert warned.valid
+    assert len(_id_warnings(warned)) == 4
+
+    fixed = verify_form(form)
+    assert fixed.valid, fixed.errors
+    assert not _id_warnings(fixed)
+    tab1, tab2 = (t["id"] for t in fixed.form["tabs"])
+    link = fixed.form["flow"]["links"][0]
+    assert (link["source"], link["target"]) == (tab1, tab2)
+    ids = [tab1, tab2, link["id"], _first_field(fixed.form)["id"]]
+    assert all(UUID_RE.match(i) for i in ids)
+    assert len(set(ids)) == 4
+    assert {f.code for f in fixed.fixes} == {IssueCode.W12_ID_FORMAT}
+
+
+def test_uuid_ids_are_left_alone():
+    result = verify_form(_form())
+    assert IssueCode.W12_ID_FORMAT not in {f.code for f in result.fixes}
+    assert result.form["tabs"][0]["id"] == _u(1)
+    assert not _id_warnings(result)
