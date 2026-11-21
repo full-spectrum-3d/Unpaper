@@ -3,6 +3,7 @@ import pytest
 from app.models.document import DocumentModel
 from app.pipeline.draft_rules import (
     applicant_field_reason,
+    computed_field_reason,
     covered_by,
     is_statement,
     statements_from_document,
@@ -193,3 +194,37 @@ def test_applicant_person_section_is_not_other_person() -> None:
 def test_full_and_short_names_are_applicant_data() -> None:
     assert applicant_field_reason("Nazwisko/Nazwa pełna", ["Podstawowe dane"])
     assert applicant_field_reason("Pierwsze imię/ Nazwa skrócona", ["Podstawowe dane"])
+
+
+@pytest.mark.parametrize(
+    ("label", "section_labels"),
+    [
+        ("Stawka opłaty za gospodarstwo", ["Liczba gospodarstw"]),
+        ("Wysokość miesięcznej opłaty (do 50 m²)", ["Liczba lokali do 50 m²"]),
+        ("Suma opłat pomniejszona o zwolnienie", ["Liczba osób"]),
+        ("Kwota z poz. 12 załącznika", ["Liczba osób"]),
+        ("Razem", ["Powierzchnia działki A", "Powierzchnia działki B"]),
+        ("Opłata łączna (poz. 3 + poz. 4)", ["Liczba pojemników"]),
+    ],
+)
+def test_computed_labels_removed(label: str, section_labels: list[str]) -> None:
+    assert computed_field_reason(label, section_labels) is not None
+
+
+@pytest.mark.parametrize(
+    ("label", "section_labels"),
+    [
+        ("Kwota nadpłaty", ["Rok podatkowy"]),
+        ("Wysokość dochodu na osobę", []),
+        ("Kwota dochodu", ["Liczba osób w rodzinie"]),
+        ("Łączna powierzchnia zajęcia (m²)", []),
+        # Bez określenia okresu to kwota, którą wnioskodawca zapłacił i wpisuje.
+        ("Wysokość opłaty", ["Liczba dokumentów"]),
+        # Bez innego pola liczbowego w sekcji nie ma z czego wyliczyć.
+        ("Stawka opłaty za gospodarstwo", []),
+        # Inne pole też jest wyliczane: sekcja to same wyniki, a nie dane wejściowe.
+        ("Suma opłat", ["Stawka opłaty"]),
+    ],
+)
+def test_entered_amounts_kept(label: str, section_labels: list[str]) -> None:
+    assert computed_field_reason(label, section_labels) is None

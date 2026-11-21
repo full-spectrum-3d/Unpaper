@@ -1,4 +1,4 @@
-"""Reguły bez LLM: oświadczenia z blankietu i pola dublujące dane wnioskodawcy.
+"""Reguły bez LLM: oświadczenia z blankietu, pola dublujące dane wnioskodawcy i wyliczane.
 
 To, co da się ustalić z tekstu dokumentu deterministycznie, nie powinno zależeć
 od modelu: model przepisujący oświadczenia zużywa najwięcej tokenów wyjścia
@@ -84,6 +84,18 @@ _OTHER_PERSON = re.compile(
 )
 
 
+# Wartości wyliczane: etykieta zaczyna się od słowa wyniku albo stawki („Stawka opłaty”,
+# „Wysokość miesięcznej opłaty”, „Suma…”, „Razem”) albo odwołuje się do innych pozycji
+# („Kwota z poz. 12”, „poz. 3 + poz. 4”, „pomniejszona o”). Sama „Wysokość opłaty”
+# (bez okresu czy rodzaju) to zwykle kwota, którą wnioskodawca zapłacił i wpisuje.
+_RATE_LABEL = re.compile(r"^stawk\w*\b")
+_COMPUTED_LABEL = re.compile(
+    r"^((wysokość|kwot[ay])\s+\w+\b.*?\bopłat\w*|sum[ay]|razem|łącznie|ogółem)\b"
+    r"|\bz poz\.|\bpoz\.\s*\d+\w*\s*[+-]\s*(poz\.\s*)?\d|\bpomniejszon\w*\s+o\b"
+)
+_LEADING_POSITION = re.compile(r"^[\W\d]+")
+
+
 def clean_text(text: str) -> str:
     """Tekst bez wypełnień i znacznika pola, z pojedynczymi spacjami."""
     text = _FILL.sub(" ", text.replace(FIELD_MARKER, " "))
@@ -163,6 +175,30 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
         return "dane wnioskodawcy są w sekcjach predefiniowanych"
     if words <= _ADDRESS_WORDS | _PERSONAL_WORDS and not other_person and _applicant_titled(titles):
         return "adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych"
+    return None
+
+
+def computed_field_reason(label: str, section_labels: list[str]) -> str | None:
+    """Dlaczego pole to wartość wyliczana albo stawka z cennika, albo None.
+
+    `section_labels` to etykiety pozostałych pól liczbowych sekcji. Pole usuwamy tylko
+    wtedy, gdy obok jest pole liczbowe spoza tej reguły (dane wejściowe, np. „Liczba osób”):
+    bez niego nie ma z czego wyliczyć, więc „Wysokość dochodu na osobę” zostaje.
+    """
+    kind = _computed_kind(label)
+    if kind is None or not any(_computed_kind(other) is None for other in section_labels):
+        return None
+    if kind == "rate":
+        return "stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje"
+    return "wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje"
+
+
+def _computed_kind(label: str) -> str | None:
+    text = _LEADING_POSITION.sub("", _norm(label))
+    if _RATE_LABEL.match(text):
+        return "rate"
+    if _COMPUTED_LABEL.search(text):
+        return "computed"
     return None
 
 

@@ -388,3 +388,17 @@ def test_example_choice_with_generic_label_removed() -> None:
 
     _, warnings = normalize_draft(_make(mutate), doc)
     assert _codes(warnings).count("W28_EXAMPLE_FIELD_REMOVED") == 2
+
+
+def test_computed_fields_removed_with_warning() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        d["subject_pages"][0]["sections"][0]["fields"] = [
+            {"id": "f1", "label": "Liczba gospodarstw", "kind": "number", "required": True},
+            {"id": "f2", "label": "Stawka opłaty", "kind": "number", "required": True},
+        ]
+
+    doc = _doc_with("Liczba gospodarstw. Stawka opłaty. Do Wójt Gminy Elbląg")
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert [f.label for _, f in out.iter_fields()] == ["Liczba gospodarstw"]
+    assert _codes(warnings) == ["W33_COMPUTED_FIELD_REMOVED"]
+    assert warnings[0].message.startswith("Usunięto pole „Stawka opłaty”: ")

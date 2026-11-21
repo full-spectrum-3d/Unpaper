@@ -15,6 +15,7 @@ Czego NIE umieszczać w subject_pages (system dodaje to sam):
 - danych wnioskodawcy: imię, nazwisko, nazwa, PESEL, NIP, REGON, adres, telefon, e-mail;
 - adresata, daty, miejscowości złożenia i podpisu;
 - oświadczeń („Oświadczam, że…”, „Zobowiązuję się…”), klauzuli RODO i zgód. Nie twórz z nich pól info.
+- wartości, które system wylicza z innych pól (np. suma pozycji albo liczba × stawka), ani stawek z cennika czy uchwały. Zostaw tylko dane wejściowe do wyliczenia.
 
 subject_pages: tylko dane o przedmiocie sprawy.
 - Tytuł strony od tematu, np. „Informacje o budynku”. Nie dziel przedmiotu na wiele stron, gdy wystarczy jedna.

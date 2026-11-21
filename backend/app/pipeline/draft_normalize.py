@@ -18,6 +18,7 @@ from app.models.warning import ConversionWarning
 from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
 from app.pipeline.draft_rules import (
     applicant_field_reason,
+    computed_field_reason,
     covered_by,
     is_statement,
     same_stem,
@@ -30,6 +31,8 @@ STATEMENT_FIELD_COVERAGE = 0.8
 # krótkie etykiety („Rasa psa”) przypadkowo pokrywają się z tekstem oświadczeń.
 MIN_STATEMENT_LABEL_CHARS = 25
 GENERIC_OPTIONS = frozenset({"tak", "nie", "inne"})
+# Pola, które mogą być wartością wyliczaną albo stawką (W33).
+COMPUTED_KINDS = frozenset({"number", "short_text", "info"})
 STATEMENT_LIKE_KINDS = frozenset({"single_choice", "multi_choice", "short_text", "long_text"})
 VARIANT_PAGE_TITLE = "Przedmiot wniosku"
 VARIANT_SECTION_TITLE = "Rodzaj sprawy"
@@ -76,6 +79,7 @@ def normalize_draft(
 
     _downgrade_choices_without_options(draft, data, warnings)
     _remove_applicant_fields(data, warnings)
+    _remove_computed_fields(data, warnings)
     _remove_example_fields(data, doc_text, warnings)
     _remove_duplicate_fields(data, warnings)
     _remove_unnamed_attachments(data, warnings)
@@ -155,6 +159,39 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
                 warnings.append(
                     ConversionWarning(
                         code="W20_APPLICANT_FIELD_REMOVED",
+                        message=f"Usunięto pole „{field['label']}”: {reason}.",
+                        path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                    )
+                )
+            section["fields"] = kept
+
+
+def _remove_computed_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Pola na wartości wyliczane z innych pól sekcji i stawki z cennika usuwamy.
+
+    Wybory i załączniki zostają: „Razem z małżonkiem?” to pytanie, a nie suma.
+    """
+    for i, page in enumerate(data["subject_pages"]):
+        for j, section in enumerate(page["sections"]):
+            fields = section["fields"]
+            kept = []
+            for k, field in enumerate(fields):
+                numbers = [
+                    other["label"]
+                    for other in fields
+                    if other is not field and other["kind"] == "number"
+                ]
+                reason = (
+                    computed_field_reason(field["label"], numbers)
+                    if field["kind"] in COMPUTED_KINDS
+                    else None
+                )
+                if reason is None:
+                    kept.append(field)
+                    continue
+                warnings.append(
+                    ConversionWarning(
+                        code="W33_COMPUTED_FIELD_REMOVED",
                         message=f"Usunięto pole „{field['label']}”: {reason}.",
                         path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
                     )
