@@ -392,6 +392,24 @@
               "title": "Report",
               "type": "boolean"
             }
+          },
+          {
+            "description": "Model LLM z `LLM_MODEL` albo `LLM_MODELS`; domyślnie `LLM_MODEL`",
+            "in": "query",
+            "name": "model",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Model LLM z `LLM_MODEL` albo `LLM_MODELS`; domyślnie `LLM_MODEL`",
+              "title": "Model"
+            }
           }
         ],
         "requestBody": {
@@ -496,7 +514,7 @@
                 }
               }
             },
-            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem"
+            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; model spoza LLM_MODELS"
           },
           "504": {
             "content": {

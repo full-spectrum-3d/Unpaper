@@ -189,3 +189,21 @@ def test_initial_data_sources() -> None:
     mlpz = next(s for s in sources if s["source"] == "MLPZ")
     assert mlpz["name"] == "Dane zalogowanego użytkownika"
     assert {"attribute": "name", "ref": "MLPZ.name"}.items() <= mlpz["attributes"][0].items()
+
+
+def test_convert_uses_model_from_query_when_allowed() -> None:
+    client, fake = _client(llm_models="qwen3.5:35b-a3b")
+    with client:
+        response = _post(client, report="true", model="qwen3.5:35b-a3b")
+    assert response.status_code == 200, response.text
+    assert response.json()["report"]["llm"]["model"] == "qwen3.5:35b-a3b"
+    assert {call["model"] for call in fake.calls} == {"qwen3.5:35b-a3b"}
+
+
+def test_convert_rejects_model_outside_allowlist() -> None:
+    client, fake = _client(llm_models="qwen3.5:35b-a3b")
+    with client:
+        response = _post(client, model="llama3:70b")
+    assert response.status_code == 422
+    assert response.json()["code"] == "VALIDATION_ERROR"
+    assert not fake.calls
