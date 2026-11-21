@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideApiConfiguration } from './shared/api/api-configuration';
 import { provideStore } from '@ngrx/store';
@@ -19,7 +19,7 @@ import { importQueueFeatureKey, importQueueReducer } from './store/import-queue/
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideApiConfiguration(''),
     // meta-reducer wraps the slice reducer: restore relies on @ngrx/store/init
