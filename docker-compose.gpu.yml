@@ -1,7 +1,11 @@
 # Opcjonalnie: inferencja na karcie NVIDIA (wymaga NVIDIA Container Toolkit na hoście).
 #   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+# Target `gpu` to obraz producenta Ollamy z bibliotekami NVIDIA CUDA/cuDNN (licencja
+# własnościowa NVIDIA, bezpłatna). Domyślny obraz `cpu` ich nie zawiera.
 services:
   llm:
+    build: { context: ./llm, target: gpu }
+    image: coi-cf-llm:0.40.16-gpu
     deploy:
       resources:
         reservations:

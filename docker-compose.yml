@@ -70,6 +70,9 @@ services:
       OLLAMA_NUM_PARALLEL: "1"
       # Model zostaje w pamięci między żądaniami (pierwsze ładowanie trwa kilkadziesiąt sekund).
       OLLAMA_KEEP_ALIVE: "24h"
+      # Bez funkcji chmurowych Ollamy (modele ollama.com, podpowiedzi modeli): żadnych
+      # prób połączeń z internetem w trakcie działania.
+      OLLAMA_NO_CLOUD: "1"
     tmpfs: ["/tmp"]
     volumes: ["ollama-models:/home/ollama/.ollama"]
     networks: [internal]
