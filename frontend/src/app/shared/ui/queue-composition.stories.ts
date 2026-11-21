@@ -21,7 +21,7 @@ interface Row {
   imports: [Topbar, FileDrop, Card, Table, Badge, Button, Progress],
   template: `
     <app-topbar appName="Formularze" userName="Jan Kowalski" />
-    <main class="p-[16px] flex flex-col gap-[16px]">
+    <main class="max-w-[480px] p-[16px] flex flex-col gap-[16px]">
       <h1 class="text-title font-semibold">Import formularzy</h1>
       <app-file-drop [maxSizeMb]="20" />
       <app-card>
