@@ -71,7 +71,6 @@ async def run_case(
             settings.model_copy(update={"llm_model": model}),
             client,
             deadline=time.monotonic() + budget_s,
-            mode="accurate",
         )
         draft, warnings = result.draft, result.warnings
         row.update(

@@ -25,8 +25,8 @@ services:
   llm:
     image: ollama/ollama:0.40.16  # przed wydaniem: dodać digest @sha256
     environment:
-      # Jeden model w RAM: domyślnie Ollama trzyma do 3, a 4b + 8b (ok. 11 GB) nie mieści się
-      # w budżecie 16 GB razem z API - zmiana trybu kończy się wtedy swapem.
+      # Jeden model w RAM: domyślnie Ollama trzyma do 3, a dwa modele naraz (np. po zmianie
+      # LLM_MODEL albo przy porównaniu w llm_eval) nie mieszczą się w 16 GB razem z API.
       OLLAMA_MAX_LOADED_MODELS: "1"
     volumes: ["ollama-models:/root/.ollama"]
     networks: [internal]          # bez portu na hoście
