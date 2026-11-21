@@ -59,7 +59,7 @@ def _fields(doc: DocumentModel) -> list[tuple[str, str, str]]:
 
 def test_fields_from_placeholders_skip_header_and_signature() -> None:
     assert _fields(SWIETLICA) == [
-        ("Dane wniosku", "W terminie", "date"),
+        ("Dane wniosku", "Termin", "date"),
         ("Dane wniosku", "W terminie do", "date"),
         ("Dane wniosku", "Cel wynajęcia świetlicy", "short_text"),
         ("Dane wniosku", "Przewidywana ilość uczestników", "number"),
@@ -94,7 +94,7 @@ def test_office_name_joined_with_place_and_company_applicants() -> None:
     assert draft is not None
     assert (draft.authority_kind, draft.authority_name) == ("URZAD", "Urząd Gminy Ulan-Majorat")
     assert draft.applicant_kinds == ["SELF", "OTHER_PERSON", "LEGAL_ENTITY"]
-    assert _fields(doc) == [("Dane wniosku", "W kwocie", "number")]
+    assert _fields(doc) == [("Dane wniosku", "Kwota", "number")]
 
 
 def test_no_placeholders_gives_none() -> None:
