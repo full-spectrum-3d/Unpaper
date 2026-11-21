@@ -11,7 +11,7 @@ Sukces: na ekranie `/validator` użytkownik wkleja albo wgrywa JSON i klika „S
 ## Cele
 
 - Trasa `/validator` (za logowaniem) i pozycja „Walidator” w górnym menu obok „Import”.
-- Wklejenie JSON-a w pole tekstowe albo wgranie pliku `.json` (wczytywany do pola).
+- Wklejenie JSON-a w pole tekstowe albo wgranie jednego pliku `.json` (wczytywany do pola).
 - Walidacja składni po stronie klienta, potem `POST /api/v1/forms/validate`.
 - Wynik: podsumowanie, lista błędów, lista ostrzeżeń, sformatowany JSON z podświetleniem.
 - Wspólny komponent widoku JSON (`app-json-view`) dla ekranu wyniku i walidatora.
@@ -100,10 +100,19 @@ Układ (jedna kolumna, `max-w-[960px]`, w `<main>`):
   - błąd 500 → `role="alert"`;
   - `?item=<id>` z wierszem w kolejce → pole wypełnione i żądanie wysłane;
   - nieznany `id` → informacja.
-- Wgranie pliku: plik `.json` trafia do pola. Plik > 5 MB daje komunikat.
+- Wgranie pliku: plik `.json` trafia do pola. Plik > 5 MB albo z innym rozszerzeniem daje komunikat.
 - Storybook `Ekrany/Walidator`: pusty, z błędami, poprawny, błąd składni. Testy a11y przechodzą.
 
 ## Zostawione builderowi
 
 - Dokładne klasy i odstępy (jak ekran wyniku i import).
 - Czy `parseJsonInput` leży w `features/validator/`.
+
+## Doprecyzowania po przeglądzie buildera (moje decyzje)
+
+1. **Bez `app-file-drop`.** Współdzielony komponent ma na sztywno teksty importu, `multiple` i podpowiedź o PDF/DOCX. Walidator dostaje własny przycisk „Wgraj plik .json” z ukrytym `input type="file"` (jeden plik), a `app-file-drop` i ekran importu się nie zmieniają. Przeciągania pliku na pole nie robimy.
+2. **Limit 5 MB** jest poniżej limitu nginx (`client_max_body_size 21m` w `frontend/nginx.conf`) i backend nie ma niższego limitu dla `/forms/validate`. Odpowiedź 422 nie powinna wystąpić dzięki kontroli obiektu po stronie klienta. Gdyby jednak przyszła, walidator pokazuje „Serwer odrzucił JSON jako niepoprawny.” zamiast ogólnego `toUserMessage`, którego `VALIDATION_ERROR` dotyczy logowania. Inne błędy idą przez `toUserMessage`.
+3. **Ścieżki.** `/forms/validate` używa tej samej składni co raport (`verify.py`, `_format_path`). Link „Pokaż w JSON” pokazujemy, gdy ścieżka istnieje w `ranges` sformatowanego JSON-a. W przeciwnym razie ścieżka jest tekstem, bez rozróżnień szkic/brak (wszystkie ścieżki dotyczą sprawdzanego JSON-a, `pathTarget` z raportu nie jest używany).
+4. **Po odświeżeniu** kolejka jest pusta (nie jest zapisywana), więc `?item=<id>` daje informację „Nie znaleziono wyniku do sprawdzenia. Wklej JSON ręcznie.”. To zamierzone.
+5. **`?item`** wstawia JSON i uruchamia sprawdzenie przy pierwszym wejściu i przy każdej zmianie `item` (świadoma nawigacja z innego wyniku nadpisuje tekst). Zwykła edycja tekstu niczego nie uruchamia.
+6. **Wynik nieaktualny,** gdy bieżący tekst różni się od tekstu wysłanego (porównanie dokładne, także białych znaków). Lista i `app-json-view` pokazują stan z chwili sprawdzenia.
