@@ -20,6 +20,7 @@ for _name in Settings.model_fields:
 
 settings = Settings(
     _env_file=None,
+    _secrets_dir=None,
     jwt_secret="openapi-export-" + "x" * 32,
     api_user="openapi",
     api_password_hash="$argon2id$v=19$m=65536,t=3,p=4$b3BlbmFwaQ$b3BlbmFwaQ",

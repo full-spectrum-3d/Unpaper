@@ -37,5 +37,5 @@ Kontrakt REST między backendem (FastAPI) a frontendem (Angular) nie może się 
 - Test dymny: build (`ng build`) przechodzi z wygenerowanym klientem.
 
 ## Ryzyka
-- Dopóki endpointy backendu zwracają `dict[str, object]`, wygenerowane typy odpowiedzi są luźne (`{ [key: string]: unknown }`); modele (`FormDefinition` itd.) pojawią się w schemacie dopiero, gdy backend użyje ich w endpointach.
+- Dopóki endpointy backendu zwracają `dict[str, object]`, wygenerowane typy odpowiedzi są luźne (`{ [key: string]: any }`, więc takie odpowiedzi nie powodują błędów TS); modele (`FormDefinition` itd.) pojawią się w schemacie dopiero, gdy backend użyje ich w endpointach.
 - `api:export` wymaga `uv` i zależności backendu (Python 3.14) na maszynie, która regeneruje klienta.
