@@ -17,10 +17,11 @@ from pydantic import ValidationError
 
 from app.core.config import Settings
 from app.models.document import DocumentModel
-from app.models.draft import FormDraft, llm_schema
+from app.models.draft import FormDraft, LlmDraft, llm_schema
 from app.models.warning import ConversionWarning
 from app.pipeline.draft_merge import merge_drafts, split_prompt_text
 from app.pipeline.draft_normalize import normalize_draft
+from app.pipeline.draft_repair import repair_draft
 from app.pipeline.llm_client import (
     ChatMessage,
     LlmClient,
@@ -155,7 +156,11 @@ async def _single(
     deadline: float,
     clock: Callable[[], float],
 ) -> FormDraft | FallbackReason:
-    """Cały dokument w jednym wywołaniu; jedna ponowna próba, jeśli starczy budżetu."""
+    """Cały dokument w jednym wywołaniu; jedna ponowna próba, jeśli starczy budżetu.
+
+    Ponawiamy tylko odpowiedź niezgodną ze schematem (np. ucięty JSON). Błędy
+    odwołań między polami poprawia `repair_draft` bez kolejnego wywołania.
+    """
     messages = _messages(system, text)
     outcome = await _call(client, settings, result, messages, deadline, clock)
     if isinstance(outcome, str):
@@ -232,7 +237,7 @@ async def _call(
     deadline: float,
     clock: Callable[[], float],
 ) -> tuple[LlmReply, FormDraft | ValidationError] | FallbackReason:
-    """Jedno wywołanie modelu z walidacją; przy błędzie wywołania zwraca przyczynę fallbacku."""
+    """Jedno wywołanie modelu z walidacją i naprawą; przy błędzie wywołania zwraca przyczynę."""
     remaining = deadline - clock()
     if remaining < MIN_CALL_BUDGET_S:
         return "timeout"
@@ -250,9 +255,11 @@ async def _call(
         return "unavailable"
     result._add(reply)
     try:
-        return reply, FormDraft.model_validate_json(reply.content)
+        draft, warnings = repair_draft(LlmDraft.model_validate_json(reply.content))
     except ValidationError as exc:
         return reply, exc
+    result.warnings.extend(warnings)
+    return reply, draft
 
 
 def _retry_message(error: ValidationError) -> str:

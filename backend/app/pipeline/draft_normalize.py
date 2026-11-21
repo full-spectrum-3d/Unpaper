@@ -11,6 +11,7 @@ from typing import Any
 from app.models.document import FIELD_MARKER, DocumentModel
 from app.models.draft import FormDraft
 from app.models.warning import ConversionWarning
+from app.pipeline.draft_repair import remove_empty_containers
 
 STATEMENT_MATCH_THRESHOLD = 0.8
 LABEL_MATCH_THRESHOLD = 0.6
@@ -43,7 +44,7 @@ def normalize_draft(
     _normalize_title_case(data, warnings)
     _check_labels(draft, doc_text, warnings)
     _check_authority(draft, doc_text, warnings)
-    _remove_empty_pages(data, warnings)
+    remove_empty_containers(data, warnings)
 
     return FormDraft.model_validate(data), warnings
 
@@ -172,19 +173,3 @@ def _same_stem(word: str, other: str) -> bool:
     """Wspólny początek o długości słowa minus 2 (min. 3) - toleruje polską odmianę."""
     need = min(len(word), max(3, len(word) - 2))
     return len(other) >= need and word[:need] == other[:need]
-
-
-def _remove_empty_pages(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
-    kept = []
-    for i, page in enumerate(data["subject_pages"]):
-        if page["sections"]:
-            kept.append(page)
-        else:
-            warnings.append(
-                ConversionWarning(
-                    code="W18_EMPTY_CONTAINER_REMOVED",
-                    message=f"Usunięto pustą stronę „{page['title']}”.",
-                    path=f"subject_pages[{i}]",
-                )
-            )
-    data["subject_pages"] = kept

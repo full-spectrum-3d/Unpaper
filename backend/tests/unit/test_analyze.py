@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import Any
 
@@ -40,8 +41,16 @@ def _valid() -> LlmReply:
     return fixture_reply("wniosek1_valid")
 
 
-def _invalid() -> LlmReply:
+def _invalid_ref() -> LlmReply:
+    """Warunek widoczności wskazuje nieistniejące pole f9 - naprawialne w kodzie."""
     return fixture_reply("wniosek1_invalid_ref")
+
+
+def _invalid(duration_ms: int = 60_000) -> LlmReply:
+    """Odpowiedź niezgodna ze schematem (nieznany `kind`) - wymaga ponownej próby."""
+    content = json.loads(_valid().content)
+    content["subject_pages"][0]["sections"][0]["fields"][0]["kind"] = "textarea"
+    return reply(json.dumps(content, ensure_ascii=False), duration_ms=duration_ms)
 
 
 async def test_valid_reply_returns_draft() -> None:
@@ -61,10 +70,18 @@ async def test_request_contains_document_and_schema() -> None:
     assert client.calls[0]["schema"] == llm_schema()
 
 
-async def test_invalid_then_valid_retries_once() -> None:
+async def test_invalid_reference_repaired_without_retry() -> None:
+    r, client = await _run([_invalid_ref()])
+    assert len(client.calls) == 1 and r.retries == 0 and r.draft is not None
+    assert [w.code for w in r.warnings] == ["W21_CONDITION_REMOVED"]
+    assert "f9" in r.warnings[0].message
+    assert all(not f.visible_when for _, f in r.draft.iter_fields())
+
+
+async def test_schema_error_then_valid_retries_once() -> None:
     r, client = await _run([_invalid(), _valid()])
     assert r.retries == 1 and r.draft is not None and not r.fallback
-    assert "f9" in client.calls[1]["messages"][-1]["content"]
+    assert "kind" in client.calls[1]["messages"][-1]["content"]
     assert client.calls[1]["messages"][-2]["role"] == "assistant"
     assert r.output_tokens == 600
 
@@ -81,9 +98,7 @@ async def test_truncated_json_is_invalid_output() -> None:
 
 
 async def test_no_retry_when_budget_too_small() -> None:
-    r, client = await _run(
-        [fixture_reply("wniosek1_invalid_ref", duration_ms=100_000)], deadline=150
-    )
+    r, client = await _run([_invalid(duration_ms=100_000)], deadline=150)
     assert len(client.calls) == 1 and r.fallback_reason == "invalid_output"
 
 
@@ -135,8 +150,6 @@ async def test_model_from_settings() -> None:
 
 
 async def test_normalization_warnings_in_result() -> None:
-    import json
-
     content = json.loads(_valid().content)
     content["title"] = "WNIOSEK O USTALENIE NUMERU PORZĄDKOWEGO NIERUCHOMOŚCI"
     r, _ = await _run([reply(json.dumps(content, ensure_ascii=False))])

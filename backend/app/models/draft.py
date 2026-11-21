@@ -1,8 +1,12 @@
-"""FormDraft - schemat structured output LLM (spec §5.4, projekt LLM §5.2).
+"""Szkic formularza: odpowiedź LLM (`LlmDraft`) i kontrakt dla `build/` (`FormDraft`).
 
-Szkic zawiera tylko semantykę, której kod nie ustali sam. Schemat jest płaski
-(bez rekurencji i bez `null`), bo Ollama wymusza go przez constrained decoding.
-Komunikaty walidacji wracają do modelu w ponownej próbie, dlatego są po polsku
+`LlmDraft` to schemat structured output (spec §5.4, projekt LLM §5.2): płaski, bez
+rekurencji i bez `null`, bo Ollama wymusza go przez constrained decoding. Jest luźny:
+wartości domyślne skracają odpowiedź (mniej tokenów wyjścia), a błędne odwołania
+między polami nie odrzucają szkicu - poprawia je `pipeline/draft_repair.py`.
+Oświadczeń model nie przepisuje: wykrywa je kod (`pipeline/draft_rules.py`).
+
+`FormDraft` jest ścisły i zawsze spójny. Komunikaty walidacji są po polsku
 i wskazują ścieżkę oraz id pola.
 """
 
@@ -99,6 +103,47 @@ class FormDraft(_DraftModel):
         return self
 
 
+class _LlmModel(BaseModel):
+    """Odpowiedź modelu: nadmiarowe klucze pomijamy zamiast odrzucać całą odpowiedź."""
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class LlmCondition(_LlmModel):
+    field_id: str = Field(description="id pola single_choice lub multi_choice")
+    op: ConditionOp
+    value: str = Field(description="jedna z opcji tamtego pola")
+
+
+class LlmField(_LlmModel):
+    id: str = Field(description="f1, f2, ... unikalne w całym szkicu")
+    label: str = Field(description="krótka etykieta pola")
+    kind: FieldKind
+    required: bool = Field(default=True, description="pomiń, gdy pole jest wymagane")
+    options: list[str] = Field(default=[], description="opcje pola wyboru")
+    visible_when: list[LlmCondition] = Field(default=[], description="pomiń = zawsze widoczne")
+
+
+class LlmSection(_LlmModel):
+    title: str
+    repeating: bool = Field(default=False, description="pomiń, gdy sekcja się nie powtarza")
+    fields: list[LlmField]
+
+
+class LlmPage(_LlmModel):
+    title: str
+    sections: list[LlmSection]
+
+
+class LlmDraft(_LlmModel):
+    title: NonEmptyStr = Field(description="pełny tytuł wniosku")
+    authority_kind: AuthorityKind
+    authority_name: NonEmptyStr = Field(description="adresat wniosku")
+    applicant_kinds: list[ApplicantKind]
+    attachments: list[str] = Field(default=[], description="załączniki z blankietu")
+    subject_pages: list[LlmPage]
+
+
 def llm_schema() -> dict[str, Any]:
-    """JSON Schema szkicu przekazywany do Ollamy w parametrze `format`."""
-    return FormDraft.model_json_schema()
+    """JSON Schema odpowiedzi modelu przekazywany do Ollamy w parametrze `format`."""
+    return LlmDraft.model_json_schema()

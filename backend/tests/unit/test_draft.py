@@ -6,7 +6,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from app.models.draft import FormDraft, llm_schema
+from app.models.draft import FormDraft, LlmDraft, llm_schema
 from app.models.warning import ConversionWarning
 
 Draft = dict[str, Any]
@@ -157,3 +157,39 @@ def test_warning_code_format() -> None:
     ConversionWarning(code="W01_LLM_FALLBACK", message="x")
     with pytest.raises(ValidationError):
         ConversionWarning(code="llm", message="x")
+
+
+def test_llm_draft_defaults_shorten_reply() -> None:
+    raw = LlmDraft.model_validate(
+        {
+            "title": "Wniosek",
+            "authority_kind": "URZAD",
+            "authority_name": "Urząd Gminy",
+            "applicant_kinds": ["SELF"],
+            "subject_pages": [
+                {
+                    "title": "Strona",
+                    "sections": [
+                        {"title": "S", "fields": [{"id": "f1", "label": "A", "kind": "date"}]}
+                    ],
+                }
+            ],
+        }
+    )
+    section = raw.subject_pages[0].sections[0]
+    assert section.repeating is False and section.fields[0].required is True
+    assert raw.attachments == [] and section.fields[0].visible_when == []
+
+
+def test_llm_draft_ignores_extra_keys_and_bad_references() -> None:
+    d = cond_to("f9")(copy.deepcopy(_draft()))
+    _fields(d)[0]["semantic"] = "PESEL"
+    raw = LlmDraft.model_validate(d)
+    assert raw.subject_pages[0].sections[0].fields[5].visible_when[0].field_id == "f9"
+
+
+def test_llm_schema_has_no_statements_and_optional_defaults() -> None:
+    schema = llm_schema()
+    assert "statements" not in schema["properties"]
+    assert set(schema["$defs"]["LlmField"]["required"]) == {"id", "label", "kind"}
+    assert "repeating" not in schema["$defs"]["LlmSection"]["required"]
