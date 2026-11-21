@@ -1,0 +1,11 @@
+# Opcjonalnie: inferencja na karcie NVIDIA (wymaga NVIDIA Container Toolkit na hoście).
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+services:
+  llm:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
