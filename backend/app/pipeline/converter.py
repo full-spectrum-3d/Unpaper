@@ -11,14 +11,37 @@ działający `soffice.bin`.
 
 import asyncio
 import contextlib
+import logging
 import os
+import shutil
 import signal
+import time
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
+from fastapi import Request
+
+from app.core.config import Settings
+from app.pipeline.upload_validation.policy import FileKind
+
+logger = logging.getLogger(__name__)
+
 STDERR_TAIL_BYTES = 2048
+
+_FILTERS = {
+    FileKind.DOCX: "docx:MS Word 2007 XML",
+    FileKind.XLSX: "xlsx:Calc MS Excel 2007 XML",
+}
+
+# LibreOffice headless nie uruchamia makr przy konwersji; to drugi bezpiecznik w profilu.
+_MACRO_LOCKDOWN_XCU = """<?xml version="1.0" encoding="UTF-8"?>
+<oor:items xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="MacroSecurityLevel" oor:op="fuse"><value>3</value></prop></item>
+<item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="DisableMacrosExecution" oor:op="fuse"><value>true</value></prop></item>
+</oor:items>
+"""  # noqa: E501
 
 
 class ConversionError(Exception):
@@ -86,3 +109,80 @@ async def run_process(
         raise
     assert proc.returncode is not None  # noqa: S101 - communicate() czeka na zakończenie
     return RunResult(proc.returncode, stderr[-STDERR_TAIL_BYTES:])
+
+
+class Converter(Protocol):
+    async def convert(self, source: Path, target: FileKind, workdir: Path) -> Path:
+        """Konwertuje `source` do `target` w `workdir`; zwraca ścieżkę niepustego wyniku."""
+        ...
+
+
+class LibreOfficeConverter:
+    """`soffice --headless --convert-to` z osobnym profilem w katalogu roboczym."""
+
+    def __init__(self, soffice_path: str, timeout_s: float, runner: Runner = run_process) -> None:
+        self.soffice_path = soffice_path
+        self.timeout_s = timeout_s
+        self._runner = runner
+
+    async def convert(self, source: Path, target: FileKind, workdir: Path) -> Path:
+        if target not in _FILTERS:
+            raise ValueError(f"nieobsługiwany format docelowy: {target}")
+        profile = workdir / "profile"
+        outdir = workdir / "out"
+        (profile / "user").mkdir(parents=True)
+        outdir.mkdir()
+        (profile / "user" / "registrymodifications.xcu").write_text(
+            _MACRO_LOCKDOWN_XCU, encoding="utf-8"
+        )
+        argv = [
+            self.soffice_path,
+            f"-env:UserInstallation={profile.as_uri()}",
+            "--headless",
+            "--invisible",
+            "--norestore",
+            "--nolockcheck",
+            "--nodefault",
+            "--nologo",
+            "--convert-to",
+            _FILTERS[target],
+            "--outdir",
+            str(outdir),
+            str(source),
+        ]
+        env = {
+            "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
+            "HOME": str(workdir),
+            "TMPDIR": str(workdir),
+            "LANG": "C.UTF-8",
+        }
+        started = time.monotonic()
+        try:
+            result = await self._runner(argv, env=env, cwd=workdir, timeout_s=self.timeout_s)
+        except OSError as exc:
+            logger.warning("nie udało się uruchomić konwertera: %s", type(exc).__name__)
+            raise ConversionError("nie udało się uruchomić konwertera") from exc
+        elapsed = time.monotonic() - started
+
+        output = outdir / f"{source.stem}.{target}"
+        if result.returncode != 0 or not output.is_file() or output.stat().st_size == 0:
+            logger.debug(
+                "konwersja nieudana: kod %s, stderr: %r", result.returncode, result.stderr_tail
+            )
+            raise ConversionError(f"brak wyniku konwersji (kod wyjścia {result.returncode})")
+        logger.info("konwersja do %s: %.1f s, %d B", target, elapsed, output.stat().st_size)
+        return output
+
+
+def find_converter(settings: Settings) -> LibreOfficeConverter | None:
+    """Konwerter, gdy `soffice` jest w obrazie; `None` = Plan B (DOC/ODS → 415)."""
+    path = shutil.which("soffice") or shutil.which("libreoffice")
+    if path is None:
+        return None
+    return LibreOfficeConverter(path, settings.converter_timeout_s)
+
+
+def get_converter(request: Request) -> Converter | None:
+    """Zależność FastAPI: konwerter wykryty przy starcie aplikacji."""
+    converter: Converter | None = request.app.state.converter
+    return converter
