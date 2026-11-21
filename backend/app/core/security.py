@@ -4,7 +4,8 @@ Algorytm i klucze pochodzą wyłącznie z konfiguracji - nigdy z nagłówka toke
 Ścieżka uwierzytelniania nie wykonuje żadnych wywołań sieciowych.
 
 Narzędzie: `python -m app.core.security hash-password` wypisuje hash argon2id
-do zmiennej API_PASSWORD_HASH.
+do zmiennej API_PASSWORD_HASH. Z `--stdin` czyta hasło z pierwszej linii wejścia
+(skrypty, np. `scripts/init-env.sh`), bez pytania o powtórzenie.
 """
 
 import argparse
@@ -186,12 +187,12 @@ def require_auth(
 # --- CLI ---
 
 
-def _hash_password_command() -> int:
-    password = getpass.getpass("Hasło: ")
+def _hash_password_command(*, from_stdin: bool = False) -> int:
+    password = sys.stdin.readline().rstrip("\r\n") if from_stdin else getpass.getpass("Hasło: ")
     if not password:
         print("Hasło nie może być puste.", file=sys.stderr)
         return 1
-    if password != getpass.getpass("Powtórz hasło: "):
+    if not from_stdin and password != getpass.getpass("Powtórz hasło: "):
         print("Hasła nie są zgodne.", file=sys.stderr)
         return 1
     print(_password_hasher.hash(password))
@@ -201,10 +202,15 @@ def _hash_password_command() -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m app.core.security")
     subcommands = parser.add_subparsers(dest="command", required=True)
-    subcommands.add_parser("hash-password", help="wygeneruj hash argon2id dla API_PASSWORD_HASH")
+    hash_parser = subcommands.add_parser(
+        "hash-password", help="wygeneruj hash argon2id dla API_PASSWORD_HASH"
+    )
+    hash_parser.add_argument(
+        "--stdin", action="store_true", help="hasło z pierwszej linii stdin (dla skryptów)"
+    )
     args = parser.parse_args(argv)
     if args.command == "hash-password":
-        return _hash_password_command()
+        return _hash_password_command(from_stdin=args.stdin)
     return 2
 
 
