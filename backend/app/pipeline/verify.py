@@ -2,6 +2,7 @@
 
 import copy
 import itertools
+import re
 import uuid
 from collections import deque
 from collections.abc import Callable, Iterator, Mapping
@@ -32,6 +33,8 @@ from app.pipeline.issues import Issue, IssueCode
 MAX_TITLE = 255
 MAX_TECH_NAME = 60
 MAX_SCHEMA_ISSUES = 20
+DEFAULT_SECTION_TITLE = "Dane"
+UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
 TITLE_PREFIXES = ("wniosek", "zgłoszenie", "deklaracja", "oświadczenie")
 BASE_DEFAULTS: dict[str, Any] = {
     "id": "",
@@ -259,6 +262,40 @@ def _fix_duplicate_tech_names(form: dict[str, Any], ctx: _Ctx) -> None:
         seen.add(name)
 
 
+def _blank(value: Any) -> bool:
+    return not isinstance(value, str) or not value.strip()
+
+
+def _fix_section_titles(form: dict[str, Any], ctx: _Ctx) -> None:
+    # Tytuły sekcji nie są celem odwołań stanów (te wskazują strony i techName).
+    for node in _nodes(form):
+        if not _is_section(node.field) or not _blank(node.field.get("title")):
+            continue
+        titles = (
+            q["field"].get("title")
+            for _, q in _items(node.field.get("repeatingSectionGrid"), "")
+            if isinstance(q.get("field"), dict)
+        )
+        title = next((t for t in titles if not _blank(t)), DEFAULT_SECTION_TITLE)
+        node.field["title"] = title
+        ctx.fix(IssueCode.R16_SECTION_TITLE, f"Nadano tytuł sekcji: {title}", node.path)
+
+
+def _fix_id_format(form: dict[str, Any], ctx: _Ctx) -> None:
+    renamed: dict[str, str] = {}
+    for path, holder in _id_holders(form):
+        value = holder.get("id")
+        if isinstance(value, str) and not UUID_RE.match(value):
+            renamed[value] = holder["id"] = ctx.id_factory()
+            ctx.fix(IssueCode.W12_ID_FORMAT, f"Zamieniono id {value!r} na UUID", path)
+    # Jedyne odwołania do id w formularzu to końce połączeń przepływu.
+    flow = form.get("flow")
+    for _, link in _items(flow.get("links"), "flow.links") if isinstance(flow, dict) else ():
+        for end in ("source", "target"):
+            if isinstance(link.get(end), str) and link[end] in renamed:
+                link[end] = renamed[link[end]]
+
+
 def _state_problem(
     state: Any, fld: dict[str, Any], titles: set[str], names: set[str]
 ) -> str | None:
@@ -424,6 +461,8 @@ FIXES: tuple[Callable[[dict[str, Any], _Ctx], None], ...] = (
     _fix_nested_sections,
     _fix_empty_pages,
     _fix_duplicate_ids,
+    _fix_id_format,
+    _fix_section_titles,
     _fix_duplicate_tech_names,
     _fix_states,
     _fix_validators,
@@ -514,6 +553,37 @@ def _rule_finish(form: dict[str, Any]) -> list[Issue]:
         Issue(IssueCode.R05_FINISH_INPUT, "Pole do wprowadzania danych na stronie końcowej", n.path)
         for n in _nodes(form)
         if n.tab.get("type") == TabType.FINISH and _ftype(n.field) in INPUT_TYPES
+    ]
+
+
+def _rule_finish_content(form: dict[str, Any]) -> list[Issue]:
+    # Reguła 7: na stronie końcowej wyłącznie INFO_SECTION (pola wejściowe to błąd R05).
+    return [
+        Issue(
+            IssueCode.W11_FINISH_NOT_INFO,
+            "Strona końcowa powinna zawierać wyłącznie sekcje informacyjne (INFO_SECTION)",
+            n.path,
+        )
+        for n in _nodes(form)
+        if n.tab.get("type") == TabType.FINISH
+        and n.parent is not None
+        and _ftype(n.field) not in INPUT_TYPES | {FieldType.INFO_SECTION, None}
+    ]
+
+
+def _rule_section_titles(form: dict[str, Any]) -> list[Issue]:
+    return [
+        Issue(IssueCode.R16_SECTION_TITLE, "Sekcja bez tytułu", n.path)
+        for n in _nodes(form)
+        if _is_section(n.field) and _blank(n.field.get("title"))
+    ]
+
+
+def _rule_id_format(form: dict[str, Any]) -> list[Issue]:
+    return [
+        Issue(IssueCode.W12_ID_FORMAT, f"id nie jest UUID: {holder['id']!r}", path)
+        for path, holder in _id_holders(form)
+        if isinstance(holder.get("id"), str) and not UUID_RE.match(holder["id"])
     ]
 
 
@@ -657,6 +727,9 @@ RULES: tuple[Rule, ...] = (
     _rule_tabs,
     _rule_structure,
     _rule_finish,
+    _rule_finish_content,
+    _rule_section_titles,
+    _rule_id_format,
     _rule_requiredness,
     _rule_flow,
     _rule_choices,
