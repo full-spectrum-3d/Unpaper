@@ -92,8 +92,9 @@ export class ResultPage {
     afterNextRender(
       () => {
         const el = this.fragment()?.nativeElement;
-        el?.scrollIntoView?.({ block: 'center' });
-        el?.focus();
+        // Centre the first line, not the block: a tall range would push its start off-screen.
+        el?.querySelector('[data-line]')?.scrollIntoView?.({ block: 'center' });
+        el?.focus({ preventScroll: true });
       },
       { injector: this.injector },
     );

@@ -1,7 +1,7 @@
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { applicationConfig, type Meta, type StoryObj } from '@storybook/angular-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
 import { mockReport } from '../import/mock-report';
 import { formatJson } from './json-lines';
@@ -131,18 +131,29 @@ export const ZRaportem: Story = {
       expect(jsonRegion(c).querySelectorAll('.bg-warning-subtle')).toHaveLength(1);
     };
 
-    await userEvent.click(tab(c, 'Raport'));
-    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W07_CHOICE_OPTIONS' }));
-    expect(tab(c, 'JSON')).toHaveAttribute('aria-selected', 'true');
-    await waitFor(() => expectHighlighted('tabs[0].questions[1]'));
-
-    await userEvent.click(tab(c, 'Raport'));
-    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W12_LOW_OCR_CONFIDENCE' }));
-    await waitFor(() => expectHighlighted('tabs[1].questions[0].field.repeatingSectionGrid[1]'));
+    const scroll = spyOn(Element.prototype, 'scrollIntoView');
+    try {
+      await userEvent.click(tab(c, 'Raport'));
+      await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W07_CHOICE_OPTIONS' }));
+      expect(tab(c, 'JSON')).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() => expectHighlighted('tabs[0].questions[1]'));
+      // The first line of the range is centred, not the whole block.
+      const first = c.getByLabelText('Fragment JSON: tabs[0].questions[1]').querySelector('[data-line]');
+      expect(scroll).toHaveBeenCalledWith({ block: 'center' });
+      expect(scroll.mock.contexts.at(-1)).toBe(first);
+    } finally {
+      scroll.mockRestore();
+    }
+    expect(c.getByRole('group', { name: 'Fragment JSON: tabs[0].questions[1]' })).toHaveFocus();
 
     // Leaving the JSON tab clears the highlight.
     await userEvent.click(tab(c, 'Podgląd formularza'));
     expect(jsonRegion(c).querySelector('.bg-warning-subtle')).toBeNull();
+
+    await userEvent.click(tab(c, 'Raport'));
+    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W12_LOW_OCR_CONFIDENCE' }));
+    // Ends with the highlight on screen so the a11y scan checks the fragment too.
+    await waitFor(() => expectHighlighted('tabs[1].questions[0].field.repeatingSectionGrid[1]'));
   },
 };
 
