@@ -405,8 +405,12 @@ Raport (`report=true`):
 
 Najczęstsze ostrzeżenia: `W01_LLM_FALLBACK` i `W24_RULE_BASED_DRAFT` (szkic z reguł,
 bez modelu), `W12_LOW_OCR_CONFIDENCE` (słaba jakość skanu), `W13_FIELD_NOT_IN_DOCUMENT`
-(pole, którego etykiety nie ma w dokumencie), `W27_FORM_REBUILT` (formularz zastępczy), `W28_RODO_CLAUSE_URL_MISSING` (zgoda RODO bez linku:
-ustaw `RODO_CLAUSE_URL`).
+(pole, którego etykiety nie ma w dokumencie), `W27_FORM_REBUILT` (formularz zastępczy),
+`W28_RODO_CLAUSE_URL_MISSING` (zgoda RODO bez linku: ustaw `RODO_CLAUSE_URL`),
+`W29_FINISH_NOT_INFO` (strona końcowa w układzie wzorców zamiast `INFO_SECTION`),
+`W30_ID_FORMAT` (`id` spoza formatu UUID), `W31_TITLE_LEGAL_REFERENCE` (z tytułu usunięto
+odwołanie do przepisu), `W32_LABEL_NORMALIZED` (etykieta poprawiona, np. „W miejscowości”
+na „Miejscowość”).
 
 ### Walidacja pliku
 
