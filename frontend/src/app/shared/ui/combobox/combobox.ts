@@ -97,8 +97,11 @@ let nextId = 0;
           }
         }
       </ul>
+      <!-- Always in the DOM: live regions inserted with text are not reliably announced. -->
+      <p role="status" class="sr-only">{{ open() && !visible().length ? emptyText() : '' }}</p>
       @if (open() && !visible().length) {
         <p
+          aria-hidden="true"
           class="absolute z-10 mt-1 w-full bg-surface border border-border-input rounded-field px-field-x py-field-y text-body text-fg-muted"
         >
           {{ emptyText() }}

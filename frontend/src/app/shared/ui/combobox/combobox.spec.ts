@@ -98,6 +98,18 @@ describe('Combobox', () => {
     expect(fixture.nativeElement.textContent).toContain('Brak wyników');
   });
 
+  it('announces empty results in a persistent status region', async () => {
+    const search = inputs[1];
+    const status = () =>
+      search.parentElement!.querySelector('[role="status"]') as HTMLElement | null;
+    const before = status();
+    expect(before).not.toBeNull();
+    expect(before!.textContent?.trim()).toBe('');
+    await type(search, 'xyz');
+    expect(status()).toBe(before);
+    expect(before!.textContent?.trim()).toBe('Brak wyników');
+  });
+
   it('restores the value on blur without committing the query', async () => {
     host.second.set('Polska');
     await render();

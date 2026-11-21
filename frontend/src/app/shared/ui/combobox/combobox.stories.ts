@@ -32,6 +32,8 @@ export const PustaLista: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     await userEvent.click(c.getByRole('combobox', { name: 'Gatunek' }));
-    await expect(c.getByText('Brak pozycji w słowniku X')).toBeVisible();
+    await expect(c.getByRole('status')).toHaveTextContent('Brak pozycji w słowniku X');
+    const [, visible] = c.getAllByText('Brak pozycji w słowniku X');
+    await expect(visible).toBeVisible();
   },
 };
