@@ -1,7 +1,9 @@
-import { Component, forwardRef, input } from '@angular/core';
+import { Component, computed, forwardRef, input } from '@angular/core';
 import { FormField } from './form-definition';
+import { isCascade } from './select-options';
 import { CheckboxField } from './fields/checkbox';
 import { ConsentSectionField } from './fields/consent-section';
+import { DictionaryCascadeField } from './fields/dictionary-cascade';
 import { DateField } from './fields/date';
 import { FileUploaderField } from './fields/file-uploader';
 import { RadioField } from './fields/radio';
@@ -20,6 +22,7 @@ import { UnknownField } from './fields/unknown';
     TextareaField,
     RadioField,
     SelectField,
+    DictionaryCascadeField,
     CheckboxField,
     DateField,
     FileUploaderField,
@@ -45,7 +48,11 @@ import { UnknownField } from './fields/unknown';
         <app-radio-field [field]="field()" />
       }
       @case ('SELECT') {
-        <app-select-field [field]="field()" />
+        @if (cascade()) {
+          <app-dictionary-cascade-field [field]="field()" />
+        } @else {
+          <app-select-field [field]="field()" />
+        }
       }
       @case ('CHECKBOX') {
         <app-checkbox-field [field]="field()" />
@@ -67,9 +74,10 @@ import { UnknownField } from './fields/unknown';
       }
     }
   `,
-  host: { class: 'block' },
+  host: { class: 'block', '[attr.data-field-id]': 'field().id' },
 })
 export class FieldHost {
   readonly field = input.required<FormField>();
   readonly hidden = input<ReadonlySet<string>>(new Set());
+  protected readonly cascade = computed(() => isCascade(this.field()));
 }

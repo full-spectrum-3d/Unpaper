@@ -1,19 +1,29 @@
-import { Component, input } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { AnswersStore } from './answers-store';
 import { FormField, Question } from './form-definition';
+import { FormState } from './form-state';
 import { RendererGrid } from './renderer-grid';
 
 @Component({
   selector: 'app-fields-harness',
   imports: [RendererGrid],
-  providers: [AnswersStore],
+  providers: [AnswersStore, FormState],
   template: `<app-renderer-grid [questions]="questions()" [hidden]="hidden()" />`,
 })
 class FieldsHarness {
   readonly questions = input.required<Question[]>();
   readonly hidden = input<ReadonlySet<string>>(new Set());
+  readonly errors = input<ReadonlyMap<string, string>>(new Map());
+  readonly readOnly = input<ReadonlySet<string>>(new Set());
+
+  constructor() {
+    // Stories stand in for FormRenderer, the only writer of FormState.
+    const state = inject(FormState);
+    effect(() => state.errors.set(this.errors()));
+    effect(() => state.readOnly.set(this.readOnly()));
+  }
 }
 
 const f = (id: string, type: string, extra: Partial<FormField> = {}): FormField => ({
@@ -54,7 +64,18 @@ const allTypes: Question[] = [
     options: opts,
   }),
   f('sel', 'SELECT', { title: 'Wybór', options: opts }),
-  f('dict', 'SELECT', { title: 'Kraj', dictionaryName: 'Kraje' }),
+  f('dict', 'SELECT', {
+    title: 'Kraj',
+    dictionaryName: 'Kraje',
+    defaultValue: ['Polska'],
+    searchEnabled: true,
+  }),
+  f('teryt', 'SELECT', {
+    title: 'TERYT_4G_DOWODOWY',
+    dictionaryName: 'TERYT_4G_DOWODOWY',
+    searchEnabled: true,
+    defaultValue: [],
+  }),
   f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
   f('data', 'DATEPICKER', { title: 'Data' }),
   f('plik', 'FILE_UPLOADER', { title: 'Załącznik' }),
@@ -89,11 +110,22 @@ export const AllTypes: Story = {
     await userEvent.click(radios[1]);
     expect(radios[1]).toBeChecked();
 
-    const sel = within(c.getByLabelText('Wybór'));
-    expect(sel.getAllByRole('option')[0]).toHaveTextContent('Wybierz');
-    expect(
-      within(c.getByLabelText('Kraj')).getByRole('option', { name: 'Słownik: Kraje' }),
-    ).toBeDisabled();
+    const sel = c.getByRole('combobox', { name: 'Wybór' });
+    await userEvent.click(sel);
+    expect(c.getAllByRole('option').length).toBeGreaterThan(0);
+    await userEvent.keyboard('{Escape}');
+
+    const kraj = c.getByRole('combobox', { name: 'Kraj' });
+    expect(kraj).toHaveValue('Polska');
+    await userEvent.click(kraj);
+    expect(c.getByRole('option', { name: 'Polska' })).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+
+    expect(c.queryByText('TERYT_4G_DOWODOWY')).toBeNull();
+    expect(c.queryByRole('combobox', { name: 'Powiat' })).toBeNull();
+    await userEvent.click(c.getByRole('combobox', { name: 'Województwo' }));
+    await userEvent.click(c.getByRole('option', { name: 'mazowieckie' }));
+    expect(c.getByRole('combobox', { name: 'Powiat' })).toBeVisible();
 
     const chk = c.getByRole('checkbox', { name: 'Zgoda ogólna' });
     await userEvent.click(chk);
@@ -176,5 +208,118 @@ export const SparseFields: Story = {
   play: async ({ canvasElement }) => {
     expect(canvasElement.querySelectorAll('app-field-host').length).toBe(11);
     expect(within(canvasElement).getByLabelText('TEXT FIELD')).toBeVisible(); // humanized techName fallback
+  },
+};
+
+const stateTypes: Question[] = [
+  f('kwota', 'NUMBER', { title: 'Kwota' }),
+  f('opis', 'TEXTAREA', { title: 'Opis' }),
+  f('data', 'DATEPICKER', { title: 'Data' }),
+  f('sel', 'SELECT', { title: 'Wybór', options: opts }),
+  f('teryt', 'SELECT', {
+    title: 'Adres',
+    dictionaryName: 'TERYT_4G_DOWODOWY',
+    defaultValue: ['mazowieckie'],
+  }),
+  f('radio', 'RADIO', { title: 'W czyim imieniu', options: opts }),
+  f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
+  f('plik', 'FILE_UPLOADER', { title: 'Załącznik' }),
+  f('zgody', 'CONSENT_SECTION', {
+    title: undefined,
+    consentSectionConfig: { consents: [{ description: 'Zgoda na kontakt', required: true }] },
+  }),
+].map((field, i) => q(field, i));
+
+export const ZBledami: Story = {
+  args: {
+    questions: stateTypes,
+    errors: new Map([
+      ['kwota', 'Uzupełnij to pole'],
+      ['opis', 'Uzupełnij to pole'],
+      ['data', 'Uzupełnij to pole'],
+      ['sel', 'Wybierz jedną z opcji'],
+      ['teryt', 'Wybierz jedną z opcji'],
+      ['radio', 'Wybierz jedną z opcji'],
+      ['chk', 'Zaznacz to pole'],
+      ['plik', 'Dodaj plik'],
+      ['zgody', 'Zaznacz wymaganą zgodę'],
+    ]),
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    expect(c.getByLabelText('Kwota')).toHaveAccessibleDescription('Uzupełnij to pole');
+    expect(c.getByLabelText('Kwota')).toBeInvalid();
+    expect(c.getByRole('combobox', { name: 'Powiat' })).toHaveAccessibleDescription(
+      'Wybierz jedną z opcji',
+    );
+    expect(c.getByRole('group', { name: 'W czyim imieniu' })).toHaveAccessibleDescription(
+      'Wybierz jedną z opcji',
+    );
+    expect(c.getByRole('button', { name: 'Dodaj lub przeciągnij plik' })).toBeInvalid();
+    expect(c.getByText('Zaznacz wymaganą zgodę')).toBeVisible();
+  },
+};
+
+export const TylkoDoOdczytu: Story = {
+  args: {
+    questions: stateTypes,
+    readOnly: new Set(stateTypes.map((x) => x.field.id)),
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    expect(c.getByLabelText('Kwota')).toHaveAttribute('readonly');
+    expect(c.getByLabelText('Opis')).toHaveAttribute('readonly');
+    const sel = c.getByRole('combobox', { name: 'Wybór' });
+    await userEvent.click(sel);
+    expect(sel).toHaveAttribute('aria-expanded', 'false');
+    for (const r of c.getAllByRole('radio')) expect(r).toBeDisabled();
+    expect(c.getByRole('button', { name: 'Dodaj lub przeciągnij plik' })).toBeDisabled();
+  },
+};
+
+export const ZPodpowiedzia: Story = {
+  args: {
+    questions: [
+      f('pesel', 'TEXT_FIELD', { title: 'Numer PESEL', tooltipMessage: '<p>11 cyfr</p>' }),
+      f('opis', 'TEXTAREA', { title: 'Opis', tooltipMessage: 'Krótko' }),
+      f('radio', 'RADIO', { title: 'W czyim imieniu', options: opts, tooltipMessage: 'Pomoc' }),
+      f('plik', 'FILE_UPLOADER', { title: 'Załącznik', tooltipMessage: 'Skan lub zdjęcie' }),
+    ].map((field, i) => q(field, i)),
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const btn = c.getByRole('button', { name: 'Więcej informacji: Numer PESEL' });
+    await userEvent.click(btn);
+    expect(btn).toHaveAttribute('aria-expanded', 'true');
+    expect(c.getByText('11 cyfr')).toBeVisible();
+    expect(c.getByRole('button', { name: 'Więcej informacji: W czyim imieniu' })).toBeVisible();
+    expect(c.getByRole('button', { name: 'Więcej informacji: Załącznik' })).toBeVisible();
+  },
+};
+
+export const ZRejestru: Story = {
+  args: {
+    questions: [
+      f('pesel', 'TEXT_FIELD', {
+        title: 'Numer PESEL',
+        readOnly: true,
+        defaultValueType: 'EXTERNAL_SYSTEM',
+        defaultValue: 'PESEL.pesel',
+        tooltipMessage: '11 cyfr',
+      }),
+      f('email', 'TEXT_FIELD', { title: 'E-mail', defaultValueType: 'EXTERNAL_SYSTEM' }),
+      f('radio', 'RADIO', {
+        title: 'Płeć',
+        options: opts,
+        defaultValueType: 'EXTERNAL_SYSTEM',
+      }),
+    ].map((field, i) => q(field, i)),
+  },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    expect(c.getByLabelText(/Numer PESEL\s*, dane z rejestru/)).toHaveAttribute('readonly');
+    expect(c.getByLabelText(/E-mail\s*, dane z rejestru/)).not.toHaveAttribute('readonly');
+    expect(c.getByRole('group', { name: /^Płeć\s*, dane z rejestru$/ })).toBeVisible();
+    expect(c.getAllByText('dane z rejestru')).toHaveLength(3);
   },
 };

@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { TOKEN_URL, toUserMessage } from './api-error';
+import { TOKEN_URL, errorCode, toUserMessage } from './api-error';
 
 const err = (status: number, error: unknown, extra: Partial<{ url: string; headers: HttpHeaders }> = {}) =>
   new HttpErrorResponse({ status, error, ...extra });
@@ -13,6 +13,8 @@ describe('toUserMessage', () => {
     ['VALIDATION_ERROR', 'Uzupełnij login i hasło'],
     ['LLM_UNAVAILABLE', 'Usługa analizy formularzy jest chwilowo niedostępna. Spróbuj ponownie.'],
     ['PROCESSING_TIMEOUT', 'Przetwarzanie trwało zbyt długo. Spróbuj ponownie.'],
+    ['DOCUMENT_PASSWORD_REQUIRED', 'Dokument jest zabezpieczony hasłem. Podaj hasło, aby go przetworzyć.'],
+    ['DOCUMENT_PASSWORD_INVALID', 'Hasło jest niepoprawne. Spróbuj ponownie.'],
   ])('maps %s', (code, message) => {
     expect(toUserMessage(err(400, { code, detail: 'x' }))).toBe(message);
   });
@@ -42,5 +44,17 @@ describe('toUserMessage', () => {
 
   it('falls back to generic message without request id', () => {
     expect(toUserMessage(err(500, 'oops'))).toBe('Wystąpił nieoczekiwany błąd');
+  });
+});
+
+describe('errorCode', () => {
+  it('reads code from an HTTP error body', () => {
+    expect(errorCode(err(422, { code: 'DOCUMENT_PASSWORD_REQUIRED' }))).toBe('DOCUMENT_PASSWORD_REQUIRED');
+  });
+
+  it('returns null without a string code', () => {
+    expect(errorCode(err(500, null))).toBeNull();
+    expect(errorCode(err(500, { code: 1 }))).toBeNull();
+    expect(errorCode(new Error('x'))).toBeNull();
   });
 });

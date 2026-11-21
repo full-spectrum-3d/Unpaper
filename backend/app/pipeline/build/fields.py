@@ -8,6 +8,7 @@ from app.models.draft import CHOICE_KINDS, DraftField, FieldKind
 from app.models.draft import Condition as DraftCondition
 from app.models.form import ALLOWED_VALIDATORS, CHOICE_TYPES, FieldType, Validator
 from app.models.warning import ConversionWarning
+from app.pipeline.build.file_hints import file_constraints_html
 from app.pipeline.build.html import paragraphs
 from app.pipeline.build.ir import AllOf, Condition, Eq, FieldNode, Not, PageNode, Semantic
 from app.pipeline.issues import IssueCode
@@ -19,6 +20,26 @@ _LABEL_MAX = 80
 _TECH_NAME_MAX = 60
 _RADIO_MAX_OPTIONS = 5
 _SEARCH_THRESHOLD = 15
+
+# Odwołania do przepisów w tytule (standard: tytuł krótki, bez przepisów). Tylko wyraźne wzorce.
+_INTRO = r"(?:na\s+podstawie|zgodnie\s+z|o\s+kt[óo]r(?:ym|ej|ych)\s+mowa\s+w)"
+_ARTICLE = r"art\.\s*\d+\w*(?:\s*(?:ust\.|pkt|lit\.|§)\s*\d+\w*)*"
+_STATUTE = (
+    r"(?:\s+(?:ustawy|rozporządzenia)\s+z\s+dnia\s+\d{1,2}\s+\w+\s+\d{4}\s*r\.?"
+    r"(?:\s+[^,;()]*)?"  # tytuł ustawy aż do przecinka lub końca
+    r"|\s+(?:ustawy|Ordynacji\s+podatkowej|Kodeksu\s+\w+(?:\s+\w+)?))?"
+)
+_DZ_U = r"Dz\.\s*U\.[^()]*"
+_LEGAL_REFERENCES: tuple[re.Pattern[str], ...] = tuple(
+    re.compile(pattern, re.IGNORECASE)
+    for pattern in (
+        rf"\s*\(\s*(?:t\.\s*j\.\s*)?{_DZ_U}\)",
+        rf"\s*\(\s*{_INTRO}\s+{_ARTICLE}{_STATUTE}[^()]*\)",
+        rf"[,\s]*{_INTRO}\s+{_ARTICLE}{_STATUTE}",
+        r"[,\s]*Dz\.\s*U\.\s*(?:z\s+\d{4}\s*r\.?\s*)?(?:Nr\s*\d+\s*)?,?\s*poz\.\s*\d+"
+        r"(?:\s+z\s+późn\.\s*zm\.)?",
+    )
+)
 
 _KIND_TYPES: dict[FieldKind, FieldType] = {
     "short_text": FieldType.TEXT_FIELD,
@@ -81,10 +102,28 @@ def slugify(text: str, *, max_length: int = 60) -> str:
     return slug or "pole"
 
 
+def _strip_legal_references(title: str) -> str:
+    """Usuwa odwołania do przepisów i sprząta po nich interpunkcję."""
+    for rx in _LEGAL_REFERENCES:
+        title = rx.sub("", title)
+    title = re.sub(r"\(\s*\)", "", title)
+    title = re.sub(r"\s+([,;.])", r"\1", title)
+    return " ".join(title.split()).rstrip(" ,;:-–")  # noqa: RUF001
+
+
 def normalize_title(raw: str) -> tuple[str, list[ConversionWarning]]:
-    """Zwija białe znaki, ucina do 255 znaków i pilnuje prefiksu tytułu."""
+    """Zwija białe znaki, usuwa odwołania do przepisów, ucina do 255 znaków, pilnuje prefiksu."""
     issues: list[ConversionWarning] = []
     title = " ".join(raw.split())
+    cleaned = _strip_legal_references(title)
+    if cleaned and cleaned != title:
+        title = cleaned
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W31_TITLE_LEGAL_REFERENCE,
+                message="Z tytułu usunięto odwołanie do przepisów.",
+            )
+        )
     if len(title) > _TITLE_MAX:
         title = title[:_TITLE_MAX].rstrip()
         issues.append(
@@ -192,7 +231,9 @@ def map_draft_field(field: DraftField, *, key: str) -> tuple[FieldNode, list[Con
                 path=key,
             )
         )
-    if field.kind != "file":
+    if field.kind == "file":
+        node.description_html = file_constraints_html()
+    else:
         node.semantic = label_semantic(field.label)
     node.validation = _validators(field.required, node.semantic, node.type)
     return node, issues

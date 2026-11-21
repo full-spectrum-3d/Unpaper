@@ -94,10 +94,10 @@ async def test_invalid_twice_falls_back() -> None:
     assert [w.code for w in r.warnings][:2] == ["W01_LLM_FALLBACK", "W24_RULE_BASED_DRAFT"]
     assert r.draft is not None
     assert [f.label for _, f in r.draft.iter_fields()] == [
-        "W miejscowości",
-        "Przy ulicy",
-        "Nr ewidencyjny działki",
-        "W obrębie",
+        "Miejscowość",
+        "Ulica",
+        "Numer ewidencyjny działki",
+        "Obręb",
     ]
 
 

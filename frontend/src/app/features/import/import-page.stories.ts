@@ -13,6 +13,7 @@ import { FileRegistry } from './file-registry';
 import { ImportPage } from './import-page';
 
 const dispatched = fn();
+const registry = { add: fn(), get: fn(), delete: fn(), setPassword: fn() };
 let mockStore: MockStore;
 
 const stateOf = (items: QueueItem[]) => ({
@@ -49,7 +50,7 @@ function withQueue(items: QueueItem[]) {
           return s;
         },
       },
-      { provide: FileRegistry, useValue: { add: fn(), get: fn(), delete: fn() } },
+      { provide: FileRegistry, useValue: registry },
     ],
   });
 }
@@ -134,6 +135,68 @@ export const RetryableError: Story = {
   play: async ({ canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole('button', { name: 'Ponów wniosek.pdf' }));
     expect(dispatched).toHaveBeenCalledWith(ImportQueueActions.retry({ id: 'r1' }));
+  },
+};
+
+export const PasswordRequired: Story = {
+  decorators: [
+    withQueue([
+      item({
+        id: 'h1',
+        name: 'umowa.pdf',
+        status: 'error',
+        error: 'Dokument jest zabezpieczony hasłem. Podaj hasło, aby go przetworzyć.',
+        retryable: true,
+        passwordState: 'required',
+      }),
+    ]),
+  ],
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    registry.setPassword.mockClear();
+    expect(c.queryByRole('button', { name: 'Ponów umowa.pdf' })).toBeNull();
+    const field = c.getByLabelText('Hasło do umowa.pdf');
+    expect(field).toHaveAttribute('type', 'password');
+    expect(field).toHaveAccessibleDescription(/zabezpieczony hasłem/);
+    await userEvent.click(c.getByRole('button', { name: 'Odblokuj umowa.pdf' }));
+    expect(dispatched).not.toHaveBeenCalledWith(ImportQueueActions.passwordSubmitted({ id: 'h1' }));
+    expect(field).toHaveAccessibleDescription(/Wpisz hasło\./);
+    expect(field).toHaveFocus();
+    await userEvent.type(field, 'ą'.repeat(513));
+    await userEvent.click(c.getByRole('button', { name: 'Odblokuj umowa.pdf' }));
+    expect(field).toHaveAccessibleDescription(/Hasło jest za długie/);
+    expect(registry.setPassword).not.toHaveBeenCalled();
+    await userEvent.clear(field);
+    await userEvent.type(field, 'tajne{Enter}');
+    expect(registry.setPassword).toHaveBeenCalledWith('h1', 'tajne');
+    expect(dispatched).toHaveBeenCalledWith(ImportQueueActions.passwordSubmitted({ id: 'h1' }));
+    expect(field).toHaveValue('');
+    // The store re-queues the file, the backend rejects the password: its field gets focus again.
+    const row = (p: Partial<QueueItem>) => item({ id: 'h1', name: 'umowa.pdf', retryable: true, ...p });
+    mockStore.setState(stateOf([row({ status: 'processing' })]));
+    await waitFor(() => expect(c.queryByLabelText('Hasło do umowa.pdf')).toBeNull());
+    mockStore.setState(
+      stateOf([row({ status: 'error', error: 'Hasło jest niepoprawne. Spróbuj ponownie.', passwordState: 'invalid' })]),
+    );
+    await waitFor(() => expect(c.getByLabelText('Hasło do umowa.pdf')).toHaveFocus());
+  },
+};
+
+export const PasswordInvalid: Story = {
+  decorators: [
+    withQueue([
+      item({
+        id: 'h2',
+        name: 'umowa.pdf',
+        status: 'error',
+        error: 'Hasło jest niepoprawne. Spróbuj ponownie.',
+        retryable: true,
+        passwordState: 'invalid',
+      }),
+    ]),
+  ],
+  play: async ({ canvasElement }) => {
+    expect(within(canvasElement).getByLabelText('Hasło do umowa.pdf')).toHaveAttribute('aria-invalid', 'true');
   },
 };
 

@@ -13,6 +13,7 @@ from app.core.config import Settings
 from app.models.draft import ApplicantKind, FormDraft
 from app.models.form import FieldType, Validator
 from app.pipeline.build.fields import normalize_title, slugify
+from app.pipeline.build.file_hints import file_constraints_html
 from app.pipeline.build.html import external_link, paragraphs
 from app.pipeline.build.ir import AllOf, AnyOf, Condition, Consent, Eq, FieldNode, Not, SectionNode
 
@@ -25,9 +26,16 @@ APPLICANT_OPTIONS: dict[ApplicantKind, str] = {
     "LEGAL_ENTITY": "Osoby prawnej lub jednostki organizacyjnej",
 }
 
+# Czasownik pytań o podmiot wg pierwszego słowa tytułu (standard: wnioskujesz / zgłaszasz /
+# deklarujesz); dla pozostałych, także „Oświadczenia”, domyślnie „wnioskujesz”.
+_SUBJECT_VERBS: dict[str, tuple[str, str]] = {
+    "wniosek": ("wnioskujesz", "wnioskujesz"),
+    "zgłoszenie": ("zgłaszasz", "zglaszasz"),
+    "deklaracja": ("deklarujesz", "deklarujesz"),
+}
+_DEFAULT_VERB = _SUBJECT_VERBS["wniosek"]
 _ROLE_REPRESENTATIVE = "Reprezentant"
 _ROLE_ATTORNEY = "Pełnomocnik"
-_FILE_FORMATS = ".jpg, .pdf, .png, .jpeg"
 _PREVIEW_SIGNED = (
     "Zanim przejdziesz do wyboru sposobu podpisu, sprawdź dane na podglądzie. "
     "Jeśli zobaczysz błędy, wróć do edycji."
@@ -51,9 +59,12 @@ class BuildOptions:
     id_factory: Callable[[], str] = _new_uuid
 
     @classmethod
-    def from_settings(cls, settings: Settings) -> Self:
+    def from_settings(
+        cls, settings: Settings, identity_source: Literal["MLPZ", "PESEL"] | None = None
+    ) -> Self:
+        """`identity_source` (np. z parametru żądania) ma pierwszeństwo przed ustawieniem."""
         return cls(
-            identity_source=settings.initial_data_identity_source,
+            identity_source=identity_source or settings.initial_data_identity_source,
             finish_page_style=settings.finish_page_style,
             max_sections_per_page=settings.max_sections_per_page,
             rodo_clause_url=settings.rodo_clause_url,
@@ -181,8 +192,18 @@ def _authority(draft: FormDraft) -> SectionNode:
     return section
 
 
-def _subject(kinds: set[ApplicantKind]) -> SectionNode:
-    section = instantiate(load_template("applicant_subject.json"), key="podmiot_wniosku")
+def _subject_verb(title: str) -> tuple[str, str]:
+    words = title.split()
+    return _SUBJECT_VERBS.get(words[0].casefold(), _DEFAULT_VERB) if words else _DEFAULT_VERB
+
+
+def _subject(kinds: set[ApplicantKind], form_title: str) -> SectionNode:
+    verb, verb_ascii = _subject_verb(form_title)
+    section = instantiate(
+        load_template("applicant_subject.json"),
+        key="podmiot_wniosku",
+        params={"verb": verb, "verb_ascii": verb_ascii},
+    )
     ordered = [kind for kind in APPLICANT_OPTIONS if kind in kinds]
     section.fields[0].options = [APPLICANT_OPTIONS[kind] for kind in ordered]
     if "LEGAL_ENTITY" not in kinds:
@@ -203,11 +224,12 @@ def applicant_page_sections(draft: FormDraft, options: BuildOptions) -> list[Sec
     only_legal = kinds == {"LEGAL_ENTITY"}
     is_attorney = Eq(ROLE_CHOICE_KEY, _ROLE_ATTORNEY)
     legal_attorney = is_attorney if only_legal else AllOf((is_legal, is_attorney))
-    form_title = {"form_title": normalize_title(draft.title)[0]}
+    title = normalize_title(draft.title)[0]
+    form_title = {"form_title": title}
 
     sections = [_authority(draft)]
     if kinds != {"SELF"}:
-        sections.append(_subject(kinds))
+        sections.append(_subject(kinds, title))
     sections.append(
         instantiate(
             load_template("your_data.json"),
@@ -306,10 +328,7 @@ def contact_page_sections(
 ) -> list[SectionNode]:
     sections = [instantiate(load_template("contact.json"), key="dane_do_kontaktu")]
     if extra_attachments:
-        description = paragraphs(
-            f"Dopuszczalny format pliku: {_FILE_FORMATS}. "
-            "Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1."
-        )
+        description = file_constraints_html()
         fields = [
             FieldNode(
                 key=f"zalaczniki.zalacznik_{index}",

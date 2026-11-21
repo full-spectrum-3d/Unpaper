@@ -1,6 +1,7 @@
 import { Directive, computed, inject, input } from '@angular/core';
 import { FormField } from '../form-definition';
 import { AnswersStore } from '../answers-store';
+import { FormState } from '../form-state';
 import { hasText } from '../html-text';
 
 /** Shared plumbing: the field input, its answer signal and the empty-description check. */
@@ -8,6 +9,9 @@ import { hasText } from '../html-text';
 export abstract class FieldBase<T = string> {
   readonly field = input.required<FormField>();
   protected readonly store = inject(AnswersStore);
+  protected readonly formState = inject(FormState);
+  protected readonly error = computed(() => this.formState.error(this.field()));
+  protected readonly readOnly = computed(() => this.formState.isReadOnly(this.field()));
   // Call expressions are not allowed in two-way bindings, so bind one-way via this signal.
   protected readonly answer = computed(() => this.store.answer(this.field()));
   protected readonly value = computed(() => this.answer()() as T);
@@ -22,8 +26,18 @@ export abstract class FieldBase<T = string> {
           .body.textContent!.trim()
       : undefined,
   );
-  /** Id of the description element when there is one, for aria-describedby. */
-  protected readonly describedBy = computed(() => (this.hasDescription() ? this.descId() : null));
+  protected readonly errorId = computed(() => this.id() + '-error');
+  /** Ids of the description and error elements that exist, for aria-describedby. */
+  protected readonly describedBy = computed(
+    () =>
+      [this.hasDescription() && this.descId(), this.error() && this.errorId()]
+        .filter(Boolean)
+        .join(' ') || null,
+  );
+  protected readonly tooltip = computed(() => this.field().tooltipMessage?.trim() || undefined);
+  protected readonly tag = computed(() =>
+    this.field().defaultValueType === 'EXTERNAL_SYSTEM' ? 'dane z rejestru' : undefined,
+  );
   protected readonly hasTitle = computed(() => !!this.field().title?.trim());
   protected readonly label = computed(
     () => this.field().title?.trim() || humanize(this.field().techName) || 'Pole bez nazwy',
@@ -31,6 +45,14 @@ export abstract class FieldBase<T = string> {
   /** A fallback label (no title) stays for screen readers only. */
   protected readonly labelClass = computed(() =>
     this.hasTitle() ? 'block text-label font-label mb-1.5' : 'sr-only',
+  );
+  /** Border and background of a native text-like control, as in app-text-field. */
+  protected readonly controlClass = computed(
+    () =>
+      'block w-full text-fg text-body border rounded-field px-field-x py-field-y focus-ring ' +
+      (this.readOnly()
+        ? 'border-transparent bg-surface-readonly'
+        : (this.error() ? 'border-danger' : 'border-border-input') + ' bg-surface'),
   );
   protected set(v: T) {
     this.answer().set(v);

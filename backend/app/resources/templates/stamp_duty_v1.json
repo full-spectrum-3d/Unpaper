@@ -23,7 +23,7 @@
       "type": "TEXT_BLOCK",
       "title": "",
       "techName": "oplata_info_1",
-      "descriptionHtml": "<p>Opłata skarbowa za pełnomocnictwo wynosi <strong>17 zł</strong>.</p><p>Przelej ją na konto urzędu miasta lub gminy właściwego dla adresu zamieszkania osoby, która udzieliła pełnomocnictwa. Jeśli adres nie jest w Polsce, opłatę przelej na konto <a href=\"https://warszawa19115.pl/-/oplata-skarbowa\" rel=\"noopener noreferrer\" target=\"_blank\" aria-label=\"Link otwiera się w nowej karcie\" title=\"Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika\">Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika</a></p><p>W tytule przelewu wpisz „{form_title} – opłata skarbowa za pełnomocnictwo”.</p>",
+      "descriptionHtml": "<p>Opłata skarbowa za pełnomocnictwo wynosi <strong>17 zł</strong>.</p><p>Przelej ją na konto urzędu miasta lub gminy właściwego dla adresu zamieszkania osoby, która udzieliła pełnomocnictwa. Jeśli adres nie jest w Polsce, opłatę przelej na konto <a href=\"https://warszawa19115.pl/-/oplata-skarbowa\" rel=\"noopener noreferrer\" target=\"_blank\" aria-label=\"Link otwiera się w nowej karcie\" title=\"Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika\">Urzędu Miasta Stołecznego Warszawy – Centrum Obsługi Podatnika</a></p><p>W tytule przelewu wpisz „{form_title} – opłata skarbowa za pełnomocnictwo”.</p><p>Dodaj plik z potwierdzeniem przelewu. Znajdziesz go na stronie lub w aplikacji swojego banku.</p>",
       "showWhen": {
         "eq": [
           "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
@@ -39,7 +39,7 @@
       "validation": [
         "REQUIRED"
       ],
-      "descriptionHtml": "<p>Dopuszczalny format pliku: .jpg, .pdf, .png, .jpeg. Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1.</p>",
+      "descriptionHtml": "<p>Dopuszczalny format pliku: .pdf. Maksymalny rozmiar pliku: 10 MB. Maksymalna liczba plików: 1.</p>",
       "showWhen": {
         "eq": [
           "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",

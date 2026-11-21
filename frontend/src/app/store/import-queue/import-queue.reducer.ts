@@ -6,6 +6,9 @@ import { ImportQueueActions } from './import-queue.actions';
 
 export const importQueueFeatureKey = 'importQueue';
 
+/** The document is password-protected: no password sent yet, or the sent one was wrong. */
+export type PasswordState = 'required' | 'invalid';
+
 export interface QueueItem {
   id: string;
   name: string;
@@ -17,6 +20,7 @@ export interface QueueItem {
   result: unknown | null;
   startedAt: number | null;
   durationMs: number | null;
+  passwordState?: PasswordState | null;
 }
 
 export type ImportQueueState = EntityState<QueueItem>;
@@ -39,15 +43,23 @@ export const importQueueReducer = createReducer(
       ? state
       : adapter.updateOne({ id, changes: { status: 'done', result, durationMs, error: null } }, state),
   ),
-  on(ImportQueueActions.convertFailed, (state, { id, error }) =>
+  on(ImportQueueActions.convertFailed, (state, { id, error, passwordState }) =>
     state.entities[id]?.status !== 'processing'
       ? state
-      : adapter.updateOne({ id, changes: { status: 'error', error, retryable: true } }, state),
+      : adapter.updateOne(
+          { id, changes: { status: 'error', error, retryable: true, passwordState: passwordState ?? null } },
+          state,
+        ),
   ),
+  on(ImportQueueActions.passwordSubmitted, (state, { id }) => {
+    const item = state.entities[id];
+    if (item?.status !== 'error' || !item.passwordState) return state;
+    return adapter.updateOne({ id, changes: { status: 'pending', error: null, passwordState: null } }, state);
+  }),
   on(ImportQueueActions.retry, (state, { id }) => {
     const item = state.entities[id];
     if (item?.status !== 'error' || !item.retryable) return state;
-    return adapter.updateOne({ id, changes: { status: 'pending', error: null } }, state);
+    return adapter.updateOne({ id, changes: { status: 'pending', error: null, passwordState: null } }, state);
   }),
   on(ImportQueueActions.removed, (state, { id }) =>
     state.entities[id]?.status === 'processing' ? state : adapter.removeOne(id, state),

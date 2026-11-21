@@ -466,6 +466,11 @@ FormDefinition
 | D14 | Układ i opisy we wzorcach | `questionOrder = y`; `rows` sekcji = liczba pól + 1; `description` sekcji zawsze dokumentem HTML (także pustym), niepusty opis pola też HTML; tytuł `TEXT_BLOCK` i `CONSENT_SECTION` pusty |
 | D15 | jsonata-python nie obsługuje `\'` w literałach | Tytuł strony lub `techName` z apostrofem trafia do zapytania w cudzysłowie `"…"` (JSONata traktuje oba rodzaje literałów tak samo) |
 | D16 | Przykład `FormDraft` w §5.4 jest szerszy niż kontrakt LLM (`docs/superpowers/specs/2026-11-21-llm-models-design.md` §5.2) | Obowiązuje kontrakt LLM: bez `semantic`, `addresses`, `summaryInfo`; `visibleWhen` przez `field_id`. `build/` wykrywa semantykę (walidatory, `Kraje`, `NUMERY_KIERUNKOWE`) z etykiety; adres wnioskodawcy to zawsze „Adres zamieszkania”, siedziby i innej osoby wynikają z `applicant_kinds`; strona końcowa bez „Podsumowania”; propozycje słowników (O2) do czasu nowego źródła nie powstają |
+| D17 | Standard (pkt 8) zaleca strony alternatywne, ale link `flow.links` ma tylko `id`, `source`, `target` (`importowanyPlikJsonSchemat.json`, `OpisImportowanegoPlikuJSON.md` l. 41-44; oba wzorce `konfiguracja_form_*.json` mają same liniowe pary). Warunek jest dostępny wyłącznie w `states` (SHOW + JSONata) sekcji i pól, strona (tab) nie ma `states` | Strony alternatywne realizujemy przez warunkową widoczność sekcji (SHOW) na stronach liniowego przepływu; generator `flow.links` pozostaje liniowy i nie dodaje pól spoza schematu. R07 akceptuje jednak grafy z wieloma linkami z jednej strony (osiągalność, dojście do FINISH, brak cykli), więc ręcznie rozgałęziony import nie jest „prostowany” |
+| D18 | Standard: powyżej 5 opcji lista rozwijana, także wielokrotnego wyboru. Reguły techniczne opisują `SELECT` jako wybór jednej wartości, schemat importu i oba wzorce nie mają atrybutu wielokrotności (`multiple` i podobnych) | `SELECT` nie wspiera wielokrotnego wyboru, więc wielokrotny wybór zostaje `CHECKBOX` bez względu na liczbę opcji (`SELECT` dałby wybór jednokrotny i zmienił sens pytania). Wyjątek od standardu zgłaszamy mentorom; mapowanie zmienimy, gdy schemat dostanie atrybut wielokrotności |
+| D19 | Materiał „Dane inicjalne”: pole zasilane z rejestru ma być `readOnly`. W `initial_data.json` 11 atrybutów MLPZ (telefon, e-mail, kraj, województwo, dzielnica, gmina, miejscowość, kod pocztowy, ulica, nr budynku, nr lokalu) ma `editable: true` | `readOnly` wynika z `editable` katalogu. Oba wzorce mają `MLPZ.postCode/street/building/apartment/phoneNumber/email` z `readOnly: false`, a `MLPZ.name/surname` i `PESEL.*` z `readOnly: true`; standard (ekran wizualizacji) mówi „Możesz je zmienić lub usunąć”. Zostajemy przy wzorcach i katalogu; odstępstwo od litery materiału (rozwinięcie D10) do potwierdzenia (Q6) |
+| D20 | Standard: tytuł krótki, bez odwołań do przepisów | `normalize_title` (w buildzie, więc dla szkiców z LLM i z reguł) usuwa wyraźne wzorce (`na podstawie art. …`, `zgodnie z art. …`, `o którym mowa w art. …`, `(Dz. U. … poz. …)`) i zgłasza `W31_TITLE_LEGAL_REFERENCE`. Tytuł, który po czyszczeniu byłby pusty, zostaje bez zmian |
+| D21 | Pola przedmiotu sprawy ze szkicu nie miały danych inicjalnych | `apply_initial_data` dopisuje `PESEL.*` / `PESEL_ADDRESS.*` tylko we wniosku składanym wyłącznie we własnym imieniu i tylko dla jednoznacznych etykiet (cała etykieta: data i miejsce urodzenia, imiona rodziców, nazwisko rodowe, drugie imię, stan cywilny, płeć, obywatelstwo, adres zameldowania z częścią adresu), zgodnych typem z katalogiem. Pomijane: etykiety i sekcje dotyczące dziecka, małżonka, pełnomocnika, innej osoby itp., sekcje powtarzalne, pola ze słownikiem, powtórzenia atrybutu w formularzu |
 
 ---
 
@@ -679,7 +684,7 @@ Do repozytorium dołączamy makiety trzech głównych widoków (Import, Wynik/Po
 |---|---|---|---|
 | api | `python:3.14-alpine3.22` (multi-stage: builder z `uv`, runtime z `tesseract-ocr`, `tesseract-ocr-data-pol`, `tesseract-ocr-data-osd` (orientacja skanów), `libmagic`, `libreoffice-writer`, `libreoffice-calc`) | `app` (UID 10001, bez powłoki logowania) | 8000 |
 | frontend | build: `node:24-alpine3.22`. Runtime: `nginx:1.28-alpine3.22` (nasłuch 8080, pid i cache w `/tmp`) | `nginx` (nie root) | 8080 |
-| llm | `ollama/ollama:<wersja przypięta>` (oficjalny obraz producenta) | nieuprzywilejowany | 11434 (tylko sieć wewnętrzna) |
+| llm | `ubuntu:24.04@sha256:…` + binarka i biblioteki CPU skopiowane z `ollama/ollama:0.40.16@sha256:…` (`llm/Dockerfile`, target `cpu`; bez bibliotek NVIDIA CUDA/cuDNN o licencji własnościowej). Target `gpu` = obraz producenta, tylko z `docker-compose.gpu.yml` | `ollama` (UID 10002) | 11434 (tylko sieć wewnętrzna) |
 
 Wszystkie obrazy przypinamy do konkretnej wersji (najlepiej z digestem `@sha256:` w compose dla wydania do oceny).
 
@@ -718,8 +723,11 @@ volumes:
   ollama-models: {}
 ```
 
-- Model pobieramy raz przy instalacji (`make model` → `docker compose run llm ollama pull qwen3:8b`) albo dostarczamy jako wolumen offline. W trakcie działania nie ma ruchu do internetu.
-- Profil GPU (`docker compose --profile gpu`) dodaje `deploy.resources.reservations.devices` dla NVIDIA.
+- Model pobieramy raz przy instalacji (`make model` → `docker compose --profile setup run --rm llm-pull`: ten sam obraz i wolumen co `llm`, ale w sieci `egress`, bo `internal` nie ma wyjścia do internetu) albo dostarczamy jako wolumen offline (README). W trakcie działania nie ma ruchu do internetu.
+- Rzeczywisty `docker-compose.yml` dodaje do zarysu: `init: true` dla `api` (tini zbiera procesy LibreOffice), `pids_limit`, `read_only` i `cap_drop` także dla `llm`, healthcheck frontendu, porty `API_PORT`/`FRONTEND_PORT` oraz `scripts/init-env.sh` do wygenerowania `.env`.
+- Kontener `llm` i pobieranie modelu są opcjonalne: profil `ollama` (`COMPOSE_PROFILES=ollama` w `.env`, domyślnie). Bez profilu `api` startuje samo (`depends_on` z `required: false`) i łączy się z zewnętrznym serwerem modelu pod `LLM_BASE_URL`; `extra_hosts: host.docker.internal` pozwala wskazać serwer na hoście.
+- GPU: `docker-compose.gpu.yml` (nakładka `-f`) buduje target `gpu` (obraz producenta z CUDA) i dodaje `deploy.resources.reservations.devices` dla NVIDIA.
+- `OLLAMA_NO_CLOUD=1`: Ollama nie próbuje łączyć się z ollama.com (katalog modeli w chmurze, podpowiedzi modeli).
 - Sekrety (`JWT_SECRET`, `API_PASSWORD_HASH`) tylko przez `env_file` lub Docker secrets, nigdy przez `ARG`/`ENV` w Dockerfile.
 
 ---

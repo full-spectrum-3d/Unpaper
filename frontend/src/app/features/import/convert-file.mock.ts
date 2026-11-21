@@ -10,17 +10,23 @@ const FORMS = [
 ];
 let next = 0;
 
-export const mockConvertFile: ConvertFileFn = (file) =>
+/** Demo password for files with "haslo" in the name. */
+export const MOCK_DOCUMENT_PASSWORD = 'test';
+
+const fail = (status: number, code: string) =>
+  throwError(() => new HttpErrorResponse({ status, error: { code } }));
+
+export const mockConvertFile: ConvertFileFn = (file, password) =>
   defer(() => {
     const load = FORMS[next++ % FORMS.length];
     return timer(1500 + Math.random() * 2500).pipe(
-      switchMap(() =>
-        /blad/i.test(file.name)
-          ? throwError(
-              () => new HttpErrorResponse({ status: 503, error: { code: 'LLM_UNAVAILABLE' } }),
-            )
-          : from(load().then((m) => m.default)),
-      ),
+      switchMap(() => {
+        if (/blad/i.test(file.name)) return fail(503, 'LLM_UNAVAILABLE');
+        if (/haslo/i.test(file.name) && password !== MOCK_DOCUMENT_PASSWORD) {
+          return fail(422, password ? 'DOCUMENT_PASSWORD_INVALID' : 'DOCUMENT_PASSWORD_REQUIRED');
+        }
+        return from(load().then((m) => m.default));
+      }),
     );
   });
 

@@ -20,6 +20,9 @@ import { MAX_FILE_SIZE_MB, validateFile } from './file-validation';
 import { formatSize, queueSummary } from './format';
 import { newId } from './new-id';
 
+/** Backend limit for the `password` multipart field (UTF-8 bytes). */
+const MAX_PASSWORD_BYTES = 1024;
+
 @Component({
   selector: 'app-import-page',
   imports: [FileDrop, Card, Table, Badge, Progress, Button, RouterLink],
@@ -47,6 +50,10 @@ export class ImportPage {
 
   private previous: Map<string, QueueItem['status']> | null = null;
   private announceToggle = false;
+  /** Row whose password was just sent: if it comes back wrong, its field gets focus again. */
+  private awaitingPassword: string | null = null;
+  /** Client-side problem with the typed password (empty, too long), shown under that row's field. */
+  protected readonly passwordHint = signal<{ id: string; text: string } | null>(null);
 
   constructor() {
     effect(() => {
@@ -60,6 +67,13 @@ export class ImportPage {
           if (prev.get(i.id) === i.status) continue;
           if (i.status === 'done') messages.push(`${i.name}: gotowe`);
           else if (i.status === 'error') messages.push(`${i.name}: błąd – ${i.error}`);
+          if (i.id === this.awaitingPassword && i.status !== 'pending' && i.status !== 'processing') {
+            this.awaitingPassword = null;
+            // Only if focus is still where submitPassword left it: never pull the user out of another field.
+            const active = this.host.nativeElement.ownerDocument.activeElement;
+            const untouched = !active || active.tagName === 'BODY' || active.id === `remove-${i.id}`;
+            if (i.passwordState === 'invalid' && untouched) this.focusAfterRender([`pw-${i.id}`]);
+          }
         }
         if (!messages.length) return;
         // Toggling an invisible character makes an identical message change the text, so it is announced again.
@@ -92,6 +106,26 @@ export class ImportPage {
   protected retry(id: string): void {
     this.store.dispatch(ImportQueueActions.retry({ id }));
     this.focusAfterRender([`remove-${id}`]);
+  }
+
+  protected submitPassword(event: Event, item: QueueItem, input: HTMLInputElement): void {
+    event.preventDefault();
+    const problem = !input.value
+      ? 'Wpisz hasło.'
+      : new TextEncoder().encode(input.value).length > MAX_PASSWORD_BYTES
+        ? `Hasło jest za długie (najwyżej ${MAX_PASSWORD_BYTES} bajty).`
+        : null;
+    this.passwordHint.set(problem ? { id: item.id, text: problem } : null);
+    if (problem) {
+      input.focus();
+      return;
+    }
+    // The password stays in memory next to the file; the store only learns that one was given.
+    this.registry.setPassword(item.id, input.value);
+    input.value = '';
+    this.awaitingPassword = item.id;
+    this.store.dispatch(ImportQueueActions.passwordSubmitted({ id: item.id }));
+    this.focusAfterRender([`remove-${item.id}`]);
   }
 
   protected remove(item: QueueItem): void {

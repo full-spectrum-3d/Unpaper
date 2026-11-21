@@ -8,6 +8,7 @@ from app.models.form import FieldType, FormDefinition, TabType
 from app.models.warning import ConversionWarning
 from app.pipeline.build.dictionaries import apply_dictionaries
 from app.pipeline.build.fields import assign_unique_tech_names, normalize_title
+from app.pipeline.build.html import accessible_links
 from app.pipeline.build.initial_data import apply_initial_data
 from app.pipeline.build.ir import PageNode
 from app.pipeline.build.pages import subject_pages
@@ -51,6 +52,16 @@ def _normalized(draft: FormDraft) -> FormDraft:
     )
 
 
+def _make_links_accessible(pages: list[PageNode]) -> None:
+    for page in pages:
+        for section in page.sections:
+            section.description_html = accessible_links(section.description_html)
+            for node in section.fields:
+                node.description_html = accessible_links(node.description_html)
+                for consent in node.consents:
+                    consent.description_html = accessible_links(consent.description_html)
+
+
 def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> BuildResult:
     draft = _normalized(draft)
     warnings: list[ConversionWarning] = []
@@ -89,9 +100,18 @@ def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> Bu
         PageNode("koniec", "Strona końcowa", TabType.FINISH, finish_page_sections(draft, options))
     )
 
+    if not options.rodo_clause_url:
+        warnings.append(
+            ConversionWarning(
+                code=IssueCode.W28_RODO_CLAUSE_URL_MISSING,
+                message="Zgoda RODO nie ma linku do klauzuli informacyjnej: ustaw "
+                "RODO_CLAUSE_URL (np. adres w BIP) albo dodaj link w Generatorze.",
+            )
+        )
+    _make_links_accessible(pages)
     assign_unique_tech_names(pages)
     apply_dictionaries(pages)
-    warnings += apply_initial_data(pages)
+    warnings += apply_initial_data(pages, infer_subject=set(draft.applicant_kinds) == {"SELF"})
     states, issues = build_states(pages)
     warnings += issues
     form = FormDefinition.model_validate(

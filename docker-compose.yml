@@ -1,41 +1,109 @@
-# Zarys wg specyfikacji §11.2. Wersje obrazów do przypięcia przed wydaniem.
+# Spec §4.1, §11. Uruchomienie: README.md (make setup, make up).
+#
+# Sieci:
+#   public   - porty na hoście: api :8000, frontend :8080
+#   internal - api ↔ llm, bez wyjścia do internetu (internal: true); llm nie ma portu na hoście
+#   egress   - tylko jednorazowe pobranie modelu (profil `setup`, make model)
+#
+# Lokalny model (usługi llm i llm-pull) jest opcjonalny: profil `ollama`, włączany zmienną
+# COMPOSE_PROFILES=ollama w .env (domyślnie w .env.example). Bez niego API korzysta
+# z zewnętrznego serwera modelu pod LLM_BASE_URL.
+#
+# Sekrety (JWT_SECRET, API_PASSWORD_HASH, klucze RS256) trafiają do kontenera dopiero
+# w runtime: z pliku .env (env_file) albo z Docker secrets w /run/secrets. Obrazy ich nie zawierają.
+
+x-hardening: &hardening
+  read_only: true
+  cap_drop: ["ALL"]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+
 services:
   api:
+    <<: *hardening
     build: ./backend
+    image: coi-cf-api:0.1.0
     env_file: .env
-    read_only: true
-    tmpfs: ["/tmp:size=512m"]
-    cap_drop: ["ALL"]
-    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=512m,mode=1777"]
+    # tini jako PID 1: zbiera procesy potomne LibreOffice po timeoucie konwersji.
+    init: true
+    pids_limit: 512
     depends_on:
-      llm: { condition: service_healthy }
+      # required: false - bez profilu `ollama` usługi llm nie ma, a API startuje samo.
+      llm: { condition: service_healthy, required: false }
     networks: [internal, public]
-    ports: ["8000:8000"]
+    # Zewnętrzny serwer modelu na tym samym hoście: LLM_BASE_URL=http://host.docker.internal:<port>.
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports: ["${API_PORT:-8000}:8000"]
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8000/api/v1/health/live"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8000/api/v1/health/live"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   frontend:
+    <<: *hardening
     build: ./frontend
-    read_only: true
+    image: coi-cf-frontend:0.1.0
     tmpfs: ["/tmp"]
-    ports: ["8080:8080"]
+    pids_limit: 128
+    depends_on:
+      api: { condition: service_started }
     networks: [public]
-    depends_on: [api]
+    ports: ["${FRONTEND_PORT:-8080}:8080"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   llm:
-    image: ollama/ollama:0.40.16  # przed wydaniem: dodać digest @sha256
+    <<: *hardening
+    build: ./llm
+    image: coi-cf-llm:0.40.16
+    profiles: ["ollama"]
     environment:
       # Jeden model w RAM: domyślnie Ollama trzyma do 3, a dwa modele naraz (np. po zmianie
       # LLM_MODEL albo przy porównaniu w llm_eval) nie mieszczą się w 16 GB razem z API.
       OLLAMA_MAX_LOADED_MODELS: "1"
-    volumes: ["ollama-models:/root/.ollama"]
-    networks: [internal]          # bez portu na hoście
+      OLLAMA_NUM_PARALLEL: "1"
+      # Model zostaje w pamięci między żądaniami (pierwsze ładowanie trwa kilkadziesiąt sekund).
+      OLLAMA_KEEP_ALIVE: "24h"
+      # Bez funkcji chmurowych Ollamy (modele ollama.com, podpowiedzi modeli): żadnych
+      # prób połączeń z internetem w trakcie działania.
+      OLLAMA_NO_CLOUD: "1"
+    tmpfs: ["/tmp"]
+    volumes: ["ollama-models:/home/ollama/.ollama"]
+    networks: [internal]
     healthcheck:
       test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Jednorazowo: make model (docker compose --profile setup run --rm llm-pull). Osobny
+  # profil `setup`, żeby `up` z profilem `ollama` nie pobierał modelu przy każdym starcie.
+  llm-pull:
+    <<: *hardening
+    build: ./llm
+    image: coi-cf-llm:0.40.16
+    profiles: ["setup"]
+    restart: "no"
+    entrypoint: ["pull-model"]
+    environment:
+      LLM_MODEL: ${LLM_MODEL:-qwen3:8b}
+      OLLAMA_HOST: 127.0.0.1:11434
+    tmpfs: ["/tmp"]
+    volumes: ["ollama-models:/home/ollama/.ollama"]
+    networks: [egress]
 
 networks:
   internal: { internal: true }
   public: {}
+  egress: {}
 
 volumes:
-  ollama-models: {}
+  ollama-models:
+    name: ollama-models

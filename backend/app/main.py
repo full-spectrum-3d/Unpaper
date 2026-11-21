@@ -20,6 +20,7 @@ from app.core.errors import (
     install_error_handlers,
     request_id_middleware,
 )
+from app.core.logging import configure_logging
 from app.core.security import require_auth
 from app.pipeline.analyze import prompt_messages
 from app.pipeline.converter import Converter, find_converter
@@ -60,6 +61,7 @@ def create_app(
 ) -> FastAPI:
     """`converter="auto"`: szukamy `soffice` w PATH; `None` = Plan B (DOC/ODS → 415)."""
     settings = settings or load_settings()
+    configure_logging(settings.log_level)
 
     app = FastAPI(title="COI - Cyfryzacja formularzy", version="0.1.0", lifespan=_lifespan)
     app.state.settings = settings

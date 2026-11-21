@@ -12,7 +12,7 @@ import { authActionSanitizer } from './store/auth/auth-devtools';
 import { AuthEffects } from './store/auth/auth.effects';
 import { authReducer, authFeatureKey } from './store/auth/auth.reducer';
 import { authStorageMetaReducer } from './store/auth/auth.storage';
-import { provideMockConvertFile } from './features/import/convert-file.mock';
+import { provideHttpConvertFile } from './features/import/convert-file.http';
 import { ImportQueueEffects } from './store/import-queue/import-queue.effects';
 import { importQueueFeatureKey, importQueueReducer } from './store/import-queue/import-queue.reducer';
 
@@ -28,7 +28,7 @@ export const appConfig: ApplicationConfig = {
       [importQueueFeatureKey]: importQueueReducer,
     }),
     provideEffects(AuthEffects, ImportQueueEffects),
-    provideMockConvertFile(),
+    provideHttpConvertFile(),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

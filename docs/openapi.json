@@ -410,6 +410,28 @@
               "description": "Model LLM z `LLM_MODEL` albo `LLM_MODELS`; domyślnie `LLM_MODEL`",
               "title": "Model"
             }
+          },
+          {
+            "description": "Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; domyślnie INITIAL_DATA_IDENTITY_SOURCE",
+            "in": "query",
+            "name": "identitySource",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "PESEL",
+                    "MLPZ"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; domyślnie INITIAL_DATA_IDENTITY_SOURCE",
+              "title": "Identitysource"
+            }
           }
         ],
         "requestBody": {
@@ -514,7 +536,7 @@
                 }
               }
             },
-            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; model spoza LLM_MODELS"
+            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne `identitySource`; model spoza LLM_MODELS"
           },
           "504": {
             "content": {
