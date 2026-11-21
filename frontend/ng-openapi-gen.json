@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+  "input": "../docs/openapi.json",
+  "output": "src/app/shared/api",
+  "services": true,
+  "promises": false,
+  "ignoreUnusedModels": false,
+  "removeStaleFiles": true
+}

@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "api:check": "sh scripts/api-check.sh",
+    "api:generate": "npm run api:export && ng-openapi-gen --config ng-openapi-gen.json",
+    "api:export": "command -v uv >/dev/null || { echo 'api:export wymaga uv (https://docs.astral.sh/uv/)' >&2; exit 1; }; uv run --locked --project ../backend python scripts/export-openapi.py ../docs/openapi.json",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -47,6 +50,7 @@
     "@vitest/browser-playwright": "5.1.1",
     "@vitest/coverage-v8": "5.1.1",
     "jsdom": "^31.0.0",
+    "ng-openapi-gen": "^1.1.0",
     "playwright": "^1.65.1",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
