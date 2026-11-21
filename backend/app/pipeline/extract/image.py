@@ -5,6 +5,7 @@ w testach atrapa. Obrazy z kilkoma stronami A4 sklejonymi w pionie dzielimy na s
 """
 
 import math
+import warnings
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import IO, Protocol
@@ -23,7 +24,9 @@ A4_WIDTH_IN = 8.27
 PAGE_SPLIT_RATIO = 1.6
 """Obraz wyższy niż 1,6 szerokości to kilka stron A4 (proporcja √2) jedna pod drugą."""
 MIN_METADATA_DPI = 50
-TESSERACT_CONFIG = "--psm 3"
+TESSERACT_CONFIG = "--psm 11"
+"""Tryb „tekst rozproszony”: blankiet to etykiety i pola, nie akapity. Tryb 3 gubił całe
+regiony (nagłówek z datą, imieniem i PESEL). Kolejność czytania i tak wyznacza `layout`."""
 TSV_LINE_LEVEL = 4
 """Poziom „linia” w wyniku `image_to_data`."""
 
@@ -188,11 +191,19 @@ def extract_image(
 ) -> tuple[DocumentModel, OcrStats]:
     builder = DocumentBuilder("ocr")
     stats = OcrStats()
-    with Image.open(file) as original:
-        original.load()
-        dpi = image_dpi(original)
-        prepared = preprocess(original)
-    for number, page in enumerate(split_pages(prepared, max_pages), start=1):
+    with warnings.catch_warnings():
+        # Limit pikseli egzekwuje walidacja (MAX_IMAGE_PIXELS), nie domyślny próg Pillow.
+        warnings.simplefilter("ignore", Image.DecompressionBombWarning)
+        with Image.open(file) as original:
+            if original.format == "JPEG":
+                # Dekodowanie od razu w skali szarości: 1 bajt na piksel zamiast 3.
+                original.draft("L", original.size)
+            original.load()
+            dpi = image_dpi(original)
+            prepared = preprocess(original)
+    pages = split_pages(prepared, max_pages)
+    del prepared
+    for number, page in enumerate(pages, start=1):
         check()
         builder.new_page()
         run_ocr(builder, page, engine, dpi, number, stats)

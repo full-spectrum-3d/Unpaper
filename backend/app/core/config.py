@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     max_file_size_mb: PositiveInt = 20
     max_uncompressed_mb: PositiveInt = 100
     max_pdf_pages: PositiveInt = 30
-    max_image_pixels: PositiveInt = 60_000_000
+    max_image_pixels: PositiveInt = 100_000_000
     spool_max_mb: PositiveInt = 10
     max_concurrent_jobs: PositiveInt = 2
     request_timeout_s: PositiveInt = 540

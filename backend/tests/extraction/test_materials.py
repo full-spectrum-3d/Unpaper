@@ -16,7 +16,6 @@ from app.core.config import Settings
 from app.pipeline.converter import find_converter
 from app.pipeline.extract import extract
 from app.pipeline.normalize import normalize
-from app.pipeline.upload_validation.errors import UploadError, UploadErrorCode
 from app.pipeline.upload_validation.policy import UploadLimits
 from app.pipeline.upload_validation.validate import validate_file
 
@@ -68,14 +67,7 @@ async def test_key_phrases_extracted(path: Path, tmp_path: Path) -> None:
     settings = Settings(app_env="development", auth_enabled=False, _env_file=None)  # type: ignore[call-arg]
     limits = UploadLimits()
     with path.open("rb") as handle:
-        try:
-            upload = validate_file(path.name, handle, limits)
-        except UploadError as exc:
-            # Materiały zawierają pliki odrzucane słusznie już przy walidacji (spec §6.3):
-            # obraz ponad MAX_IMAGE_PIXELS i DOCX zapisany z rozszerzeniem .DOC.
-            if exc.code in (UploadErrorCode.DOCUMENT_TOO_COMPLEX, UploadErrorCode.MIME_MISMATCH):
-                pytest.skip(f"plik odrzucony przez walidację: {exc}")
-            raise
+        upload = validate_file(path.name, handle, limits)
         with upload:
             converter = find_converter(settings)
             if path.suffix.lower() in CONVERTED and converter is None:

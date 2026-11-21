@@ -24,7 +24,7 @@ from app.pipeline.upload_validation.encryption import unlock_if_protected
 from app.pipeline.upload_validation.errors import UploadError, UploadErrorCode
 from app.pipeline.upload_validation.filename import check_filename, normalize_filename, resolve_kind
 from app.pipeline.upload_validation.mime import check_mime, detect_mime
-from app.pipeline.upload_validation.policy import FileKind, UploadLimits
+from app.pipeline.upload_validation.policy import ACCEPTED_MIME, FileKind, UploadLimits
 from app.pipeline.upload_validation.receive import receive_single_file
 
 
@@ -153,6 +153,7 @@ def _inspect(
     decrypted: bool,
 ) -> ValidatedUpload:
     """Pkt 6-9 na (ewentualnie odszyfrowanej) treści."""
+    kind = _content_kind(kind, detected)
     check_mime(kind, extension, detected)
 
     page_count: int | None = None
@@ -179,6 +180,26 @@ def _inspect(
         image_size=image_size,
         decrypted=decrypted,
     )
+
+
+_NEWER_FORMAT: dict[FileKind, FileKind] = {FileKind.DOC: FileKind.DOCX}
+
+
+def _content_kind(kind: FileKind, detected: str) -> FileKind:
+    """DOCX zapisany z rozszerzeniem .doc traktujemy jak DOCX.
+
+    Word i inne edytory potrafią zapisać nowy format pod starym rozszerzeniem (są takie
+    pliki w materiałach konkursu). Treść przechodzi pełne sprawdzenie struktury DOCX
+    (pkt 7), więc to nie osłabia walidacji - zmienia tylko ścieżkę przetwarzania.
+    """
+    newer = _NEWER_FORMAT.get(kind)
+    if (
+        newer is not None
+        and detected not in ACCEPTED_MIME[kind]
+        and detected in ACCEPTED_MIME[newer]
+    ):
+        return newer
+    return kind
 
 
 def _measure(file: IO[bytes], limits: UploadLimits) -> int:

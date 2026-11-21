@@ -368,6 +368,8 @@ Kolejność sprawdzeń. Pierwsze naruszenie kończy żądanie.
 | jpg, jpeg | `image/jpeg` |
 | png | `image/png` |
 
+Plik `.doc`, który w środku jest DOCX (Word potrafi tak zapisać; są takie w materiałach), traktujemy jak DOCX: przechodzi pełne sprawdzenie struktury z pkt 7 i omija konwersję.
+
 W docs/ jest plik `.JPE` (w treści zadania nie ma takiego rozszerzenia). Odrzucamy go z 415, chyba że mentorzy zdecydują inaczej (§14, Q8).
 
 ### 6.4. Format błędów
@@ -669,7 +671,7 @@ Do repozytorium dołączamy makiety trzech głównych widoków (Import, Wynik/Po
 
 | Usługa | Obraz bazowy (wersje jawne, bez `latest`) | Użytkownik | Port |
 |---|---|---|---|
-| api | `python:3.14-alpine3.22` (multi-stage: builder z `uv`, runtime z `tesseract-ocr`, `tesseract-ocr-data-pol`, `libmagic`, `libreoffice-writer`, `libreoffice-calc`) | `app` (UID 10001, bez powłoki logowania) | 8000 |
+| api | `python:3.14-alpine3.22` (multi-stage: builder z `uv`, runtime z `tesseract-ocr`, `tesseract-ocr-data-pol`, `tesseract-ocr-data-osd` (orientacja skanów), `libmagic`, `libreoffice-writer`, `libreoffice-calc`) | `app` (UID 10001, bez powłoki logowania) | 8000 |
 | frontend | build: `node:24-alpine3.22`. Runtime: `nginx:1.28-alpine3.22` (nasłuch 8080, pid i cache w `/tmp`) | `nginx` (nie root) | 8080 |
 | llm | `ollama/ollama:<wersja przypięta>` (oficjalny obraz producenta) | nieuprzywilejowany | 11434 (tylko sieć wewnętrzna) |
 
@@ -726,7 +728,7 @@ Wszystkie parametry przez zmienne środowiskowe (pydantic-settings). Plik `.env.
 | `MAX_FILE_SIZE_MB` | `20` | maks. rozmiar uploadu (**wymóg**) |
 | `MAX_UNCOMPRESSED_MB` | `100` | limit dekompresji DOCX/XLSX/ODS |
 | `MAX_PDF_PAGES` | `30` | |
-| `MAX_IMAGE_PIXELS` | `60000000` | |
+| `MAX_IMAGE_PIXELS` | `100000000` | długie skany z wieloma stronami A4 w jednym obrazie (1654 × 37 424 px = 16 stron w materiałach) |
 | `SPOOL_MAX_MB` | `10` | próg przejścia z RAM na tmpfs |
 | `MAX_CONCURRENT_JOBS` | `2` | równoległe konwersje |
 | `REQUEST_TIMEOUT_S` | `540` | całkowity czas przetwarzania |
