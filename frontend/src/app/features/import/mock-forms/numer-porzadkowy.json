@@ -539,8 +539,7 @@
                                     "title": "Numer KRS",
                                     "description": "",
                                     "options": [],
-                                    "validation": {
-                                    },
+                                    "validation": [],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],         

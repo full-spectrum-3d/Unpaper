@@ -96,7 +96,8 @@ export function isEmptyAnswer(field: FormField, answer: unknown): boolean {
 
 /** First error message, or null. REQUIRED runs first, then format codes in order; unknown codes are ignored. */
 export function validateField(field: FormField, answer: unknown): string | null {
-  const codes = field.validation ?? [];
+  // Imported JSON is untrusted: anything but an array means no codes.
+  const codes = Array.isArray(field.validation) ? field.validation : [];
   const empty = isEmptyAnswer(field, answer);
   // A consent section is always checked: its required flags live in the config, not in `validation`.
   if (empty && (codes.includes('REQUIRED') || field.type === 'CONSENT_SECTION')) {

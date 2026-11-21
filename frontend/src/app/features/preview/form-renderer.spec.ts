@@ -1,6 +1,7 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
+import numerPorzadkowy from '../import/mock-forms/numer-porzadkowy.json';
 import { FormDefinition, FormField } from './form-definition';
 import { FormRenderer, STATES_EVALUATOR } from './form-renderer';
 import { FieldStates, evaluateStates } from './visibility';
@@ -290,6 +291,20 @@ describe('FormRenderer on the "Nadpłata podatku" mock', () => {
     });
   (nadplata as unknown as FormDefinition).tabs.forEach((t) => collect(t.questions));
   const validation = (techName: string) => fields.find((f) => f.techName === techName)?.validation;
+
+  it('has an array validation on every field of both mocks', () => {
+    const all: FormField[] = [];
+    const walk = (list: { field: FormField }[]) =>
+      list.forEach(({ field }) => {
+        all.push(field);
+        walk(field.repeatingSectionGrid ?? []);
+      });
+    [nadplata, numerPorzadkowy].forEach((m) =>
+      (m as unknown as FormDefinition).tabs.forEach((t) => walk(t.questions)),
+    );
+    expect(all.length).toBeGreaterThan(100);
+    expect(all.filter((f) => !Array.isArray(f.validation)).map((f) => f.techName)).toEqual([]);
+  });
 
   it('has backend-style validators', () => {
     expect(validation('nip')).toEqual(['REQUIRED', 'NIP']);

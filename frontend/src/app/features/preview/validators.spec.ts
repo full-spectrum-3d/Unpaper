@@ -61,6 +61,11 @@ describe('validateField', () => {
     expect(validateField(f('TEXT_FIELD', [code]), value)).toBe(MSG[code]);
   });
 
+  it('tolerates a non-array validation from imported JSON', () => {
+    const field = f('TEXT_FIELD', {} as unknown as string[]);
+    expect(validateField(field, '')).toBeNull();
+  });
+
   it('skips format checks on empty optional values, but REQUIRED wins', () => {
     expect(validateField(f('TEXT_FIELD', ['PESEL']), '')).toBeNull();
     expect(validateField(f('TEXT_FIELD', ['REQUIRED', 'PESEL']), '')).toBe('Uzupełnij to pole');
