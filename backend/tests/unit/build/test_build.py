@@ -472,3 +472,34 @@ def test_reference_into_repeating_section_from_outside_is_dropped() -> None:
     result = build_form(draft, opts())
     assert find(result.form.to_import_json(), "na_zewnatrz")["states"] == []
     assert IssueCode.W06_STATE_REMOVED in [w.code for w in result.warnings]
+
+
+def test_identity_source_option_overrides_settings() -> None:
+    from app.core.config import Settings
+
+    settings = Settings(
+        app_env="development",
+        auth_enabled=False,
+        _env_file=None,
+        initial_data_identity_source="MLPZ",
+    )
+    assert BuildOptions.from_settings(settings).identity_source == "MLPZ"
+    assert BuildOptions.from_settings(settings, "PESEL").identity_source == "PESEL"
+
+
+def test_build_links_have_accessible_names() -> None:
+    from tests.unit.build.test_sections import make_draft
+
+    result = build_form(make_draft(), opts(rodo_clause_url="https://bip.example.org/rodo"))
+    text = json.dumps(result.form.to_import_json(), ensure_ascii=False)
+    assert 'aria-label=\\"Link otwiera się w nowej karcie\\"' not in text
+    assert "klauzulą informacyjną – link otwiera się w nowej karcie" in text  # noqa: RUF001
+
+
+def test_missing_rodo_url_warns() -> None:
+    from tests.unit.build.test_sections import make_draft
+
+    missing = build_form(make_draft(), opts())
+    assert IssueCode.W28_RODO_CLAUSE_URL_MISSING in {w.code for w in missing.warnings}
+    present = build_form(make_draft(), opts(rodo_clause_url="https://bip.example.org/rodo"))
+    assert IssueCode.W28_RODO_CLAUSE_URL_MISSING not in {w.code for w in present.warnings}

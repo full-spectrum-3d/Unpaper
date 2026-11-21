@@ -392,6 +392,28 @@
               "title": "Report",
               "type": "boolean"
             }
+          },
+          {
+            "description": "Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; domyślnie INITIAL_DATA_IDENTITY_SOURCE",
+            "in": "query",
+            "name": "identitySource",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "PESEL",
+                    "MLPZ"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; domyślnie INITIAL_DATA_IDENTITY_SOURCE",
+              "title": "Identitysource"
+            }
           }
         ],
         "requestBody": {
@@ -496,7 +518,7 @@
                 }
               }
             },
-            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem"
+            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne `identitySource`"
           },
           "504": {
             "content": {

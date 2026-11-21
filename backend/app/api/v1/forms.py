@@ -10,7 +10,7 @@ import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from functools import partial
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 import anyio.to_thread
 from fastapi import APIRouter, Body, Depends, Query, Request
@@ -70,7 +70,9 @@ _CONVERT_RESPONSES: dict[int | str, dict[str, Any]] = {
     400: problem_doc("Brak pliku, kilka plików albo niedozwolona nazwa pliku"),
     413: problem_doc("Plik większy niż MAX_FILE_SIZE_MB"),
     415: problem_doc("Nieobsługiwany format albo zawartość niezgodna z rozszerzeniem"),
-    422: problem_doc("Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem"),
+    422: problem_doc(
+        "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne `identitySource`"
+    ),
     504: problem_doc("Przekroczono REQUEST_TIMEOUT_S"),
 }
 
@@ -102,6 +104,14 @@ async def convert(
     settings: Annotated[Settings, Depends(get_settings)],
     client: Annotated[LlmClient, Depends(get_llm_client)],
     report: Annotated[bool, Query(description="Dołącz raport konwersji (spec §6.2)")] = False,
+    identity_source: Annotated[
+        Literal["PESEL", "MLPZ"] | None,
+        Query(
+            alias="identitySource",
+            description="Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; "
+            "domyślnie INITIAL_DATA_IDENTITY_SOURCE",
+        ),
+    ] = None,
 ) -> JSONResponse:
     """Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`)."""
     deadline = time.monotonic() + settings.request_timeout_s
@@ -120,6 +130,7 @@ async def convert(
                 client=client,
                 converter=request.app.state.converter,
                 deadline=deadline,
+                identity_source=identity_source,
             )
     content: dict[str, Any] = (
         {"form": result.form, "report": result.report} if report else result.form
