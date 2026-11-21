@@ -3,17 +3,49 @@
   @if (item(); as i) {
     <app-card>
       <h1 cardTitle class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
-      <span cardActions>
+      <span cardActions class="flex flex-wrap items-center gap-2">
+        @if (form()) {
+          <button
+            appButton
+            type="button"
+            [variant]="jsonVisible() ? 'secondary' : 'primary'"
+            [attr.aria-pressed]="!jsonVisible()"
+            (click)="showJson.set(false)"
+          >
+            Podgląd formularza
+          </button>
+          <button
+            appButton
+            type="button"
+            [variant]="jsonVisible() ? 'primary' : 'secondary'"
+            [attr.aria-pressed]="jsonVisible()"
+            (click)="showJson.set(true)"
+          >
+            JSON
+          </button>
+        }
         <button appButton type="button" variant="primary" (click)="download()">Pobierz .json</button>
       </span>
-      <pre
-        tabindex="0"
-        aria-label="Wynik konwersji w formacie JSON"
-        class="overflow-auto p-[10px] text-[13px] font-mono focus-ring"
-      >{{ json() }}</pre>
+      @if (!form()) {
+        <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
+      }
+      @if (jsonVisible()) {
+        <pre
+          tabindex="0"
+          aria-label="Wynik konwersji w formacie JSON"
+          class="overflow-auto p-[10px] text-[13px] font-mono focus-ring"
+        >{{ json() }}</pre>
+      }
     </app-card>
   } @else {
     <h1 class="text-title font-semibold">Wynik</h1>
     <p class="text-fg-muted">Wynik niedostępny. Wróć do importu i przetwórz plik ponownie.</p>
   }
 </main>
+@if (form(); as f) {
+  @if (!jsonVisible()) {
+    <div data-theme="preview" class="bg-bg mt-section p-section">
+      <app-form-renderer [definition]="f" />
+    </div>
+  }
+}
