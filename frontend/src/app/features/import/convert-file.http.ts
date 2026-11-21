@@ -1,4 +1,5 @@
 import { Provider, inject } from '@angular/core';
+import { map } from 'rxjs';
 import { FormsService } from '../../shared/api/services/forms.service';
 import { CONVERT_FILE, ConvertFileFn } from './convert-file';
 
@@ -8,6 +9,14 @@ export const provideHttpConvertFile = (): Provider => ({
   useFactory: (): ConvertFileFn => {
     const forms = inject(FormsService);
     return (file, password) =>
-      forms.convertApiV1FormsConvertPost({ body: password ? { file, password } : { file } });
+      forms
+        .convertApiV1FormsConvertPost({ body: password ? { file, password } : { file }, report: true })
+        .pipe(
+          map((body) =>
+            body && typeof body === 'object' && 'form' in body
+              ? { form: body['form'], report: body['report'] ?? null }
+              : { form: body, report: null },
+          ),
+        );
   },
 });

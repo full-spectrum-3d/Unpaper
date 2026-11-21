@@ -5,6 +5,12 @@ export const BATCH_CONCURRENCY = 2;
 
 // App: provideHttpConvertFile (convert-file.http.ts). Offline demo without the API: provideMockConvertFile.
 /** `password` unlocks a protected document (after DOCUMENT_PASSWORD_REQUIRED/INVALID). */
-export type ConvertFileFn = (file: File, password?: string) => Observable<unknown>;
+export type ConvertFileFn = (file: File, password?: string) => Observable<ConvertResult>;
+
+/** The form plus the backend's conversion report (null when the response carries none). */
+export interface ConvertResult {
+  form: unknown;
+  report: unknown | null;
+}
 
 export const CONVERT_FILE = new InjectionToken<ConvertFileFn>('CONVERT_FILE');

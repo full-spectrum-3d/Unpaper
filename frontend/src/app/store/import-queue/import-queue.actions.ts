@@ -6,7 +6,7 @@ export const ImportQueueActions = createActionGroup({
   events: {
     filesAdded: props<{ items: QueueItem[] }>(),
     convertStarted: props<{ id: string; startedAt: number }>(),
-    convertSucceeded: props<{ id: string; result: unknown; durationMs: number }>(),
+    convertSucceeded: props<{ id: string; result: unknown; report: unknown | null; durationMs: number }>(),
     convertFailed: props<{ id: string; error: string; passwordState?: PasswordState | null }>(),
     /** The password itself lives in FileRegistry, never in the store. */
     passwordSubmitted: props<{ id: string }>(),
