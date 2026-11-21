@@ -40,6 +40,7 @@ export const Variants: Story = {
     expect(css(save).borderRadius).toBe('4px');
     // disabled button does not fire click
     await userEvent.click(c.getByRole('button', { name: 'Wyłączony' }), { pointerEventsCheck: 0 });
+    expect((c.getByRole('button', { name: 'Anuluj' }) as HTMLButtonElement).type).toBe('button');
     expect(args.clicked).not.toHaveBeenCalled();
     // focus ring
     await userEvent.tab();
