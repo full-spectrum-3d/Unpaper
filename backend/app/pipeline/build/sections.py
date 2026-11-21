@@ -1,6 +1,7 @@
 """Sekcje predefiniowane z szablonów (spec §8.2)."""
 
 import json
+import re
 import uuid
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -323,6 +324,12 @@ def _consent_section(draft: FormDraft, options: BuildOptions) -> SectionNode:
     )
 
 
+_OPTIONAL_ATTACHMENT = re.compile(
+    r"\b(?:inne|jeśli|jeżeli|w\s+przypadku|o\s+ile|gdy|opcjonaln\w*)\b", re.IGNORECASE
+)
+"""„Pełnomocnictwo - jeśli dotyczy”, „Inne (podać jakie)”: załącznik nie zawsze potrzebny."""
+
+
 def contact_page_sections(
     draft: FormDraft, options: BuildOptions, extra_attachments: list[str]
 ) -> list[SectionNode]:
@@ -336,7 +343,7 @@ def contact_page_sections(
                 title=name,
                 tech_name=slugify(name),
                 description_html=description,
-                validation=[Validator.REQUIRED],
+                validation=[] if _OPTIONAL_ATTACHMENT.search(name) else [Validator.REQUIRED],
             )
             for index, name in enumerate(extra_attachments, start=1)
         ]

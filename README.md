@@ -318,7 +318,7 @@ sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
 | `APP_ENV` | `production` | `production` albo `development` |
 | `LOG_LEVEL` | `INFO` | `DEBUG` / `INFO` / `WARNING` / `ERROR`; logi JSON na stdout, bez treści dokumentów |
 | `CORS_ORIGINS` | `http://localhost:8080` | dozwolone originy, rozdzielone przecinkami |
-| `API_PORT` / `FRONTEND_PORT` | `8000` / `8080` | porty na hoście (zmienne Compose) |
+| `API_PORT` / `FRONTEND_PORT` | `8000` / `8080` | porty na hoście (zmienne Compose); API nasłuchuje tylko na `127.0.0.1` |
 
 Zmiana hasła: `make password-hash`, wklej hash do `.env` i wykonaj `docker compose up -d api`.
 

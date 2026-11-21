@@ -90,9 +90,10 @@ def test_validators() -> None:
     node, _ = map_draft_field(field, key="k")
     assert node.validation == [Validator.REQUIRED, Validator.ZIP_CODE]
 
+    # PESEL ze szkicu jako liczba staje się tekstem, żeby nie stracić walidatora formatu.
     field = _field("Numer PESEL", "number", required=True)
     node, _ = map_draft_field(field, key="k")
-    assert node.validation == [Validator.REQUIRED]
+    assert node.validation == [Validator.REQUIRED, Validator.PESEL]
 
     field = _field("Adres e-mail", "short_text")
     node, _ = map_draft_field(field, key="k")
@@ -274,3 +275,27 @@ def test_duplicate_draft_options_are_deduplicated_with_warning() -> None:
     node, issues = map_draft_field(draft, key="p1.s1.f1")
     assert node.options == ["Tak", "Nie"]
     assert [i.code for i in issues] == [IssueCode.W07_CHOICE_OPTIONS]
+
+
+@pytest.mark.parametrize(
+    ("label", "kind", "expected"),
+    [
+        ("Kod pocztowy", "number", FieldType.TEXT_FIELD),
+        ("PESEL", "number", FieldType.TEXT_FIELD),
+        ("Kwota zapłaty", "short_text", FieldType.NUMBER),
+        ("Należność (zł)", "short_text", FieldType.NUMBER),
+        ("Wysokość opłaty w PLN", "short_text", FieldType.NUMBER),
+        ("Kwota słownie", "short_text", FieldType.TEXT_FIELD),
+        ("Numer rachunku do zwrotu kwoty", "short_text", FieldType.TEXT_FIELD),
+        ("Nazwa organu, w którym zapłacono opłatę", "short_text", FieldType.TEXT_FIELD),
+        ("Liczba psów", "number", FieldType.NUMBER),
+    ],
+)
+def test_type_follows_label(label: str, kind: FieldKind, expected: FieldType) -> None:
+    node, _ = map_draft_field(_field(label, kind), key="k")
+    assert node.type is expected
+
+
+def test_zip_code_typed_as_number_keeps_format_validator() -> None:
+    node, _ = map_draft_field(_field("Kod pocztowy", "number", required=True), key="k")
+    assert node.validation == [Validator.REQUIRED, Validator.ZIP_CODE]

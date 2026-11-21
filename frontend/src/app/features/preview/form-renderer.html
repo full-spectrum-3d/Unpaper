@@ -7,6 +7,22 @@
       {{ stepTitle() }}
     </h3>
     <app-renderer-grid [questions]="p.questions" [hidden]="hidden()" />
+    @if (summary().length) {
+      <section aria-labelledby="summary-heading" class="mt-4 flex flex-col gap-4">
+        <h4 id="summary-heading" class="m-0 text-section-title font-bold">Twoje odpowiedzi</h4>
+        @for (s of summary(); track s.id) {
+          <section class="bg-surface rounded-card p-section" [attr.aria-label]="s.title">
+            <h5 class="m-0 mb-2 text-label font-bold">{{ s.title }}</h5>
+            <dl class="m-0 grid gap-x-4 gap-y-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+              @for (r of s.rows; track r.id) {
+                <dt class="text-fg-muted [overflow-wrap:anywhere]">{{ r.label }}</dt>
+                <dd class="m-0 mb-2 sm:mb-0 [overflow-wrap:anywhere]">{{ r.value }}</dd>
+              }
+            </dl>
+          </section>
+        }
+      </section>
+    }
   }
 }
 

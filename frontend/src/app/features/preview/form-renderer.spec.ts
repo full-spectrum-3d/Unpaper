@@ -273,12 +273,64 @@ describe('FormRenderer step validation', () => {
     expect(error('imie')).toBeNull();
   });
 
+  it('shows a format error when leaving a filled field, but not REQUIRED on an empty one', async () => {
+    await create();
+    const leave = async (id: string) => {
+      input(id).dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      await fixture.whenStable();
+    };
+    await type('nip', '123');
+    expect(error('nip')).toBeNull();
+    await leave('nip');
+    expect(error('nip')).toBe('✕ Wpisz poprawny NIP: 10 cyfr');
+    await leave('imie');
+    expect(error('imie')).toBeNull();
+  });
+
   it('clears errors on abort', async () => {
     await create();
     await click('Dalej');
     expect(error('imie')).not.toBeNull();
     await click('Przerwij wypełnianie');
     expect(error('imie')).toBeNull();
+  });
+
+  it('lists the visible answers of earlier pages on the FINISH page', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: STATES_EVALUATOR, useValue: evaluator },
+      ],
+    });
+    fixture = TestBed.createComponent(FormRenderer);
+    fixture.componentRef.setInput('definition', {
+      title: 'Test',
+      flow: { links: [{ source: 't1', target: 'fin' }] },
+      tabs: [
+        {
+          id: 't1',
+          title: 'Dane',
+          type: 'MAIN',
+          questions: [q({ id: 'imie', title: 'Imię' }), q({ id: 'nip', title: 'NIP' }, 1)],
+        },
+        {
+          id: 'fin',
+          title: 'Podgląd',
+          type: 'FINISH',
+          questions: [q({ id: 'info', type: 'TEXT_BLOCK', description: 'Sprawdź dane' })],
+        },
+      ],
+    } as FormDefinition);
+    await fixture.whenStable();
+    await type('imie', 'Jan');
+    await click('Dalej');
+    expect(step()).toBe('Podsumowanie');
+    const rows = [...el().querySelectorAll('dl')].flatMap((dl) =>
+      [...dl.querySelectorAll('dt')].map(
+        (dt) => `${dt.textContent?.trim()}: ${dt.nextElementSibling?.textContent?.trim()}`,
+      ),
+    );
+    expect(rows).toEqual(['Imię: Jan', 'NIP: —']);
   });
 });
 

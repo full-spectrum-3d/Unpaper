@@ -35,6 +35,13 @@ import { UnknownField } from './fields/unknown';
       @case ('SECTION') {
         <app-section-field [field]="field()" [hidden]="hidden()" />
       }
+      @case ('REPEATING_SECTION') {
+        <app-section-field [field]="field()" [hidden]="hidden()" />
+      }
+      @case ('INFO_SECTION') {
+        <!-- Backend turns the finish page's text blocks into INFO_SECTION: render as text. -->
+        <app-text-block-field [field]="field()" />
+      }
       @case ('TEXT_FIELD') {
         <app-text-field-type [field]="field()" />
       }

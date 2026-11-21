@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -28,21 +29,26 @@ const item = (id: string, status: QueueItem['status']): QueueItem => ({
 const running = (id: string, startedAt = 0): QueueItem => ({ ...item(id, 'processing'), startedAt });
 const tick = () => new Promise((r) => setTimeout(r));
 
-const stateOf = (items: QueueItem[], token: string | null = 't') => ({
-  [authFeatureKey]: { token },
+const stateOf = (items: QueueItem[], token: string | null = 't', username: string | null = null) => ({
+  [authFeatureKey]: { token, username },
   [importQueueFeatureKey]: {
     ids: items.map((i) => i.id),
     entities: Object.fromEntries(items.map((i) => [i.id, i])),
   },
 });
 
-function setup(items: QueueItem[], convert: ConvertFileFn = () => of({ form: { ok: 1 }, report: { durationMs: 7 } }), token: string | null = 't') {
+function setup(
+  items: QueueItem[],
+  convert: ConvertFileFn = () => of({ form: { ok: 1 }, report: { durationMs: 7 } }),
+  token: string | null = 't',
+  username: string | null = null,
+) {
   const actions$ = new Subject<Action>();
   TestBed.configureTestingModule({
     providers: [
       ImportQueueEffects,
       provideMockActions(() => actions$),
-      provideMockStore({ initialState: stateOf(items, token) }),
+      provideMockStore({ initialState: stateOf(items, token, username) }),
       { provide: CONVERT_FILE, useValue: convert },
     ],
   });
@@ -210,6 +216,16 @@ describe('ImportQueueEffects', () => {
     expect(out).toEqual([]);
     actions$.next(AuthActions.logout({ reason: 'expired' }));
     actions$.next(login('b'));
+    expect(registry.get('1')).toBeUndefined();
+    expect(out).toEqual([A.cleared()]);
+  });
+
+  it('clears the queue for another user after a session restored on reload', () => {
+    const { actions$, out, registry } = setup([], undefined, 't', 'a');
+    registry.add('1', new File(['x'], '1.pdf'));
+    actions$.next({ type: ROOT_EFFECTS_INIT });
+    actions$.next(AuthActions.logout({ reason: 'expired' }));
+    actions$.next(AuthActions.loginSuccess({ token: 't', expiresAt: 1, username: 'b' }));
     expect(registry.get('1')).toBeUndefined();
     expect(out).toEqual([A.cleared()]);
   });

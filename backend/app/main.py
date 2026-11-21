@@ -63,7 +63,14 @@ def create_app(
     settings = settings or load_settings()
     configure_logging(settings.log_level)
 
-    app = FastAPI(title="COI - Cyfryzacja formularzy", version="0.1.0", lifespan=_lifespan)
+    app = FastAPI(
+        title="COI - Cyfryzacja formularzy",
+        version="0.1.0",
+        lifespan=_lifespan,
+        # Body JSON jest czytane przed `require_auth`: bez limitu anonim może wysłać
+        # dowolnie duże żądanie. +1 MiB na narzut multipart (jak `client_max_body_size` w nginx).
+        max_body_size=(settings.max_file_size_mb + 1) * 1024 * 1024,
+    )
     app.state.settings = settings
     app.state.llm_client = llm_client
     app.state.converter = find_converter(settings) if converter == "auto" else converter

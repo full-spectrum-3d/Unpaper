@@ -402,3 +402,72 @@ def test_computed_fields_removed_with_warning() -> None:
     assert [f.label for _, f in out.iter_fields()] == ["Liczba gospodarstw"]
     assert _codes(warnings) == ["W33_COMPUTED_FIELD_REMOVED"]
     assert warnings[0].message.startswith("Usunięto pole „Stawka opłaty”: ")
+
+
+def test_attachments_from_document_complete_the_model() -> None:
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+        ("paragraph", "Załączniki:"),
+        ("paragraph", "1. Kopia aktu notarialnego"),
+        ("paragraph", "2. Pełnomocnictwo - jeśli dotyczy"),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        d["attachments"] = ["Kopia aktu notarialnego"]
+
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert out.attachments == ["Kopia aktu notarialnego", "Pełnomocnictwo - jeśli dotyczy"]
+    assert _codes(warnings).count("W34_ATTACHMENT_FROM_DOCUMENT") == 1
+
+
+CORRECTION_DOC = _doc_blocks(
+    ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+    ("paragraph", "Cel złożenia deklaracji: złożenie deklaracji / korekta deklaracji"),
+    ("paragraph", "Uzasadnienie przyczyn korekty"),
+)
+
+
+def test_correction_choice_with_conditional_reason_added() -> None:
+    out, warnings = normalize_draft(_make(), CORRECTION_DOC)
+    first, second = out.subject_pages[0].sections[0].fields[:2]
+    assert (first.label, first.kind, first.options) == (
+        "Cel złożenia",
+        "single_choice",
+        ["Złożenie deklaracji", "Korekta deklaracji"],
+    )
+    assert second.label == "Uzasadnienie przyczyn korekty"
+    assert second.kind == "long_text"
+    assert [(c.field_id, c.value) for c in second.visible_when] == [
+        (first.id, "Korekta deklaracji")
+    ]
+    assert "W35_CORRECTION_CHOICE" in _codes(warnings)
+
+
+def test_existing_purpose_choice_gets_correction_option_only() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {
+                "id": "f5",
+                "label": "Cel złożenia deklaracji",
+                "kind": "single_choice",
+                "required": True,
+                "options": ["Złożenie deklaracji", "Zmiana danych"],
+            }
+        )
+
+    doc = _doc_with("Wójt Gminy Elbląg. Cel złożenia deklaracji. Korekta deklaracji.")
+    out, _ = normalize_draft(_make(mutate), doc)
+    labels = [f.label for _, f in out.iter_fields()]
+    assert labels.count("Cel złożenia") == 0
+    assert _field(out, "f5").options[-1] == "Korekta deklaracji"
+    assert "Uzasadnienie przyczyn korekty" not in labels
+
+
+def test_mention_of_correction_without_purpose_heading_changes_nothing() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        d["attachments"] = ["Korekta deklaracji"]
+
+    doc = _doc_with("Wójt Gminy Elbląg. Do wniosku dołączam korektę deklaracji.")
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert "W35_CORRECTION_CHOICE" not in _codes(warnings)
+    assert "Cel złożenia" not in [f.label for _, f in out.iter_fields()]

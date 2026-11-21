@@ -18,10 +18,27 @@ import { Button } from '../../shared/ui/button/button';
 import { AnswersStore } from './answers-store';
 import { FormDefinition, Question } from './form-definition';
 import { FormState } from './form-state';
-import { orderTabs } from './page-order';
+import { orderTabs, sortQuestions } from './page-order';
+import { findDictionary } from './dictionaries.mock';
 import { RendererGrid } from './renderer-grid';
 import { validateStep } from './validate-step';
 import { FieldStates, evaluateStates } from './visibility';
+
+/** Containers and static content: no answer of their own in the summary. */
+const NOT_ANSWERS = new Set([
+  'SECTION',
+  'REPEATING_SECTION',
+  'INFO_SECTION',
+  'TEXT_BLOCK',
+  'CONSENT_SECTION',
+]);
+const display = (v: unknown): string => {
+  const text = Array.isArray(v) ? v.filter(Boolean).join(', ') : typeof v === 'string' ? v : '';
+  return text.trim() || '—';
+};
+
+const isBlank = (v: unknown) =>
+  v == null || (typeof v === 'string' && !v.trim()) || (Array.isArray(v) && !v.length);
 
 /** Ids of all fields (nested too) that have a SHOW state: hidden until the first evaluation completes. */
 function fieldsWithShow(def: FormDefinition): ReadonlySet<string> {
@@ -53,7 +70,7 @@ export const STATES_EVALUATOR = new InjectionToken<typeof evaluateStates>('STATE
   imports: [RendererGrid, Button],
   providers: [AnswersStore, FormState],
   templateUrl: './form-renderer.html',
-  host: { class: 'block' },
+  host: { class: 'block', '(focusout)': 'onFocusOut($event)' },
 })
 export class FormRenderer {
   readonly definition = input.required<FormDefinition>();
@@ -70,6 +87,34 @@ export class FormRenderer {
   protected readonly index = signal(0);
   protected readonly page = computed(() => this.pages()[this.index()]);
   protected readonly isFinish = computed(() => this.page()?.type === 'FINISH');
+  /** On the FINISH page: the visible answers of every earlier page, label and value. */
+  protected readonly summary = computed(() => {
+    if (!this.isFinish()) return [];
+    this.store.version();
+    const answers = this.store.snapshot();
+    const hidden = this.hidden();
+    return this.pages()
+      .filter((p) => p.type !== 'FINISH')
+      .map((p) => {
+        const rows: { id: string; label: string; value: string }[] = [];
+        // Same order as on screen: rows top-down, then columns.
+        const visit = (qs: Question[]) =>
+          sortQuestions(qs).forEach(({ field }) => {
+            if (hidden.has(field.id)) return;
+            if (!NOT_ANSWERS.has(field.type)) {
+              // TERYT carries the dictionary name as its title: label it by its levels, as on screen.
+              const levels = findDictionary(field.dictionaryName)?.levels.join(', ');
+              const titled = field.title && field.title !== field.dictionaryName;
+              const label = (titled ? field.title : levels) || field.title || field.techName;
+              rows.push({ id: field.id, label, value: display(answers.get(field.id)) });
+            }
+            visit(field.repeatingSectionGrid ?? []);
+          });
+        visit(p.questions);
+        return { id: p.id, title: p.title, rows };
+      })
+      .filter((p) => p.rows.length);
+  });
   protected readonly stepTitle = computed(() => {
     const page = this.page();
     if (!page) return '';
@@ -86,10 +131,18 @@ export class FormRenderer {
 
   /** Index of the step whose errors are shown (after a failed „Dalej”), or null. */
   private readonly showErrorsFor = signal<number | null>(null);
+  /** Fields the user has left on this step: their format errors show before „Dalej”. */
+  private readonly touched = signal<ReadonlySet<string>>(new Set());
   private readonly errors = computed(() => {
-    if (this.showErrorsFor() !== this.index()) return NO_ERRORS;
+    const submitted = this.showErrorsFor() === this.index();
+    const touched = this.touched();
+    if (!submitted && !touched.size) return NO_ERRORS;
     this.store.version();
-    return this.validatePage();
+    const errors = this.validatePage();
+    if (submitted) return errors;
+    // Leaving an empty field is not an error yet: REQUIRED waits for „Dalej”.
+    const answers = this.store.snapshot();
+    return new Map([...errors].filter(([id]) => touched.has(id) && !isBlank(answers.get(id))));
   });
 
   private request = 0;
@@ -105,6 +158,7 @@ export class FormRenderer {
         this.index.set(0);
         this.evaluated.set(null);
         this.showErrorsFor.set(null);
+        this.touched.set(new Set());
       });
     });
 
@@ -168,8 +222,16 @@ export class FormRenderer {
     );
   }
 
+  protected onFocusOut(event: FocusEvent) {
+    const id = (event.target as Element | null)?.closest<HTMLElement>('[data-field-id]')?.dataset[
+      'fieldId'
+    ];
+    if (id && !this.touched().has(id)) this.touched.update((t) => new Set(t).add(id));
+  }
+
   protected go(index: number) {
     this.showErrorsFor.set(null);
+    this.touched.set(new Set());
     this.index.set(index);
     afterNextRender(
       () => {
@@ -183,6 +245,7 @@ export class FormRenderer {
 
   protected abort() {
     this.showErrorsFor.set(null);
+    this.touched.set(new Set());
     this.store.reset();
     if (this.index() !== 0) this.go(0);
   }

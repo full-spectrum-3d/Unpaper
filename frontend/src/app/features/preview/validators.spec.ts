@@ -61,6 +61,13 @@ describe('validateField', () => {
     expect(validateField(f('TEXT_FIELD', [code]), value)).toBe(MSG[code]);
   });
 
+  it('NUMBER accepts only numbers, with comma or dot and spaces', () => {
+    for (const ok of ['1250', '1 250,50', '-3.5'])
+      expect(validateField(f('NUMBER', []), ok)).toBeNull();
+    for (const bad of ['abc', '12 zł', '1,2,3'])
+      expect(validateField(f('NUMBER', []), bad)).toBe('Wpisz liczbę, np. 1250,50');
+  });
+
   it('tolerates a non-array validation from imported JSON', () => {
     const field = f('TEXT_FIELD', {} as unknown as string[]);
     expect(validateField(field, '')).toBeNull();

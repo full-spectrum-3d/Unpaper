@@ -326,3 +326,10 @@ def test_every_template_instantiates() -> None:
         assert section.fields
         assert all(f.key.startswith("k.") for f in section.fields)
         assert "{" not in section.title + section.tech_name
+
+
+def test_conditional_attachments_are_optional() -> None:
+    names = ["Kopia aktu notarialnego", "Pełnomocnictwo - jeśli dotyczy", "Inne (podać jakie)"]
+    sections = contact_page_sections(make_draft(), BuildOptions(), names)
+    attachments = next(s for s in sections if s.key == "zalaczniki").fields
+    assert [f.validation for f in attachments] == [[Validator.REQUIRED], [], []]

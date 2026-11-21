@@ -56,6 +56,16 @@ describe('validateStep', () => {
     expect(run(qs).size).toBe(0);
   });
 
+  it('validates children of REPEATING_SECTION but never the section itself', () => {
+    const qs = [q({ id: 'r', type: 'REPEATING_SECTION', repeatingSectionGrid: [q({ id: 'b' })] })];
+    expect([...run(qs).keys()]).toEqual(['b']);
+  });
+
+  it('never blocks on children of a type the preview cannot render', () => {
+    const qs = [q({ id: 'u', type: 'NOVEL_SECTION', repeatingSectionGrid: [q({ id: 'b' })] })];
+    expect(run(qs).size).toBe(0);
+  });
+
   it('skips unknown types and option-less SELECTs the user cannot fill', () => {
     const qs = [
       q({ id: 'u', type: 'EMAIL_FIELD' }),

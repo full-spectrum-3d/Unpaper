@@ -2,6 +2,8 @@
 
 export const KNOWN_FIELD_TYPES = [
   'SECTION',
+  'REPEATING_SECTION',
+  'INFO_SECTION',
   'TEXT_FIELD',
   'NUMBER',
   'TEXTAREA',

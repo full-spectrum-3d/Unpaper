@@ -100,7 +100,7 @@ def rule_draft(doc: DocumentModel) -> FormDraft | None:
     blocks = [block for _, block in doc.iter_content_blocks()]
     title, title_end = _find_title(blocks)
     authority_kind, authority_name = _find_authority(blocks)
-    attachments, file_items, attachment_blocks = _find_attachments(blocks)
+    attachments, file_items, attachment_blocks = find_attachments(blocks)
     page_title = _subject_title(title) or PAGE_TITLE
 
     state = _State(section_title=_subject_title(title) or DEFAULT_SECTION)
@@ -451,7 +451,7 @@ def _find_authority(blocks: list[Block]) -> tuple[str, str]:
     return "URZAD", "Urząd"
 
 
-def _find_attachments(blocks: list[Block]) -> tuple[list[str], list[str], set[int]]:
+def find_attachments(blocks: list[Block]) -> tuple[list[str], list[str], set[int]]:
     """Listy pod „Załączniki:” (załączniki blankietu) i „W załączeniu:” (pliki do sprawy).
 
     Zwraca (załączniki, pliki przedmiotu, id bloków z list - to nie pola).

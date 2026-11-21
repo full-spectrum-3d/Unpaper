@@ -31,6 +31,17 @@ describe('findDictionary', () => {
     expect(findDictionary('TERYT_DOWODOWY')).toBe(findDictionary('TERYT_4G_DOWODOWY'));
   });
 
+  it('derives single-level Województwo/Powiat/Gmina/Miejscowość from the TERYT tree', () => {
+    const names = (n: string) => findDictionary(n)!.items.map((i) => i.name);
+    expect(findDictionary('Województwo')!.levels).toEqual(['Województwo']);
+    expect(names('Województwo')).toHaveLength(16);
+    expect(names('Powiat')).toEqual(expect.arrayContaining(['Kraków', 'piaseczyński']));
+    expect(names('Gmina')).toContain('Piaseczno');
+    expect(names('Miejscowość')).toContain('Zalesie Górne');
+    // Miasto na prawach powiatu występuje raz, choć jest powiatem, gminą i miejscowością.
+    expect(names('Miejscowość').filter((n) => n === 'Kraków')).toHaveLength(1);
+  });
+
   it('returns phone prefixes', () => {
     const d = findDictionary('NUMERY_KIERUNKOWE')!;
     expect(d.levels).toEqual(['Numer kierunkowy']);

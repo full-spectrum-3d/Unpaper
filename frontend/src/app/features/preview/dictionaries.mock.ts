@@ -80,10 +80,26 @@ const TERYT: Dictionary = {
   ],
 };
 
+/** Unique names at one TERYT depth (0 = województwo), for single-level dictionaries. */
+const tierNames = (depth: number): string[] => {
+  let nodes = TERYT.items;
+  for (let d = 0; d < depth; d++) nodes = nodes.flatMap((n) => n.children ?? []);
+  return [...new Set(nodes.map((n) => n.name))];
+};
+const tier = (depth: number): Dictionary => ({
+  levels: [TERYT.levels[depth]],
+  items: flat(tierNames(depth)),
+});
+
 export const SAMPLE_DICTIONARIES: Readonly<Record<string, Dictionary>> = {
   Kraje: { levels: ['Kraj'], items: flat(COUNTRIES) },
   TERYT_4G_DOWODOWY: TERYT,
   TERYT_DOWODOWY: TERYT,
+  // Single-level TERYT dictionaries the backend binds to bare "Województwo:" / "Powiat:" labels.
+  Województwo: tier(0),
+  Powiat: tier(1),
+  Gmina: tier(2),
+  Miejscowość: tier(3),
   NUMERY_KIERUNKOWE: {
     levels: ['Numer kierunkowy'],
     items: [
