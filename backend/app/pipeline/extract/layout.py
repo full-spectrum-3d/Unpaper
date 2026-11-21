@@ -145,7 +145,7 @@ def layout_page(
         outs.extend(_classify_line(line, line_no, style))
     outs = _merge_wrapped(outs, texts)
     _mark_labels(outs)
-    _emit(builder, outs)
+    _emit(builder, _collapse_fields(outs))
 
 
 # --- ramki -------------------------------------------------------------------------------
@@ -343,6 +343,22 @@ def _merge_wrapped(outs: list[_Out], spans: Sequence[Span]) -> list[_Out]:
             continue
         merged.append(out)
     return merged
+
+
+def _collapse_fields(outs: list[_Out]) -> list[_Out]:
+    """Kolejne pola bez tekstu między nimi → jedno pole.
+
+    Siatki komórek (arkusze, deklaracje) dają ciągi pustych ramek bez etykiet; dla LLM to
+    jedno miejsce do wypełnienia, a nie kilkanaście znaczników `[POLE]` z rzędu.
+    """
+    collapsed: list[_Out] = []
+    for out in outs:
+        prev = collapsed[-1] if collapsed else None
+        if prev is not None and prev.kind == out.kind == "input_placeholder":
+            prev.bbox = _union([prev.bbox, out.bbox])
+            continue
+        collapsed.append(out)
+    return collapsed
 
 
 def _mark_labels(outs: list[_Out]) -> None:

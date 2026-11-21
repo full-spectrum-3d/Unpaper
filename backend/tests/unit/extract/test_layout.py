@@ -119,3 +119,17 @@ def test_tall_frame_is_own_line() -> None:
         ("input_placeholder", ""),
         ("paragraph", "Dalej"),
     ]
+
+
+def test_consecutive_fields_without_labels_collapse() -> None:
+    rows = [
+        frame(10 + 120 * c, 100 + 40 * r, 110 + 120 * c, 120 + 40 * r)
+        for r in range(3)
+        for c in range(3)
+    ]
+    doc = run_layout([span("Zalaczniki", 10, 60, 80), span("Dalej", 10, 300, 40)], rows)
+    assert kinds(doc) == [
+        ("label", "Zalaczniki"),
+        ("input_placeholder", ""),
+        ("paragraph", "Dalej"),
+    ]
