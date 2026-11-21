@@ -3083,16 +3083,16 @@
   "fallback_reason": null,
   "retries": 0,
   "prompt_tokens": 2668,
-  "output_tokens": 689,
-  "duration_s": 5.2,
-  "applicant_removed": 1,
-  "conditions_removed": 0,
+  "output_tokens": 800,
+  "duration_s": 6.0,
+  "applicant_removed": 4,
+  "conditions_removed": 1,
   "rule_based": false,
   "statements": 0,
   "expected": 7,
   "matched": 6,
-  "draft_fields": 12,
-  "extra": 1,
+  "draft_fields": 15,
+  "extra": 4,
   "kind_ok": 6,
   "title_ok": true,
   "authority_ok": null,
@@ -3100,11 +3100,14 @@
    "Lokalizacja punktu sprzedaży"
   ],
   "extras": [
-   "Rodzaj lokalizacji"
+   "Rodzaj lokalizacji",
+   "Dokument potwierdzający tytuł prawny do lokalu",
+   "Zgoda właściciela/budynku mieszkalnego wielorodzinnego",
+   "Decyzja inspektora sanitarnego o zatwierdzeniu zakładu"
   ],
   "wrong_kinds": [],
   "recall": 0.86,
-  "precision": 0.92,
+  "precision": 0.73,
   "form_valid": true,
   "fields": [
    [
@@ -3113,7 +3116,7 @@
    ],
    [
     "Rodzaj napojów alkoholowych",
-    "single_choice"
+    "multi_choice"
    ],
    [
     "Oznaczenie przedsiębiorcy",
@@ -3148,12 +3151,24 @@
     "single_choice"
    ],
    [
-    "Opis innej lokalizacji",
+    "Szczegóły innej lokalizacji",
     "short_text"
    ],
    [
     "Adres punktu składowania napojów alkoholowych (magazynu dystrybucyjnego)",
     "short_text"
+   ],
+   [
+    "Dokument potwierdzający tytuł prawny do lokalu",
+    "file"
+   ],
+   [
+    "Zgoda właściciela/budynku mieszkalnego wielorodzinnego",
+    "file"
+   ],
+   [
+    "Decyzja inspektora sanitarnego o zatwierdzeniu zakładu",
+    "file"
    ]
   ]
  },
@@ -5102,16 +5117,16 @@
   "fallback_reason": null,
   "retries": 0,
   "prompt_tokens": 2668,
-  "output_tokens": 689,
-  "duration_s": 5.2,
-  "applicant_removed": 1,
-  "conditions_removed": 0,
+  "output_tokens": 800,
+  "duration_s": 5.9,
+  "applicant_removed": 4,
+  "conditions_removed": 1,
   "rule_based": false,
   "statements": 0,
   "expected": 7,
   "matched": 6,
-  "draft_fields": 12,
-  "extra": 1,
+  "draft_fields": 15,
+  "extra": 4,
   "kind_ok": 6,
   "title_ok": true,
   "authority_ok": null,
@@ -5119,11 +5134,14 @@
    "Lokalizacja punktu sprzedaży"
   ],
   "extras": [
-   "Rodzaj lokalizacji"
+   "Rodzaj lokalizacji",
+   "Dokument potwierdzający tytuł prawny do lokalu",
+   "Zgoda właściciela/budynku mieszkalnego wielorodzinnego",
+   "Decyzja inspektora sanitarnego o zatwierdzeniu zakładu"
   ],
   "wrong_kinds": [],
   "recall": 0.86,
-  "precision": 0.92,
+  "precision": 0.73,
   "form_valid": true,
   "fields": [
    [
@@ -5132,7 +5150,7 @@
    ],
    [
     "Rodzaj napojów alkoholowych",
-    "single_choice"
+    "multi_choice"
    ],
    [
     "Oznaczenie przedsiębiorcy",
@@ -5167,12 +5185,24 @@
     "single_choice"
    ],
    [
-    "Opis innej lokalizacji",
+    "Szczegóły innej lokalizacji",
     "short_text"
    ],
    [
     "Adres punktu składowania napojów alkoholowych (magazynu dystrybucyjnego)",
     "short_text"
+   ],
+   [
+    "Dokument potwierdzający tytuł prawny do lokalu",
+    "file"
+   ],
+   [
+    "Zgoda właściciela/budynku mieszkalnego wielorodzinnego",
+    "file"
+   ],
+   [
+    "Decyzja inspektora sanitarnego o zatwierdzeniu zakładu",
+    "file"
    ]
   ]
  },

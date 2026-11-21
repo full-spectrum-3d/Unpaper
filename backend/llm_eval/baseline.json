@@ -115,9 +115,9 @@
   "recall": 0.86,
   "recall_min": 0.86,
   "recall_max": 0.86,
-  "precision": 0.8566666666666668,
+  "precision": 0.73,
   "precision_min": 0.73,
-  "precision_max": 0.92
+  "precision_max": 0.73
  },
  {
   "set": "holdout",
