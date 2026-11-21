@@ -1,1 +1,246 @@
 """Mapowanie typów pól, walidatorów i generowanie techName (spec §8.3, §7.2)."""
+
+import re
+import unicodedata
+from collections.abc import Mapping
+
+from app.models.draft import CHOICE_KINDS, DraftField, FieldKind
+from app.models.draft import Condition as DraftCondition
+from app.models.form import ALLOWED_VALIDATORS, CHOICE_TYPES, FieldType, Validator
+from app.models.warning import ConversionWarning
+from app.pipeline.build.html import paragraphs
+from app.pipeline.build.ir import AllOf, Condition, Eq, FieldNode, Not, PageNode, Semantic
+from app.pipeline.issues import IssueCode
+
+_TRANSLITERATION = str.maketrans("ąćęłńóśźż", "acelnoszz")
+_TITLE_PREFIXES = ("wniosek", "zgłoszenie", "deklaracja", "oświadczenie")
+_TITLE_MAX = 255
+_LABEL_MAX = 80
+_TECH_NAME_MAX = 60
+_RADIO_MAX_OPTIONS = 5
+_SEARCH_THRESHOLD = 15
+
+_KIND_TYPES: dict[FieldKind, FieldType] = {
+    "short_text": FieldType.TEXT_FIELD,
+    "long_text": FieldType.TEXTAREA,
+    "number": FieldType.NUMBER,
+    "date": FieldType.DATEPICKER,
+    "file": FieldType.FILE_UPLOADER,
+}
+
+_SEMANTIC_VALIDATORS: dict[Semantic, Validator] = {
+    Semantic.PESEL: Validator.PESEL,
+    Semantic.NIP: Validator.NIP,
+    Semantic.REGON: Validator.REGON,
+    Semantic.ZIP_CODE: Validator.ZIP_CODE,
+    Semantic.EMAIL: Validator.EMAIL,
+    Semantic.EPUAP: Validator.EPUAP,
+    Semantic.ADE: Validator.ADE,
+    Semantic.ID_CARD: Validator.SERIAL_NUMBER_ID_CARD,
+}
+
+_LABEL_SEMANTICS: tuple[tuple[re.Pattern[str], Semantic], ...] = tuple(
+    (re.compile(pattern, re.IGNORECASE), semantic)
+    for pattern, semantic in (
+        (r"\bpesel\b", Semantic.PESEL),
+        (r"\bnip\b", Semantic.NIP),
+        (r"\bregon\b", Semantic.REGON),
+        (r"kod\w*\s+pocztow", Semantic.ZIP_CODE),
+        (r"e-?mail|poczty\s+elektronicznej", Semantic.EMAIL),
+        (r"\bepuap\b", Semantic.EPUAP),
+        (r"e-?doręcze", Semantic.ADE),
+        (r"seri\w*\s+i\s+numer\w*\s+dowodu", Semantic.ID_CARD),
+        (r"numer\w*\s+kierunkow", Semantic.PHONE_PREFIX),
+        (r"\bkraj\b|\bpaństw|obywatelstw", Semantic.COUNTRY),
+    )
+)
+
+
+def label_semantic(label: str) -> Semantic | None:
+    """Pierwsza semantyka, której wzorzec pasuje do etykiety."""
+    return next((sem for rx, sem in _LABEL_SEMANTICS if rx.search(label)), None)
+
+
+def slugify(text: str, *, max_length: int = 60) -> str:
+    """techName: ASCII `[a-z0-9_]`, polskie znaki transliterowane."""
+    lowered = text.lower().translate(_TRANSLITERATION)
+    decomposed = unicodedata.normalize("NFKD", lowered)
+    ascii_text = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+    slug = re.sub(r"[^a-z0-9]+", "_", ascii_text).strip("_")
+    if len(slug) > max_length:
+        cut = slug[:max_length]
+        idx = cut.rfind("_")
+        if idx >= max_length / 2:
+            cut = cut[:idx]
+        slug = cut.strip("_")
+    return slug or "pole"
+
+
+def normalize_title(raw: str) -> tuple[str, list[ConversionWarning]]:
+    """Zwija białe znaki, ucina do 255 znaków i pilnuje prefiksu tytułu."""
+    issues: list[ConversionWarning] = []
+    title = " ".join(raw.split())
+    if len(title) > _TITLE_MAX:
+        title = title[:_TITLE_MAX].rstrip()
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W08_TITLE_TRUNCATED, message="Tytuł skrócono do 255 znaków."
+            )
+        )
+    if not title:
+        title = "Wniosek"
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W05_TITLE_PREFIX, message="Brak tytułu, użyto „Wniosek”."
+            )
+        )
+    elif not title.lower().startswith(_TITLE_PREFIXES):
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W05_TITLE_PREFIX,
+                message=(
+                    "Tytuł nie zaczyna się od „Wniosek”, „Zgłoszenie”, „Deklaracja” "
+                    "ani „Oświadczenie”."
+                ),
+            )
+        )
+    return title, issues
+
+
+def _choice_type(draft: DraftField, key: str, issues: list[ConversionWarning]) -> FieldType:
+    count = len(draft.options)
+    if draft.kind == "single_choice":
+        if count == 0 or count == 1:
+            issues.append(
+                ConversionWarning(
+                    code=IssueCode.W07_CHOICE_OPTIONS,
+                    message=f"Pole wyboru ma {count} opcji.",
+                    path=key,
+                )
+            )
+            return FieldType.TEXT_FIELD if count == 0 else FieldType.CHECKBOX
+        return FieldType.RADIO if count <= _RADIO_MAX_OPTIONS else FieldType.SELECT
+    if count == 0:
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W07_CHOICE_OPTIONS, message="Pole wyboru nie ma opcji.", path=key
+            )
+        )
+        return FieldType.TEXT_FIELD
+    return FieldType.CHECKBOX
+
+
+def _validators(
+    required: bool, semantic: Semantic | None, field_type: FieldType
+) -> list[Validator]:
+    allowed = ALLOWED_VALIDATORS[field_type]
+    result: list[Validator] = []
+    if required and Validator.REQUIRED in allowed:
+        result.append(Validator.REQUIRED)
+    if field_type is not FieldType.TEXT_FIELD or semantic is None:
+        return result
+    extra = _SEMANTIC_VALIDATORS.get(semantic)
+    if extra is not None and extra not in result:
+        result.append(extra)
+    return result
+
+
+def map_draft_field(field: DraftField, *, key: str) -> tuple[FieldNode, list[ConversionWarning]]:
+    """Pole ze szkicu na `FieldNode` (spec §8.3). Semantykę ustala etykieta."""
+    issues: list[ConversionWarning] = []
+    unique = list(dict.fromkeys(field.options))
+    if len(unique) != len(field.options):
+        field = field.model_copy(update={"options": unique})
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W07_CHOICE_OPTIONS,
+                message="Usunięto powtórzone opcje pola.",
+                path=key,
+            )
+        )
+    node = FieldNode(
+        key=key,
+        type=FieldType.TEXT_FIELD,
+        title=field.label,
+        tech_name=slugify(field.label),
+    )
+    if field.kind == "info":
+        node.type = FieldType.TEXT_BLOCK
+        node.title = ""
+        node.description_html = paragraphs(field.label)
+        return node, issues
+
+    if field.kind in CHOICE_KINDS:
+        node.type = _choice_type(field, key, issues)
+        if node.type in (FieldType.RADIO, FieldType.SELECT, FieldType.CHECKBOX):
+            node.options = list(field.options)
+        if node.type is FieldType.SELECT and len(field.options) > _SEARCH_THRESHOLD:
+            node.search_enabled = True
+    else:
+        node.type = _KIND_TYPES[field.kind]
+
+    if len(field.label) > _LABEL_MAX:
+        issues.append(
+            ConversionWarning(
+                code=IssueCode.W02_LABEL_TOO_LONG,
+                message=f"Etykieta ma {len(field.label)} znaków.",
+                path=key,
+            )
+        )
+    if field.kind != "file":
+        node.semantic = label_semantic(field.label)
+    node.validation = _validators(field.required, node.semantic, node.type)
+    return node, issues
+
+
+def unresolved_condition(
+    conds: list[DraftCondition], by_id: Mapping[str, FieldNode], owner: FieldNode
+) -> DraftCondition | None:
+    """Pierwszy warunek, którego cel nie istnieje, nie jest wyborem albo jest właścicielem."""
+    for cond in conds:
+        target = by_id.get(cond.field_id)
+        if target is None or target is owner or target.type not in CHOICE_TYPES:
+            return cond
+    return None
+
+
+def convert_conditions(
+    conds: list[DraftCondition], by_id: Mapping[str, FieldNode], owner: FieldNode
+) -> Condition | None:
+    """Warunki szkicu (AND) na `Condition`. `None`, gdy któreś pole jest nieznane,
+    nie jest polem wyboru albo jest samym właścicielem."""
+    if unresolved_condition(conds, by_id, owner) is not None:
+        return None
+    items: list[Condition] = []
+    for cond in conds:
+        target = by_id[cond.field_id]
+        eq = Eq(target.key, cond.value)
+        items.append(Not(eq) if cond.op == "not_equals" else eq)
+    if not items:
+        return None
+    return items[0] if len(items) == 1 else AllOf(tuple(items))
+
+
+def assign_unique_tech_names(pages: list[PageNode]) -> None:
+    """Pierwsze wystąpienie zostaje, kolejne dostają `_2`, `_3`. Sekcje i pola wspólnie."""
+    used: set[str] = set()
+
+    def unique(base: str) -> str:
+        if base not in used:
+            used.add(base)
+            return base
+        n = 2
+        while True:
+            suffix = f"_{n}"
+            name = base[: _TECH_NAME_MAX - len(suffix)].rstrip("_") + suffix
+            if name not in used:
+                break
+            n += 1
+        used.add(name)
+        return name
+
+    for page in pages:
+        for section in page.sections:
+            section.tech_name = unique(section.tech_name)
+            for node in section.fields:
+                node.tech_name = unique(node.tech_name)

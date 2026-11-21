@@ -44,6 +44,67 @@ class Validator(StrEnum):
     SERIAL_NUMBER_ID_CARD = "SERIAL_NUMBER_ID_CARD"
 
 
+# --- Stałe reguł (spec §7.2-7.3), wspólne dla `build/` i `verify.py` ---
+
+SECTION_TYPES: frozenset[FieldType] = frozenset({FieldType.SECTION, FieldType.REPEATING_SECTION})
+INPUT_TYPES: frozenset[FieldType] = (
+    frozenset(FieldType) - SECTION_TYPES - {FieldType.TEXT_BLOCK, FieldType.INFO_SECTION}
+)
+CHOICE_TYPES: frozenset[FieldType] = frozenset(
+    {FieldType.SELECT, FieldType.RADIO, FieldType.CHECKBOX}
+)
+
+_REQUIRED_ONLY = frozenset({Validator.REQUIRED})
+ALLOWED_VALIDATORS: dict[FieldType, frozenset[Validator]] = {
+    FieldType.TEXT_FIELD: frozenset(Validator),
+    FieldType.TEXTAREA: _REQUIRED_ONLY,
+    FieldType.NUMBER: _REQUIRED_ONLY,
+    FieldType.SELECT: _REQUIRED_ONLY,
+    FieldType.RADIO: _REQUIRED_ONLY,
+    FieldType.CHECKBOX: _REQUIRED_ONLY,
+    FieldType.DATEPICKER: _REQUIRED_ONLY,
+    FieldType.FILE_UPLOADER: _REQUIRED_ONLY,
+    FieldType.TEXT_BLOCK: frozenset(),
+    FieldType.INFO_SECTION: frozenset(),
+    FieldType.CONSENT_SECTION: frozenset(),
+    FieldType.SECTION: frozenset(),
+    FieldType.REPEATING_SECTION: frozenset(),
+}
+
+
+class TabType(StrEnum):
+    MAIN = "MAIN"
+    FINISH = "FINISH"
+
+
+class StateType(StrEnum):
+    SHOW = "SHOW"
+    READ_ONLY = "READ_ONLY"
+
+
+EXTERNAL_SYSTEM = "EXTERNAL_SYSTEM"
+
+BASE_FIELD_KEYS: tuple[str, ...] = (
+    "id",
+    "type",
+    "techName",
+    "title",
+    "description",
+    "options",
+    "validation",
+    "readOnly",
+    "repeatingSectionGrid",
+    "states",
+    "questionOrder",
+    "tooltipMessage",
+)
+
+EMPTY_HTML = "<html><head></head><body></body></html>"
+
+type FormJson = dict[str, Any]
+"""Formularz jako surowy JSON importu (wynik `to_import_json()`, wejście `verify_form`)."""
+
+
 class Option(_CoiModel):
     id: str
     name: str

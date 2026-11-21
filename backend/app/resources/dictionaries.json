@@ -1,1 +1,78 @@
-[]
+[
+  {
+    "name": "Kraje",
+    "description": "Słownik krajów",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": false,
+    "semantics": [
+      "COUNTRY"
+    ]
+  },
+  {
+    "name": "TERYT_4G_DOWODOWY",
+    "description": "Słownik TERYT (województwo, powiat, gmina, miejscowość) wielopoziomowy",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": true,
+    "semantics": []
+  },
+  {
+    "name": "TERYT_DOWODOWY",
+    "description": "Słownik TERYT wielopoziomowy",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": true,
+    "semantics": []
+  },
+  {
+    "name": "Województwo",
+    "description": "Słownik województw",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": false,
+    "semantics": []
+  },
+  {
+    "name": "Powiat",
+    "description": "Słownik powiatów",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": false,
+    "semantics": []
+  },
+  {
+    "name": "Gmina",
+    "description": "Słownik gmin",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": false,
+    "semantics": []
+  },
+  {
+    "name": "Miejscowość",
+    "description": "Słownik miejscowości",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": false,
+    "semantics": []
+  },
+  {
+    "name": "NUMERY_KIERUNKOWE",
+    "description": "Słownik numerów kierunkowych",
+    "fieldTypes": [
+      "SELECT"
+    ],
+    "multiLevelTree": false,
+    "semantics": [
+      "PHONE_PREFIX"
+    ]
+  }
+]

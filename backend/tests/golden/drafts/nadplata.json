@@ -1,0 +1,95 @@
+{
+  "title": "Wniosek o stwierdzenie nadpłaty podatku",
+  "authority_kind": "URZAD",
+  "authority_name": "Urząd Gminy Ulan-Majorat",
+  "applicant_kinds": [
+    "SELF",
+    "OTHER_PERSON",
+    "LEGAL_ENTITY"
+  ],
+  "subject_pages": [
+    {
+      "title": "Informacje o nadpłacie",
+      "sections": [
+        {
+          "title": "Informacje o nadpłacie",
+          "repeating": false,
+          "fields": [
+            {
+              "id": "f1",
+              "label": "Podatek, którego dotyczy nadpłata",
+              "kind": "short_text",
+              "required": false
+            },
+            {
+              "id": "f2",
+              "label": "Kwota",
+              "kind": "number",
+              "required": false
+            },
+            {
+              "id": "f3",
+              "label": "Uzasadnienie",
+              "kind": "long_text",
+              "required": false
+            }
+          ]
+        },
+        {
+          "title": "Rozliczenie nadpłaty",
+          "repeating": false,
+          "fields": [
+            {
+              "id": "f4",
+              "label": "Wybierz, co mamy zrobić z nadpłatą",
+              "kind": "single_choice",
+              "required": false,
+              "options": [
+                "Zaliczyć na poczet przyszłego zobowiązania podatkowego",
+                "Zwrócić przelewem na rachunek bankowy"
+              ]
+            },
+            {
+              "id": "f5",
+              "label": "Nazwa podatku",
+              "kind": "short_text",
+              "required": false,
+              "visible_when": [
+                {
+                  "field_id": "f4",
+                  "op": "equals",
+                  "value": "Zaliczyć na poczet przyszłego zobowiązania podatkowego"
+                }
+              ]
+            },
+            {
+              "id": "f6",
+              "label": "Numer rachunku",
+              "kind": "short_text",
+              "required": false,
+              "visible_when": [
+                {
+                  "field_id": "f4",
+                  "op": "equals",
+                  "value": "Zwrócić przelewem na rachunek bankowy"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Korekta deklaracji",
+          "repeating": false,
+          "fields": [
+            {
+              "id": "f7",
+              "label": "Plik deklaracji podatkowej",
+              "kind": "file",
+              "required": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
