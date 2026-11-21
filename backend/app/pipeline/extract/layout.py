@@ -13,10 +13,9 @@ from dataclasses import dataclass, field
 from statistics import median
 from typing import Literal
 
-from app.models.document import BBox, BlockKind, TablePos
+from app.models.document import FILL_RUN, BBox, BlockKind, TablePos
 from app.pipeline.extract.builder import DocumentBuilder
 from app.pipeline.extract.text_rules import (
-    FILL_RUN,
     is_fill_only,
     looks_like_heading,
     split_checkbox_options,

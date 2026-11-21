@@ -10,9 +10,11 @@ from typing import IO
 
 import openpyxl
 from openpyxl.cell.cell import Cell
-from openpyxl.utils import get_column_letter
+from openpyxl.utils import column_index_from_string
+from openpyxl.worksheet.dimensions import ColumnDimension
 from openpyxl.worksheet.worksheet import Worksheet
 
+from app.core.errors import AppError, ErrorCode
 from app.models.document import BBox, DocumentModel
 from app.pipeline.extract.builder import DocumentBuilder
 from app.pipeline.extract.layout import Frame, Span, layout_page
@@ -23,13 +25,22 @@ DEFAULT_COLUMN_WIDTH = 8.43
 DEFAULT_ROW_HEIGHT_PT = 15.0
 MIN_BORDER_SIDES = 3
 MAX_CELLS = 200_000
-"""Ochrona przed arkuszami o ogromnym zakresie (`dimensions` z formatowania)."""
+"""Ochrona przed arkuszami o ogromnym zakresie (`dimensions` z formatowania). Ten sam limit
+dotyczy komórek zapisanych w pliku: blankiet ma ich najwyżej kilka tysięcy, więc 200 tys.
+to duży zapas, a jednocześnie granica, przy której układ strony liczyłby się minutami."""
 
 
 def extract_xlsx(file: IO[bytes]) -> DocumentModel:
     workbook = openpyxl.load_workbook(file, data_only=True)
     builder = DocumentBuilder("xlsx")
     try:
+        # read_only odpada: arkusz w tym trybie nie ma column_dimensions ani scaleń.
+        stored = sum(len(sheet._cells) for sheet in workbook.worksheets)
+        if stored > MAX_CELLS:
+            raise AppError(
+                ErrorCode.DOCUMENT_TOO_COMPLEX,
+                f"Arkusz ma {stored} komórek, dopuszczalne jest {MAX_CELLS}",
+            )
         for sheet in workbook.worksheets:
             if sheet.sheet_state != "visible":
                 continue
@@ -46,7 +57,8 @@ def _sheet_items(sheet: Worksheet) -> tuple[list[Span], list[Frame]]:
     max_row, max_col = sheet.max_row, sheet.max_column
     if max_row * max_col > MAX_CELLS:
         max_row = max(1, MAX_CELLS // max(max_col, 1))
-    xs = _offsets([_column_width(sheet, c) for c in range(1, max_col + 1)])
+    columns = _column_dimensions(sheet, max_col)
+    xs = _offsets([_column_width(sheet, columns.get(c)) for c in range(1, max_col + 1)])
     ys = _offsets([_row_height(sheet, r) for r in range(1, max_row + 1)])
 
     merged = {
@@ -61,7 +73,7 @@ def _sheet_items(sheet: Worksheet) -> tuple[list[Span], list[Frame]]:
             if not isinstance(cell, Cell):  # MergedCell: część scalonego zakresu
                 continue
             row, col = cell.row, cell.column
-            if _hidden(sheet, row, col):
+            if _hidden(sheet, row, columns.get(col)):
                 continue
             r0, c0, r1, c1 = merged.get((row, col), (row, col, row, col))
             r1, c1 = min(r1, max_row), min(c1, max_col)
@@ -100,16 +112,24 @@ def _is_field(sheet: Worksheet, r0: int, c0: int, r1: int, c1: int, max_row: int
     return bottom or sides >= MIN_BORDER_SIDES
 
 
-def _hidden(sheet: Worksheet, row: int, col: int) -> bool:
+def _column_dimensions(sheet: Worksheet, max_col: int) -> dict[int, ColumnDimension]:
+    """Numer kolumny → wymiar; `<col min max>` z pliku opisuje cały zakres kolumn naraz."""
+    columns: dict[int, ColumnDimension] = {}
+    for dim in sheet.column_dimensions.values():
+        low = dim.min or column_index_from_string(dim.index)
+        for col in range(low, min(dim.max or low, max_col) + 1):
+            columns[col] = dim
+    return columns
+
+
+def _hidden(sheet: Worksheet, row: int, col_dim: ColumnDimension | None) -> bool:
     row_dim = sheet.row_dimensions.get(row)
-    col_dim = sheet.column_dimensions.get(get_column_letter(col))
     return bool(
         (row_dim is not None and row_dim.hidden) or (col_dim is not None and col_dim.hidden)
     )
 
 
-def _column_width(sheet: Worksheet, col: int) -> float:
-    dim = sheet.column_dimensions.get(get_column_letter(col))
+def _column_width(sheet: Worksheet, dim: ColumnDimension | None) -> float:
     if dim is not None and dim.hidden:
         return 0.0
     width = dim.width if dim is not None and dim.width else _default_width(sheet)

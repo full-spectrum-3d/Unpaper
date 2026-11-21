@@ -89,8 +89,6 @@ class Settings(BaseSettings):
     # Dłuższy dokument dzielimy na fragmenty: 8b na CPU gubi pola w długim tekście
     # (stypendium), a pojedyncze wywołanie nie mieści się w czasie (odpady, §10.2).
     llm_max_chunk_chars: PositiveInt = 4500
-    extraction_vlm_enabled: bool = False
-    vlm_model: str = "qwen2.5vl:7b"
 
     # --- Ekstrakcja i konwersja ---
     ocr_lang: str = "pol"
@@ -116,6 +114,16 @@ class Settings(BaseSettings):
         if isinstance(value, str) and not value.strip():
             return None
         return value.strip() if isinstance(value, str) else value
+
+    @field_validator("rodo_clause_url", mode="before")
+    @classmethod
+    def _https_rodo_url(cls, value: object) -> object:
+        # Adres trafia do `href` formularza: inny schemat (np. `javascript:`) to XSS.
+        if isinstance(value, str):
+            value = value.strip() or None
+            if value is not None and not value.lower().startswith("https://"):
+                raise ValueError("RODO_CLAUSE_URL musi być adresem https://")
+        return value
 
     @field_validator("jwt_public_key", mode="before")
     @classmethod
@@ -168,6 +176,17 @@ class Settings(BaseSettings):
             self._validate_rs256()
 
         self._validate_claim_mapping()
+
+        # Tokeny z zewnętrznego brokera: bez wymaganej roli każdy jego token otwiera API.
+        if (
+            self.app_env == "production"
+            and not self.token_issuing_enabled
+            and self.jwt_required_role is None
+        ):
+            raise ValueError(
+                "JWT_REQUIRED_ROLE jest wymagany przy APP_ENV=production i RS256 bez "
+                "JWT_PRIVATE_KEY (tokeny wydaje zewnętrzny broker)"
+            )
 
         if self.token_issuing_enabled:
             self._validate_technical_account()

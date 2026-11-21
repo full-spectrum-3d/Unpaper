@@ -74,8 +74,11 @@ _CONVERT_RESPONSES: dict[int | str, dict[str, Any]] = {
         "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne "
         "`identitySource`; model spoza LLM_MODELS"
     ),
+    503: problem_doc("SERVER_BUSY: serwer przetwarza inne pliki (nagłówek Retry-After)"),
     504: problem_doc("Przekroczono REQUEST_TIMEOUT_S"),
 }
+
+RETRY_AFTER_S = 30
 
 
 @asynccontextmanager
@@ -86,7 +89,9 @@ async def _job_slot(semaphore: asyncio.Semaphore, deadline: float) -> AsyncItera
             await semaphore.acquire()
     except TimeoutError as exc:
         raise AppError(
-            ErrorCode.PROCESSING_TIMEOUT, "Serwer przetwarza inne pliki - spróbuj ponownie"
+            ErrorCode.SERVER_BUSY,
+            "Serwer przetwarza inne pliki - spróbuj ponownie",
+            headers={"Retry-After": str(RETRY_AFTER_S)},
         ) from exc
     try:
         yield
@@ -128,11 +133,18 @@ async def convert(
             )
         settings = settings.model_copy(update={"llm_model": model})
     try:
-        upload = await accept_upload(
-            request.stream(), request.headers.get("content-type"), upload_limits(settings)
-        )
+        # Odbiór (wolny klient) i walidacja też mieszczą się w REQUEST_TIMEOUT_S.
+        async with asyncio.timeout(settings.request_timeout_s):
+            upload = await accept_upload(
+                request.stream(),
+                request.headers.get("content-type"),
+                upload_limits(settings),
+                cpu_slot=_job_slot(request.app.state.validation_semaphore, deadline),
+            )
     except UploadError as exc:
         raise AppError(ErrorCode(exc.code), exc.detail) from exc
+    except TimeoutError as exc:
+        raise AppError(ErrorCode.PROCESSING_TIMEOUT) from exc
 
     with upload:
         async with _job_slot(request.app.state.job_semaphore, deadline):
@@ -155,15 +167,21 @@ async def convert(
     responses={
         200: {"description": "Wynik weryfikacji: JSON Schema i reguły R01-R15, bez autonaprawy"},
         422: {"model": ProblemDetail, "description": "Ciało nie jest obiektem JSON"},
+        503: problem_doc("SERVER_BUSY: serwer przetwarza inne żądania (nagłówek Retry-After)"),
     },
 )
 async def validate(
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
     form: Annotated[
         dict[str, Any], Body(description="Konfiguracja formularza w formacie importu (spec §7)")
     ],
 ) -> dict[str, Any]:
     """Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`."""
-    checked = await anyio.to_thread.run_sync(partial(verify_form, form, autofix=False))
+    deadline = time.monotonic() + settings.request_timeout_s
+    # Wątku nie da się przerwać, więc limit czasu dotyczy czekania na miejsce w semaforze.
+    async with _job_slot(request.app.state.validation_semaphore, deadline):
+        checked = await anyio.to_thread.run_sync(partial(verify_form, form, autofix=False))
     return {
         "valid": checked.valid,
         "errors": [issue.to_dict() for issue in checked.errors],

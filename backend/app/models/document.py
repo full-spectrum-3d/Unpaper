@@ -18,7 +18,8 @@ BlockKind = Literal[
 ExtractionMethod = Literal["pdf_text", "ocr", "docx", "xlsx"]
 
 FIELD_MARKER = "[POLE]"
-_FILL_RUN = re.compile(r"[.…_]{3,}")
+FILL_RUN = re.compile(r"[.…_]{3,}")
+"""Ciąg kropek, wielokropków lub podkreślników - miejsce do wpisania w blankiecie."""
 _WHITESPACE = re.compile(r"\s+")
 _BOILERPLATE = re.compile(
     r"(?i)klauzula informacyjna|obowiązek informacyjny|\bRODO\b|ochron\w* danych osobowych"
@@ -175,7 +176,7 @@ def _ends_boilerplate(block: Block) -> bool:
     """Klauzulę kończy inny nagłówek albo miejsce na dane (pole formularza)."""
     if block.kind == "heading":
         return not _SENTENCE_END.search(block.text)
-    return block.kind == "input_placeholder" or bool(_FILL_RUN.search(block.text))
+    return block.kind == "input_placeholder" or bool(FILL_RUN.search(block.text))
 
 
 def _is_page_header(line: str) -> bool:
@@ -223,7 +224,7 @@ def _collapse_repeats(lines: list[str]) -> list[str]:
 
 
 def _clean(text: str) -> str:
-    text = _FILL_RUN.sub(f" {FIELD_MARKER} ", text)
+    text = FILL_RUN.sub(f" {FIELD_MARKER} ", text)
     return _WHITESPACE.sub(" ", text).strip()
 
 

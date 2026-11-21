@@ -83,6 +83,7 @@ markers = [
     "llm: wymaga działającej Ollamy",
     "converter: wymaga LibreOffice (soffice)",
     "ocr: wymaga Tesseracta z danymi `pol`",
+    "libmagic: wymaga biblioteki libmagic (python-magic); pomijany, gdy jej brak",
 ]
 addopts = "-m 'not llm and not converter and not ocr'"
 # Domyślne norecursedirs pomija katalogi `build` (tests/unit/build).

@@ -6,7 +6,7 @@ Uruchomienie: `uvicorn app.main:create_app --factory`.
 import asyncio
 import logging
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, FastAPI
@@ -51,6 +51,9 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
         yield
     finally:
         app.state.warm_up_task.cancel()
+        # Zadanie musi się zakończyć przed zamknięciem klienta, którego używa.
+        with suppress(asyncio.CancelledError):
+            await app.state.warm_up_task
         await client.aclose()
 
 
@@ -63,10 +66,15 @@ def create_app(
     settings = settings or load_settings()
     configure_logging(settings.log_level)
 
+    # Na produkcji bez /docs, /redoc i /openapi.json; eksport schematu woła `app.openapi()`.
+    docs = settings.app_env != "production"
     app = FastAPI(
         title="COI - Cyfryzacja formularzy",
         version="0.1.0",
         lifespan=_lifespan,
+        docs_url="/docs" if docs else None,
+        redoc_url="/redoc" if docs else None,
+        openapi_url="/openapi.json" if docs else None,
         # Body JSON jest czytane przed `require_auth`: bez limitu anonim może wysłać
         # dowolnie duże żądanie. +1 MiB na narzut multipart (jak `client_max_body_size` w nginx).
         max_body_size=(settings.max_file_size_mb + 1) * 1024 * 1024,
@@ -76,8 +84,12 @@ def create_app(
     app.state.converter = find_converter(settings) if converter == "auto" else converter
     # Limit równoległych konwersji (spec §10.2): Ollama na CPU i tak liczy po kolei.
     app.state.job_semaphore = asyncio.Semaphore(settings.max_concurrent_jobs)
+    # Osobny, większy limit na walidację CPU (upload, /forms/validate): nie czeka za LLM.
+    app.state.validation_semaphore = asyncio.Semaphore(settings.max_concurrent_jobs * 2)
 
     install_error_handlers(app)
+    # Wewnątrz CORS: request_id i konwersja wyjątków na 500 problem+json z nagłówkami CORS.
+    app.middleware("http")(request_id_middleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -85,8 +97,6 @@ def create_app(
         allow_headers=["Authorization", "Content-Type", REQUEST_ID_HEADER],
         expose_headers=[REQUEST_ID_HEADER, "X-Conversion-Warnings"],
     )
-    # Dodany jako ostatni = najbardziej zewnętrzny: request_id jest dostępny wszędzie.
-    app.middleware("http")(request_id_middleware)
 
     public_routers: list[APIRouter] = [health.router]
     if settings.token_issuing_enabled:

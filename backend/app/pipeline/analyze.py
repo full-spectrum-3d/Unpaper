@@ -8,6 +8,7 @@ i formularz zbuduje się bez szkicu.
 """
 
 import logging
+import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -15,6 +16,7 @@ from functools import cache
 from importlib.resources import files
 from typing import Literal
 
+import anyio
 from pydantic import ValidationError
 
 from app.core.config import Settings
@@ -39,7 +41,9 @@ logger = logging.getLogger(__name__)
 FallbackReason = Literal["timeout", "unavailable", "invalid_output", "empty_document"]
 
 MIN_CALL_BUDGET_S = 30
-CHARS_PER_TOKEN = 3
+# Polski tekst tokenizuje się gęściej niż angielski; za duży fragment Ollama obcina od początku.
+CHARS_PER_TOKEN = 2.2
+CONTEXT_WARN_RATIO = 0.95
 RESPONSE_RESERVE_TOKENS = 2048
 MIN_CHUNK_CHARS = 1000
 RETRY_BUDGET_FACTOR = 1.2
@@ -126,8 +130,18 @@ def _use_rule_draft(doc: DocumentModel, result: AnalysisResult) -> None:
     result.warnings.extend(warnings)
 
 
+_CLOSING_TAG = re.compile(r"</\s*dokument\s*>", re.IGNORECASE)
+
+
 def _document(text: str) -> str:
-    return f"<dokument>\n{text}\n</dokument>"
+    # Zamykający tag w treści nie może "wyjść" z dokumentu (prompt injection).
+    return f"<dokument>\n{_CLOSING_TAG.sub('[/dokument]', text)}\n</dokument>"
+
+
+def _log_invalid(message: str, exc: ValidationError) -> None:
+    """Loguje tylko liczbę i miejsca błędów - `input_value` zawiera treść dokumentu (PII)."""
+    locs = [".".join(str(part) for part in e["loc"]) for e in exc.errors(include_url=False)]
+    logger.warning("%s: %d błędów, miejsca=%s", message, exc.error_count(), locs[:20])
 
 
 async def analyze(
@@ -144,7 +158,7 @@ async def analyze(
     try:
         result = await _analyze(doc, settings, client, result, deadline, clock)
         if result.fallback and result.fallback_reason != "empty_document":
-            _use_rule_draft(doc, result)
+            await anyio.to_thread.run_sync(_use_rule_draft, doc, result)
         return result
     finally:
         logger.info(
@@ -171,7 +185,9 @@ async def _analyze(
         return result._fail("empty_document")
 
     prefix_chars = sum(len(m["content"]) for m in prompt_messages(""))
-    max_chars = (settings.llm_num_ctx - RESPONSE_RESERVE_TOKENS) * CHARS_PER_TOKEN - prefix_chars
+    max_chars = (
+        int((settings.llm_num_ctx - RESPONSE_RESERVE_TOKENS) * CHARS_PER_TOKEN) - prefix_chars
+    )
     max_chars = min(max_chars, settings.llm_max_chunk_chars)
     chunks = split_prompt_text(text, max(max_chars, MIN_CHUNK_CHARS))
     if len(chunks) == 1:
@@ -182,9 +198,9 @@ async def _analyze(
         return result._fail(outcome)
 
     try:
-        result.draft, warnings = normalize_draft(outcome, doc)
-    except ValidationError:
-        logger.exception("normalizacja dała niepoprawny szkic")
+        result.draft, warnings = await anyio.to_thread.run_sync(normalize_draft, outcome, doc)
+    except ValidationError as exc:
+        _log_invalid("normalizacja dała niepoprawny szkic", exc)
         return result._fail("invalid_output")
     result.warnings.extend(warnings)
     return result
@@ -264,9 +280,9 @@ async def _chunked(
         if failure == "timeout":
             break
     try:
-        return merge_drafts(drafts)
-    except ValidationError:
-        logger.exception("łączenie fragmentów dało niepoprawny szkic")
+        return await anyio.to_thread.run_sync(merge_drafts, drafts)
+    except ValidationError as exc:
+        _log_invalid("łączenie fragmentów dało niepoprawny szkic", exc)
         return "invalid_output"
 
 
@@ -295,12 +311,22 @@ async def _call(
         logger.warning("model niedostępny: %s", exc)
         return "unavailable"
     result._add(reply)
+    if reply.prompt_tokens >= settings.llm_num_ctx * CONTEXT_WARN_RATIO:
+        logger.warning(
+            "prompt zajął %d z %d tokenów kontekstu - Ollama mogła obciąć początek",
+            reply.prompt_tokens,
+            settings.llm_num_ctx,
+        )
     try:
-        draft, warnings = repair_draft(LlmDraft.model_validate_json(reply.content))
+        draft, warnings = await anyio.to_thread.run_sync(_validate_reply, reply.content)
     except ValidationError as exc:
         return reply, exc
     result.warnings.extend(warnings)
     return reply, draft
+
+
+def _validate_reply(content: str) -> tuple[FormDraft, list[ConversionWarning]]:
+    return repair_draft(LlmDraft.model_validate_json(content))
 
 
 def _retry_message(error: ValidationError) -> str:

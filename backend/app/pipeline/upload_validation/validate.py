@@ -12,6 +12,7 @@ wtedy odszyfrowaną kopię, a oryginał można zamknąć.
 """
 
 from collections.abc import AsyncIterable
+from contextlib import AbstractAsyncContextManager, nullcontext
 from dataclasses import dataclass
 from types import TracebackType
 from typing import IO, Self
@@ -77,12 +78,14 @@ async def accept_upload(
     limits: UploadLimits,
     *,
     tmp_dir: str | None = None,
+    cpu_slot: AbstractAsyncContextManager[object] | None = None,
 ) -> ValidatedUpload:
     """Odbiera jedyny plik z pola `file` żądania multipart i waliduje go w całości.
 
     `chunks` to np. `request.stream()` ze Starlette. Opcjonalne pole `password` w tym samym
     żądaniu odblokowuje dokument z hasłem. Sprawdzenia zawartości (libmagic, ZIP, PDFium,
-    Pillow, KDF) blokują, więc wykonujemy je w puli wątków.
+    Pillow, KDF) blokują, więc wykonujemy je w puli wątków - pod `cpu_slot` (np. semafor
+    limitu równoległości), odbiór strumienia nie zajmuje miejsca w limicie.
     """
     received = await receive_single_file(
         chunks,
@@ -93,15 +96,16 @@ async def accept_upload(
         tmp_dir=tmp_dir,
     )
     try:
-        upload = await anyio.to_thread.run_sync(
-            lambda: validate_file(
-                received.filename,
-                received.file,
-                limits,
-                password=received.password,
-                tmp_dir=tmp_dir,
+        async with cpu_slot or nullcontext():
+            upload = await anyio.to_thread.run_sync(
+                lambda: validate_file(
+                    received.filename,
+                    received.file,
+                    limits,
+                    password=received.password,
+                    tmp_dir=tmp_dir,
+                )
             )
-        )
     except BaseException:
         received.close()
         raise

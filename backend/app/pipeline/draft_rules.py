@@ -9,9 +9,8 @@ import re
 from collections.abc import Iterable
 from difflib import SequenceMatcher
 
-from app.models.document import FIELD_MARKER, Block, DocumentModel
+from app.models.document import FIELD_MARKER, FILL_RUN, Block, DocumentModel
 
-_FILL = re.compile(r"[.…_]{3,}")
 _WHITESPACE = re.compile(r"\s+")
 _WORD = re.compile(r"[\w-]+")
 _NUMBERING = re.compile(r"^\s*(\d{1,2}[.)]|[a-z][.)/]|[-\u2013\u2022])\s*")
@@ -103,12 +102,12 @@ _LEADING_POSITION = re.compile(r"^[\W\d]+")
 
 def clean_text(text: str) -> str:
     """Tekst bez wypełnień i znacznika pola, z pojedynczymi spacjami."""
-    text = _FILL.sub(" ", text.replace(FIELD_MARKER, " "))
+    text = FILL_RUN.sub(" ", text.replace(FIELD_MARKER, " "))
     return _WHITESPACE.sub(" ", text).strip()
 
 
 def has_fill(block: Block) -> bool:
-    return block.kind == "input_placeholder" or bool(_FILL.search(block.text))
+    return block.kind == "input_placeholder" or bool(FILL_RUN.search(block.text))
 
 
 def statements_from_document(doc: DocumentModel) -> list[str]:

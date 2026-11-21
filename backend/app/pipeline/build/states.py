@@ -119,10 +119,10 @@ def query_references(query: str) -> tuple[set[str], set[str]]:
     names: set[str] = set()
     for match in _LITERAL.finditer(query):
         text = _unescape(match.group(1) if match.group(1) is not None else match.group(2))
-        tail = query[match.end() :]
-        if tail.startswith(" in title"):
+        end = match.end()  # startswith z pozycją: bez kopiowania reszty zapytania
+        if query.startswith(" in title", end):
             titles.add(text)
-        elif tail.startswith((" in field.techName", " in fieldTechName")):
+        elif query.startswith((" in field.techName", " in fieldTechName"), end):
             names.add(text)
     return titles, names
 

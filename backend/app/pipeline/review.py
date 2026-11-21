@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import Any
 
-from app.models.document import Block, DocumentModel, Page
+from app.models.document import FILL_RUN, Block, DocumentModel, Page
 from app.models.draft import DraftField, FormDraft
 from app.models.form import SECTION_TYPES, FieldType
 from app.models.warning import ConversionWarning
@@ -30,7 +30,6 @@ RULE_BASED_FACTOR = 0.85
 
 _SUBJECT_KEY = re.compile(r"^p(\d+)(?:_\d+)?\.s(\d+)\.f(\d+)$")
 _ATTACHMENT_KEY = re.compile(r"^zalaczniki\.zalacznik_(\d+)")
-_FILL = re.compile(r"[.…_]{3,}")
 _WHITESPACE = re.compile(r"\s+")
 _NOT_REVIEWED = frozenset({FieldType.TEXT_BLOCK, FieldType.INFO_SECTION})
 
@@ -74,7 +73,7 @@ class _Score:
 
 
 def _norm(text: str) -> str:
-    return _WHITESPACE.sub(" ", _FILL.sub(" ", text.casefold())).strip()
+    return _WHITESPACE.sub(" ", FILL_RUN.sub(" ", text.casefold())).strip()
 
 
 def _level(score: float) -> str:
@@ -131,7 +130,7 @@ class _Locator:
 
 
 def _source(found: _Located) -> dict[str, Any]:
-    text = _WHITESPACE.sub(" ", _FILL.sub(" … ", found.block.text)).strip()
+    text = _WHITESPACE.sub(" ", FILL_RUN.sub(" … ", found.block.text)).strip()
     if len(text) > SOURCE_TEXT_LIMIT:
         text = text[: SOURCE_TEXT_LIMIT - 1].rstrip() + "…"
     source: dict[str, Any] = {"page": found.page.number, "blockId": found.block.id, "text": text}

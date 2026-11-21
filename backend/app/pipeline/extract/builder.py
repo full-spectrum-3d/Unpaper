@@ -24,6 +24,12 @@ class DocumentBuilder:
         self._pages.append([])
         self._sizes.append(size if size and size[0] > 0 and size[1] > 0 else None)
 
+    def rotate_page(self) -> None:
+        """Bieżąca strona obrócona o 90°: zamiana szerokości z wysokością."""
+        size = self._sizes[-1]
+        if size is not None:
+            self._sizes[-1] = (size[1], size[0])
+
     def ensure_new_page(self) -> None:
         """Nowa strona, chyba że bieżąca jest jeszcze pusta (dwa podziały z rzędu)."""
         if not self._pages or self._pages[-1]:

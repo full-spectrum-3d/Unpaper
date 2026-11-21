@@ -538,6 +538,16 @@
             },
             "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne `identitySource`; model spoza LLM_MODELS"
           },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "SERVER_BUSY: serwer przetwarza inne pliki (nagłówek Retry-After)"
+          },
           "504": {
             "content": {
               "application/problem+json": {
@@ -619,6 +629,16 @@
               }
             },
             "description": "Ciało nie jest obiektem JSON"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "SERVER_BUSY: serwer przetwarza inne żądania (nagłówek Retry-After)"
           }
         },
         "security": [
@@ -676,7 +696,7 @@
                 }
               }
             },
-            "description": "LLM_UNAVAILABLE: serwer modelu nieosiągalny albo brak modelu"
+            "description": "LLM_UNAVAILABLE: serwer modelu nieosiągalny albo brak modelu; SERVICE_UNAVAILABLE: brak libmagic albo Tesseracta w obrazie"
           }
         },
         "summary": "Ready",

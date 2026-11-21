@@ -11,6 +11,7 @@ i wskazują ścieżkę oraz id pola.
 """
 
 from collections.abc import Iterator
+from functools import cache
 from typing import Annotated, Any, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
@@ -144,6 +145,10 @@ class LlmDraft(_LlmModel):
     subject_pages: list[LlmPage]
 
 
+@cache
 def llm_schema() -> dict[str, Any]:
-    """JSON Schema odpowiedzi modelu przekazywany do Ollamy w parametrze `format`."""
+    """JSON Schema odpowiedzi modelu przekazywany do Ollamy w parametrze `format`.
+
+    Wynik jest współdzielony (cache) - nie modyfikować.
+    """
     return LlmDraft.model_json_schema()

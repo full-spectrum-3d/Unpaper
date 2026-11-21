@@ -79,14 +79,17 @@ def test_merge_renumbers_and_remaps_conditions() -> None:
     assert fields[1].visible_when[0].field_id == "f1"
 
 
-def test_merge_dedupes_by_label() -> None:
+def test_merge_keeps_same_labels_across_chunks() -> None:
+    # fragmenty się nie nakładają: pola drugiej osoby nie mogą zniknąć
     merged = merge_drafts(
         [
             _draft("Strona A", [_field("f1", "Miejscowość")]),
             _draft("Strona B", [_field("f1", " miejscowość "), _field("f2", "Ulica")]),
         ]
     )
-    assert [f.label for _, f in merged.iter_fields()] == ["Miejscowość", "Ulica"]
+    fields = [f for _, f in merged.iter_fields()]
+    assert [f.label for f in fields] == ["Miejscowość", " miejscowość ", "Ulica"]
+    assert [f.id for f in fields] == ["f1", "f2", "f3"]
 
 
 def test_merge_joins_same_titled_pages_and_takes_first_meta() -> None:
@@ -120,11 +123,11 @@ def test_merge_keeps_repeated_labels_within_one_draft() -> None:
         }
     )
     merged = merge_drafts([draft, _draft("P", [_field("f1", "Ulica")])])
-    assert [s.title for s in merged.subject_pages[0].sections] == ["Budynek", "Działka"]
-    assert len(list(merged.iter_fields())) == 2
+    assert [s.title for s in merged.subject_pages[0].sections] == ["Budynek", "Działka", "S"]
+    assert len(list(merged.iter_fields())) == 3
 
 
-def test_merge_drops_condition_on_non_choice_duplicate() -> None:
+def test_merge_condition_targets_field_from_same_chunk() -> None:
     first = _draft("A", [_field("f1", "Typ", options=["a", "b"])])
     second = _draft(
         "B",
@@ -134,5 +137,6 @@ def test_merge_drops_condition_on_non_choice_duplicate() -> None:
         ],
     )
     merged = merge_drafts([first, second])
-    opis = next(f for _, f in merged.iter_fields() if f.label == "Opis")
-    assert opis.visible_when == []
+    fields = [f for _, f in merged.iter_fields()]
+    assert [f.id for f in fields] == ["f1", "f2", "f3"]
+    assert fields[2].visible_when[0].field_id == "f2"

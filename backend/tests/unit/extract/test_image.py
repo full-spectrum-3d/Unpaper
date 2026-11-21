@@ -55,14 +55,53 @@ def test_ocr_words_become_blocks() -> None:
 
 
 def test_dpi_from_metadata_scales_bbox() -> None:
-    engine = FakeOcr([[word("Tekst", 100, 100)]])
-    doc, _ = extract_image(png(800, 1100, dpi=(100, 100)), engine, max_pages=30, check=no_check)
+    engine = FakeOcr([[word("Tekst", 300, 100)]])
+    doc, _ = extract_image(png(800, 1100, dpi=(300, 300)), engine, max_pages=30, check=no_check)
     bbox = doc.pages[0].blocks[0].bbox
     assert bbox is not None and round(bbox.x0, 2) == 72.0
 
 
 def test_dpi_without_metadata_assumes_a4_width() -> None:
     assert round(image_dpi(Image.new("L", (1654, 2339)))) == 200
+
+
+def test_camera_default_dpi_ignored() -> None:
+    for dpi in (72, 96, 100):
+        image = Image.new("L", (1654, 2339))
+        image.info["dpi"] = (dpi, dpi)
+        assert round(image_dpi(image)) == 200
+
+
+def test_dpi_guessed_after_exif_rotation() -> None:
+    # Zdjęcie w poziomie z EXIF „obróć o 90°”: szerokość strony to krótszy bok.
+    image = Image.new("RGB", (2339, 1654), "white")
+    exif = image.getexif()
+    exif[0x0112] = 6
+    buffer = io.BytesIO()
+    image.save(buffer, format="JPEG", exif=exif)
+    buffer.seek(0)
+    doc, _ = extract_image(buffer, FakeOcr(), max_pages=30, check=no_check)
+    page = doc.pages[0]
+    assert page.width is not None and page.height is not None
+    assert (round(page.width), round(page.height)) == (595, 842)
+
+
+def test_osd_rotation_applies_to_page_size_and_frames() -> None:
+    # Skan leży na boku; silnik obraca go do pionu - strona i ramki w układzie obróconym.
+    from PIL import ImageDraw
+
+    image = Image.new("L", (2339, 1654), 255)
+    ImageDraw.Draw(image).rectangle((200, 500, 260, 1400), outline=0, width=3)
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG", dpi=(200, 200))
+    buffer.seek(0)
+    engine = FakeOcr([[word("Miejscowość", 20, 215, 200)]], rotate=-90)
+    doc, _ = extract_image(buffer, engine, max_pages=30, check=no_check)
+    page = doc.pages[0]
+    assert engine.sizes == [(1654, 2339)]
+    assert page.width is not None and page.height is not None
+    assert page.width < page.height
+    assert ("input_placeholder", "") in kinds(doc)
 
 
 def test_failed_page_recorded() -> None:
@@ -133,9 +172,25 @@ def test_dotted_leader_detected() -> None:
 
 
 def test_page_size_matches_bbox_units() -> None:
-    # 144 dpi to 2 piksele na punkt: strona 400 na 200 px ma 200 na 100 pt.
-    doc, _ = extract_image(png(400, 200, dpi=(144, 144)), FakeOcr(), max_pages=30, check=no_check)
+    # 288 dpi to 4 piksele na punkt: strona 800 na 400 px ma 200 na 100 pt.
+    doc, _ = extract_image(png(800, 400, dpi=(288, 288)), FakeOcr(), max_pages=30, check=no_check)
     page = doc.pages[0]
     assert page.width is not None and page.height is not None
     # PNG zapisuje rozdzielczość w pikselach na metr, stąd niewielkie zaokrąglenie.
     assert (round(page.width), round(page.height)) == (200, 100)
+
+
+def test_tesseract_timeout_capped_by_deadline() -> None:
+    import pytest
+
+    from app.pipeline.extract.image import OcrUnavailableError, TesseractOcr
+
+    now = [100.0]
+    ocr = TesseractOcr("pol", deadline=110.0, clock=lambda: now[0])
+    assert ocr._timeout() == 10.0
+    now[0] = 30.0
+    assert ocr._timeout() == 60
+    now[0] = 111.0
+    with pytest.raises(OcrUnavailableError):
+        ocr._timeout()
+    assert TesseractOcr("pol")._timeout() == 60

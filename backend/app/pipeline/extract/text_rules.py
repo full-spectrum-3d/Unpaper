@@ -6,12 +6,13 @@ którymi Word i PDF-y z Worda rysują kratki), wykropkowania i nagłówki.
 
 import re
 
+from app.models.document import FILL_RUN
+
 CHECKBOX_GLYPHS = frozenset(
     "☐□■▢◻❑❒☑☒"
     # Wingdings / Symbol w obszarze prywatnym: kratki, kółka, „ptaszki”.
     ""
 )
-FILL_RUN = re.compile(r"[.…_]{3,}")
 
 HEADING_MAX_CHARS = 150
 HEADING_SIZE_RATIO = 1.15

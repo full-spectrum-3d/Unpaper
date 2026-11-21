@@ -15,6 +15,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
 FROM python:3.14-alpine3.22@sha256:6b91e66ab2a880ce9ca5a1b91c70f45963ff71ff68268df056336e1a657d5efd AS runtime
+# Pakiety apk bez wersji celowo: repozytorium Alpine trzyma tylko bieżącą wersję w gałęzi
+# 3.22, więc przypięta wersja przestaje się budować po pierwszej łatce bezpieczeństwa.
+# Powtarzalność daje obraz bazowy przypięty digestem; łatki wchodzą przy przebudowie.
 # Ta warstwa zależy tylko od obrazu bazowego, więc zostaje w cache. Nie zmieniaj tekstu polecenia
 # bez potrzeby: każda zmiana instaluje od nowa ~270 pakietów (LibreOffice).
 RUN apk add --no-cache tesseract-ocr tesseract-ocr-data-pol libmagic \
