@@ -8,6 +8,8 @@ const MESSAGES: Record<string, string> = {
   INVALID_TOKEN: 'Sesja wygasła, zaloguj się ponownie',
   FORBIDDEN: 'Brak uprawnień',
   VALIDATION_ERROR: 'Uzupełnij login i hasło',
+  LLM_UNAVAILABLE: 'Usługa analizy formularzy jest chwilowo niedostępna. Spróbuj ponownie.',
+  PROCESSING_TIMEOUT: 'Przetwarzanie trwało zbyt długo. Spróbuj ponownie.',
 };
 
 export function toUserMessage(error: HttpErrorResponse): string {

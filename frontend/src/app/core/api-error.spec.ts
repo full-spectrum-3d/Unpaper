@@ -11,6 +11,8 @@ describe('toUserMessage', () => {
     ['INVALID_TOKEN', 'Sesja wygasła, zaloguj się ponownie'],
     ['FORBIDDEN', 'Brak uprawnień'],
     ['VALIDATION_ERROR', 'Uzupełnij login i hasło'],
+    ['LLM_UNAVAILABLE', 'Usługa analizy formularzy jest chwilowo niedostępna. Spróbuj ponownie.'],
+    ['PROCESSING_TIMEOUT', 'Przetwarzanie trwało zbyt długo. Spróbuj ponownie.'],
   ])('maps %s', (code, message) => {
     expect(toUserMessage(err(400, { code, detail: 'x' }))).toBe(message);
   });
