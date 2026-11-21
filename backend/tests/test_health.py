@@ -1,20 +1,27 @@
 from typing import Any
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.core.config import Settings
 from app.main import create_app
+from app.pipeline import converter as converter_module
+from app.pipeline.converter import LibreOfficeConverter
 from app.pipeline.llm_client import LlmUnavailableError
-from tests.unit.fakes import FakeLlmClient
+from tests.unit.fakes import FakeLlmClient, FakeRunner
+
+_CONVERTER = LibreOfficeConverter("soffice", 60, FakeRunner())
 
 
 def _settings() -> Settings:
     return Settings(app_env="development", auth_enabled=False, _env_file=None)
 
 
-def _ready(models: set[str] | Exception) -> Any:
+def _ready(
+    models: set[str] | Exception, converter: LibreOfficeConverter | None = _CONVERTER
+) -> Any:
     fake = FakeLlmClient(models=models)
-    with TestClient(create_app(_settings(), llm_client=fake)) as client:
+    with TestClient(create_app(_settings(), llm_client=fake, converter=converter)) as client:
         return client.get("/api/v1/health/ready"), fake
 
 
@@ -33,6 +40,27 @@ def test_ready_degraded() -> None:
     response, _ = _ready({"qwen3:8b"})
     assert response.status_code == 200
     assert response.json() == {"status": "ok", "degraded": ["fast"]}
+
+
+def test_ready_degraded_converter() -> None:
+    response, _ = _ready({"qwen3:8b", "qwen3:4b"}, converter=None)
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok", "degraded": ["converter"]}
+
+
+def test_ready_degraded_mode_and_converter() -> None:
+    response, _ = _ready({"qwen3:8b"}, converter=None)
+    assert response.status_code == 200
+    assert response.json()["degraded"] == ["fast", "converter"]
+
+
+def test_create_app_detects_converter(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(converter_module.shutil, "which", lambda _name: None)
+    assert create_app(_settings(), llm_client=FakeLlmClient()).state.converter is None
+
+    monkeypatch.setattr(converter_module.shutil, "which", lambda name: f"/usr/bin/{name}")
+    found = create_app(_settings(), llm_client=FakeLlmClient()).state.converter
+    assert isinstance(found, LibreOfficeConverter)
 
 
 def test_ready_default_model_missing() -> None:

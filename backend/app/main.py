@@ -7,7 +7,7 @@ import asyncio
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,6 +21,7 @@ from app.core.errors import (
     request_id_middleware,
 )
 from app.core.security import require_auth
+from app.pipeline.converter import Converter, find_converter
 from app.pipeline.llm_client import LlmClient, LlmError, OllamaClient
 
 API_PREFIX = "/api/v1"
@@ -51,12 +52,18 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
         await client.aclose()
 
 
-def create_app(settings: Settings | None = None, llm_client: LlmClient | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    llm_client: LlmClient | None = None,
+    converter: Converter | Literal["auto"] | None = "auto",
+) -> FastAPI:
+    """`converter="auto"`: szukamy `soffice` w PATH; `None` = Plan B (DOC/ODS → 415)."""
     settings = settings or load_settings()
 
     app = FastAPI(title="COI - Cyfryzacja formularzy", version="0.1.0", lifespan=_lifespan)
     app.state.settings = settings
     app.state.llm_client = llm_client
+    app.state.converter = find_converter(settings) if converter == "auto" else converter
 
     install_error_handlers(app)
     app.add_middleware(
