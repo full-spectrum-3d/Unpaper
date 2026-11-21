@@ -1,7 +1,13 @@
 import pytest
 
 from app.models.document import DocumentModel
-from app.pipeline.draft_rules import applicant_field_reason, covered_by, statements_from_document
+from app.pipeline.draft_rules import (
+    applicant_field_reason,
+    covered_by,
+    is_statement,
+    statements_from_document,
+    variant_choices,
+)
 
 
 def _doc(*blocks: tuple[str, str]) -> DocumentModel:
@@ -110,3 +116,55 @@ def test_covered_by_tolerates_typos() -> None:
     assert (
         covered_by("W czasie najmu odpowiadam za ład i porządek na terenie przyległym", text) > 0.9
     )
+
+
+@pytest.mark.parametrize(
+    ("label", "context"),
+    [
+        ("Miejscowość", ["Adres zamieszkania"]),
+        ("Nr domu", ["Adres siedziby lub miejsca zamieszkania wnioskodawcy"]),
+        ("Kod pocztowy", ["B.4 Adres do korespondencji"]),
+        ("Województwo", ["Dane wnioskodawcy"]),
+        ("Adres poczty elektronicznej", ["Dane kontaktowe"]),
+    ],
+)
+def test_address_parts_in_applicant_section_detected(label: str, context: list[str]) -> None:
+    assert applicant_field_reason(label, context)
+
+
+@pytest.mark.parametrize(
+    ("label", "context"),
+    [
+        ("Miejscowość", ["Adres nieruchomości"]),
+        ("Ulica", ["Lokalizacja pasa drogowego"]),
+        ("Kod pocztowy", ["Dane identyfikacyjne współmałżonka"]),
+        ("Nr domu", ["Adres zamieszkania pełnomocnika"]),
+        ("Rasa psa", ["Dane wnioskodawcy"]),
+    ],
+)
+def test_address_parts_elsewhere_kept(label: str, context: list[str]) -> None:
+    assert applicant_field_reason(label, context) is None
+
+
+def test_statement_after_position_number_is_a_field() -> None:
+    doc = _doc(
+        ("paragraph", "35."),
+        ("paragraph", "Oświadczam, że nieruchomość wyposażona jest w kompostownik."),
+        ("paragraph", "Oświadczam, że dane są prawdziwe."),
+    )
+    assert statements_from_document(doc) == ["Oświadczam, że dane są prawdziwe."]
+
+
+def test_is_statement() -> None:
+    assert is_statement("2. Oświadczam, że psy nie będą wykorzystywane do polowań")
+    assert not is_statement("Data szczepienia")
+
+
+def test_variant_choices() -> None:
+    doc = _doc(
+        ("paragraph", "o wynajęcie/użyczenie* świetlicy wiejskiej"),
+        ("paragraph", "Proszę o wynajem/użyczenie* świetlicy"),
+        ("paragraph", "hodowanie/utrzymywanie* charta/chartów*"),
+        ("paragraph", "metryka**, zapoznałem/am się, imię/nazwisko*"),
+    )
+    assert variant_choices(doc) == [["wynajęcie", "użyczenie"], ["hodowanie", "utrzymywanie"]]

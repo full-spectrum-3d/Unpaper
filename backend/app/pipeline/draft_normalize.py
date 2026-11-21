@@ -10,16 +10,24 @@ from difflib import SequenceMatcher
 from typing import Any
 
 from app.models.document import FIELD_MARKER, DocumentModel
-from app.models.draft import FormDraft
+from app.models.draft import CHOICE_KINDS, FormDraft
 from app.models.warning import ConversionWarning
 from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
 from app.pipeline.draft_rules import (
     applicant_field_reason,
     covered_by,
+    is_statement,
+    same_stem,
     statements_from_document,
+    variant_choices,
 )
 
 STATEMENT_FIELD_COVERAGE = 0.8
+# Pole innego typu niż `info` uznajemy za oświadczenie tylko przy dłuższej etykiecie:
+# krótkie etykiety („Rasa psa”) przypadkowo pokrywają się z tekstem oświadczeń.
+MIN_STATEMENT_LABEL_CHARS = 25
+VARIANT_PAGE_TITLE = "Przedmiot wniosku"
+VARIANT_SECTION_TITLE = "Rodzaj sprawy"
 LABEL_MATCH_THRESHOLD = 0.6
 UPPERCASE_TITLE_RATIO = 0.8
 ABBREVIATIONS = frozenset({"NIP", "PESEL", "REGON", "KRS", "RODO", "CEIDG", "VAT"})
@@ -53,6 +61,7 @@ def normalize_draft(
     _remove_unnamed_attachments(data, warnings)
     data["statements"] = statements_from_document(doc)
     _remove_statement_fields(data, warnings)
+    _add_variant_choices(data, doc, warnings)
     repair_conditions(data, warnings)
     _normalize_title_case(data, warnings)
     _check_labels(data, doc_text, warnings)
@@ -192,16 +201,24 @@ def _remove_unnamed_attachments(data: dict[str, Any], warnings: list[ConversionW
 
 
 def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
-    """Pole informacyjne z treścią oświadczenia dubluje zgodę w sekcji zgód - usuwamy je."""
+    """Pole z treścią oświadczenia dubluje zgodę w sekcji zgód - usuwamy je.
+
+    Model zapisuje oświadczenia jako pola `info`, ale też jako wybór Tak/Nie albo
+    pojedynczy checkbox. Pole innego typu usuwamy, gdy ma długą etykietę, która
+    zaczyna się jak oświadczenie albo pokrywa się z oświadczeniem z blankietu.
+    """
     statements = " ".join(data["statements"])
     if not statements:
         return
-    removed = {
-        id(field)
-        for _, field in iter_field_dicts(data)
-        if field["kind"] == "info"
-        and covered_by(field["label"], statements) >= STATEMENT_FIELD_COVERAGE
-    }
+
+    def is_statement_field(field: dict[str, Any]) -> bool:
+        label: str = field["label"]
+        covered = covered_by(label, statements) >= STATEMENT_FIELD_COVERAGE
+        if field["kind"] == "info":
+            return covered
+        return len(label) >= MIN_STATEMENT_LABEL_CHARS and (covered or is_statement(label))
+
+    removed = {id(field) for _, field in iter_field_dicts(data) if is_statement_field(field)}
     for path, field in iter_field_dicts(data):
         if id(field) in removed:
             warnings.append(
@@ -215,6 +232,63 @@ def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarn
     for page in data["subject_pages"]:
         for section in page["sections"]:
             section["fields"] = [f for f in section["fields"] if id(f) not in removed]
+
+
+def _add_variant_choices(
+    data: dict[str, Any], doc: DocumentModel, warnings: list[ConversionWarning]
+) -> None:
+    """Warianty do skreślenia („wynajęcie/użyczenie*”) jako pole wyboru, gdy model je pominął.
+
+    Pole tekstowe z wariantami w etykiecie zamieniamy na wybór; gdy nie ma żadnego,
+    dodajemy nowe na początku pierwszej sekcji.
+    """
+    fields = iter_field_dicts(data)
+    for variants in variant_choices(doc):
+        options = [v[:1].upper() + v[1:] for v in variants]
+
+        def mentions(text: str, variants: list[str] = variants) -> bool:
+            words = _WORD.findall(text)
+            return all(any(same_stem(v, w) for w in words) for v in variants)
+
+        if any(f["kind"] in CHOICE_KINDS and mentions(" ".join(f["options"])) for _, f in fields):
+            continue
+        label = " lub ".join([options[0], *variants[1:]])
+        text_field = next(
+            ((path, f) for path, f in fields if f["kind"] != "info" and mentions(f["label"])),
+            None,
+        )
+        if text_field is not None:
+            path, field = text_field
+            field.update(kind="single_choice", options=options)
+            message = f"Pole „{field['label']}” zamieniono na wybór: {', '.join(options)}."
+        else:
+            path = "subject_pages[0].sections[0].fields[0]"
+            field = {
+                "id": _next_id(data),
+                "label": label,
+                "kind": "single_choice",
+                "required": True,
+                "options": options,
+                "visible_when": [],
+            }
+            if not data["subject_pages"]:
+                data["subject_pages"].append({"title": VARIANT_PAGE_TITLE, "sections": []})
+            page = data["subject_pages"][0]
+            if not page["sections"]:
+                page["sections"].append(
+                    {"title": VARIANT_SECTION_TITLE, "repeating": False, "fields": []}
+                )
+            page["sections"][0]["fields"].insert(0, field)
+            fields = iter_field_dicts(data)
+            message = f"Dodano pole wyboru „{label}” z wariantów do skreślenia na blankiecie."
+        warnings.append(ConversionWarning(code="W27_VARIANT_CHOICE", message=message, path=path))
+
+
+def _next_id(data: dict[str, Any]) -> str:
+    numbers = [
+        int(f["id"][1:]) for _, f in iter_field_dicts(data) if re.fullmatch(r"f\d+", f["id"])
+    ]
+    return f"f{max(numbers, default=0) + 1}"
 
 
 def _normalize_title_case(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:

@@ -47,6 +47,26 @@ _SIGNATURE_WORDS = frozenset(
         "sporządzenia", "wnioskodawcy", "pieczątka", "pieczęć", "lub", "osoby", "upoważnionej",
     }
 )  # fmt: skip
+# Składowe adresu. Dublują sekcje predefiniowane tylko w sekcji o adresie lub danych
+# wnioskodawcy (np. „Miejscowość” w „Adres zamieszkania”), a nie w „Adres nieruchomości”.
+_ADDRESS_WORDS = frozenset(
+    {
+        "kraj", "województwo", "powiat", "gmina", "miejscowość", "miejscowości", "ulica", "ul",
+        "domu", "lokalu", "budynku", "kod", "pocztowy", "poczta", "pocztowa", "adres", "nr",
+        "numer", "i", "lub", "oraz", "/", "telefonu", "telefon", "e-mail", "email", "faks", "fax",
+        "tel", "poczty", "elektronicznej", "skrzynki", "epuap", "kontaktowy", "kontaktowe",
+    }
+)  # fmt: skip
+_APPLICANT_CONTEXT = re.compile(
+    r"(?i)wnioskodawc|składając|podmiotu zobowiązanego|dane identyfikacyjne|dane kontaktowe"
+    r"|dane do kontaktu|adres\w*\W+(\w+\W+){0,3}?(zamieszkania|siedziby|do korespondencji)"
+    r"|korespondencyjn"
+)
+# Numer pozycji przed oświadczeniem („35.”) w deklaracjach: to pole do zaznaczenia.
+_POSITION_NUMBER = re.compile(r"^\s*\d{1,3}\.?\s*$")
+# Warianty do skreślenia: „wynajęcie/użyczenie*”, „hodowanie/utrzymywanie*”.
+_VARIANTS = re.compile(r"(?<![\w/])(\w{3,}(?:/\w{3,})+)\s?\*(?!\*)")
+VARIANT_STEM = 4
 # Sekcja o innej osobie niż wnioskodawca: tam imię, adres czy telefon to przedmiot sprawy.
 _OTHER_PERSON = re.compile(
     r"(?i)\bosob(a|y|ie|ę|ą)\b|pełnomocni|właściciel|wykonawc|kierownik|inwestor|zmarł|dzieck|"
@@ -83,6 +103,7 @@ def statements_from_document(doc: DocumentModel) -> list[str]:
             or has_fill(block)
             or not _STATEMENT.search(text)
             or _DATA_CONSENT.search(text)
+            or (i >= 2 and _POSITION_NUMBER.match(blocks[i - 2].text))
         ):
             continue
         parts = [_NUMBERING.sub("", text)]
@@ -119,13 +140,49 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
         or ("data" in words and words & {"miejscowość", "złożenia", "sporządzenia"})
     ):
         return "miejsce i data złożenia oraz podpis są w sekcjach systemowych"
-    if not (words <= _PERSONAL_WORDS and words & _PERSONAL_KEYS):
-        return None
-    if not words & {"wnioskodawcy", "wnioskodawca"} and any(
-        _OTHER_PERSON.search(title) for title in context
+    titles = list(context)
+    other_person = any(_OTHER_PERSON.search(title) for title in titles)
+    if words <= _PERSONAL_WORDS and words & _PERSONAL_KEYS:
+        if not words & {"wnioskodawcy", "wnioskodawca"} and other_person:
+            return None
+        return "dane wnioskodawcy są w sekcjach predefiniowanych"
+    if (
+        words <= _ADDRESS_WORDS | _PERSONAL_WORDS
+        and not other_person
+        and any(_APPLICANT_CONTEXT.search(title) for title in titles)
     ):
-        return None
-    return "dane wnioskodawcy są w sekcjach predefiniowanych"
+        return "adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych"
+    return None
+
+
+def is_statement(text: str) -> bool:
+    """Czy tekst zaczyna się jak oświadczenie („Oświadczam, że…”, „2. Zobowiązuję się…”)."""
+    return bool(_STATEMENT.match(_NUMBERING.sub("", clean_text(text))))
+
+
+def variant_choices(doc: DocumentModel) -> list[list[str]]:
+    """Warianty do skreślenia z dokumentu („wynajęcie/użyczenie*”), bez form jednego słowa.
+
+    „charta/chartów*” to odmiana jednego wyrazu (wspólny rdzeń), a nie wybór.
+    Te same warianty w innej formie („wynajem/użyczenie*”) zwracamy raz.
+    """
+    out: list[list[str]] = []
+    seen: set[tuple[str, ...]] = set()
+    for _, block in doc.iter_content_blocks():
+        for match in _VARIANTS.finditer(block.text):
+            variants = match.group(1).split("/")
+            stems = tuple(v.casefold()[:VARIANT_STEM] for v in variants)
+            if len(set(stems)) < len(stems) or stems in seen:
+                continue
+            if any(v.casefold() in _PERSONAL_WORDS for v in variants):
+                continue
+            seen.add(stems)
+            out.append(variants)
+    return out
+
+
+def same_stem(a: str, b: str) -> bool:
+    return a.casefold()[:VARIANT_STEM] == b.casefold()[:VARIANT_STEM]
 
 
 def covered_by(needle: str, haystack: str) -> float:

@@ -59,6 +59,7 @@ def _fields(doc: DocumentModel) -> list[tuple[str, str, str]]:
 
 def test_fields_from_placeholders_skip_header_and_signature() -> None:
     assert _fields(SWIETLICA) == [
+        ("Dane wniosku", "Wynajęcie lub użyczenie", "single_choice"),
         ("Dane wniosku", "W terminie", "date"),
         ("Dane wniosku", "W terminie do", "date"),
         ("Dane wniosku", "Cel wynajęcia świetlicy", "short_text"),
@@ -99,3 +100,20 @@ def test_office_name_joined_with_place_and_company_applicants() -> None:
 
 def test_no_placeholders_gives_none() -> None:
     assert rule_draft(_doc(("heading", "WNIOSEK"), ("paragraph", "Proszę o coś."))) is None
+
+
+def test_options_become_one_choice_field() -> None:
+    doc = _doc(
+        ("heading", "WNIOSEK O ZWROT OPŁATY"),
+        ("paragraph", "Sposób zwrotu opłaty (postaw „x” w wybranym polu)"),
+        ("checkbox_option", "gotówką w kasie"),
+        ("checkbox_option", "przelewem"),
+        ("paragraph", "Nr rachunku: ……………"),
+    )
+    draft = rule_draft(doc)
+    assert draft is not None
+    fields = [f for _, f in draft.iter_fields()]
+    assert [(f.label, f.kind, f.options) for f in fields] == [
+        ("Sposób zwrotu opłaty", "single_choice", ["Gotówką w kasie", "Przelewem"]),
+        ("Nr rachunku", "short_text", []),
+    ]
