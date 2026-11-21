@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -203,6 +204,50 @@ describe('ValidatorPage', () => {
     fixture.detectChanges();
     expect(text()).toContain('Nie znaleziono wyniku do sprawdzenia. Wklej JSON ręcznie.');
     http.expectNone(URL);
+  });
+
+  it('resets the screen when item changes to an unknown id', () => {
+    const { fixture, el, http, field, text } = setup();
+    fixture.componentRef.setInput('item', 'd1');
+    fixture.detectChanges();
+    http.expectOne(URL).flush({ valid: true, errors: [], warnings: [] });
+    fixture.detectChanges();
+    fixture.componentRef.setInput('item', 'd2');
+    fixture.detectChanges();
+    const pending = http.expectOne(URL);
+    fixture.componentRef.setInput('item', 'nope');
+    fixture.detectChanges();
+    expect(pending.cancelled).toBe(true);
+    expect(field().value).toBe('');
+    expect(el.querySelector('h2')).toBeNull();
+    expect(el.querySelector('app-json-view')).toBeNull();
+    expect(text()).toContain('Nie znaleziono wyniku do sprawdzenia. Wklej JSON ręcznie.');
+  });
+
+  it('clears the missing-item notice and the input error on input', () => {
+    const { fixture, field, type, check, text } = setup();
+    fixture.componentRef.setInput('item', 'nope');
+    fixture.detectChanges();
+    type('{"a":');
+    check();
+    expect(field().getAttribute('aria-invalid')).toBe('true');
+    expect(text()).not.toContain('Nie znaleziono wyniku');
+    type('{"a": 1}');
+    expect(field().getAttribute('aria-invalid')).toBeNull();
+    expect(field().getAttribute('aria-describedby')).toBeNull();
+  });
+
+  it('cancels a running check when the page is destroyed', () => {
+    const { fixture, http, type, check } = setup();
+    const handleError = vi.spyOn(TestBed.inject(ErrorHandler), 'handleError');
+    type(JSON.stringify(FORM));
+    check();
+    const req = http.expectOne(URL);
+    fixture.destroy();
+    // A late response must not touch the destroyed view (afterNextRender would raise NG0911).
+    if (!req.cancelled) req.flush({ valid: true, errors: [], warnings: [] });
+    expect(handleError).not.toHaveBeenCalled();
+    expect(req.cancelled).toBe(true);
   });
 
   it('reads an uploaded .json file into the field and rejects a bad one', async () => {

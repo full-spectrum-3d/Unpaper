@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   afterNextRender,
@@ -100,6 +101,8 @@ export class ValidatorPage {
   private pending?: Subscription;
 
   constructor() {
+    // A late response must not touch a destroyed view (afterNextRender would throw NG0911).
+    inject(DestroyRef).onDestroy(() => this.pending?.unsubscribe());
     // Runs on every `item` change only; the queue row is read once, so later store updates never overwrite edits.
     effect(() => {
       const id = this.item();
@@ -107,19 +110,29 @@ export class ValidatorPage {
       untracked(() => {
         const row = this.store.selectSignal(selectQueueItem(id))();
         const found = row?.status === 'done';
-        this.missingItem.set(!found);
-        if (!found) return;
-        this.text.set(JSON.stringify(row.result, null, 2));
         // A newer navigation wins over a request still in flight for the previous item.
         this.pending?.unsubscribe();
         this.checking.set(false);
-        this.check();
+        this.missingItem.set(!found);
+        if (found) {
+          this.text.set(JSON.stringify(row.result, null, 2));
+          this.check();
+        } else {
+          this.text.set('');
+          this.result.set(null);
+          this.checkedText.set(null);
+          this.checkedLines.set(null);
+          this.httpError.set(null);
+          this.inputError.set(null);
+        }
       });
     });
   }
 
   protected onInput(event: Event): void {
     this.text.set((event.target as HTMLTextAreaElement).value);
+    this.inputError.set(null);
+    this.missingItem.set(false);
   }
 
   protected async onFile(event: Event): Promise<void> {
@@ -154,6 +167,7 @@ export class ValidatorPage {
         this.checkedLines.set(lines);
         this.result.set(normalize(body, lines));
         this.httpError.set(null);
+        this.missingItem.set(false);
         this.highlight.set(null);
         this.checking.set(false);
         afterNextRender(() => this.resultHeading()?.nativeElement.focus(), {
