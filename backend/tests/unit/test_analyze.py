@@ -90,8 +90,29 @@ async def test_schema_error_then_valid_retries_once() -> None:
 
 async def test_invalid_twice_falls_back() -> None:
     r, _ = await _run([_invalid(), _invalid()])
-    assert (r.draft, r.fallback, r.fallback_reason, r.retries) == (None, True, "invalid_output", 1)
-    assert r.warnings[0].code == "W01_LLM_FALLBACK"
+    assert (r.fallback, r.fallback_reason, r.retries) == (True, "invalid_output", 1)
+    assert [w.code for w in r.warnings][:2] == ["W01_LLM_FALLBACK", "W24_RULE_BASED_DRAFT"]
+    assert r.draft is not None
+    assert [f.label for _, f in r.draft.iter_fields()] == [
+        "W miejscowości",
+        "Przy ulicy",
+        "Nr ewidencyjny działki",
+        "W obrębie",
+    ]
+
+
+async def test_fallback_without_fields_has_no_draft() -> None:
+    doc = DocumentModel.model_validate(
+        {
+            "source": {"method": "docx", "pages": 1},
+            "pages": [
+                {"number": 1, "blocks": [{"id": "b1", "kind": "paragraph", "text": "Tekst"}]}
+            ],
+        }
+    )
+    r, _ = await _run([LlmTimeoutError("slow")], doc=doc)
+    assert (r.draft, r.fallback_reason) == (None, "timeout")
+    assert [w.code for w in r.warnings] == ["W01_LLM_FALLBACK"]
 
 
 async def test_truncated_json_is_invalid_output() -> None:

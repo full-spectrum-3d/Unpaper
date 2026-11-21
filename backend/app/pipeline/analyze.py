@@ -1,8 +1,10 @@
 """[4] Analiza LLM: DocumentModel → FormDraft (spec §5.4, projekt LLM §5.4, §5.7).
 
 `analyze()` nigdy nie przerywa żądania z powodu modelu: przy timeoucie, braku
-serwera albo niepoprawnej odpowiedzi zwraca `AnalysisResult` z `draft=None`
-i ostrzeżeniem `W01_LLM_FALLBACK` - formularz zbuduje się wtedy bez szkicu.
+serwera albo niepoprawnej odpowiedzi zwraca `AnalysisResult` z `fallback=True`
+i ostrzeżeniem `W01_LLM_FALLBACK`. `draft` to wtedy szkic z reguł (`rule_draft`,
+ostrzeżenie `W24_RULE_BASED_DRAFT`), a gdy reguły nie znajdą pól - `None`
+i formularz zbuduje się bez szkicu.
 """
 
 import logging
@@ -29,6 +31,7 @@ from app.pipeline.llm_client import (
     LlmTimeoutError,
     LlmUnavailableError,
 )
+from app.pipeline.rule_draft import rule_draft
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +106,25 @@ def prompt_messages(text: str, note: str = "") -> list[ChatMessage]:
     ]
 
 
+def _use_rule_draft(doc: DocumentModel, result: AnalysisResult) -> None:
+    """Fallback: szkic z wykropkowań dokumentu zamiast pustego szkieletu (o ile są pola)."""
+    draft = rule_draft(doc)
+    if draft is None:
+        return
+    draft, warnings = normalize_draft(draft, doc)
+    if not draft.subject_pages:
+        return
+    result.draft = draft
+    result.warnings.append(
+        ConversionWarning(
+            code="W24_RULE_BASED_DRAFT",
+            message="Pola przedmiotu wniosku rozpoznano regułami z miejsc do wypełnienia - "
+            "sprawdź ich etykiety, typy i podział na sekcje.",
+        )
+    )
+    result.warnings.extend(warnings)
+
+
 def _document(text: str) -> str:
     return f"<dokument>\n{text}\n</dokument>"
 
@@ -118,7 +140,10 @@ async def analyze(
     """Szkic formularza z dokumentu. `deadline` to `clock()` końca budżetu żądania."""
     result = AnalysisResult(draft=None, model=settings.llm_model)
     try:
-        return await _analyze(doc, settings, client, result, deadline, clock)
+        result = await _analyze(doc, settings, client, result, deadline, clock)
+        if result.fallback and result.fallback_reason != "empty_document":
+            _use_rule_draft(doc, result)
+        return result
     finally:
         logger.info(
             "analiza LLM: model=%s czas=%d ms wejście=%d wyjście=%d ponowienia=%d fallback=%s",
