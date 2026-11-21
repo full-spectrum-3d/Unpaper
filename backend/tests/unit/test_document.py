@@ -164,3 +164,30 @@ def test_rodo_clause_starting_with_article_13_skipped() -> None:
         }
     )
     assert doc.to_prompt_text() == "=== strona 1\nCel: [POLE]\n[POLE]\n(podpis)"
+
+
+def test_rodo_heading_about_processing_your_data_skipped() -> None:
+    doc = DocumentModel.model_validate(
+        {
+            "source": {"method": "pdf_text", "pages": 1},
+            "pages": [
+                {
+                    "number": 1,
+                    "blocks": [
+                        {"id": "b1", "kind": "paragraph", "text": "Rasa psa: ………"},
+                        {
+                            "id": "b2",
+                            "kind": "heading",
+                            "text": "INFORMACJE DOTYCZĄCE PRZETWARZANIA TWOICH DANYCH OSOBOWYCH",
+                        },
+                        {
+                            "id": "b3",
+                            "kind": "paragraph",
+                            "text": "Administratorem jest Prezydent.",
+                        },
+                    ],
+                }
+            ],
+        }
+    )
+    assert doc.to_prompt_text() == "=== strona 1\nRasa psa: [POLE]"

@@ -18,7 +18,10 @@ ExtractionMethod = Literal["pdf_text", "ocr", "docx", "xlsx"]
 FIELD_MARKER = "[POLE]"
 _FILL_RUN = re.compile(r"[.…_]{3,}")
 _WHITESPACE = re.compile(r"\s+")
-_BOILERPLATE = re.compile(r"(?i)klauzula informacyjna|\bRODO\b|ochron\w* danych osobowych")
+_BOILERPLATE = re.compile(
+    r"(?i)klauzula informacyjna|\bRODO\b|ochron\w* danych osobowych"
+    r"|przetwarzani\w* (twoich |pani/pana |pana/pani )?danych osobowych"
+)
 _BOILERPLATE_PARAGRAPH = re.compile(
     r"(?i)^\s*(klauzula informacyjna"
     r"|zgodnie z art\. ?13 ust\. ?1( i 2)? (rozporządzenia|RODO|ogólnego))"
