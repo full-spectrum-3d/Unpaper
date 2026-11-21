@@ -122,11 +122,11 @@
   "conditions_removed": 3,
   "rule_based": false,
   "statements": 0,
-  "expected": 18,
-  "matched": 14,
+  "expected": 17,
+  "matched": 13,
   "draft_fields": 59,
   "extra": 40,
-  "kind_ok": 13,
+  "kind_ok": 12,
   "title_ok": true,
   "authority_ok": true,
   "missing": [
@@ -180,7 +180,7 @@
   "wrong_kinds": [
    "Oświadczenie o przydomowym kompostowniku: short_text (oczekiwano single_choice/multi_choice/info)"
   ],
-  "recall": 0.78,
+  "recall": 0.76,
   "precision": 0.32,
   "form_valid": true,
   "fields": [
@@ -2201,11 +2201,11 @@
   "conditions_removed": 3,
   "rule_based": false,
   "statements": 0,
-  "expected": 18,
-  "matched": 14,
+  "expected": 17,
+  "matched": 13,
   "draft_fields": 59,
   "extra": 40,
-  "kind_ok": 13,
+  "kind_ok": 12,
   "title_ok": true,
   "authority_ok": true,
   "missing": [
@@ -2259,7 +2259,7 @@
   "wrong_kinds": [
    "Oświadczenie o przydomowym kompostowniku: short_text (oczekiwano single_choice/multi_choice/info)"
   ],
-  "recall": 0.78,
+  "recall": 0.76,
   "precision": 0.32,
   "form_valid": true,
   "fields": [
@@ -4235,11 +4235,11 @@
   "conditions_removed": 3,
   "rule_based": false,
   "statements": 0,
-  "expected": 18,
-  "matched": 14,
+  "expected": 17,
+  "matched": 13,
   "draft_fields": 59,
   "extra": 40,
-  "kind_ok": 13,
+  "kind_ok": 12,
   "title_ok": true,
   "authority_ok": true,
   "missing": [
@@ -4293,7 +4293,7 @@
   "wrong_kinds": [
    "Oświadczenie o przydomowym kompostowniku: short_text (oczekiwano single_choice/multi_choice/info)"
   ],
-  "recall": 0.78,
+  "recall": 0.76,
   "precision": 0.32,
   "form_valid": true,
   "fields": [
@@ -6251,7 +6251,7 @@
   "conditions_removed": 0,
   "rule_based": false,
   "statements": 0,
-  "expected": 18,
+  "expected": 17,
   "matched": 3,
   "draft_fields": 9,
   "extra": 6,
@@ -6272,8 +6272,7 @@
    "Liczba gospodarstw domowych od 45 do 60 m²",
    "Liczba gospodarstw domowych od 60 do 80 m²",
    "Liczba gospodarstw domowych powyżej 80 m²",
-   "Liczba gospodarstw objętych zwolnieniem dochodowym",
-   "Wysokość miesięcznej opłaty"
+   "Liczba gospodarstw objętych zwolnieniem dochodowym"
   ],
   "extras": [
    "Najemca/dzierżawca",
@@ -6284,7 +6283,7 @@
    "Inne: (podać jakie"
   ],
   "wrong_kinds": [],
-  "recall": 0.17,
+  "recall": 0.18,
   "precision": 0.33,
   "form_valid": true,
   "fields": [
@@ -7594,7 +7593,7 @@
   "conditions_removed": 0,
   "rule_based": false,
   "statements": 0,
-  "expected": 18,
+  "expected": 17,
   "matched": 3,
   "draft_fields": 9,
   "extra": 6,
@@ -7615,8 +7614,7 @@
    "Liczba gospodarstw domowych od 45 do 60 m²",
    "Liczba gospodarstw domowych od 60 do 80 m²",
    "Liczba gospodarstw domowych powyżej 80 m²",
-   "Liczba gospodarstw objętych zwolnieniem dochodowym",
-   "Wysokość miesięcznej opłaty"
+   "Liczba gospodarstw objętych zwolnieniem dochodowym"
   ],
   "extras": [
    "Najemca/dzierżawca",
@@ -7627,7 +7625,7 @@
    "Inne: (podać jakie"
   ],
   "wrong_kinds": [],
-  "recall": 0.17,
+  "recall": 0.18,
   "precision": 0.33,
   "form_valid": true,
   "fields": [
@@ -8937,7 +8935,7 @@
   "conditions_removed": 0,
   "rule_based": false,
   "statements": 0,
-  "expected": 18,
+  "expected": 17,
   "matched": 3,
   "draft_fields": 9,
   "extra": 6,
@@ -8958,8 +8956,7 @@
    "Liczba gospodarstw domowych od 45 do 60 m²",
    "Liczba gospodarstw domowych od 60 do 80 m²",
    "Liczba gospodarstw domowych powyżej 80 m²",
-   "Liczba gospodarstw objętych zwolnieniem dochodowym",
-   "Wysokość miesięcznej opłaty"
+   "Liczba gospodarstw objętych zwolnieniem dochodowym"
   ],
   "extras": [
    "Najemca/dzierżawca",
@@ -8970,7 +8967,7 @@
    "Inne: (podać jakie"
   ],
   "wrong_kinds": [],
-  "recall": 0.17,
+  "recall": 0.18,
   "precision": 0.33,
   "form_valid": true,
   "fields": [

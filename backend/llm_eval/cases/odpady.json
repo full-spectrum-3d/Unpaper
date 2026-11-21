@@ -3958,7 +3958,7 @@
      "razem wysokość miesięcznej opłaty",
      "suma"
     ],
-    "optional": false
+    "optional": true
    },
    {
     "label": "Numer działki",
