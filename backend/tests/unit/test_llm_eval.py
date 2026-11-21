@@ -1,8 +1,12 @@
+from pathlib import Path
 from typing import Any
 
+import docx
 import pytest
 
+from app.core.config import Settings
 from app.models.draft import FormDraft
+from llm_eval.build_case import build_document
 from llm_eval.metrics import score_draft, similarity
 from llm_eval.run import RULES, load_cases, run_case
 
@@ -93,3 +97,27 @@ def test_no_draft_scores_zero() -> None:
 async def test_rule_baseline_builds_valid_forms(case: dict[str, Any]) -> None:
     row = await run_case(case, RULES, None, None, 0)  # type: ignore[arg-type]
     assert row.get("form_valid", True), case["slug"]
+
+
+def _settings() -> Settings:
+    return Settings(app_env="development", auth_enabled=False, _env_file=None)
+
+
+def test_build_document_uses_real_extraction(tmp_path: Path) -> None:
+    source = tmp_path / "wniosek.docx"
+    document = docx.Document()
+    document.add_paragraph("Imię psa: ………")
+    document.save(str(source))
+
+    doc = build_document(source, _settings())
+
+    assert doc.source.method == "docx"
+    blocks = [block for page in doc.pages for block in page.blocks]
+    assert any(b.kind == "input_placeholder" or "Imię psa" in b.text for b in blocks)
+
+
+def test_build_document_rejects_legacy_formats(tmp_path: Path) -> None:
+    legacy = tmp_path / "stary.doc"
+    legacy.write_bytes(b"x")
+    with pytest.raises(ValueError, match="DOCX"):
+        build_document(legacy, _settings())

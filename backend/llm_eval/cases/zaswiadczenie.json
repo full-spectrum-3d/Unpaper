@@ -1,6 +1,6 @@
 {
  "name": "Wniosek o wydanie zaświadczenia",
- "source": "Wniosek o wydanie zaświadczenia.docx",
+ "source": "zaswiadczenie.docx",
  "document": {
   "source": {
    "method": "docx",
@@ -18,111 +18,117 @@
      {
       "id": "b2",
       "kind": "input_placeholder",
-      "text": "……………………………….."
+      "text": ""
      },
      {
       "id": "b3",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "/ imię i nazwisko /"
      },
      {
       "id": "b4",
-      "kind": "paragraph",
-      "text": "Urząd Miasta i Gminy Młynary"
+      "kind": "input_placeholder",
+      "text": ""
      },
      {
       "id": "b5",
       "kind": "paragraph",
-      "text": "ul. Dworcowa 29"
+      "text": "Urząd Miasta i Gminy Młynary ul. Dworcowa 29 14-420 Młynary",
+      "bbox": {
+       "x0": 279.08771653543306,
+       "y0": 14.602834645669292,
+       "x1": 464.98771653543304,
+       "y1": 50.60283464566929
+      }
      },
      {
       "id": "b6",
       "kind": "paragraph",
-      "text": "14-420 Młynary"
-     },
-     {
-      "id": "b7",
-      "kind": "label",
       "text": "/ adres /"
      },
      {
-      "id": "b8",
+      "id": "b7",
       "kind": "input_placeholder",
-      "text": "………………………………."
+      "text": ""
      },
      {
-      "id": "b9",
-      "kind": "label",
+      "id": "b8",
+      "kind": "paragraph",
       "text": "/ PESEL /"
      },
      {
-      "id": "b10",
+      "id": "b9",
       "kind": "input_placeholder",
-      "text": "………………………………."
+      "text": ""
      },
      {
-      "id": "b11",
-      "kind": "label",
+      "id": "b10",
+      "kind": "paragraph",
       "text": "/ nr telefonu /"
      },
      {
-      "id": "b12",
+      "id": "b11",
       "kind": "heading",
       "text": "WNIOSEK O WYDANIE ZAŚWIADCZENIA"
      },
      {
-      "id": "b13",
-      "kind": "paragraph",
+      "id": "b12",
+      "kind": "heading",
       "text": "Proszę o wydanie zaświadczenia o:*"
      },
      {
-      "id": "b14",
-      "kind": "paragraph",
+      "id": "b13",
+      "kind": "checkbox_option",
       "text": "ilości posiadanych użytków rolnych w hektarach fizycznych i przeliczeniowych"
      },
      {
-      "id": "b15",
-      "kind": "paragraph",
+      "id": "b14",
+      "kind": "checkbox_option",
       "text": "ilości dzierżawionych użytków rolnych w hektarach fizycznych i przeliczeniowych"
      },
      {
-      "id": "b16",
-      "kind": "paragraph",
+      "id": "b15",
+      "kind": "checkbox_option",
       "text": "okresie posiadania gospodarstwa rolnego"
      },
      {
-      "id": "b17",
-      "kind": "paragraph",
+      "id": "b16",
+      "kind": "checkbox_option",
       "text": "nieposiadaniu użytków rolnych / gospodarstwa rolnego na terenie Gminy Młynary"
      },
      {
-      "id": "b18",
-      "kind": "paragraph",
+      "id": "b17",
+      "kind": "checkbox_option",
       "text": "inne………………………………………………………………………………………"
      },
      {
-      "id": "b19",
+      "id": "b18",
       "kind": "input_placeholder",
-      "text": "…………………………………………………………………………………………..."
+      "text": ""
      },
      {
-      "id": "b20",
+      "id": "b19",
       "kind": "paragraph",
       "text": "Zaświadczenie potrzebne jest celem przedłożenia w ………………………………………."
      },
      {
+      "id": "b20",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
       "id": "b21",
       "kind": "input_placeholder",
-      "text": "………………………………………………………………………………………………."
+      "text": ""
      },
      {
       "id": "b22",
       "kind": "paragraph",
-      "text": "………………………………………           /podpis/"
+      "text": "/podpis/"
      },
      {
       "id": "b23",
-      "kind": "heading",
+      "kind": "label",
       "text": "INFORMACJE:"
      },
      {
@@ -138,7 +144,12 @@
      {
       "id": "b26",
       "kind": "paragraph",
-      "text": "Zwolnienie z opłaty skarbowej określa art. 2, natomiast wyłączenie art. 7 ustawy z dnia 16 listopada 2006 r. o opłacie skarbowej."
+      "text": "Zwolnienie z opłaty skarbowej określa art. 2, natomiast wyłączenie art. 7 ustawy z dnia 16 listopada 2006 r."
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "o opłacie skarbowej."
      }
     ]
    }

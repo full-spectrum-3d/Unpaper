@@ -1,6 +1,6 @@
 {
  "name": "Wniosek o wynajęcie świetlicy",
- "source": "Wniosek o wynajęcie świetlicy.docx",
+ "source": "swietlica.docx",
  "document": {
   "source": {
    "method": "docx",
@@ -18,41 +18,41 @@
      {
       "id": "b2",
       "kind": "input_placeholder",
-      "text": "…………………………………………"
+      "text": ""
      },
      {
       "id": "b3",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "(miejscowość i data)"
      },
      {
       "id": "b4",
       "kind": "input_placeholder",
-      "text": "……………………………………………"
+      "text": ""
      },
      {
       "id": "b5",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "(imię i nazwisko wnioskodawcy)"
      },
      {
       "id": "b6",
       "kind": "input_placeholder",
-      "text": "……………………………………………"
+      "text": ""
      },
      {
       "id": "b7",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "(adres zamieszkania)"
      },
      {
       "id": "b8",
       "kind": "input_placeholder",
-      "text": "……………………………………………"
+      "text": ""
      },
      {
       "id": "b9",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "(nr telefonu)"
      },
      {
@@ -62,12 +62,12 @@
      },
      {
       "id": "b11",
-      "kind": "paragraph",
+      "kind": "heading",
       "text": "Płoskinia 8"
      },
      {
       "id": "b12",
-      "kind": "paragraph",
+      "kind": "heading",
       "text": "14-526 Płoskinia"
      },
      {
@@ -97,7 +97,7 @@
      },
      {
       "id": "b18",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "( rodzaj uroczystości, np. wesele, urodziny, zabawa itp.)"
      },
      {
@@ -107,17 +107,17 @@
      },
      {
       "id": "b20",
-      "kind": "paragraph",
+      "kind": "label",
       "text": "3. Osoba odpowiedzialna (pełnoletnia) za utrzymanie porządku i bezpieczeństwa:"
      },
      {
       "id": "b21",
       "kind": "input_placeholder",
-      "text": "…………………………………………………………………………………………..………………"
+      "text": ""
      },
      {
       "id": "b22",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "( imię i nazwisko – wnioskodawca, w przypadku innej osoby niż wnioskodawca - zgoda osoby odpowiedzialnej)"
      },
      {
@@ -148,11 +148,11 @@
      {
       "id": "b28",
       "kind": "input_placeholder",
-      "text": "………………………………………………"
+      "text": ""
      },
      {
       "id": "b29",
-      "kind": "label",
+      "kind": "paragraph",
       "text": "(czytelny podpis wnioskodawcy)"
      }
     ]

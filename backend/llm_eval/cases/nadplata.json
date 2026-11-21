@@ -1,6 +1,6 @@
 {
  "name": "Wniosek o stwierdzenie nadpłaty podatku",
- "source": "Wniosek o stwierdzenie nadpłaty podatku.docx",
+ "source": "nadplata.docx",
  "document": {
   "source": {
    "method": "docx",
@@ -17,13 +17,13 @@
      },
      {
       "id": "b2",
-      "kind": "paragraph",
+      "kind": "label",
       "text": "Wnioskodawca:"
      },
      {
       "id": "b3",
       "kind": "input_placeholder",
-      "text": "................................................................"
+      "text": ""
      },
      {
       "id": "b4",
@@ -33,7 +33,7 @@
      {
       "id": "b5",
       "kind": "input_placeholder",
-      "text": "................................................................"
+      "text": ""
      },
      {
       "id": "b6",
@@ -42,18 +42,18 @@
      },
      {
       "id": "b7",
-      "kind": "heading",
+      "kind": "paragraph",
       "text": "PESEL *................................................."
      },
      {
       "id": "b8",
-      "kind": "heading",
+      "kind": "paragraph",
       "text": "NIP * ......................................................"
      },
      {
       "id": "b9",
       "kind": "input_placeholder",
-      "text": "......................................................."
+      "text": ""
      },
      {
       "id": "b10",
@@ -88,90 +88,329 @@
      {
       "id": "b16",
       "kind": "paragraph",
-      "text": "Na podstawie art. 75 ustawy z dnia 29 sierpnia 1997 r. - Ordynacja podatkowa(Dz. U. z 2025 r. poz. 111 ze zm.) wnoszę o stwierdzenie nadpłaty z tytułu .......……………."
+      "text": "Na podstawie art. 75 ustawy z dnia 29 sierpnia 1997 r. - Ordynacja podatkowa"
      },
      {
       "id": "b17",
       "kind": "paragraph",
-      "text": "........................................................................ w kwocie …..................................................."
+      "text": "(Dz. U. z 2025 r. poz. 111 ze zm.) wnoszę o stwierdzenie nadpłaty z tytułu .......……………."
      },
      {
       "id": "b18",
-      "kind": "label",
-      "text": "(rodzaj podatku)"
+      "kind": "paragraph",
+      "text": "........................................................................ w kwocie …..................................................."
      },
      {
       "id": "b19",
       "kind": "paragraph",
-      "text": "Uzasadnienie:"
+      "text": "(rodzaj podatku)"
      },
      {
       "id": "b20",
-      "kind": "input_placeholder",
-      "text": "................................................................................................................................................"
+      "kind": "label",
+      "text": "Uzasadnienie:"
      },
      {
       "id": "b21",
       "kind": "input_placeholder",
-      "text": "................................................................................................................................................"
+      "text": ""
      },
      {
       "id": "b22",
       "kind": "input_placeholder",
-      "text": "................................................................................................................................................"
+      "text": ""
      },
      {
       "id": "b23",
-      "kind": "paragraph",
-      "text": "Kwotę nadpłaty proszę:"
+      "kind": "input_placeholder",
+      "text": ""
      },
      {
       "id": "b24",
-      "kind": "paragraph",
-      "text": "1) zaliczyć na poczet  przyszłego zobowiązania podatkowego z tytułu  ……….……………"
+      "kind": "label",
+      "text": "Kwotę nadpłaty proszę:"
      },
      {
       "id": "b25",
-      "kind": "input_placeholder",
-      "text": "…………………………………………………………………………………………………….."
+      "kind": "paragraph",
+      "text": "1) zaliczyć na poczet przyszłego zobowiązania podatkowego z tytułu ……….……………"
      },
      {
       "id": "b26",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b27",
       "kind": "paragraph",
       "text": "2) zwrócić przelewem na wskazany rachunek"
      },
      {
-      "id": "b27",
+      "id": "b28",
       "kind": "table",
       "text": ""
      },
      {
-      "id": "b28",
-      "kind": "input_placeholder",
-      "text": "....................……..............................."
+      "id": "b29",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
      },
      {
-      "id": "b29",
+      "id": "b30",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b31",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b32",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 3
+      }
+     },
+     {
+      "id": "b33",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 4
+      }
+     },
+     {
+      "id": "b34",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 5
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 6
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 7
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 8
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 9
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 10
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 11
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 12
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 13
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 14
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 15
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 16
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 17
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 18
+      }
+     },
+     {
+      "id": "b48",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 19
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 20
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 21
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 22
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 23
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 24
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 0,
+       "col": 25
+      }
+     },
+     {
+      "id": "b55",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b56",
       "kind": "paragraph",
       "text": "podpis wnioskodawcy lub osoby upoważnionej"
      },
      {
-      "id": "b30",
-      "kind": "paragraph",
+      "id": "b57",
+      "kind": "label",
       "text": "w załączeniu:"
      },
      {
-      "id": "b31",
+      "id": "b58",
       "kind": "paragraph",
       "text": "1) korekta deklaracji"
      },
      {
-      "id": "b32",
+      "id": "b59",
       "kind": "paragraph",
       "text": "2) .................................................................."
      },
      {
-      "id": "b33",
+      "id": "b60",
       "kind": "paragraph",
       "text": "3) .................................................................."
      }
