@@ -1,7 +1,8 @@
 """[5] Deterministyczna budowa FormDefinition z FormDraft (spec §5.5, §8)."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from app.models.dictionary import DictionaryProposal
 from app.models.draft import DraftField, DraftPage, DraftSection, FormDraft
 from app.models.form import FieldType, FormDefinition, TabType
 from app.models.warning import ConversionWarning
@@ -10,6 +11,7 @@ from app.pipeline.build.fields import assign_unique_tech_names, normalize_title
 from app.pipeline.build.initial_data import apply_initial_data
 from app.pipeline.build.ir import PageNode
 from app.pipeline.build.pages import subject_pages
+from app.pipeline.build.proposals import propose_dictionaries
 from app.pipeline.build.sections import (
     BuildOptions,
     applicant_page_sections,
@@ -29,6 +31,8 @@ __all__ = ["BuildOptions", "BuildResult", "build_fallback", "build_form"]
 class BuildResult:
     form: FormDefinition
     warnings: list[ConversionWarning]
+    # Do raportu: `report.dictionaryProposals` (spec §6.2, §8.6).
+    dictionary_proposals: list[DictionaryProposal] = field(default_factory=list)
 
 
 def _label_key(label: str) -> str:
@@ -93,7 +97,7 @@ def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> Bu
     form = FormDefinition.model_validate(
         to_form_definition(title, pages, states, options.id_factory)
     )
-    return BuildResult(form, warnings)
+    return BuildResult(form, warnings, propose_dictionaries(form))
 
 
 def build_fallback(

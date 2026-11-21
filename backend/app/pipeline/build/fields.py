@@ -51,6 +51,11 @@ _LABEL_SEMANTICS: tuple[tuple[re.Pattern[str], Semantic], ...] = tuple(
         (r"e-?doręcze", Semantic.ADE),
         (r"seri\w*\s+i\s+numer\w*\s+dowodu", Semantic.ID_CARD),
         (r"numer\w*\s+kierunkow", Semantic.PHONE_PREFIX),
+        # Jednostki adresowe tylko jako cała etykieta („Powiat grodzki” to nie słownik).
+        # Miejscowość zostaje tekstem: tak ma wzorzec COI („Lokalizacja budynku”).
+        (r"^\s*województwo\s*[:*]?\s*$", Semantic.VOIVODESHIP),
+        (r"^\s*powiat\s*[:*]?\s*$", Semantic.COUNTY),
+        (r"^\s*gmina\s*[:*]?\s*$", Semantic.COMMUNE),
         (r"\bkraj\b|\bpaństw|obywatelstw", Semantic.COUNTRY),
     )
 )

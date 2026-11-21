@@ -218,6 +218,45 @@ def test_label_semantics_drive_dictionaries_and_validators() -> None:
     assert "dictionaryName" not in nip
 
 
+def test_contact_section_has_phone_prefix_before_phone() -> None:
+    form = build_json(make_draft(page("Przedmiot", section("Sekcja", fld("f1", "Opis")))))
+    contact = find(form, "dane_do_kontaktu")
+    names = [
+        g["field"]["techName"]
+        for g in sorted(contact["repeatingSectionGrid"], key=lambda g: g["y"])
+    ]
+    assert names[:2] == ["numer_kierunkowy", "numer_telefonu"]
+    prefix = find(form, "numer_kierunkowy")
+    assert prefix["type"] == "SELECT"
+    assert prefix["dictionaryName"] == "NUMERY_KIERUNKOWE"
+    assert prefix["options"] == []
+    assert prefix["defaultValue"] == ["+48"]
+    assert prefix["searchEnabled"] is True
+    assert prefix["validation"] == []
+
+
+def test_address_unit_labels_get_dictionaries() -> None:
+    draft = make_draft(
+        page(
+            "Przedmiot",
+            section("Położenie", fld("f1", "Gmina"), fld("f2", "Miejscowość")),
+        )
+    )
+    form = build_json(draft)
+    assert find(form, "gmina")["dictionaryName"] == "Gmina"
+    locality = find(form, "miejscowosc")
+    assert locality["type"] == "TEXT_FIELD"
+    assert "dictionaryName" not in locality
+
+
+def test_build_result_has_dictionary_proposals() -> None:
+    draft = make_draft(page("Przedmiot", section("Nadpłata", fld("f1", "Nazwa podatku"))))
+    result = build_form(draft, opts())
+    assert [p.name for p in result.dictionary_proposals] == ["RODZAJE_PODATKOW_LOKALNYCH"]
+    assert result.dictionary_proposals[0].used_by == ("nazwa_podatku",)
+    assert find(result.form.to_import_json(), "nazwa_podatku")["type"] == "TEXT_FIELD"
+
+
 @pytest.mark.parametrize("kind", ["single_choice", "multi_choice"])
 def test_choice_labelled_country_keeps_options_and_conditions(kind: str) -> None:
     draft = make_draft(
