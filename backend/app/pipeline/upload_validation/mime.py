@@ -5,8 +5,6 @@ Nagłówek `Content-Type` części multipart ignorujemy, bo kontroluje go klient
 
 from typing import IO
 
-import magic
-
 from app.pipeline.upload_validation.errors import UploadError, UploadErrorCode
 from app.pipeline.upload_validation.policy import ACCEPTED_MIME, MIME_ZIP, FileKind
 
@@ -18,6 +16,9 @@ _ZIP_LOCAL_HEADER = b"PK\x03\x04"
 
 
 def detect_mime(file: IO[bytes]) -> str:
+    # Import leniwy: brak libmagic (np. Windows bez DLL) nie blokuje importu pakietu.
+    import magic
+
     file.seek(0)
     head = file.read(MAGIC_BUFFER_BYTES)
     file.seek(0)
