@@ -22,8 +22,8 @@ from app.pipeline.extract.text_rules import (
 )
 
 CHECKBOX_MIN_PT = 5.0
-CHECKBOX_MAX_PT = 20.0
-CHECKBOX_SQUARENESS = 0.35
+CHECKBOX_MAX_PT = 24.0
+CHECKBOX_SQUARENESS = 0.4
 """Maksymalna różnica boków kratki względem dłuższego boku."""
 CHECKBOX_TEXT_GAP_FACTOR = 3.0
 """Tekst opcji zaczyna się najdalej 3 szerokości kratki od niej."""

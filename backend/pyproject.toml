@@ -65,6 +65,8 @@ module = [
     "msoffcrypto.*",
     "jsonata",
     "jsonata.*",
+    "lxml",
+    "lxml.*",
 ]
 ignore_missing_imports = true
 

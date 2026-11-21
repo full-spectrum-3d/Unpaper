@@ -21,9 +21,10 @@ class DocumentBuilder:
     def new_page(self) -> None:
         self._pages.append([])
 
-    @property
-    def page_count(self) -> int:
-        return len(self._pages)
+    def ensure_new_page(self) -> None:
+        """Nowa strona, chyba że bieżąca jest jeszcze pusta (dwa podziały z rzędu)."""
+        if not self._pages or self._pages[-1]:
+            self.new_page()
 
     def add(
         self,

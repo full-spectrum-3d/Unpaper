@@ -21,6 +21,8 @@ HEADING_MIN_UPPER_LETTERS = 6
 _GLYPH_SPLIT = re.compile("[" + re.escape("".join(sorted(CHECKBOX_GLYPHS))) + "]")
 _FILL_NOISE = re.compile(r"[\s.…_:()\[\]/-]+")
 _HEADING_STYLE = re.compile(r"(?i)^(heading|nagłówek|title|tytuł)\b")
+_FORMAT_MASK = re.compile(r"\w{1,4}([-./]\w{1,4})+")
+"""Maska formatu, np. „DD-MM-RRRR” - to podpowiedź, nie nagłówek."""
 
 
 def split_checkbox_options(text: str) -> list[str] | None:
@@ -57,7 +59,11 @@ def looks_like_heading(
     text = text.strip()
     if not text or len(text) > HEADING_MAX_CHARS or FILL_RUN.search(text):
         return False
-    if has_checkbox_glyph(text) or text[0].islower():
+    if (
+        has_checkbox_glyph(text)
+        or text[0].islower()
+        or _FORMAT_MASK.fullmatch(text.replace(" ", ""))
+    ):
         return False
     letters = [ch for ch in text if ch.isalpha()]
     if not letters:
