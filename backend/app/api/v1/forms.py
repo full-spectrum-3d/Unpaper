@@ -2,12 +2,17 @@
 
 from fastapi import APIRouter
 
+from app.core.config import LlmMode
+
 router = APIRouter(prefix="/forms", tags=["forms"])
 
 
 @router.post("/convert")
-async def convert(report: bool = False) -> dict[str, object]:
-    """Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report})."""
+async def convert(report: bool = False, mode: LlmMode | None = None) -> dict[str, object]:
+    """Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).
+
+    `mode`: tryb analizy LLM (`accurate`/`fast`), domyślnie `LLM_DEFAULT_MODE`.
+    """
     raise NotImplementedError
 
 

@@ -23,7 +23,7 @@ services:
     depends_on: [api]
 
   llm:
-    image: ollama/ollama:0.0.0  # TODO: przypiąć wersję (+ digest @sha256 dla wydania)
+    image: ollama/ollama:0.40.16  # przed wydaniem: dodać digest @sha256
     volumes: ["ollama-models:/root/.ollama"]
     networks: [internal]          # bez portu na hoście
     healthcheck:

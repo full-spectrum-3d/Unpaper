@@ -3,6 +3,10 @@
 Uruchomienie: `uvicorn app.main:create_app --factory`.
 """
 
+import asyncio
+import logging
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import APIRouter, Depends, FastAPI
@@ -17,15 +21,42 @@ from app.core.errors import (
     request_id_middleware,
 )
 from app.core.security import require_auth
+from app.pipeline.llm_client import LlmClient, LlmError, OllamaClient
 
 API_PREFIX = "/api/v1"
 
+logger = logging.getLogger(__name__)
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+
+async def _warm_up(client: LlmClient, model: str) -> None:
+    """Ładuje model trybu domyślnego do pamięci; błąd nie blokuje startu."""
+    try:
+        await client.warm_up(model)
+    except LlmError as exc:
+        logger.warning("nie udało się rozgrzać modelu %s: %s", model, exc)
+
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
+    settings: Settings = app.state.settings
+    if app.state.llm_client is None:
+        app.state.llm_client = OllamaClient(settings)
+    client: LlmClient = app.state.llm_client
+    model = settings.llm_model_for(settings.llm_default_mode)
+    app.state.warm_up_task = asyncio.create_task(_warm_up(client, model))
+    try:
+        yield
+    finally:
+        app.state.warm_up_task.cancel()
+        await client.aclose()
+
+
+def create_app(settings: Settings | None = None, llm_client: LlmClient | None = None) -> FastAPI:
     settings = settings or load_settings()
 
-    app = FastAPI(title="COI - Cyfryzacja formularzy", version="0.1.0")
+    app = FastAPI(title="COI - Cyfryzacja formularzy", version="0.1.0", lifespan=_lifespan)
     app.state.settings = settings
+    app.state.llm_client = llm_client
 
     install_error_handlers(app)
     app.add_middleware(

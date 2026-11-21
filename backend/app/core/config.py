@@ -25,6 +25,7 @@ _ENV_FILES = (_BACKEND_DIR.parent / ".env", _BACKEND_DIR / ".env")
 _MIN_HS256_SECRET_BYTES = 32  # RFC 7518 §3.2: klucz co najmniej tak długi jak skrót (256 bitów)
 _ARGON2ID_PREFIX = "$argon2id$"
 _CLAIM_PATH_PATTERN = r"^[A-Za-z0-9_:-]+(\.[A-Za-z0-9_:-]+)*$"
+LlmMode = Literal["accurate", "fast"]
 # Claimy rejestrowane, których nie wolno nadpisać mapowaniem (sub jest dozwolony).
 _RESERVED_CLAIMS = frozenset({"iss", "aud", "exp", "iat", "nbf", "jti"})
 
@@ -49,7 +50,7 @@ class Settings(BaseSettings):
     max_image_pixels: PositiveInt = 60_000_000
     spool_max_mb: PositiveInt = 10
     max_concurrent_jobs: PositiveInt = 2
-    request_timeout_s: PositiveInt = 180
+    request_timeout_s: PositiveInt = 540
 
     # --- Uwierzytelnianie (spec §10.1) ---
     auth_enabled: bool = True
@@ -74,8 +75,10 @@ class Settings(BaseSettings):
 
     # --- LLM ---
     llm_base_url: str = "http://llm:11434"
-    llm_model: str = "qwen3:8b"
-    llm_timeout_s: PositiveInt = 120
+    llm_model: str = "qwen3:8b"  # model trybu `accurate`
+    llm_fast_model: str = "qwen3:4b"  # model trybu `fast`
+    llm_default_mode: LlmMode = "accurate"
+    llm_timeout_s: PositiveInt = 240
     llm_temperature: Annotated[float, Field(ge=0, le=2)] = 0
     llm_seed: int = 42
     llm_num_ctx: PositiveInt = 16384
@@ -115,6 +118,10 @@ class Settings(BaseSettings):
     @classmethod
     def _unescape_private_pem(cls, value: object) -> object:
         return _unescape_pem(value)
+
+    def llm_model_for(self, mode: LlmMode) -> str:
+        """Model Ollamy dla trybu analizy (projekt LLM §5.7)."""
+        return self.llm_model if mode == "accurate" else self.llm_fast_model
 
     @property
     def token_issuing_enabled(self) -> bool:

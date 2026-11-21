@@ -1,0 +1,8 @@
+{
+  "message": {
+    "role": "assistant",
+    "content": "{\"title\": \"Wniosek o ustalenie numeru porządkowego nieruchomości\", \"authority_kind\": \"ORGAN\", \"authority_name\": \"Wójt Gminy Elbląg\", \"applicant_kinds\": [\"SELF\", \"OTHER_PERSON\"], \"attachments\": [], \"statements\": [], \"subject_pages\": [{\"title\": \"Informacje o budynku\", \"sections\": [{\"title\": \"Lokalizacja budynku\", \"repeating\": false, \"fields\": [{\"id\": \"f1\", \"label\": \"Miejscowość\", \"kind\": \"short_text\", \"required\": true}, {\"id\": \"f2\", \"label\": \"Ulica\", \"kind\": \"short_text\", \"required\": true}, {\"id\": \"f3\", \"label\": \"Numer ewidencyjny działki\", \"kind\": \"short_text\", \"required\": true}, {\"id\": \"f4\", \"label\": \"Obręb\", \"kind\": \"short_text\", \"required\": true, \"visible_when\": [{\"field_id\": \"f9\", \"op\": \"equals\", \"value\": \"Tak\"}]}]}]}]}"
+  },
+  "prompt_eval_count": 700,
+  "eval_count": 300
+}
