@@ -1,0 +1,22 @@
+<h2 class="m-0 mb-4 text-title font-bold">{{ definition().title }}</h2>
+
+@for (d of [definition()]; track d) {
+  @if (page(); as p) {
+    <h3 #stepHeading tabindex="-1" class="m-0 mb-4 text-title font-semibold">{{ stepTitle() }}</h3>
+    <app-renderer-grid [questions]="p.questions" [hidden]="hidden()" />
+  }
+}
+
+<div class="mt-8 flex items-center justify-between gap-4">
+  <button type="button" class="focus-ring bg-transparent border-0 p-0 text-primary underline cursor-pointer" (click)="abort()">
+    Przerwij wypełnianie
+  </button>
+  <div class="flex gap-2">
+    @if (index() > 0) {
+      <button appButton variant="secondary" (click)="go(index() - 1)">Wstecz</button>
+    }
+    @if (!isFinish()) {
+      <button appButton variant="primary" (click)="go(index() + 1)">Dalej</button>
+    }
+  </div>
+</div>
