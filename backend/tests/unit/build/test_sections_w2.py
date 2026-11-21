@@ -90,7 +90,7 @@ def test_address_has_no_data_checkboxes(suffix: str) -> None:
 
 
 def test_no_data_checkbox_in_built_form() -> None:
-    result = build_form(make_draft(), BuildOptions())
+    result = build_form(make_draft(), BuildOptions(rodo_clause_url="https://bip.example/rodo"))
     assert not result.warnings
     form = result.form.to_import_json()
     verified = verify_form(form, autofix=False)
@@ -157,7 +157,7 @@ def test_subject_verb_follows_form_title(title: str, verb: str) -> None:
 
 def test_subject_verb_in_built_form_keeps_states_consistent() -> None:
     draft = make_draft(title="Zgłoszenie zmiany", applicant_kinds=ALL_KINDS)
-    result = build_form(draft, BuildOptions())
+    result = build_form(draft, BuildOptions(rodo_clause_url="https://bip.example/rodo"))
     assert not result.warnings
     form = result.form.to_import_json()
     assert verify_form(form, autofix=False).valid

@@ -1,14 +1,24 @@
 """R07: flow dopuszcza rozgałęzienia, ale wymaga osiągalności, dojścia do FINISH i braku cykli."""
 
 from typing import Any
+from uuid import NAMESPACE_OID, uuid5
 
 from app.pipeline.issues import IssueCode
 from app.pipeline.verify import verify_form
 
 
+def _u(name: str) -> str:
+    """Stabilny UUID z nazwy: id spoza formatu UUID autonaprawa by podmieniła (W30)."""
+    return str(uuid5(NAMESPACE_OID, name))
+
+
+def _pairs(links: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    return [(_u(s), _u(t)) for s, t in links]
+
+
 def _tab(tid: str, ttype: str = "MAIN") -> dict[str, Any]:
     field = {
-        "id": f"{tid}-f",
+        "id": _u(f"{tid}-f"),
         "type": "TEXT_BLOCK",
         "techName": f"tb_{tid}",
         "title": "",
@@ -21,17 +31,20 @@ def _tab(tid: str, ttype: str = "MAIN") -> dict[str, Any]:
         "questionOrder": 0,
         "tooltipMessage": "",
     }
-    section = {**field, "id": f"{tid}-s", "type": "SECTION", "techName": f"s_{tid}"}
+    section = {**field, "id": _u(f"{tid}-s"), "type": "SECTION", "techName": f"s_{tid}"}
     section["repeatingSectionGrid"] = [{"x": 0, "y": 0, "rows": 1, "cols": 3, "field": field}]
     question = {"x": 0, "y": 0, "rows": 1, "cols": 3, "field": section}
-    return {"id": tid, "title": tid, "type": ttype, "questions": [question]}
+    return {"id": _u(tid), "title": tid, "type": ttype, "questions": [question]}
 
 
 def _form(links: list[tuple[str, str]]) -> dict[str, Any]:
     return {
         "tabs": [_tab("a"), _tab("b"), _tab("c"), _tab("z", "FINISH")],
         "flow": {
-            "links": [{"id": f"l{n}", "source": s, "target": t} for n, (s, t) in enumerate(links)]
+            "links": [
+                {"id": _u(f"l{n}"), "source": _u(s), "target": _u(t)}
+                for n, (s, t) in enumerate(links)
+            ]
         },
     }
 
@@ -80,4 +93,4 @@ def test_valid_branching_not_straightened() -> None:
 def test_broken_flow_rebuilt_linearly() -> None:
     result = verify_form(_form([("a", "b"), ("c", "b")]))
     pairs = [(link["source"], link["target"]) for link in result.form["flow"]["links"]]
-    assert pairs == LINEAR
+    assert pairs == _pairs(LINEAR)

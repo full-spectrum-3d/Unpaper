@@ -68,9 +68,22 @@ def sample(request: pytest.FixtureRequest) -> str:
     return name
 
 
-def _diff(sample: str) -> tuple[set[Pair], set[Pair]]:
+def _raw_diff(sample: str) -> tuple[set[Pair], set[Pair]]:
     ref, ours = _pairs(_load(SAMPLES[sample][0]), sample), _pairs(_build(sample))
     return ours - ref, ref - ours
+
+
+def _is_no_data_checkbox(pair: Pair) -> bool:
+    """Checkboxy „Brak nazwy ulicy / numeru lokalu / kodu pocztowego” ze standardu adresu.
+
+    Wzorce ich nie mają, a standard wymaga ich w każdym wariancie sekcji adresowej.
+    """
+    return pair[0].startswith("adres_") and pair[1].startswith("brak_")
+
+
+def _diff(sample: str) -> tuple[set[Pair], set[Pair]]:
+    extra, missing = _raw_diff(sample)
+    return {pair for pair in extra if not _is_no_data_checkbox(pair)}, missing
 
 
 def test_no_unjustified_extra_fields(sample: str) -> None:
