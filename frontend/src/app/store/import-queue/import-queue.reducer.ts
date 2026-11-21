@@ -27,14 +27,21 @@ export const initialImportQueueState: ImportQueueState = adapter.getInitialState
 export const importQueueReducer = createReducer(
   initialImportQueueState,
   on(ImportQueueActions.filesAdded, (state, { items }) => adapter.addMany(items, state)),
+  // Transitions are guarded so a duplicate/stale action can never re-enter or revive an item.
   on(ImportQueueActions.convertStarted, (state, { id, startedAt }) =>
-    adapter.updateOne({ id, changes: { status: 'processing', startedAt } }, state),
+    state.entities[id]?.status !== 'pending'
+      ? state
+      : adapter.updateOne({ id, changes: { status: 'processing', startedAt } }, state),
   ),
   on(ImportQueueActions.convertSucceeded, (state, { id, result, durationMs }) =>
-    adapter.updateOne({ id, changes: { status: 'done', result, durationMs, error: null } }, state),
+    state.entities[id]?.status !== 'processing'
+      ? state
+      : adapter.updateOne({ id, changes: { status: 'done', result, durationMs, error: null } }, state),
   ),
   on(ImportQueueActions.convertFailed, (state, { id, error }) =>
-    adapter.updateOne({ id, changes: { status: 'error', error, retryable: true } }, state),
+    state.entities[id]?.status !== 'processing'
+      ? state
+      : adapter.updateOne({ id, changes: { status: 'error', error, retryable: true } }, state),
   ),
   on(ImportQueueActions.retry, (state, { id }) => {
     const item = state.entities[id];

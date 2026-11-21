@@ -29,6 +29,15 @@ describe('importQueueReducer', () => {
     expect(state.entities['a']).toMatchObject({ status: 'processing', startedAt: 5 });
   });
 
+  it('ignores start, success and failure for items in the wrong status', () => {
+    const { convertStarted, convertSucceeded, convertFailed } = ImportQueueActions;
+    const processing = withItems(item('a', { status: 'processing' }));
+    expect(importQueueReducer(processing, convertStarted({ id: 'a', startedAt: 1 }))).toBe(processing);
+    const pending = withItems(item('a'));
+    expect(importQueueReducer(pending, convertSucceeded({ id: 'a', result: 1, durationMs: 1 }))).toBe(pending);
+    expect(importQueueReducer(pending, convertFailed({ id: 'a', error: 'x' }))).toBe(pending);
+  });
+
   it('convertSucceeded sets done, result, durationMs, clears error', () => {
     const before = withItems(item('a', { status: 'processing', error: 'x' }));
     const state = importQueueReducer(
