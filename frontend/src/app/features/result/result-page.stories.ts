@@ -29,8 +29,10 @@ const meta: Meta<ResultPage> = {
         provideRouter([]),
         provideMockStore({
           initialState: {
-            [importQueueFeatureKey]: { ids: [done.id, notAForm.id],
-              entities: { [done.id]: done, [notAForm.id]: notAForm }, },
+            [importQueueFeatureKey]: {
+              ids: [done.id, notAForm.id],
+              entities: { [done.id]: done, [notAForm.id]: notAForm },
+            },
           },
         }),
       ],
@@ -52,6 +54,8 @@ export const Done: Story = {
     expect(c.getByRole('heading', { level: 1, name: done.name })).toBeVisible();
     const title = await c.findByRole('heading', { level: 2, name: nadplata.title });
     expect(title.closest('[data-theme="preview"]')).not.toBeNull();
+    expect(title.closest('main')).not.toBeNull();
+    expect(c.getByRole('group', { name: 'Widok wyniku' })).toBeVisible();
     expect(c.queryByText(previewMessage)).toBeNull();
     const previewBtn = c.getByRole('button', { name: 'Podgląd formularza' });
     const jsonBtn = c.getByRole('button', { name: 'JSON' });
@@ -65,9 +69,17 @@ export const Done: Story = {
     expect(pre.tagName).toBe('PRE');
     expect(pre).toHaveAttribute('tabindex', '0');
     expect(pre.textContent).toContain('"title"');
-    expect(c.queryByRole('heading', { level: 2, name: nadplata.title })).toBeNull();
+    expect(c.getByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(pre);
+    expect(
+      c.getByRole('heading', { level: 2, name: nadplata.title, hidden: true }),
+    ).not.toBeVisible();
     expect(c.getByRole('button', { name: 'Pobierz .json' })).toBeVisible();
     expect(backPath(c, '← Wróć do importu')).toBe('/import');
+
+    await userEvent.click(previewBtn);
+    expect(previewBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(c.getByRole('heading', { level: 2, name: nadplata.title })).toBeVisible();
+    expect(pre).not.toBeVisible();
   },
 };
 
