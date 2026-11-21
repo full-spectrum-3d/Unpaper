@@ -101,8 +101,14 @@ def _infer_initial_data(pages: list[PageNode]) -> None:
             used.add(ref)
 
 
-def apply_initial_data(pages: list[PageNode]) -> list[ConversionWarning]:
-    _infer_initial_data(pages)
+def apply_initial_data(
+    pages: list[PageNode], *, infer_subject: bool = True
+) -> list[ConversionWarning]:
+    """`infer_subject=False`, gdy wniosek można złożyć w cudzym imieniu: pole przedmiotu sprawy
+    może wtedy dotyczyć innej osoby, a dane wnioskodawcy z rejestru byłyby błędne i nieedytowalne.
+    """
+    if infer_subject:
+        _infer_initial_data(pages)
     catalog = load_initial_data_catalog()
     issues: list[ConversionWarning] = []
     for _, _, node in iter_fields(pages):

@@ -111,7 +111,7 @@ def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> Bu
     _make_links_accessible(pages)
     assign_unique_tech_names(pages)
     apply_dictionaries(pages)
-    warnings += apply_initial_data(pages)
+    warnings += apply_initial_data(pages, infer_subject=set(draft.applicant_kinds) == {"SELF"})
     states, issues = build_states(pages)
     warnings += issues
     form = FormDefinition.model_validate(

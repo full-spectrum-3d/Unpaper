@@ -150,3 +150,28 @@ def test_built_form_passes_verification() -> None:
     assert found["data_urodzenia"]["defaultValue"] == "PESEL.birthDate"
     assert found["data_urodzenia"]["readOnly"] is True
     assert verify_form(form, autofix=False).valid
+
+
+def test_form_for_another_person_gets_no_subject_registry_data() -> None:
+    # Wniosek składany także w cudzym imieniu: „Data urodzenia” może dotyczyć innej osoby.
+    draft = FormDraft(
+        title="Wniosek o zaświadczenie",
+        authority_kind="URZAD",
+        authority_name="Urząd",
+        applicant_kinds=["SELF", "OTHER_PERSON"],
+        subject_pages=[
+            DraftPage(
+                title="Sprawa",
+                sections=[
+                    DraftSection(
+                        title="Dane osoby",
+                        repeating=False,
+                        fields=[
+                            DraftField(id="f1", label="Data urodzenia", kind="date", required=True)
+                        ],
+                    )
+                ],
+            )
+        ],
+    )
+    assert "PESEL.birthDate" not in build_form(draft).form.model_dump_json()
