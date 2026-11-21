@@ -72,7 +72,15 @@ ignore_missing_imports = true
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+
+markers = [
+    "llm: wymaga działającej Ollamy",
+    "converter: wymaga LibreOffice (soffice)",
+]
+addopts = "-m 'not llm and not converter'"
+=======
 markers = ["llm: wymaga działającej Ollamy"]
 addopts = "-m 'not llm'"
 # Domyślne norecursedirs pomija katalogi `build` (tests/unit/build).
 norecursedirs = [".*", "dist", "CVS", "_darcs", "{arch}", "*.egg", "venv", "node_modules"]
+
