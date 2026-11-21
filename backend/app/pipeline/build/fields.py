@@ -8,6 +8,7 @@ from app.models.draft import CHOICE_KINDS, DraftField, FieldKind
 from app.models.draft import Condition as DraftCondition
 from app.models.form import ALLOWED_VALIDATORS, CHOICE_TYPES, FieldType, Validator
 from app.models.warning import ConversionWarning
+from app.pipeline.build.file_hints import file_constraints_html
 from app.pipeline.build.html import paragraphs
 from app.pipeline.build.ir import AllOf, Condition, Eq, FieldNode, Not, PageNode, Semantic
 from app.pipeline.issues import IssueCode
@@ -230,7 +231,9 @@ def map_draft_field(field: DraftField, *, key: str) -> tuple[FieldNode, list[Con
                 path=key,
             )
         )
-    if field.kind != "file":
+    if field.kind == "file":
+        node.description_html = file_constraints_html()
+    else:
         node.semantic = label_semantic(field.label)
     node.validation = _validators(field.required, node.semantic, node.type)
     return node, issues
