@@ -84,14 +84,19 @@ _OTHER_PERSON = re.compile(
 )
 
 
-# Wartości wyliczane: etykieta zaczyna się od słowa wyniku albo stawki („Stawka opłaty”,
-# „Wysokość miesięcznej opłaty”, „Suma…”, „Razem”) albo odwołuje się do innych pozycji
-# („Kwota z poz. 12”, „poz. 3 + poz. 4”, „pomniejszona o”). Sama „Wysokość opłaty”
-# (bez okresu czy rodzaju) to zwykle kwota, którą wnioskodawca zapłacił i wpisuje.
+# Wartości wyliczane: stawka („Stawka opłaty”), opłata za okres albo należna
+# („Wysokość miesięcznej opłaty”), wynik sumowania („Razem”, „Suma opłat”, „Suma poz. 3
+# i 4”) i odwołania do innych pozycji („Kwota z poz. 12”, „poz. 3 + poz. 4”,
+# „pomniejszona o”). Kwoty, które wnioskodawca wpisuje sam, zostają: „Wysokość opłaty”,
+# „Kwota uiszczonej opłaty”, „Suma ubezpieczenia”, „Kwota zwrotu z poz. 5 rachunku”.
 _RATE_LABEL = re.compile(r"^stawk\w*\b")
+_TOTAL_WORD = r"(sum[ay]|razem|łącznie|ogółem)"
 _COMPUTED_LABEL = re.compile(
-    r"^((wysokość|kwot[ay])\s+\w+\b.*?\bopłat\w*|sum[ay]|razem|łącznie|ogółem)\b"
-    r"|\bz poz\.|\bpoz\.\s*\d+\w*\s*[+-]\s*(poz\.\s*)?\d|\bpomniejszon\w*\s+o\b"
+    r"^(wysokość|kwot[ay])\s+(miesięczn|roczn|kwartaln|półroczn|należn|łączn)\w*\b.*?\bopłat"
+    rf"|^{_TOTAL_WORD}(\s*\([^)]*\))?\W*$"
+    rf"|^{_TOTAL_WORD}\s+(opłat|kwot|należnoś|wysokoś|pozycj|poz\.)"
+    rf"|^(wysokość|kwot[ay]|{_TOTAL_WORD})\s+z poz\."
+    r"|\bpoz\.\s*\d+\w*\s*[+-]\s*(poz\.\s*)?\d|\bpomniejszon\w*\s+o\b"
 )
 _LEADING_POSITION = re.compile(r"^[\W\d]+")
 

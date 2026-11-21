@@ -205,6 +205,9 @@ def test_full_and_short_names_are_applicant_data() -> None:
         ("Kwota z poz. 12 załącznika", ["Liczba osób"]),
         ("Razem", ["Powierzchnia działki A", "Powierzchnia działki B"]),
         ("Opłata łączna (poz. 3 + poz. 4)", ["Liczba pojemników"]),
+        ("Razem (zł)", ["Liczba pojemników"]),
+        ("Suma poz. 3 i 4", ["Liczba pojemników"]),
+        ("Kwota należnej opłaty", ["Liczba pojemników"]),
     ],
 )
 def test_computed_labels_removed(label: str, section_labels: list[str]) -> None:
@@ -220,6 +223,16 @@ def test_computed_labels_removed(label: str, section_labels: list[str]) -> None:
         ("Łączna powierzchnia zajęcia (m²)", []),
         # Bez określenia okresu to kwota, którą wnioskodawca zapłacił i wpisuje.
         ("Wysokość opłaty", ["Liczba dokumentów"]),
+        # Opłata już wniesiona to kwota z dowodu wpłaty, a nie wynik.
+        ("Kwota uiszczonej opłaty", ["Liczba dokumentów"]),
+        ("Wysokość wniesionej opłaty skarbowej", ["Liczba dokumentów"]),
+        # „Suma”, „Ogółem”, „Razem” przed czymś innym niż kwota lub pozycja.
+        ("Suma ubezpieczenia", ["Liczba pojazdów"]),
+        ("Ogółem powierzchnia użytkowa lokalu (m2)", ["Liczba pokoi"]),
+        ("Razem z małżonkiem zamieszkuje osób", ["Liczba dzieci"]),
+        ("Łącznie liczba osób w gospodarstwie", ["Liczba dzieci"]),
+        # Odwołanie do pozycji innego dokumentu przy kwocie wpisywanej przez wnioskodawcę.
+        ("Kwota zwrotu z poz. 5 rachunku", ["Liczba rachunków"]),
         # Bez innego pola liczbowego w sekcji nie ma z czego wyliczyć.
         ("Stawka opłaty za gospodarstwo", []),
         # Inne pole też jest wyliczane: sekcja to same wyniki, a nie dane wejściowe.
