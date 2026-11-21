@@ -2,7 +2,8 @@
 FROM node:24-alpine3.22 AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+# Cache npm poza warstwą: zmiana package-lock.json nie pobiera ponownie wszystkich paczek.
+RUN --mount=type=cache,target=/root/.npm npm ci
 COPY . .
 RUN npm run build
 
