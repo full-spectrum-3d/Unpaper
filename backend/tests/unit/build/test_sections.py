@@ -7,7 +7,7 @@ from app.core.config import Settings
 from app.models.draft import ApplicantKind, FormDraft
 from app.models.form import FieldType, Validator
 from app.pipeline.build import BuildOptions
-from app.pipeline.build.ir import AllOf, AnyOf, Eq, FieldNode, SectionNode
+from app.pipeline.build.ir import AllOf, AnyOf, Eq, FieldNode, Not, SectionNode
 from app.pipeline.build.sections import (
     APPLICANT_OPTIONS,
     ROLE_CHOICE_KEY,
@@ -132,7 +132,9 @@ def test_address_fields_match_reference() -> None:
     draft = make_draft(applicant_kinds=["SELF", "LEGAL_ENTITY"])
     sections = applicant_page_sections(draft, BuildOptions())
     seat = by_tech(sections, "adres_siedziby")
-    assert [f.tech_name for f in seat.fields] == [
+    # checkboxy „Brak …” dochodzą do pól wzorca, ich kolejność względem pól wzorca się nie zmienia
+    names = [f.tech_name for f in seat.fields if f.type is not FieldType.CHECKBOX]
+    assert names == [
         "kraj_siedziba",
         "miejscowosc_siedziba_zagranica",
         "kod_pocztowy_siedziba_zagranica",
@@ -160,7 +162,9 @@ def test_address_fields_match_reference() -> None:
     assert teryt.multi_level_tree is True
     assert teryt.default_value == []
     assert field_by_tech(home, "ulica_zagranica").show_when is not None
-    assert field_by_tech(home, "ulica").show_when == Eq(kraj.key, "Polska")
+    assert field_by_tech(home, "ulica").show_when == AllOf(
+        (Eq(kraj.key, "Polska"), Not(Eq("adres_zamieszkania.brak_nazwy_ulicy", "Brak nazwy ulicy")))
+    )
 
 
 def test_applicant_has_single_home_address_with_initial_data() -> None:
@@ -311,6 +315,8 @@ def test_every_template_instantiates() -> None:
         "field_tech_name": "etykieta",
         "form_title": "Wniosek",
         "text": "Tekst",
+        "verb": "wnioskujesz",
+        "verb_ascii": "wnioskujesz",
     }
     for name in names:
         template = load_template(name)

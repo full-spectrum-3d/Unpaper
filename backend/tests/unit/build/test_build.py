@@ -141,13 +141,11 @@ def test_duplicate_labels_resolve_by_id() -> None:
     def part(title: str, suffix: str) -> DraftSection:
         return section(
             title,
-            fld(f"c{suffix}", "Brak nazwy ulicy", "multi_choice", options=["Brak nazwy ulicy"]),
+            fld(f"c{suffix}", "Brak danych", "multi_choice", options=["Brak danych"]),
             fld(
                 f"u{suffix}",
                 "Ulica",
-                visible_when=[
-                    Condition(field_id=f"c{suffix}", op="equals", value="Brak nazwy ulicy")
-                ],
+                visible_when=[Condition(field_id=f"c{suffix}", op="equals", value="Brak danych")],
             ),
         )
 
@@ -164,9 +162,9 @@ def test_duplicate_labels_resolve_by_id() -> None:
         for name in ("Pierwsza", "Druga")
     )
     assert [s["type"] for s in first["states"]] == ["SHOW"]
-    assert "'brak_nazwy_ulicy' in field.techName" in first["states"][0]["query"]
+    assert "'brak_danych' in field.techName" in first["states"][0]["query"]
     assert "'Pierwsza' in title" in first["states"][0]["query"]
-    assert "'brak_nazwy_ulicy_2' in field.techName" in second["states"][0]["query"]
+    assert "'brak_danych_2' in field.techName" in second["states"][0]["query"]
     assert "'Druga' in title" in second["states"][0]["query"]
 
 
