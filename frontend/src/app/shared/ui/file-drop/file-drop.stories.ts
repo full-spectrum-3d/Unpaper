@@ -36,9 +36,11 @@ export const Default: Story = {
     expect(input.accept).toBe('.pdf,.doc,.docx,.ods,.xlsx,.jpg,.jpeg,.png');
     await userEvent.upload(input, [a, b]);
     expect(spy).toHaveBeenLastCalledWith([a, b]);
+    expect(input.value).toBe('');
     // re-selecting the same file emits again
     await userEvent.upload(input, [a]);
     expect(spy).toHaveBeenCalledTimes(2);
+    expect(input.value).toBe('');
     // drag state
     const zone = canvasElement.querySelector('app-file-drop')!;
     // fireEvent drops `files` from init.dataTransfer, so dispatch real DragEvents
