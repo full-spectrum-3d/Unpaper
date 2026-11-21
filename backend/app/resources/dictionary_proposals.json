@@ -15,6 +15,23 @@
     ]
   },
   {
+    "name": "RODZAJE_OPLAT_LOKALNYCH",
+    "title": "Rodzaje opłat lokalnych",
+    "description": "Opłaty, w których organem jest wójt (burmistrz, prezydent miasta). Opłata to „podatek” w rozumieniu Ordynacji podatkowej (art. 3 pkt 3), więc dotyczy jej np. wniosek o stwierdzenie nadpłaty lub zwrot opłaty skarbowej. Pole „Rodzaj opłaty”.",
+    "fieldTypes": ["SELECT", "RADIO"],
+    "itemStructure": ["code", "name", "techName", "validFrom", "validTo"],
+    "labelPatterns": ["^(nazwa|rodzaj) opłaty$", "^opłata$"],
+    "items": [
+      {"code": "OT", "name": "Opłata targowa"},
+      {"code": "OM", "name": "Opłata miejscowa"},
+      {"code": "OU", "name": "Opłata uzdrowiskowa"},
+      {"code": "OPP", "name": "Opłata od posiadania psów"},
+      {"code": "OR", "name": "Opłata reklamowa"},
+      {"code": "OS", "name": "Opłata skarbowa"},
+      {"code": "OGO", "name": "Opłata za gospodarowanie odpadami komunalnymi"}
+    ]
+  },
+  {
     "name": "RODZAJE_DOKUMENTOW_TOZSAMOSCI",
     "title": "Rodzaje dokumentów tożsamości",
     "description": "Dokumenty potwierdzające tożsamość. Pola typu „Rodzaj dokumentu tożsamości”.",

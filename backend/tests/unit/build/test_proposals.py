@@ -34,6 +34,27 @@ def test_propose_by_label_for_text_field() -> None:
     assert len(proposals[0].items) == 5
 
 
+def test_fees_are_a_separate_proposal_from_taxes() -> None:
+    proposals = propose_for_fields(
+        [
+            _field("Nazwa podatku", FieldType.TEXT_FIELD),
+            _field("Rodzaj opłaty", FieldType.TEXT_FIELD),
+            _field(
+                "Czego dotyczy nadpłata",
+                options=_options("Opłata targowa", "Opłata skarbowa", "Opłata miejscowa"),
+            ),
+        ]
+    )
+    assert [p.name for p in proposals] == [
+        "RODZAJE_PODATKOW_LOKALNYCH",
+        "RODZAJE_OPLAT_LOKALNYCH",
+    ]
+    fees = proposals[1]
+    assert fees.used_by == ("rodzaj_oplaty", "czego_dotyczy_nadplata")
+    assert len(fees.items) == 7
+    assert "Opłata skarbowa" not in {i.name for i in proposals[0].items}
+
+
 def test_propose_by_options_in_repeating_section_and_merges_extra_items() -> None:
     choice = _field(
         "Wybierz dokument",
