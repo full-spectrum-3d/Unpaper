@@ -62,6 +62,8 @@ def looks_like_heading(
     if (
         has_checkbox_glyph(text)
         or text[0].islower()
+        or text[0] in "(["
+        or text.endswith(":")
         or _FORMAT_MASK.fullmatch(text.replace(" ", ""))
     ):
         return False

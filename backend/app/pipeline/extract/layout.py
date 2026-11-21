@@ -6,6 +6,7 @@ puste ramki (`Frame` - miejsca do wypełnienia albo kratki checkboxów) i tabele
 w kolejności czytania: linie z góry na dół, segmenty linii od lewej.
 """
 
+import re
 from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass, field
@@ -36,6 +37,9 @@ LINE_HEIGHT_RATIO = 2.5
 FRAME_TOUCH_PT = 2.0
 FRAME_MIN_PT = 2.0
 LABEL_MAX_CHARS = 80
+BOLD_SIGNAL_MAX_SHARE = 0.5
+_NEW_ITEM = re.compile(r"^(\d+[.)]|[a-zA-Z][.)]\s|[-\u2013\u2022*])")
+"""Początek kolejnego punktu listy - takiej linii nie doklejamy do poprzedniej."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -102,6 +106,13 @@ class _Segment:
         return sum(values) / len(values) if values else None
 
 
+@dataclass(frozen=True, slots=True)
+class _PageStyle:
+    body_size: float | None
+    bold_signal: bool
+    """Pogrubienie wyróżnia nagłówki tylko wtedy, gdy większość tekstu nie jest pogrubiona."""
+
+
 @dataclass(slots=True)
 class _Out:
     kind: BlockKind
@@ -126,10 +137,10 @@ def layout_page(
         items.append(_Item("check" if _is_checkbox(frame) else "field", frame))
     items.extend(_Item("table", t.bbox, table=t) for t in tables)
 
-    body_size = _body_size(texts)
+    style = _PageStyle(_body_size(texts), _bold_share(texts) < BOLD_SIGNAL_MAX_SHARE)
     outs: list[_Out] = []
     for line_no, line in enumerate(_group_lines(items)):
-        outs.extend(_classify_line(line, line_no, body_size))
+        outs.extend(_classify_line(line, line_no, style))
     outs = _merge_wrapped(outs, texts)
     _mark_labels(outs)
     _emit(builder, outs)
@@ -233,7 +244,7 @@ def _segments(line: list[_Item]) -> list[_Segment]:
 # --- klasyfikacja ------------------------------------------------------------------------
 
 
-def _classify_line(line: list[_Item], line_no: int, body_size: float | None) -> list[_Out]:
+def _classify_line(line: list[_Item], line_no: int, style: _PageStyle) -> list[_Out]:
     segments = _segments(line)
     option_of = _pair_checkboxes(segments)
     alone = len(segments) == 1
@@ -250,7 +261,7 @@ def _classify_line(line: list[_Item], line_no: int, body_size: float | None) -> 
                 if index not in option_of.values():
                     outs.append(_Out("input_placeholder", "", bbox, None, line_no, alone))
             case "text":
-                outs.extend(_classify_text(seg, index in option_of, line_no, alone, body_size))
+                outs.extend(_classify_text(seg, index in option_of, line_no, alone, style))
     return outs
 
 
@@ -274,7 +285,7 @@ def _pair_checkboxes(segments: list[_Segment]) -> dict[int, int]:
 
 
 def _classify_text(
-    seg: _Segment, is_option: bool, line_no: int, alone: bool, body_size: float | None
+    seg: _Segment, is_option: bool, line_no: int, alone: bool, style: _PageStyle
 ) -> list[_Out]:
     text, bbox, conf = seg.text, seg.bbox, seg.confidence
     options = split_checkbox_options(text)
@@ -285,7 +296,11 @@ def _classify_text(
     if is_fill_only(text):
         return [_Out("input_placeholder", "", bbox, conf, line_no, alone)]
     heading = looks_like_heading(
-        text, bold=seg.bold, size=seg.size, body_size=body_size, alone=alone
+        text,
+        bold=seg.bold and style.bold_signal,
+        size=seg.size,
+        body_size=style.body_size,
+        alone=alone,
     )
     return [_Out("heading" if heading else "paragraph", text, bbox, conf, line_no, alone)]
 
@@ -311,6 +326,8 @@ def _merge_wrapped(outs: list[_Out], spans: Sequence[Span]) -> list[_Out]:
             and not FILL_RUN.search(prev.text)
             and not FILL_RUN.search(out.text)
             and not prev.text.rstrip().endswith(":")
+            and not _NEW_ITEM.match(out.text)
+            and not (prev.text.rstrip().endswith(".") and out.text[:1].isupper())
         ):
             confs = [c for c in (prev.confidence, out.confidence) if c is not None]
             merged[-1] = _Out(
@@ -360,6 +377,11 @@ def _union(boxes: Sequence[BBox]) -> BBox:
 
 def _contains(box: BBox, x: float, y: float) -> bool:
     return box.x0 <= x <= box.x1 and box.y0 <= y <= box.y1
+
+
+def _bold_share(spans: Sequence[Span]) -> float:
+    total = sum(len(s.text) for s in spans)
+    return sum(len(s.text) for s in spans if s.bold) / total if total else 0.0
 
 
 def _body_size(spans: Sequence[Span]) -> float | None:

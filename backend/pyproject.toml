@@ -67,6 +67,8 @@ module = [
     "jsonata.*",
     "lxml",
     "lxml.*",
+    "openpyxl",
+    "openpyxl.*",
 ]
 ignore_missing_imports = true
 

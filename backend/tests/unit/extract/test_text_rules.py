@@ -62,3 +62,11 @@ def test_builder_empty_document_has_one_page() -> None:
     doc = DocumentBuilder("xlsx").build()
     assert len(doc.pages) == 1
     assert doc.pages[0].blocks == []
+
+
+def test_hints_and_labels_are_not_headings() -> None:
+    assert not looks_like_heading("(imię i nazwisko)", bold=True, size=10, body_size=10, alone=True)
+    assert not looks_like_heading("Wnioskodawca:", bold=True, size=10, body_size=10, alone=True)
+    assert not looks_like_heading(
+        "D D - M M - R R R R", bold=False, size=8, body_size=8, alone=True
+    )
