@@ -149,3 +149,48 @@ async def test_normalization_warnings_in_result() -> None:
     assert r.draft is not None
     assert r.draft.title == "Wniosek o ustalenie numeru porządkowego nieruchomości"
     assert [w.code for w in r.warnings] == ["W16_TITLE_CASE_NORMALIZED"]
+
+
+def _long_doc(pages: int = 3, chars: int = 2500) -> DocumentModel:
+    line = "Miejscowość [POLE] Ulica [POLE] Numer ewidencyjny działki [POLE] Obręb [POLE] "
+    text = (line * (chars // len(line) + 1))[:chars]
+    return DocumentModel.model_validate(
+        {
+            "source": {"method": "pdf_text", "pages": pages},
+            "pages": [
+                {"number": n, "blocks": [{"id": f"b{n}", "kind": "paragraph", "text": text}]}
+                for n in range(1, pages + 1)
+            ],
+        }
+    )
+
+
+CHUNKED = _settings(llm_num_ctx=4096)
+
+
+async def test_long_document_chunked() -> None:
+    r, client = await _run([_valid(), _valid(), _valid()], settings=CHUNKED, doc=_long_doc())
+    assert len(client.calls) == 3
+    assert "Fragment 2 z 3" in client.calls[1]["messages"][1]["content"]
+    assert r.draft is not None and not r.fallback and r.retries == 0
+    assert len(list(r.draft.iter_fields())) == 4
+
+
+async def test_failed_later_chunk_gives_partial() -> None:
+    r, _ = await _run([_valid(), _invalid(), _valid()], settings=CHUNKED, doc=_long_doc())
+    assert r.draft is not None and not r.fallback
+    w14 = [w for w in r.warnings if w.code == "W14_PARTIAL_ANALYSIS"]
+    assert [w.path for w in w14] == ["chunk[1]"]
+
+
+async def test_chunking_stops_when_budget_runs_out() -> None:
+    r, client = await _run(
+        [_valid(), _valid(), _valid()], settings=CHUNKED, doc=_long_doc(), deadline=140
+    )
+    assert len(client.calls) == 2 and r.draft is not None
+    assert [w.path for w in r.warnings if w.code == "W14_PARTIAL_ANALYSIS"] == ["chunk[2]"]
+
+
+async def test_failed_first_chunk_falls_back() -> None:
+    r, client = await _run([_invalid()], settings=CHUNKED, doc=_long_doc())
+    assert len(client.calls) == 1 and r.fallback_reason == "invalid_output"

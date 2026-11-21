@@ -19,6 +19,7 @@ from app.core.config import LlmMode, Settings
 from app.models.document import DocumentModel
 from app.models.draft import FormDraft, llm_schema
 from app.models.warning import ConversionWarning
+from app.pipeline.draft_merge import merge_drafts, split_prompt_text
 from app.pipeline.draft_normalize import normalize_draft
 from app.pipeline.llm_client import (
     ChatMessage,
@@ -33,6 +34,9 @@ logger = logging.getLogger(__name__)
 FallbackReason = Literal["timeout", "unavailable", "invalid_output", "empty_document"]
 
 MIN_CALL_BUDGET_S = 30
+CHARS_PER_TOKEN = 3
+RESPONSE_RESERVE_TOKENS = 2048
+MIN_CHUNK_CHARS = 1000
 RETRY_BUDGET_FACTOR = 1.2
 
 _FALLBACK_MESSAGES: dict[FallbackReason, str] = {
@@ -121,38 +125,103 @@ async def _analyze(
     if not text.strip():
         return result._fail("empty_document")
 
-    messages: list[ChatMessage] = [
-        {"role": "system", "content": load_system_prompt()},
-        {"role": "user", "content": f"<dokument>\n{text}\n</dokument>"},
+    system = load_system_prompt()
+    max_chars = (settings.llm_num_ctx - RESPONSE_RESERVE_TOKENS) * CHARS_PER_TOKEN - len(system)
+    chunks = split_prompt_text(text, max(max_chars, MIN_CHUNK_CHARS))
+    if len(chunks) == 1:
+        outcome = await _single(client, settings, result, system, text, deadline, clock)
+    else:
+        outcome = await _chunked(client, settings, result, system, chunks, deadline, clock)
+    if isinstance(outcome, str):
+        return result._fail(outcome)
+
+    result.draft, warnings = normalize_draft(outcome, doc)
+    result.warnings.extend(warnings)
+    return result
+
+
+def _messages(system: str, text: str, note: str = "") -> list[ChatMessage]:
+    return [
+        {"role": "system", "content": system},
+        {"role": "user", "content": f"{note}<dokument>\n{text}\n</dokument>"},
+    ]
+
+
+async def _single(
+    client: LlmClient,
+    settings: Settings,
+    result: AnalysisResult,
+    system: str,
+    text: str,
+    deadline: float,
+    clock: Callable[[], float],
+) -> FormDraft | FallbackReason:
+    """Cały dokument w jednym wywołaniu; w trybie `accurate` jedna ponowna próba."""
+    messages = _messages(system, text)
+    outcome = await _call(client, settings, result, messages, deadline, clock)
+    if isinstance(outcome, str):
+        return outcome
+    reply, parsed = outcome
+    if not isinstance(parsed, ValidationError):
+        return parsed
+
+    first_call_s = reply.duration_ms / 1000
+    can_retry = (
+        result.mode == "accurate" and deadline - clock() >= first_call_s * RETRY_BUDGET_FACTOR
+    )
+    if not can_retry:
+        return "invalid_output"
+    result.retries += 1
+    messages = [
+        *messages,
+        {"role": "assistant", "content": reply.content},
+        {"role": "user", "content": _retry_message(parsed)},
     ]
     outcome = await _call(client, settings, result, messages, deadline, clock)
     if isinstance(outcome, str):
-        return result._fail(outcome)
-    reply, parsed = outcome
+        return outcome
+    _, parsed = outcome
+    return "invalid_output" if isinstance(parsed, ValidationError) else parsed
 
-    if isinstance(parsed, ValidationError):
-        first_call_s = reply.duration_ms / 1000
-        can_retry = (
-            result.mode == "accurate" and deadline - clock() >= first_call_s * RETRY_BUDGET_FACTOR
+
+async def _chunked(
+    client: LlmClient,
+    settings: Settings,
+    result: AnalysisResult,
+    system: str,
+    chunks: list[str],
+    deadline: float,
+    clock: Callable[[], float],
+) -> FormDraft | FallbackReason:
+    """Fragmenty kolejno, bez ponownych prób; nieudany fragment (poza pierwszym) pomijamy."""
+    drafts: list[FormDraft] = []
+    for i, chunk in enumerate(chunks):
+        note = f"Fragment {i + 1} z {len(chunks)} dokumentu.\n"
+        outcome = await _call(
+            client, settings, result, _messages(system, chunk, note), deadline, clock
         )
-        if not can_retry:
-            return result._fail("invalid_output")
-        result.retries += 1
-        messages = [
-            *messages,
-            {"role": "assistant", "content": reply.content},
-            {"role": "user", "content": _retry_message(parsed)},
-        ]
-        outcome = await _call(client, settings, result, messages, deadline, clock)
+        failure: FallbackReason | None = None
         if isinstance(outcome, str):
-            return result._fail(outcome)
-        _, parsed = outcome
-        if isinstance(parsed, ValidationError):
-            return result._fail("invalid_output")
-
-    result.draft, warnings = normalize_draft(parsed, doc)
-    result.warnings.extend(warnings)
-    return result
+            failure = outcome
+        elif isinstance(outcome[1], ValidationError):
+            failure = "invalid_output"
+        else:
+            drafts.append(outcome[1])
+        if failure is None:
+            continue
+        if i == 0:
+            return failure
+        result.warnings.append(
+            ConversionWarning(
+                code="W14_PARTIAL_ANALYSIS",
+                message=f"Fragment {i + 1} z {len(chunks)} dokumentu nie został przeanalizowany "
+                f"({_FALLBACK_MESSAGES[failure]}) - sprawdź, czy formularz jest kompletny.",
+                path=f"chunk[{i}]",
+            )
+        )
+        if failure == "timeout":
+            break
+    return merge_drafts(drafts)
 
 
 async def _call(
