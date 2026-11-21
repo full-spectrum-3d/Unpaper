@@ -50,6 +50,19 @@ export const Default: Story = {
 
 export const Preview: Story = { ...Default, globals: { theme: 'preview' } };
 
+export const ReadOnly: StoryObj<TextFieldHarness> = {
+  render: () => ({
+    template: '<app-text-field label="Urząd" [readonly]="true" value="Urząd Gminy" />',
+    moduleMetadata: { imports: [TextField] },
+  }),
+  globals: { theme: 'preview' },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByLabelText('Urząd');
+    expect(input).toHaveAttribute('readonly');
+    expect(input).toHaveValue('Urząd Gminy');
+  },
+};
+
 export const SignalForm: StoryObj<SignalFormHarness> = {
   render: () => ({
     template: '<app-text-field-form-harness />',
