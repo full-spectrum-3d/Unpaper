@@ -69,6 +69,8 @@ module = [
     "lxml.*",
     "openpyxl",
     "openpyxl.*",
+    "pytesseract",
+    "pytesseract.*",
 ]
 ignore_missing_imports = true
 
@@ -80,8 +82,9 @@ asyncio_default_fixture_loop_scope = "function"
 markers = [
     "llm: wymaga działającej Ollamy",
     "converter: wymaga LibreOffice (soffice)",
+    "ocr: wymaga Tesseracta z danymi `pol`",
 ]
-addopts = "-m 'not llm and not converter'"
+addopts = "-m 'not llm and not converter and not ocr'"
 # Domyślne norecursedirs pomija katalogi `build` (tests/unit/build).
 norecursedirs = [".*", "dist", "CVS", "_darcs", "{arch}", "*.egg", "venv", "node_modules"]
 
