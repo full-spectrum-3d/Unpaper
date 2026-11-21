@@ -173,3 +173,7 @@ def test_variant_choices() -> None:
 def test_subject_section_title_wins_over_applicant_words() -> None:
     assert applicant_field_reason("Miejscowość", ["Dane identyfikacyjne nieruchomości"]) is None
     assert applicant_field_reason("Ulica", ["Adres zamieszkania", "Informacje o budynku"])
+
+
+def test_applicant_person_section_is_not_other_person() -> None:
+    assert applicant_field_reason("Nazwisko i imię", ["Osoba wnioskodawca"])

@@ -67,6 +67,7 @@ _SUBJECT_CONTEXT = re.compile(
     r"(?i)nieruchomoś|działk|budyn|lokal\w* (mieszk|użytk)|obiekt|pojazd|zwierz|\bps(a|ów|y)\b"
     r"|drog|teren|inwestycj|robót|świetlic|imprez|zgromadz"
 )
+_APPLICANT_WORD = re.compile(r"(?i)wnioskodawc")
 # Numer pozycji przed oświadczeniem („35.”) w deklaracjach: to pole do zaznaczenia.
 _POSITION_NUMBER = re.compile(r"^\s*\d{1,3}\.?\s*$")
 # Warianty do skreślenia: „wynajęcie/użyczenie*”, „hodowanie/utrzymywanie*”.
@@ -146,7 +147,10 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
     ):
         return "miejsce i data złożenia oraz podpis są w sekcjach systemowych"
     titles = list(context)
-    other_person = any(_OTHER_PERSON.search(title) for title in titles)
+    # „Osoba wnioskodawca” to nadal wnioskodawca, a nie inna osoba.
+    other_person = any(
+        _OTHER_PERSON.search(title) and not _APPLICANT_WORD.search(title) for title in titles
+    )
     if words <= _PERSONAL_WORDS and words & _PERSONAL_KEYS:
         if not words & {"wnioskodawcy", "wnioskodawca"} and other_person:
             return None

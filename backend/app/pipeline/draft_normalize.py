@@ -5,8 +5,11 @@ ostrzeżeniem. Oświadczenia bierze z dokumentu (`draft_rules`), a nie od modelu
 Wynik zawsze przechodzi ponownie walidację `FormDraft`.
 """
 
+import json
 import re
 from difflib import SequenceMatcher
+from functools import cache
+from importlib.resources import files
 from typing import Any
 
 from app.models.document import FIELD_MARKER, DocumentModel
@@ -26,6 +29,7 @@ STATEMENT_FIELD_COVERAGE = 0.8
 # Pole innego typu niż `info` uznajemy za oświadczenie tylko przy dłuższej etykiecie:
 # krótkie etykiety („Rasa psa”) przypadkowo pokrywają się z tekstem oświadczeń.
 MIN_STATEMENT_LABEL_CHARS = 25
+STATEMENT_LIKE_KINDS = frozenset({"single_choice", "multi_choice", "short_text", "long_text"})
 VARIANT_PAGE_TITLE = "Przedmiot wniosku"
 VARIANT_SECTION_TITLE = "Rodzaj sprawy"
 VARIANT_LABEL_WORDS = frozenset({"rodzaj", "lub", "albo", "wybór", "wniosku", "sprawy"})
@@ -58,6 +62,7 @@ def normalize_draft(
 
     _downgrade_choices_without_options(draft, data, warnings)
     _remove_applicant_fields(data, warnings)
+    _remove_example_fields(data, doc_text, warnings)
     _remove_duplicate_fields(data, warnings)
     _remove_unnamed_attachments(data, warnings)
     data["statements"] = statements_from_document(doc)
@@ -142,6 +147,51 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
             section["fields"] = kept
 
 
+@cache
+def _example_labels() -> frozenset[str]:
+    """Etykiety pól z przykładu few-shot w prompcie (`example_reply.json`)."""
+    path = files("app") / "resources" / "prompts" / "example_reply.json"
+    example = json.loads(path.read_text(encoding="utf-8"))
+    return frozenset(
+        _normalize(field["label"])
+        for page in example["subject_pages"]
+        for section in page["sections"]
+        for field in section["fields"]
+    )
+
+
+def _remove_example_fields(
+    data: dict[str, Any], doc_text: str, warnings: list[ConversionWarning]
+) -> None:
+    """Pola przepisane z przykładu w prompcie, których nie ma w dokumencie, usuwamy.
+
+    Przy fragmencie z niewielką treścią (np. druga strona oświadczenia) model potrafi
+    oddać pola przykładu („Gatunek”, „Obwód pnia…”). Pole o takiej etykiecie zostaje,
+    gdy etykieta lub któraś z opcji występuje w dokumencie.
+    """
+    examples = _example_labels()
+
+    def leaked(field: dict[str, Any]) -> bool:
+        if _normalize(field["label"]) not in examples:
+            return False
+        texts = [field["label"], *field["options"]]
+        return not any(matches_text(t, doc_text, LABEL_MATCH_THRESHOLD) for t in texts)
+
+    for path, field in iter_field_dicts(data):
+        if leaked(field):
+            warnings.append(
+                ConversionWarning(
+                    code="W28_EXAMPLE_FIELD_REMOVED",
+                    message=f"Usunięto pole „{field['label']}”: pochodzi z przykładu w prompcie, "
+                    "a nie z blankietu.",
+                    path=path,
+                )
+            )
+    for page in data["subject_pages"]:
+        for section in page["sections"]:
+            section["fields"] = [f for f in section["fields"] if not leaked(f)]
+
+
 def _remove_duplicate_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
     """Pole o tej samej etykiecie co wcześniejsze w tej samej sekcji to powtórzenie modelu."""
     id_map: dict[str, str] = {}
@@ -217,7 +267,11 @@ def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarn
         covered = covered_by(label, statements) >= STATEMENT_FIELD_COVERAGE
         if field["kind"] == "info":
             return covered
-        return len(label) >= MIN_STATEMENT_LABEL_CHARS and (covered or is_statement(label))
+        # Liczba, data czy plik to dane do wpisania, nawet gdy stoją w zdaniu oświadczenia
+        # („Oświadczam, że średnia roczna liczba … wynosi ……”).
+        if field["kind"] not in STATEMENT_LIKE_KINDS:
+            return False
+        return len(label) >= MIN_STATEMENT_LABEL_CHARS and is_statement(label)
 
     removed = {id(field) for _, field in iter_field_dicts(data) if is_statement_field(field)}
     for path, field in iter_field_dicts(data):

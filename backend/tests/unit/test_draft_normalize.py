@@ -338,3 +338,33 @@ def test_purpose_field_mentioning_variants_not_converted() -> None:
     out, _ = normalize_draft(_make(mutate), PSY_DOC)
     assert _field(out, "f1").kind == "short_text"
     assert out.subject_pages[0].sections[0].fields[0].label == "Hodowanie lub utrzymywanie"
+
+
+def test_fields_copied_from_prompt_example_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _section(d, "Drzewa", "Gatunek", "Obwód pnia na wysokości 130 cm (cm)")
+        _fields(d).append(
+            {"id": "f9", "label": "Rodzaj", "kind": "single_choice", "required": True,
+             "options": ["Drzewa", "Krzewy"]}
+        )  # fmt: skip
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert _codes(warnings).count("W28_EXAMPLE_FIELD_REMOVED") == 3
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4"]
+
+
+def test_number_inside_statement_kept() -> None:
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+        ("paragraph", "Oświadczam, że średnia roczna liczba dużych jednostek owiec wynosi"),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {"id": "f5", "label": "Średnia roczna liczba dużych jednostek owiec",
+             "kind": "number", "required": True}
+        )  # fmt: skip
+
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert "W17_STATEMENT_REMOVED" not in _codes(warnings)
+    assert _field(out, "f5").kind == "number"
