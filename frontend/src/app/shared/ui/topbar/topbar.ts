@@ -7,7 +7,7 @@ import { Component, input, output } from '@angular/core';
       <span class="font-bold">{{ appName() }}</span>
       <nav
         aria-label="Główna"
-        class="flex gap-[16px] [&_a]:text-on-topbar [&_a]:opacity-75 [&_a:hover]:opacity-100 [&_a]:focus-ring [&_a]:outline-on-topbar [&_a[aria-current=page]]:opacity-100 [&_a[aria-current=page]]:border-b-2 [&_a[aria-current=page]]:border-on-topbar"
+        class="flex gap-[16px] [&_a]:text-on-topbar [&_a]:opacity-75 [&_a:hover]:opacity-100 [&_a]:focus-ring [&_a:focus-visible]:outline-on-topbar [&_a[aria-current=page]]:opacity-100 [&_a[aria-current=page]]:border-b-2 [&_a[aria-current=page]]:border-on-topbar"
       >
         <ng-content />
       </nav>
@@ -15,7 +15,7 @@ import { Component, input, output } from '@angular/core';
         <span>{{ userName() }}</span>
         <button
           type="button"
-          class="text-on-topbar border border-on-topbar rounded-field px-[12px] py-field-y text-body font-semibold hover:opacity-75 focus-ring outline-on-topbar"
+          class="text-on-topbar border border-on-topbar rounded-field px-[12px] py-field-y text-body font-semibold hover:opacity-75 focus-ring focus-visible:outline-on-topbar"
           (click)="logout.emit()"
         >
           Wyloguj

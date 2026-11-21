@@ -34,6 +34,17 @@ export const Default: Story = {
       2,
     );
     expect(c.getByText('j.nowak')).toBeVisible();
+    // focus ring must stay visible on navy
+    const ringed = () => getComputedStyle(document.activeElement as HTMLElement);
+    await userEvent.tab();
+    expect(document.activeElement).toBe(c.getByRole('link', { name: 'Import' }));
+    expect(ringed().outlineColor).toBe('rgb(255, 255, 255)');
+    expect(ringed().outlineWidth).toBe('3px');
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(c.getByRole('button', { name: 'Wyloguj' }));
+    expect(ringed().outlineColor).toBe('rgb(255, 255, 255)');
+    expect(ringed().outlineWidth).toBe('3px');
     await userEvent.click(c.getByRole('button', { name: 'Wyloguj' }));
     expect(args.logout).toHaveBeenCalledOnce();
   },
