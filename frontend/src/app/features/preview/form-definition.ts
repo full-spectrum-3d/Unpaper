@@ -39,6 +39,8 @@ export interface FormField {
   options?: FieldOption[];
   validation?: string[];
   dictionaryName?: string;
+  searchEnabled?: boolean | null;
+  multiLevelTree?: boolean;
   readOnly?: boolean;
   repeatingSectionGrid?: Question[];
   defaultValue?: string | string[];

@@ -89,11 +89,14 @@ export const AllTypes: Story = {
     await userEvent.click(radios[1]);
     expect(radios[1]).toBeChecked();
 
-    const sel = within(c.getByLabelText('Wybór'));
-    expect(sel.getAllByRole('option')[0]).toHaveTextContent('Wybierz');
-    expect(
-      within(c.getByLabelText('Kraj')).getByRole('option', { name: 'Słownik: Kraje' }),
-    ).toBeDisabled();
+    const sel = c.getByRole('combobox', { name: 'Wybór' });
+    await userEvent.click(sel);
+    expect(c.getAllByRole('option').length).toBeGreaterThan(0);
+    await userEvent.keyboard('{Escape}');
+
+    await userEvent.click(c.getByRole('combobox', { name: 'Kraj' }));
+    expect(c.getByRole('option', { name: 'Polska' })).toBeVisible();
+    await userEvent.keyboard('{Escape}');
 
     const chk = c.getByRole('checkbox', { name: 'Zgoda ogólna' });
     await userEvent.click(chk);

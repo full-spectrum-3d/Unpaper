@@ -1,28 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
+import { Combobox } from '../../../shared/ui/combobox/combobox';
+import { isSearchable, selectOptions } from '../select-options';
 import { FieldBase } from './field-base';
 
 @Component({
   selector: 'app-select-field',
+  imports: [Combobox],
   template: `
-    <label [for]="id()" [class]="labelClass()">{{ label() }}</label>
-    @if (hasDescription()) {
-      <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
-    }
-    <select
-      class="block w-full bg-surface text-fg text-body border border-border-input rounded-field px-field-x py-field-y focus-ring"
-      [id]="id()"
-      [attr.aria-describedby]="describedBy()"
-      (change)="set($any($event.target).value)"
+    <app-combobox
+      [label]="label()"
+      [labelHidden]="!hasTitle()"
+      [options]="options()"
+      [searchable]="searchable()"
+      [describedBy]="describedBy()"
+      [emptyText]="emptyText()"
+      [value]="value() ?? ''"
+      (valueChange)="set($event)"
     >
-      <option value="" [selected]="!value()">Wybierz</option>
-      @for (o of field().options ?? []; track o.id) {
-        <option [value]="o.name" [selected]="value() === o.name">{{ o.name }}</option>
+      @if (hasDescription()) {
+        <div
+          description
+          class="text-fg-muted mb-1.5"
+          [id]="descId()"
+          [innerHTML]="field().description"
+        ></div>
       }
-      @if (!field().options?.length && field().dictionaryName) {
-        <option disabled>Słownik: {{ field().dictionaryName }}</option>
-      }
-    </select>
+    </app-combobox>
   `,
   host: { class: 'block' },
 })
-export class SelectField extends FieldBase {}
+export class SelectField extends FieldBase {
+  protected readonly options = computed(() => selectOptions(this.field()));
+  protected readonly searchable = computed(() => isSearchable(this.field(), this.options().length));
+  protected readonly emptyText = computed(() =>
+    !this.options().length && this.field().dictionaryName
+      ? `Brak pozycji w słowniku ${this.field().dictionaryName}`
+      : 'Brak wyników',
+  );
+}
