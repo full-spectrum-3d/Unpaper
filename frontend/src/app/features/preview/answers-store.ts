@@ -1,5 +1,5 @@
 import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
-import { FormField } from './form-definition';
+import { FormDefinition, FormField, Question } from './form-definition';
 import { SAMPLE_REGISTRY_DATA } from './sample-registry-data';
 
 export function initialAnswer(field: FormField): unknown {
@@ -25,20 +25,33 @@ export class AnswersStore {
   readonly version: Signal<number> = this.versionSignal.asReadonly();
 
   answer(field: FormField): WritableSignal<unknown> {
-    let entry = this.entries.get(field.id);
-    if (!entry) {
-      const sig = signal<unknown>(initialAnswer(field));
-      const rawSet = sig.set.bind(sig);
-      // Wrapping set/update keeps `version` in sync without effects or subscriptions.
-      sig.set = (v) => {
-        rawSet(v);
-        this.versionSignal.update((n) => n + 1);
-      };
-      sig.update = (fn) => sig.set(fn(sig()));
-      entry = { sig, field, rawSet };
-      this.entries.set(field.id, entry);
-    }
-    return entry.sig;
+    return (this.entries.get(field.id) ?? this.create(field)).sig;
+  }
+
+  /** Creates entries for every field of every tab, so `snapshot()` is complete; replaces earlier entries. */
+  init(def: FormDefinition): void {
+    this.entries.clear();
+    const visit = (qs: Question[]) =>
+      qs.forEach(({ field }) => {
+        this.create(field);
+        visit(field.repeatingSectionGrid ?? []);
+      });
+    def.tabs.forEach((t) => visit(t.questions));
+    this.versionSignal.update((n) => n + 1);
+  }
+
+  private create(field: FormField) {
+    const sig = signal<unknown>(initialAnswer(field));
+    const rawSet = sig.set.bind(sig);
+    // Wrapping set/update keeps `version` in sync without effects or subscriptions.
+    sig.set = (v) => {
+      rawSet(v);
+      this.versionSignal.update((n) => n + 1);
+    };
+    sig.update = (fn) => sig.set(fn(sig()));
+    const entry = { sig, field, rawSet };
+    this.entries.set(field.id, entry);
+    return entry;
   }
 
   reset(): void {

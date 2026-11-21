@@ -1,4 +1,7 @@
-import { FormField } from './form-definition';
+import { Component, inject, model, provideZonelessChangeDetection } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import nadplata from '../import/mock-forms/nadplata-podatku.json';
+import { FormDefinition, FormField } from './form-definition';
 import { AnswersStore, initialAnswer } from './answers-store';
 import { SAMPLE_REGISTRY_DATA } from './sample-registry-data';
 
@@ -65,5 +68,59 @@ describe('AnswersStore', () => {
     const s = new AnswersStore();
     const field = f({});
     expect(s.answer(field)).toBe(s.answer(field));
+  });
+});
+
+describe('AnswersStore.init', () => {
+  const def = nadplata as unknown as FormDefinition;
+  const page2 = def.tabs[1].questions[0].field;
+  const nested = def.tabs[0].questions.find((q) => q.field.repeatingSectionGrid?.length)!.field
+    .repeatingSectionGrid![0].field;
+
+  it('snapshot is empty for never-initialised fields', () => {
+    expect(new AnswersStore().snapshot().has(page2.id)).toBe(false);
+  });
+
+  it('creates entries for all fields incl. nested, bumping version once', () => {
+    const s = new AnswersStore();
+    s.init(def);
+    expect(s.version()).toBe(1);
+    expect(s.snapshot().get(page2.id)).toEqual(initialAnswer(page2));
+    expect(s.snapshot().get(nested.id)).toEqual(initialAnswer(nested));
+  });
+
+  it('clears old entries when called with a new definition', () => {
+    const s = new AnswersStore();
+    s.init(def);
+    s.init({ ...def, tabs: [] });
+    expect(s.snapshot().size).toBe(0);
+  });
+});
+
+@Component({ selector: 'app-child', template: '' })
+class ChildComponent {
+  readonly value = model<unknown>('');
+}
+
+@Component({
+  imports: [ChildComponent],
+  providers: [AnswersStore],
+  template: '<app-child [(value)]="answer" />',
+})
+class HostComponent {
+  readonly store = inject(AnswersStore);
+  readonly answer = this.store.answer(f({ id: 'bound' }));
+}
+
+describe('AnswersStore two-way binding', () => {
+  it('bumps version when a child model changes', () => {
+    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    const fixture = TestBed.createComponent(HostComponent);
+    fixture.detectChanges();
+    const { store } = fixture.componentInstance;
+    const v = store.version();
+    fixture.debugElement.children[0].componentInstance.value.set('x');
+    expect(store.version()).toBe(v + 1);
+    expect(store.snapshot().get('bound')).toBe('x');
   });
 });
