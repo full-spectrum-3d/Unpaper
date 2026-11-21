@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "api:check": "sh scripts/api-check.sh",
     "api:generate": "npm run api:export && ng-openapi-gen --config ng-openapi-gen.json",
     "api:export": "command -v uv >/dev/null || { echo 'api:export wymaga uv (https://docs.astral.sh/uv/)' >&2; exit 1; }; uv run --project ../backend python scripts/export-openapi.py ../docs/openapi.json",
     "start": "ng serve",
