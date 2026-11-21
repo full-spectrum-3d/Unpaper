@@ -49,6 +49,12 @@ _KIND_TYPES: dict[FieldKind, FieldType] = {
     "file": FieldType.FILE_UPLOADER,
 }
 
+_AMOUNT_LABEL = re.compile(
+    r"^\s*(kwot[aęy]|wysokość|należnoś\w*|wartość)\b|\b(zł|pln)\b", re.IGNORECASE
+)
+_NOT_AMOUNT = re.compile(r"słownie|rachunk|numer|nazwa|tytuł", re.IGNORECASE)
+"""Kwota słownie, numer rachunku, tytuł płatności: tekst, mimo słowa „kwota” lub „zł”."""
+
 _SEMANTIC_VALIDATORS: dict[Semantic, Validator] = {
     Semantic.PESEL: Validator.PESEL,
     Semantic.NIP: Validator.NIP,
@@ -235,6 +241,17 @@ def map_draft_field(field: DraftField, *, key: str) -> tuple[FieldNode, list[Con
         node.description_html = file_constraints_html()
     else:
         node.semantic = label_semantic(field.label)
+    # Typ z etykiety wygrywa ze szkicem LLM: kod pocztowy/PESEL jako NUMBER traci walidator
+    # formatu (NUMBER dopuszcza tylko REQUIRED), a kwota jako tekst przyjmuje dowolny napis.
+    if node.type is FieldType.NUMBER and node.semantic in _SEMANTIC_VALIDATORS:
+        node.type = FieldType.TEXT_FIELD
+    elif (
+        node.type is FieldType.TEXT_FIELD
+        and node.semantic is None
+        and _AMOUNT_LABEL.search(field.label)
+        and not _NOT_AMOUNT.search(field.label)
+    ):
+        node.type = FieldType.NUMBER
     node.validation = _validators(field.required, node.semantic, node.type)
     return node, issues
 

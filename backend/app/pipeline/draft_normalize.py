@@ -25,6 +25,7 @@ from app.pipeline.draft_rules import (
     statements_from_document,
     variant_choices,
 )
+from app.pipeline.rule_draft import find_attachments
 
 STATEMENT_FIELD_COVERAGE = 0.8
 # Pole innego typu niż `info` uznajemy za oświadczenie tylko przy dłuższej etykiecie:
@@ -83,9 +84,11 @@ def normalize_draft(
     _remove_example_fields(data, doc_text, warnings)
     _remove_duplicate_fields(data, warnings)
     _remove_unnamed_attachments(data, warnings)
+    _add_document_attachments(data, doc, warnings)
     data["statements"] = statements_from_document(doc)
     _remove_statement_fields(data, warnings)
     _add_variant_choices(data, doc, warnings)
+    _add_correction_choice(data, doc_text, warnings)
     repair_conditions(data, warnings)
     _normalize_title_case(data, warnings)
     _check_labels(data, doc_text, warnings)
@@ -398,6 +401,123 @@ def _add_variant_choices(
             fields = iter_field_dicts(data)
             message = f"Dodano pole wyboru „{label}” z wariantów do skreślenia na blankiecie."
         warnings.append(ConversionWarning(code="W27_VARIANT_CHOICE", message=message, path=path))
+
+
+def _add_document_attachments(
+    data: dict[str, Any], doc: DocumentModel, warnings: list[ConversionWarning]
+) -> None:
+    """Lista „Załączniki:” z dokumentu uzupełnia załączniki modelu (model bywa je pomija)."""
+    blocks = [block for _, block in doc.iter_content_blocks()]
+    known: list[str] = data["attachments"]
+    for name in find_attachments(blocks)[0]:
+        if any(
+            matches_text(name, k, LABEL_MATCH_THRESHOLD)
+            or matches_text(k, name, LABEL_MATCH_THRESHOLD)
+            for k in known
+        ):
+            continue
+        known.append(name)
+        warnings.append(
+            ConversionWarning(
+                code="W34_ATTACHMENT_FROM_DOCUMENT",
+                message=f"Dodano załącznik „{name}” z listy załączników na blankiecie.",
+                path="attachments",
+            )
+        )
+
+
+_PURPOSE = re.compile(r"(?:cel\w*|okoliczności)\s+złożenia", re.IGNORECASE)
+_CORRECTION = re.compile(r"\bkorekt", re.IGNORECASE)
+_CORRECTION_REASON = re.compile(r"uzasadnieni\w*\s+(?:przyczyn\w*\s+)?korekt", re.IGNORECASE)
+PURPOSE_OPTIONS = ["Złożenie deklaracji", "Korekta deklaracji"]
+
+
+def _add_correction_choice(
+    data: dict[str, Any], doc_text: str, warnings: list[ConversionWarning]
+) -> None:
+    """Deklaracja z „celem złożenia” (złożenie/korekta) ma wybór celu i - gdy blankiet tego
+    wymaga - uzasadnienie korekty widoczne tylko przy korekcie.
+
+    Sama wzmianka o korekcie (np. załącznik „korekta deklaracji”) nie wystarcza: potrzebny
+    jest nagłówek „Cel złożenia” / „Okoliczności złożenia”.
+    """
+    if not (_PURPOSE.search(doc_text) and _CORRECTION.search(doc_text)):
+        return
+    fields = iter_field_dicts(data)
+    purpose = next(
+        (
+            (path, f)
+            for path, f in fields
+            if f["kind"] in CHOICE_KINDS
+            and (_PURPOSE.search(f["label"]) or any(_CORRECTION.search(o) for o in f["options"]))
+        ),
+        None,
+    )
+    if purpose is None:
+        field: dict[str, Any] = {
+            "id": _next_id(data),
+            "label": "Cel złożenia",
+            "kind": "single_choice",
+            "required": True,
+            "options": list(PURPOSE_OPTIONS),
+            "visible_when": [],
+        }
+        if not data["subject_pages"]:
+            data["subject_pages"].append({"title": VARIANT_PAGE_TITLE, "sections": []})
+        page = data["subject_pages"][0]
+        if not page["sections"]:
+            page["sections"].append(
+                {"title": VARIANT_SECTION_TITLE, "repeating": False, "fields": []}
+            )
+        page["sections"][0]["fields"].insert(0, field)
+        purpose = ("subject_pages[0].sections[0].fields[0]", field)
+        warnings.append(
+            ConversionWarning(
+                code="W35_CORRECTION_CHOICE",
+                message="Dodano pole wyboru „Cel złożenia” (złożenie lub korekta deklaracji).",
+                path=purpose[0],
+            )
+        )
+    path, choice = purpose
+    correction = next((o for o in choice["options"] if _CORRECTION.search(o)), None)
+    if correction is None:
+        correction = PURPOSE_OPTIONS[1]
+        choice["options"].append(correction)
+        warnings.append(
+            ConversionWarning(
+                code="W35_CORRECTION_CHOICE",
+                message=f"Dodano opcję „{correction}” do pola „{choice['label']}”.",
+                path=path,
+            )
+        )
+    if not _CORRECTION_REASON.search(doc_text) or any(
+        _CORRECTION_REASON.search(f["label"]) for _, f in iter_field_dicts(data)
+    ):
+        return
+    section = _section_of(data, choice)
+    section["fields"].insert(
+        section["fields"].index(choice) + 1,
+        {
+            "id": _next_id(data),
+            "label": "Uzasadnienie przyczyn korekty",
+            "kind": "long_text",
+            "required": True,
+            "options": [],
+            "visible_when": [{"field_id": choice["id"], "op": "equals", "value": correction}],
+        },
+    )
+    warnings.append(
+        ConversionWarning(
+            code="W35_CORRECTION_CHOICE",
+            message="Dodano pole „Uzasadnienie przyczyn korekty” widoczne przy korekcie.",
+            path=path,
+        )
+    )
+
+
+def _section_of(data: dict[str, Any], field: dict[str, Any]) -> dict[str, Any]:
+    sections = (s for p in data["subject_pages"] for s in p["sections"])
+    return next(s for s in sections if any(f is field for f in s["fields"]))
 
 
 def _only_variants(field: dict[str, Any], variants: list[str]) -> bool:

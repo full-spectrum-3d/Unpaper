@@ -2,7 +2,7 @@ import { KNOWN_FIELD_TYPES, FormField, Question } from './form-definition';
 import { isCascade, selectOptions } from './select-options';
 import { validateField } from './validators';
 
-const NO_ANSWER = new Set(['SECTION', 'TEXT_BLOCK']);
+const NO_ANSWER = new Set(['SECTION', 'REPEATING_SECTION', 'INFO_SECTION', 'TEXT_BLOCK']);
 const KNOWN = new Set<string>(KNOWN_FIELD_TYPES);
 
 /** Unknown types have no control and an option-less SELECT cannot be filled: never block on those. */
@@ -26,7 +26,8 @@ export function validateStep(
         const error = validateField(field, answers.get(field.id));
         if (error) errors.set(field.id, error);
       }
-      visit(field.repeatingSectionGrid ?? []);
+      // Children of a type the preview cannot render are invisible: never block on them.
+      if (KNOWN.has(field.type)) visit(field.repeatingSectionGrid ?? []);
     });
   visit(questions);
   return errors;

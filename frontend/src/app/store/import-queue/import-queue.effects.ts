@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, ROOT_EFFECTS_INIT, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, asapScheduler, catchError, filter, from, map, mergeMap, observeOn, of, tap, withLatestFrom } from 'rxjs';
 import { errorCode, toUserMessage } from '../../core/api-error';
 import { BATCH_CONCURRENCY, CONVERT_FILE } from '../../features/import/convert-file';
 import { FileRegistry } from '../../features/import/file-registry';
 import { AuthActions } from '../auth/auth.actions';
-import { selectToken } from '../auth/auth.selectors';
+import { selectToken, selectUsername } from '../auth/auth.selectors';
 import { ImportQueueActions as A } from './import-queue.actions';
 import { PasswordState } from './import-queue.reducer';
 import { selectQueueItems } from './import-queue.selectors';
@@ -23,7 +23,7 @@ export class ImportQueueEffects {
   private readonly store = inject(Store);
   private readonly registry = inject(FileRegistry);
   private readonly convert = inject(CONVERT_FILE);
-  /** Username of the last login; in memory only, as the queue itself does not survive a reload. */
+  /** Username the queue belongs to; in memory only, seeded from the restored session after a reload. */
   private owner: string | null = null;
 
   schedule$ = createEffect(() =>
@@ -57,8 +57,15 @@ export class ImportQueueEffects {
 
   session$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.logout, AuthActions.loginSuccess),
-      mergeMap((action) => {
+      ofType(ROOT_EFFECTS_INIT, AuthActions.logout, AuthActions.loginSuccess),
+      withLatestFrom(this.store.select(selectUsername)),
+      mergeMap(([action, restoredUser]) => {
+        if (action.type === ROOT_EFFECTS_INIT) {
+          // Without this a session restored from sessionStorage has no owner and the next
+          // user logging in on this tab would inherit the queue.
+          this.owner = restoredUser;
+          return EMPTY;
+        }
         if (action.type === AuthActions.logout.type) {
           if ((action as ReturnType<typeof AuthActions.logout>).reason === 'manual') {
             this.owner = null;

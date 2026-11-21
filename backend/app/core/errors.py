@@ -217,6 +217,8 @@ async def _handle_http_exception(request: Request, exc: Exception) -> Response:
             code = ErrorCode.NOT_FOUND
         case HTTPStatus.METHOD_NOT_ALLOWED:
             code = ErrorCode.METHOD_NOT_ALLOWED
+        case HTTPStatus.REQUEST_ENTITY_TOO_LARGE:
+            code = ErrorCode.FILE_TOO_LARGE  # limit `max_body_size` aplikacji
         case _:
             code = ErrorCode.HTTP_ERROR
     try:

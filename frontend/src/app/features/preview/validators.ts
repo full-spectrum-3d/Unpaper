@@ -104,6 +104,10 @@ export function validateField(field: FormField, answer: unknown): string | null 
     return REQUIRED_MESSAGES[field.type] ?? 'Uzupełnij to pole';
   }
   if (empty || typeof answer !== 'string') return null;
+  // NUMBER carries no format code (only REQUIRED is allowed): the type itself is the rule.
+  if (field.type === 'NUMBER' && !/^-?\d+(?:[.,]\d+)?$/.test(answer.replace(/\s/g, ''))) {
+    return 'Wpisz liczbę, np. 1250,50';
+  }
   for (const code of codes) {
     if (code === 'REQUIRED') continue;
     const rule = FORMAT_RULES[code];
