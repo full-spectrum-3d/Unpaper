@@ -417,3 +417,38 @@ Kryteria: blankiet gminny lub powiatowy, dostępny publicznie w BIP jako DOCX al
 11. Zdjęcie telefonem jednego z blankietów z pkt 1–5: pokazuje ścieżkę OCR i ostrzeżenia o niskiej pewności.
 
 Przygotowanie demo: pobrać 2–3 blankiety z pkt 1–5 z BIP różnych gmin (różne układy, DOCX i PDF), przepuścić przez `llm_eval/extract.py` i dopisać jako przypadki z oczekiwanymi polami (zajmuje to ok. 10 min na blankiet). Zmierzyć przed demo, rozgrzać model przy starcie i mieć zapisane wyniki dla dokumentów z pkt 9–10 na wypadek przekroczenia czasu.
+
+
+## Pomiar 2026-11-21: stan wyjściowy
+
+Przypadki zestawu `cases` są teraz budowane produkcyjnym ekstraktorem (Task 1). Zestaw `holdout` ma 7 dokumentów bez skanu (lokalnie nie ma Tesseracta). Metryki to średnia z 3 przebiegów, w nawiasie min–max. Surowe wiersze: `backend/llm_eval/baseline_rows.json`, agregat: `backend/llm_eval/baseline.json`.
+
+### Zestaw cases, qwen3.5:35b-a3b
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| nadplata | 89% (83%–100%) | 84% (83%–86%) |
+| numer-porzadkowy | 100% (100%–100%) | 100% (100%–100%) |
+| odpady | 78% (78%–78%) | 32% (32%–32%) |
+| pas-drogowy | 89% (83%–92%) | 49% (48%–50%) |
+| psy | 100% (100%–100%) | 91% (91%–91%) |
+| stypendium | 100% (100%–100%) | 73% (68%–76%) |
+| swietlica | 100% (100%–100%) | 100% (100%–100%) |
+| zaswiadczenie | 100% (100%–100%) | 100% (100%–100%) |
+| zwrot-oplaty | 100% (100%–100%) | 98% (93%–100%) |
+| **średnia** (9) | **95%** | **81%** |
+
+### Zestaw cases, rules
+
+| Przypadek | Trafność (min–max) | Precyzja (min–max) |
+|---|---|---|
+| nadplata | 100% (100%–100%) | 100% (100%–100%) |
+| numer-porzadkowy | 100% (100%–100%) | 100% (100%–100%) |
+| odpady | 17% (17%–17%) | 33% (33%–33%) |
+| pas-drogowy | 58% (58%–58%) | 88% (88%–88%) |
+| psy | 33% (33%–33%) | 44% (44%–44%) |
+| stypendium | 60% (60%–60%) | 40% (40%–40%) |
+| swietlica | 100% (100%–100%) | 100% (100%–100%) |
+| zaswiadczenie | 50% (50%–50%) | 67% (67%–67%) |
+| zwrot-oplaty | 0% (0%–0%) | 60% (60%–60%) |
+| **średnia** (9) | **58%** | **70%** |
