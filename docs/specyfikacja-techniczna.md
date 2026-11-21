@@ -320,7 +320,6 @@ Prefiks `/api/v1`. Dokumentacja OpenAPI pod `/docs` (Swagger UI) i `/openapi.jso
 | POST | `/auth/token` | logowanie kontem technicznym z konfiguracji (`application/x-www-form-urlencoded`: `username`, `password`) | `200 {access_token, token_type, expires_in}` |
 | POST | `/forms/convert` | **główny endpoint**: `multipart/form-data`, pole `file` (dokładnie 1 plik) | `200 application/json` – konfiguracja formularza (§7) |
 | POST | `/forms/convert?report=true` | jak wyżej, ale odpowiedź zawiera też raport | `200 {form, report}` |
-| POST | `/forms/convert?mode=accurate\|fast` | tryb analizy LLM: `accurate` (większy model, ponowna próba) lub `fast` (mniejszy model, bez ponownej próby); domyślnie `LLM_DEFAULT_MODE` | jak wyżej |
 | POST | `/forms/validate` | walidacja dowolnego JSON-a formularza (np. poprawionego ręcznie) | `200 {valid, errors[], warnings[]}` |
 | GET | `/dictionaries` | katalog słowników: predefiniowane i proponowane | `200 [...]` |
 | GET | `/initial-data-sources` | źródła danych inicjalnych i ich atrybuty | `200 [...]` |
@@ -744,9 +743,7 @@ Wszystkie parametry przez zmienne środowiskowe (pydantic-settings). Plik `.env.
 | `API_USER` / `API_PASSWORD_HASH` | — (wymagane) | konto techniczne |
 | `CORS_ORIGINS` | `http://localhost:8080` | |
 | `LLM_BASE_URL` | `http://llm:11434` | parametr integracyjny |
-| `LLM_MODEL` | `qwen3:8b` | model trybu `accurate` |
-| `LLM_FAST_MODEL` | `qwen3:4b` | model trybu `fast` |
-| `LLM_DEFAULT_MODE` | `accurate` | tryb, gdy żądanie nie podaje `mode` |
+| `LLM_MODEL` | `qwen3:8b` | model analizy (jeden; przy niepoprawnym szkicu jedna ponowna próba) |
 | `LLM_TIMEOUT_S` | `240` | limit jednego wywołania modelu |
 | `LLM_TEMPERATURE` / `LLM_SEED` | `0` / `42` | powtarzalność |
 | `LLM_NUM_CTX` | `16384` | okno kontekstu |
@@ -785,8 +782,7 @@ LLM w testach jednostkowych mockujemy (zapisane odpowiedzi). Testy golden i E2E 
 
 | Obszar | Cel |
 |---|---|
-| Czas konwersji, tryb `fast` (CPU 8 rdzeni, 16 GB RAM, formularz 1–3 strony) | p50 ≤ 70 s, p95 ≤ 150 s |
-| Czas konwersji, tryb `accurate` (CPU jw.) | p50 ≤ 120 s, p95 ≤ 300 s |
+| Czas konwersji (CPU 8 rdzeni, 16 GB RAM, formularz 1–3 strony) | p50 ≤ 120 s, p95 ≤ 300 s |
 | Czas konwersji z GPU (≥ 8 GB VRAM) | p50 ≤ 15 s |
 | Zasoby | api ≤ 1 GB RAM. llm ≤ 8 GB RAM (model 8B Q4) |
 | Poprawność strukturalna | 100% wyników przechodzi JSON Schema i R01–R15 (wymuszone kodem) |

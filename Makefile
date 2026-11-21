@@ -11,7 +11,6 @@ down:
 
 model:
 	docker compose run --rm llm ollama pull $${LLM_MODEL:-qwen3:8b}
-	docker compose run --rm llm ollama pull $${LLM_FAST_MODEL:-qwen3:4b}
 
 test:
 	cd backend && uv run pytest

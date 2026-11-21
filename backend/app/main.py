@@ -43,7 +43,7 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
     if app.state.llm_client is None:
         app.state.llm_client = OllamaClient(settings)
     client: LlmClient = app.state.llm_client
-    model = settings.llm_model_for(settings.llm_default_mode)
+    model = settings.llm_model
     app.state.warm_up_task = asyncio.create_task(_warm_up(client, model))
     try:
         yield

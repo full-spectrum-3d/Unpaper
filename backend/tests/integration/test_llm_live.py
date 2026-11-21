@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from app.core.config import LlmMode, Settings
+from app.core.config import Settings
 from app.models.document import DocumentModel
 from app.pipeline.analyze import analyze
 from app.pipeline.draft_normalize import matches_text
@@ -21,8 +21,7 @@ EXPECTED = ["Miejscowość", "Ulica", "Numer ewidencyjny działki", "Obręb"]
 
 
 @pytest.mark.llm
-@pytest.mark.parametrize("mode", ["accurate", "fast"])
-async def test_wniosek1_live(mode: LlmMode) -> None:
+async def test_wniosek1_live() -> None:
     settings = Settings(
         app_env="development",
         auth_enabled=False,
@@ -31,17 +30,17 @@ async def test_wniosek1_live(mode: LlmMode) -> None:
     )
     client = OllamaClient(settings)
     try:
-        r = await analyze(DOC, settings, client, deadline=time.monotonic() + 600, mode=mode)
+        r = await analyze(DOC, settings, client, deadline=time.monotonic() + 600)
     finally:
         await client.aclose()
     print(
-        f"\n{mode}: {r.duration_ms} ms, in={r.prompt_tokens}, out={r.output_tokens}, "
+        f"\n{r.model}: {r.duration_ms} ms, in={r.prompt_tokens}, out={r.output_tokens}, "
         f"retries={r.retries}, warnings={[w.code for w in r.warnings]}"
     )
     assert r.draft is not None and not r.fallback
     labels = [f.label for _, f in r.draft.iter_fields()]
     d = r.draft
-    print(f"{mode}: {d.title!r} / {d.authority_kind} {d.authority_name!r} / {labels}")
+    print(f"{r.model}: {d.title!r} / {d.authority_kind} {d.authority_name!r} / {labels}")
     found = sum(any(matches_text(e, label, 0.6) for label in labels) for e in EXPECTED)
     assert found >= 3
     assert r.draft.authority_kind == "ORGAN"

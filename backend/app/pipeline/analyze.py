@@ -15,7 +15,7 @@ from typing import Literal
 
 from pydantic import ValidationError
 
-from app.core.config import LlmMode, Settings
+from app.core.config import Settings
 from app.models.document import DocumentModel
 from app.models.draft import FormDraft, llm_schema
 from app.models.warning import ConversionWarning
@@ -50,7 +50,6 @@ _FALLBACK_MESSAGES: dict[FallbackReason, str] = {
 @dataclass
 class AnalysisResult:
     draft: FormDraft | None
-    mode: LlmMode
     model: str
     duration_ms: int = 0
     retries: int = 0
@@ -91,19 +90,15 @@ async def analyze(
     client: LlmClient,
     *,
     deadline: float,
-    mode: LlmMode | None = None,
     clock: Callable[[], float] = time.monotonic,
 ) -> AnalysisResult:
     """Szkic formularza z dokumentu. `deadline` to `clock()` końca budżetu żądania."""
-    mode = mode or settings.llm_default_mode
-    result = AnalysisResult(draft=None, mode=mode, model=settings.llm_model_for(mode))
+    result = AnalysisResult(draft=None, model=settings.llm_model)
     try:
         return await _analyze(doc, settings, client, result, deadline, clock)
     finally:
         logger.info(
-            "analiza LLM: tryb=%s model=%s czas=%d ms wejście=%d wyjście=%d ponowienia=%d "
-            "fallback=%s",
-            result.mode,
+            "analiza LLM: model=%s czas=%d ms wejście=%d wyjście=%d ponowienia=%d fallback=%s",
             result.model,
             result.duration_ms,
             result.prompt_tokens,
@@ -160,7 +155,7 @@ async def _single(
     deadline: float,
     clock: Callable[[], float],
 ) -> FormDraft | FallbackReason:
-    """Cały dokument w jednym wywołaniu; w trybie `accurate` jedna ponowna próba."""
+    """Cały dokument w jednym wywołaniu; jedna ponowna próba, jeśli starczy budżetu."""
     messages = _messages(system, text)
     outcome = await _call(client, settings, result, messages, deadline, clock)
     if isinstance(outcome, str):
@@ -170,10 +165,7 @@ async def _single(
         return parsed
 
     first_call_s = reply.duration_ms / 1000
-    can_retry = (
-        result.mode == "accurate" and deadline - clock() >= first_call_s * RETRY_BUDGET_FACTOR
-    )
-    if not can_retry:
+    if deadline - clock() < first_call_s * RETRY_BUDGET_FACTOR:
         return "invalid_output"
     result.retries += 1
     messages = [

@@ -338,7 +338,7 @@
     },
     "/api/v1/forms/convert": {
       "post": {
-        "description": "Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).\n\n`mode`: tryb analizy LLM (`accurate`/`fast`), domyślnie `LLM_DEFAULT_MODE`.",
+        "description": "Główny endpoint: 1 plik → JSON w formacie importu (lub {form, report}).",
         "operationId": "convert_api_v1_forms_convert_post",
         "parameters": [
           {
@@ -349,26 +349,6 @@
               "default": false,
               "title": "Report",
               "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "mode",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "accurate",
-                    "fast"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Mode"
             }
           }
         ],
@@ -503,7 +483,7 @@
     },
     "/api/v1/health/ready": {
       "get": {
-        "description": "Gotowość: serwer modelu osiągalny i model trybu domyślnego pobrany.\n\n`degraded` wymienia brakujące tryby LLM oraz `converter`, gdy w obrazie nie ma\nLibreOffice (wtedy DOC/ODS dostają 415, reszta formatów działa).",
+        "description": "Gotowość: serwer modelu osiągalny i model pobrany.\n\n`degraded` wymienia `converter`, gdy w obrazie nie ma\nLibreOffice (wtedy DOC/ODS dostają 415, reszta formatów działa).",
         "operationId": "ready_api_v1_health_ready_get",
         "responses": {
           "200": {

@@ -31,27 +31,15 @@ def test_live(client: TestClient) -> None:
 
 
 def test_ready_ok() -> None:
-    response, fake = _ready({"qwen3:8b", "qwen3:4b"})
+    response, fake = _ready({"qwen3:8b"})
     assert response.status_code == 200 and response.json() == {"status": "ok"}
     assert fake.warmed == ["qwen3:8b"]
 
 
-def test_ready_degraded() -> None:
-    response, _ = _ready({"qwen3:8b"})
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok", "degraded": ["fast"]}
-
-
 def test_ready_degraded_converter() -> None:
-    response, _ = _ready({"qwen3:8b", "qwen3:4b"}, converter=None)
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok", "degraded": ["converter"]}
-
-
-def test_ready_degraded_mode_and_converter() -> None:
     response, _ = _ready({"qwen3:8b"}, converter=None)
     assert response.status_code == 200
-    assert response.json()["degraded"] == ["fast", "converter"]
+    assert response.json() == {"status": "ok", "degraded": ["converter"]}
 
 
 def test_create_app_detects_converter(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -63,8 +51,8 @@ def test_create_app_detects_converter(monkeypatch: pytest.MonkeyPatch) -> None:
     assert isinstance(found, LibreOfficeConverter)
 
 
-def test_ready_default_model_missing() -> None:
-    response, _ = _ready({"qwen3:4b"})
+def test_ready_model_missing() -> None:
+    response, _ = _ready({"bielik:11b"})
     assert response.status_code == 503
     assert response.json()["code"] == "LLM_UNAVAILABLE"
     assert response.headers["content-type"].startswith("application/problem+json")
@@ -75,11 +63,8 @@ def test_ready_llm_down() -> None:
     assert response.status_code == 503 and response.json()["code"] == "LLM_UNAVAILABLE"
 
 
-def test_convert_accepts_mode_param() -> None:
+def test_convert_has_no_mode_param() -> None:
     with TestClient(create_app(_settings(), llm_client=FakeLlmClient())) as client:
         spec = client.get("/openapi.json").json()
     params = spec["paths"]["/api/v1/forms/convert"]["post"]["parameters"]
-    mode = next(p for p in params if p["name"] == "mode")
-    schema = mode["schema"]
-    options = schema.get("anyOf", [schema])
-    assert any(o.get("enum") == ["accurate", "fast"] for o in options)
+    assert [p["name"] for p in params] == ["report"]
