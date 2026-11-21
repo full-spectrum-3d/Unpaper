@@ -22,6 +22,16 @@ describe('authStorageMetaReducer', () => {
     expect(stored).not.toHaveProperty('password');
   });
 
+  it('does not write storage for actions that leave the session unchanged', () => {
+    const setItem = vi.spyOn(Storage.prototype, 'setItem');
+    const removeItem = vi.spyOn(Storage.prototype, 'removeItem');
+    const state = { ...initialAuthState, token: 't', expiresAt: 99, username: 'u' };
+    reducer(state, { type: 'other' });
+    reducer(state, AuthActions.loginFailure({ error: 'x' }));
+    expect(setItem).not.toHaveBeenCalled();
+    expect(removeItem).not.toHaveBeenCalled();
+  });
+
   it('removes entry on logout', () => {
     sessionStorage.setItem(AUTH_STORAGE_KEY, '{}');
     reducer(

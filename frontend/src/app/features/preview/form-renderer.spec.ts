@@ -62,7 +62,9 @@ describe('FormRenderer states', () => {
     await create();
 
     radio('Innej osoby').click();
-    await tick(); // evaluation 2 starts and stays pending
+    await tick();
+    // Evaluations are debounced: wait until evaluation 2 has started (and stays pending).
+    await vi.waitFor(() => expect(calls).toBe(2));
     radio('Swoim').click();
     await tick(); // evaluation 3 starts with the newer answers
     await vi.waitFor(() => expect(calls).toBe(3));
@@ -74,6 +76,19 @@ describe('FormRenderer states', () => {
     await new Promise((resolve) => setTimeout(resolve)); // let the stale evaluation settle
     fixture.detectChanges();
     expect(hasHeading('Dane innej osoby')).toBe(false);
+  });
+
+  it('debounces evaluation while answers change in quick succession', async () => {
+    await create();
+    const before = settled; // `calls` only counts when impl is set
+    radio('Innej osoby').click();
+    await tick();
+    radio('Swoim').click();
+    await tick();
+    radio('Innej osoby').click();
+    await fixture.whenStable();
+    expect(settled).toBe(before + 1);
+    expect(hasHeading('Dane innej osoby')).toBe(true);
   });
 
   it('fails open when evaluation throws', async () => {
@@ -182,7 +197,7 @@ describe('FormRenderer step validation', () => {
   const host = (id: string) => el().querySelector(`[data-field-id="${id}"]`);
   const input = (id: string) => host(id)?.querySelector('input') as HTMLInputElement;
   const error = (id: string) =>
-    host(id)?.querySelector('.text-danger')?.textContent?.trim() ?? null;
+    host(id)?.querySelector('small.text-danger')?.textContent?.trim() ?? null;
   const step = () => el().querySelector('h3')?.textContent?.trim() ?? '';
   const button = (name: string) =>
     [...el().querySelectorAll('button')].find((b) => b.textContent?.trim() === name)!;
@@ -292,7 +307,30 @@ describe('FormRenderer step validation', () => {
     await click('Dalej');
     expect(error('imie')).not.toBeNull();
     await click('Przerwij wypełnianie');
+    await click('Tak, wyczyść');
     expect(error('imie')).toBeNull();
+  });
+
+  it('asks before wiping the answers and announces the reset', async () => {
+    await create();
+    const status = () => el().querySelector('p[role=status]')?.textContent?.trim();
+    await type('imie', 'Jan');
+    await click('Przerwij wypełnianie');
+    expect(document.activeElement).toBe(button('Anuluj'));
+    await click('Anuluj');
+    expect(input('imie').value).toBe('Jan');
+    expect(document.activeElement).toBe(button('Przerwij wypełnianie'));
+    await click('Przerwij wypełnianie');
+    await click('Tak, wyczyść');
+    expect(input('imie').value).toBe('');
+    expect(status()).toBe('Wyczyszczono odpowiedzi');
+  });
+
+  it('marks required fields and explains the asterisk', async () => {
+    await create();
+    expect(el().textContent).toContain('są wymagane');
+    expect(input('imie').getAttribute('aria-required')).toBe('true');
+    expect(input('nip').hasAttribute('aria-required')).toBe(false);
   });
 
   it('lists the visible answers of earlier pages on the FINISH page', async () => {

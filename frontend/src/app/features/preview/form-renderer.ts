@@ -19,7 +19,7 @@ import { AnswersStore } from './answers-store';
 import { FormDefinition, Question } from './form-definition';
 import { FormState } from './form-state';
 import { orderTabs, sortQuestions } from './page-order';
-import { findDictionary } from './dictionaries.mock';
+import { findDictionary } from './sample-dictionaries';
 import { RendererGrid } from './renderer-grid';
 import { validateStep } from './validate-step';
 import { FieldStates, evaluateStates } from './visibility';
@@ -60,6 +60,18 @@ const sameStates = (a: FieldStates | null, b: FieldStates | null) =>
 const EMPTY: ReadonlySet<string> = new Set();
 const NO_ERRORS: ReadonlyMap<string, string> = new Map();
 
+/** Typing pauses this long before the jsonata states are re-evaluated (each run clones the definition). */
+const EVALUATION_DEBOUNCE_MS = 150;
+
+/** Whether any field (nested too) carries REQUIRED: only then the asterisk legend is shown. */
+function hasRequired(qs: Question[]): boolean {
+  return qs.some(
+    ({ field }) =>
+      (Array.isArray(field.validation) && field.validation.includes('REQUIRED')) ||
+      hasRequired(field.repeatingSectionGrid ?? []),
+  );
+}
+
 /** Seam so tests can slow down or break the evaluation. */
 export const STATES_EVALUATOR = new InjectionToken<typeof evaluateStates>('STATES_EVALUATOR', {
   factory: () => evaluateStates,
@@ -82,11 +94,20 @@ export class FormRenderer {
   private readonly pending = inject(PendingTasks);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly heading = viewChild<ElementRef<HTMLElement>>('stepHeading');
+  private readonly abortButton = viewChild<ElementRef<HTMLElement>>('abortButton');
+  private readonly cancelAbortButton = viewChild('cancelAbortButton', {
+    read: ElementRef<HTMLElement>,
+  });
 
   protected readonly pages = computed(() => orderTabs(this.definition()));
   protected readonly index = signal(0);
   protected readonly page = computed(() => this.pages()[this.index()]);
   protected readonly isFinish = computed(() => this.page()?.type === 'FINISH');
+  protected readonly pageHasRequired = computed(() => hasRequired(this.page()?.questions ?? []));
+  /** „Przerwij wypełnianie” asks first: it wipes every answer. */
+  protected readonly confirmingAbort = signal(false);
+  /** Persistent live region text (inserted regions are not reliably announced). */
+  protected readonly announcement = signal('');
   /** On the FINISH page: the visible answers of every earlier page, label and value. */
   protected readonly summary = computed(() => {
     if (!this.isFinish()) return [];
@@ -146,10 +167,17 @@ export class FormRenderer {
   });
 
   private request = 0;
+  private debounce?: ReturnType<typeof setTimeout>;
+  /** One pending task spans the debounce and the evaluation, so whenStable waits for the result. */
+  private pendingDone?: () => void;
 
   constructor() {
     // Invalidate in-flight evaluations so none writes after destroy.
-    inject(DestroyRef).onDestroy(() => this.request++);
+    inject(DestroyRef).onDestroy(() => {
+      this.request++;
+      clearTimeout(this.debounce);
+      this.settle();
+    });
     // Component effects run before this view's template, so fields never see a stale store.
     effect(() => {
       const def = this.definition();
@@ -172,11 +200,12 @@ export class FormRenderer {
       const def = this.definition();
       this.store.version();
       const id = ++this.request;
-      const done = this.pending.add();
-      queueMicrotask(async () => {
+      this.pendingDone ??= this.pending.add();
+      clearTimeout(this.debounce);
+      // The first evaluation runs at once: fields with SHOW stay hidden until it completes.
+      const delay = untracked(this.evaluated) === null ? 0 : EVALUATION_DEBOUNCE_MS;
+      this.debounce = setTimeout(async () => {
         try {
-          // A newer change superseded this request before it started: skip the work.
-          if (id !== this.request) return;
           const result = await this.evaluate(def, this.store.snapshot());
           if (id === this.request) this.evaluated.set(result);
         } catch (e) {
@@ -184,10 +213,16 @@ export class FormRenderer {
           console.warn('State evaluation failed', e);
           if (id === this.request) this.evaluated.set({ hidden: new Set(), readOnly: new Set() });
         } finally {
-          done();
+          // A superseded evaluation leaves the task to the newer one.
+          if (id === this.request) this.settle();
         }
-      });
+      }, delay);
     });
+  }
+
+  private settle() {
+    this.pendingDone?.();
+    this.pendingDone = undefined;
   }
 
   private validatePage() {
@@ -243,10 +278,29 @@ export class FormRenderer {
     );
   }
 
+  protected askAbort() {
+    this.announcement.set('');
+    this.confirmingAbort.set(true);
+    // The safe choice gets focus: Enter right after the click must not wipe the answers.
+    this.focusAfterRender(() => this.cancelAbortButton());
+  }
+
+  protected cancelAbort() {
+    this.confirmingAbort.set(false);
+    this.focusAfterRender(() => this.abortButton());
+  }
+
   protected abort() {
+    this.confirmingAbort.set(false);
     this.showErrorsFor.set(null);
     this.touched.set(new Set());
     this.store.reset();
+    this.announcement.set('Wyczyszczono odpowiedzi');
     if (this.index() !== 0) this.go(0);
+    else this.focusAfterRender(() => this.abortButton());
+  }
+
+  private focusAfterRender(target: () => ElementRef<HTMLElement> | undefined) {
+    afterNextRender(() => target()?.nativeElement.focus(), { injector: this.injector });
   }
 }

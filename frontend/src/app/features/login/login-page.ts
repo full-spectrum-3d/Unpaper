@@ -37,6 +37,7 @@ export class LoginPage {
   protected readonly error = this.store.selectSignal(selectLoginError);
   protected readonly sessionExpired = this.store.selectSignal(selectSessionExpired);
   protected readonly submitted = signal(false);
+  protected readonly statusText = signal('');
 
   protected readonly f = form(signal({ username: '', password: '' }), (p) => {
     required(p.username, { message: 'Pole wymagane' });
@@ -44,6 +45,10 @@ export class LoginPage {
   });
 
   constructor() {
+    effect(() => {
+      const text = this.sessionExpired() ? 'Sesja wygasła, zaloguj się ponownie' : '';
+      afterNextRender(() => this.statusText.set(text), { injector: this.injector });
+    });
     effect(() => {
       if (this.status() === 'error') {
         afterNextRender(() => this.loginError()?.nativeElement.focus(), {

@@ -1,4 +1,4 @@
-import { DictionaryNode, findDictionary } from './dictionaries.mock';
+import { DictionaryNode, findDictionary } from './sample-dictionaries';
 import { FormField } from './form-definition';
 import { isCascade } from './select-options';
 

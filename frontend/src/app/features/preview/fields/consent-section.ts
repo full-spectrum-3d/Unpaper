@@ -15,8 +15,11 @@ import { FieldBase } from './field-base';
             type="checkbox"
             class="mt-1 focus-ring"
             [checked]="!!value()[$index]"
-            [disabled]="readOnly()"
+            [attr.aria-required]="c.required || null"
+            [attr.aria-readonly]="readOnly() || null"
+            [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="error() ? 'true' : null"
+            (click)="blockIfReadOnly($event)"
             (change)="toggle($index, $any($event.target).checked)"
           />
           <span>

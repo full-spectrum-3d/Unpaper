@@ -1,4 +1,4 @@
-import { DictionaryNode, findDictionary } from './dictionaries.mock';
+import { DictionaryNode, findDictionary } from './sample-dictionaries';
 
 const depthOk = (n: DictionaryNode, level: number): boolean =>
   level === 3 ? !n.children : !!n.children?.length && n.children.every((c) => depthOk(c, level + 1));

@@ -83,7 +83,7 @@ export const Empty: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     expect(c.getByText('Kolejka jest pusta. Dodaj pliki powyżej.')).toBeVisible();
-    expect(c.getByRole('button', { name: 'Pobierz wszystkie (ZIP)' })).toBeDisabled();
+    expect(c.getByRole('button', { name: 'Pobierz wszystkie (ZIP)' })).toHaveAttribute('aria-disabled', 'true');
   },
 };
 

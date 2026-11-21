@@ -12,6 +12,10 @@ let nextId = 0;
       <label [for]="inputId" [class]="labelHidden() ? 'sr-only' : 'text-label font-label'"
         >{{ label() }}<span class="sr-only">{{ tag() ? ', ' + tag() : '' }}</span>
       </label>
+      <!-- Outside the label: visual only (aria-required carries it), and label text stays clean. -->
+      @if (required() && !labelHidden()) {
+        <span class="text-danger -ml-1.5" aria-hidden="true">*</span>
+      }
       @if (tooltip(); as text) {
         <app-field-tooltip [text]="text" [label]="label()" />
       }
@@ -28,7 +32,7 @@ let nextId = 0;
       class="block w-full text-fg text-body border rounded-field px-field-x py-field-y focus-ring"
       [class]="
         readonly()
-          ? 'border-transparent bg-surface-readonly'
+          ? 'border-dashed border-border-input bg-surface-readonly'
           : (error() ? 'border-danger' : 'border-border-input') + ' bg-surface'
       "
       [readOnly]="readonly()"

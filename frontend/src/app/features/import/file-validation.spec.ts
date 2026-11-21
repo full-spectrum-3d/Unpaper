@@ -39,6 +39,19 @@ describe('validateFile', () => {
     expect(validateFile(file(name))).toBe(BAD_EXT);
   });
 
+  it.each(['.pdf', '  .pdf'])('rejects a name that is only the extension: "%s"', (name) => {
+    expect(validateFile(file(name))).toBe('Nazwa pliku nie może składać się z samego rozszerzenia.');
+  });
+
+  it('measures length after NFC normalization', () => {
+    // "a" + combining ogonek is one character after NFC
+    expect(validateFile(file('a\u0328'.repeat(246) + '.pdf'))).toBeNull();
+  });
+
+  it('rejects control characters', () => {
+    expect(validateFile(file('a\u0007b.pdf'))).toBe(BAD_CHARS);
+  });
+
   it('accepts empty file', () => {
     expect(validateFile(file('a.pdf', 0))).toBeNull();
   });

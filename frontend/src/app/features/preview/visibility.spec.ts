@@ -145,4 +145,57 @@ describe('evaluateStates', () => {
     expect(states.hidden.has('f1')).toBe(true);
     expect(states.readOnly.has('f1')).toBe(false);
   });
+
+  it('a hidden field no longer keeps its dependants visible (A hides, B and C follow)', async () => {
+    const answerOf = (techName: string) =>
+      `tabs.questions[field.techName = '${techName}'].field.__userAnswer`;
+    const q = (y: number, field: FormField): Question => ({ x: 0, y, rows: 1, cols: 1, field });
+    const chain: FormDefinition = {
+      title: 't',
+      flow: { links: [] },
+      tabs: [
+        {
+          id: 'tab',
+          title: 'Dane',
+          type: 'MAIN',
+          questions: [
+            q(0, {
+              id: 'a',
+              type: 'TEXT_FIELD',
+              techName: 'a',
+              title: 'A',
+              states: [{ type: 'HIDE', query: '1 = 1' }],
+            }),
+            q(1, {
+              id: 'b',
+              type: 'TEXT_FIELD',
+              techName: 'b',
+              title: 'B',
+              states: [{ type: 'SHOW', query: `${answerOf('a')} = 'x'` }],
+            }),
+            q(2, {
+              id: 'c',
+              type: 'TEXT_FIELD',
+              techName: 'c',
+              title: 'C',
+              states: [{ type: 'SHOW', query: `${answerOf('b')} = 'y'` }],
+            }),
+          ],
+        },
+      ],
+    };
+    const { hidden } = await evaluateStates(
+      chain,
+      new Map([
+        ['a', 'x'],
+        ['b', 'y'],
+      ]),
+    );
+    expect([...hidden].sort()).toEqual(['a', 'b', 'c']);
+  });
+
+  it('stops on a query that flips on its own answer', async () => {
+    const flip = syntheticDef([{ type: 'HIDE', query: "tabs.questions.field.__userAnswer = 'x'" }]);
+    await expect(evaluateStates(flip, new Map([['f1', 'x']]))).resolves.toBeDefined();
+  });
 });

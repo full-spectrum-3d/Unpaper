@@ -2,13 +2,24 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, filter, map, merge, of, switchMap, tap, timer } from 'rxjs';
+import { Observable, catchError, defer, filter, map, merge, of, switchMap, tap, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { toUserMessage } from '../../core/api-error';
 import { safeReturnUrl } from '../../core/auth.guard';
 import { AuthService } from '../../shared/api/services/auth.service';
 import { AuthActions } from './auth.actions';
 import { selectExpiresAt, selectToken } from './auth.selectors';
+
+/** setTimeout fires at once for delays above 2^31-1 ms (~24.8 days). */
+const MAX_TIMER_MS = 2 ** 31 - 1;
+
+/** Emits once at the epoch time `at`, re-arming in steps when it is further away than the timer limit. */
+export function timerUntil(at: number): Observable<unknown> {
+  return defer(() => {
+    const delay = at - Date.now();
+    return delay > MAX_TIMER_MS ? timer(MAX_TIMER_MS).pipe(switchMap(() => timerUntil(at))) : timer(Math.max(0, delay));
+  });
+}
 
 @Injectable()
 export class AuthEffects {
@@ -73,7 +84,7 @@ export class AuthEffects {
         map(() => null),
       ),
     ).pipe(
-      switchMap((at) => (at === null ? [] : timer(Math.max(0, at - Date.now())))),
+      switchMap((at) => (at === null ? [] : timerUntil(at))),
       map(() => AuthActions.logout({ reason: 'expired' })),
     ),
   );

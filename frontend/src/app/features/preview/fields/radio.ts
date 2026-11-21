@@ -6,11 +6,15 @@ import { FieldLabel } from './field-label';
   selector: 'app-radio-field',
   imports: [FieldLabel],
   template: `
-    <!-- aria-labelledby instead of a legend: the label row also holds the tooltip button. -->
+    <!-- aria-labelledby instead of a legend: the label row also holds the tooltip button.
+         role=radiogroup: unlike a plain group it supports aria-required and aria-readonly. -->
     <fieldset
+      role="radiogroup"
       class="m-0 p-0 border-0"
       [attr.aria-labelledby]="id() + '-label'"
       [attr.aria-describedby]="describedBy()"
+      [attr.aria-required]="required() || null"
+      [attr.aria-readonly]="readOnly() || null"
     >
       <app-field-label
         [label]="label()"
@@ -18,11 +22,13 @@ import { FieldLabel } from './field-label';
         [hidden]="!hasTitle()"
         [tooltip]="tooltip()"
         [tag]="tag()"
+        [required]="required()"
       />
       @if (hasDescription()) {
         <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
       }
-      @for (o of field().options ?? []; track o.id) {
+      <!-- Options come from imported JSON: ids may repeat, so track by position. -->
+      @for (o of field().options ?? []; track $index) {
         <label class="flex items-center gap-2 py-1">
           <input
             type="radio"
@@ -30,8 +36,10 @@ import { FieldLabel } from './field-label';
             [name]="field().id"
             [value]="o.name"
             [checked]="value() === o.name"
-            [disabled]="readOnly()"
+            [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="error() ? 'true' : null"
+            (click)="blockIfReadOnly($event)"
+            (keydown)="blockArrows($event)"
             (change)="set(o.name)"
           />
           {{ o.name }}
@@ -46,4 +54,9 @@ import { FieldLabel } from './field-label';
   `,
   host: { class: 'block' },
 })
-export class RadioField extends FieldBase {}
+export class RadioField extends FieldBase {
+  /** Arrow keys move the checked radio natively; a read-only group keeps its choice. */
+  protected blockArrows(event: KeyboardEvent) {
+    if (event.key.startsWith('Arrow')) this.blockIfReadOnly(event);
+  }
+}

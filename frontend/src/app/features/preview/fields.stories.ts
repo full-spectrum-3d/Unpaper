@@ -102,9 +102,11 @@ export const AllTypes: Story = {
     await userEvent.type(c.getByLabelText('Opis'), 'abc');
     expect(c.getByText('3/8000')).toBeVisible();
 
-    const radios = within(c.getByRole('group', { name: 'W czyim imieniu' })).getAllByRole('radio');
+    const radios = within(c.getByRole('radiogroup', { name: 'W czyim imieniu' })).getAllByRole(
+      'radio',
+    );
     expect(radios).toHaveLength(3);
-    expect(c.getByRole('group', { name: 'W czyim imieniu' })).toHaveAccessibleDescription(
+    expect(c.getByRole('radiogroup', { name: 'W czyim imieniu' })).toHaveAccessibleDescription(
       'Wybierz jedno',
     );
     await userEvent.click(radios[1]);
@@ -132,7 +134,7 @@ export const AllTypes: Story = {
     expect(chk).toBeChecked();
     expect(c.getByLabelText('Data')).toHaveAttribute('type', 'date');
 
-    expect(c.getByRole('button', { name: 'Dodaj lub przeciągnij plik' })).toBeVisible();
+    expect(c.getByRole('button', { name: /^Dodaj lub przeciągnij plik/ })).toBeVisible();
     await userEvent.upload(
       canvasElement.querySelector('input[type=file]') as HTMLInputElement,
       new File(['x'], 'a.pdf', { type: 'application/pdf' }),
@@ -252,10 +254,10 @@ export const ZBledami: Story = {
     expect(c.getByRole('combobox', { name: 'Powiat' })).toHaveAccessibleDescription(
       'Wybierz jedną z opcji',
     );
-    expect(c.getByRole('group', { name: 'W czyim imieniu' })).toHaveAccessibleDescription(
+    expect(c.getByRole('radiogroup', { name: 'W czyim imieniu' })).toHaveAccessibleDescription(
       'Wybierz jedną z opcji',
     );
-    expect(c.getByRole('button', { name: 'Dodaj lub przeciągnij plik' })).toBeInvalid();
+    expect(c.getByRole('button', { name: /^Dodaj lub przeciągnij plik/ })).toBeInvalid();
     expect(c.getByText('Zaznacz wymaganą zgodę')).toBeVisible();
   },
 };
@@ -272,8 +274,13 @@ export const TylkoDoOdczytu: Story = {
     const sel = c.getByRole('combobox', { name: 'Wybór' });
     await userEvent.click(sel);
     expect(sel).toHaveAttribute('aria-expanded', 'false');
-    for (const r of c.getAllByRole('radio')) expect(r).toBeDisabled();
-    expect(c.getByRole('button', { name: 'Dodaj lub przeciągnij plik' })).toBeDisabled();
+    // Read-only choices stay focusable (aria-readonly), but a click changes nothing.
+    for (const r of c.getAllByRole('radio')) {
+      expect(r).toBeEnabled();
+      await userEvent.click(r);
+      expect(r).not.toBeChecked();
+    }
+    expect(c.getByRole('button', { name: /^Dodaj lub przeciągnij plik/ })).toBeDisabled();
   },
 };
 
@@ -319,7 +326,7 @@ export const ZRejestru: Story = {
     const c = within(canvasElement);
     expect(c.getByLabelText(/Numer PESEL\s*, dane z rejestru/)).toHaveAttribute('readonly');
     expect(c.getByLabelText(/E-mail\s*, dane z rejestru/)).not.toHaveAttribute('readonly');
-    expect(c.getByRole('group', { name: /^Płeć\s*, dane z rejestru$/ })).toBeVisible();
+    expect(c.getByRole('radiogroup', { name: /^Płeć\s*, dane z rejestru$/ })).toBeVisible();
     expect(c.getAllByText('dane z rejestru')).toHaveLength(3);
   },
 };

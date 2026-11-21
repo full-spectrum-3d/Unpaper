@@ -52,7 +52,7 @@ const backPath = (c: ReturnType<typeof within>, name: string) =>
 const previewMessage = 'Nie można wyświetlić podglądu: wynik nie ma struktury formularza.';
 
 const tab = (c: ReturnType<typeof within>, name: string) => c.getByRole('tab', { name });
-// Found by label so the check also works while the JSON panel is hidden.
+// The JSON view is rendered only while its tab is active.
 const jsonRegion = (c: ReturnType<typeof within>) => c.getByLabelText('Wynik konwersji w formacie JSON');
 
 export const Done: Story = {
@@ -79,7 +79,7 @@ export const Done: Story = {
     expect(preview).toHaveAttribute('tabindex', '0');
     expect(json).toHaveAttribute('aria-selected', 'false');
     expect(json).toHaveAttribute('tabindex', '-1');
-    expect(jsonRegion(c)).not.toBeVisible();
+    expect(c.queryByLabelText('Wynik konwersji w formacie JSON')).toBeNull();
 
     // Answers survive leaving the preview tab.
     const input = (c.getAllByRole('textbox') as HTMLInputElement[]).find((t) => !t.readOnly && !t.disabled)!;
@@ -91,7 +91,7 @@ export const Done: Story = {
     await userEvent.keyboard('{ArrowRight}');
     expect(json).toHaveAttribute('aria-selected', 'true');
     expect(json).toHaveFocus();
-    expect(c.getByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(jsonRegion(c));
+    expect(await c.findByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(jsonRegion(c));
     expect(jsonRegion(c).tagName).toBe('PRE');
     expect(jsonRegion(c).textContent).toBe(JSON.stringify(nadplata, null, 2));
     expect(c.getByRole('heading', { level: 2, name: nadplata.title, hidden: true })).not.toBeVisible();
@@ -150,7 +150,8 @@ export const ZRaportem: Story = {
 
     // Leaving the JSON tab clears the highlight.
     await userEvent.click(tab(c, 'Podgląd formularza'));
-    expect(jsonRegion(c).querySelector('.bg-warning-subtle')).toBeNull();
+    await userEvent.click(tab(c, 'JSON'));
+    expect((await c.findByRole('region', { name: 'Wynik konwersji w formacie JSON' })).querySelector('.bg-warning-subtle')).toBeNull();
 
     await userEvent.click(tab(c, 'Raport'));
     await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W02_LABEL_TOO_LONG' }));

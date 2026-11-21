@@ -74,6 +74,13 @@ describe('interceptors', () => {
     expect(onError).toHaveBeenCalled();
   });
 
+  it('401 from another host does not logout', () => {
+    const { http, ctrl, dispatch } = setup('t1');
+    http.get('https://example.com/api/x').subscribe({ error: vi.fn() });
+    ctrl.expectOne('https://example.com/api/x').flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
   it('500 does not logout', () => {
     const { http, ctrl, dispatch } = setup('t1');
     const onError = vi.fn();

@@ -2,13 +2,13 @@ import { Component, input, signal } from '@angular/core';
 
 let nextId = 0;
 
-// Disclosure: the panel sits in the host's flex-wrap row (label row of the field), on its own line.
+// Disclosure: p-1 -m-1 gives a 24px target without moving the icon; the panel sits in the host's flex-wrap row (label row of the field), on its own line.
 @Component({
   selector: 'app-field-tooltip',
   template: `
     <button
       type="button"
-      class="inline-flex rounded-full text-fg-muted focus-ring"
+      class="inline-flex p-1 -m-1 rounded-full text-fg-muted focus-ring"
       [attr.aria-label]="'Więcej informacji: ' + label()"
       [attr.aria-expanded]="expanded()"
       [attr.aria-controls]="panelId"
@@ -27,12 +27,12 @@ let nextId = 0;
         <path d="M8 7.25v4M8 4.75v.5" stroke-linecap="round" />
       </svg>
     </button>
-    <div
-      class="order-last basis-full text-fg-muted"
-      [id]="panelId"
-      [hidden]="!expanded()"
-      [innerHTML]="text()"
-    ></div>
+    <!-- Always present live region: the help text is announced when it appears. -->
+    <div class="order-last basis-full text-fg-muted" aria-live="polite" [id]="panelId">
+      @if (expanded()) {
+        <div [innerHTML]="text()"></div>
+      }
+    </div>
   `,
   host: { class: 'contents' },
 })

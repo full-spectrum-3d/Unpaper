@@ -11,7 +11,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const token = store.selectSignal(selectToken);
   return next(req).pipe(
     catchError((error: unknown) => {
-      if (error instanceof HttpErrorResponse && error.status === 401 && req.url !== TOKEN_URL) {
+      const ownApi = req.url.startsWith('/api/') && req.url !== TOKEN_URL;
+      if (error instanceof HttpErrorResponse && error.status === 401 && ownApi) {
         // Only the first 401 logs out; the cleared token makes later ones no-ops.
         if (token() === null) return throwError(() => error);
         store.dispatch(AuthActions.logout({ reason: 'unauthorized' }));

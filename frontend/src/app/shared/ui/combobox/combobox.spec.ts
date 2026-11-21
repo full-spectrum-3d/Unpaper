@@ -122,9 +122,45 @@ describe('Combobox', () => {
     expect(search.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('is readonly without aria-autocomplete when not searchable', () => {
-    expect(inputs[0].readOnly).toBe(true);
+  // Not readonly: a readonly input is announced "read only" although the user can choose.
+  it('is select-only without readonly semantics: typing is blocked, no aria-autocomplete', () => {
+    expect(inputs[0].readOnly).toBe(false);
     expect(inputs[0].hasAttribute('aria-autocomplete')).toBe(false);
+    expect(inputs[0].getAttribute('inputmode')).toBe('none');
+    const ev = new InputEvent('beforeinput', { data: 'x', cancelable: true });
+    inputs[0].dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+  });
+
+  it('jumps to an option by its first letters in select-only mode', async () => {
+    const [input] = inputs;
+    const active = () => document.getElementById(input.getAttribute('aria-activedescendant')!);
+    await key(input, 'n');
+    expect(input.getAttribute('aria-expanded')).toBe('true');
+    expect(active()?.textContent?.trim()).toBe('Niemcy');
+    await key(input, 'n'); // same letter again: next match
+    expect(active()?.textContent?.trim()).toBe('Norwegia');
+    await key(input, 'Enter');
+    expect(host.first()).toBe('Norwegia');
+  });
+
+  it('leaves Home/End to the caret in the searchable input', async () => {
+    const search = inputs[1];
+    await type(search, 'n');
+    await key(search, 'ArrowDown');
+    const ev = new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true });
+    search.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(false);
+  });
+
+  it('shows the active option with a solid indicator and the selected one with a check', async () => {
+    host.first.set('Niemcy');
+    await render();
+    await key(inputs[0], 'ArrowDown');
+    const [, niemcy] = options();
+    expect(niemcy.classList).toContain('bg-primary');
+    expect(niemcy.querySelector('svg')!.classList).not.toContain('invisible');
+    expect(options()[0].querySelector('svg')!.classList).toContain('invisible');
   });
 
   it('clears the value with the clear button', async () => {
@@ -213,6 +249,7 @@ describe('Combobox', () => {
       [value]="value()"
       [error]="error()"
       [readonly]="readonly()"
+      [required]="required()"
       [tooltip]="tooltip()"
       [tag]="tag()"
       describedBy="external"
@@ -223,6 +260,7 @@ class StateHost {
   readonly value = signal('Polska');
   readonly error = signal<string | undefined>(undefined);
   readonly readonly = signal(false);
+  readonly required = signal(false);
   readonly tooltip = signal<string | undefined>(undefined);
   readonly tag = signal<string | undefined>(undefined);
 }
@@ -266,11 +304,23 @@ describe('Combobox states', () => {
     await render();
     expect(input().readOnly).toBe(true);
     expect(input().classList).toContain('bg-surface-readonly');
+    expect(input().classList).toContain('border-border-input');
     expect(fixture.nativeElement.querySelector('button')).toBeNull();
     input().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     input().click();
     await render();
     expect(input().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('marks required with aria-required and a visible asterisk', async () => {
+    expect(input().hasAttribute('aria-required')).toBe(false);
+    host.required.set(true);
+    await render();
+    expect(input().getAttribute('aria-required')).toBe('true');
+    const label = fixture.nativeElement.querySelector('label') as HTMLElement;
+    // Next to the label, not inside it: the label text (and accessible name) stays clean.
+    expect(label.textContent).not.toContain('*');
+    expect(label.parentElement!.querySelector('[aria-hidden=true]')!.textContent).toBe('*');
   });
 
   it('includes the tag in the accessible label', async () => {

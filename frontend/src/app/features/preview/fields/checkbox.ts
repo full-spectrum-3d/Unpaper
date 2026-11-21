@@ -19,18 +19,23 @@ import { FieldLabel } from './field-label';
           [hidden]="!hasTitle()"
           [tooltip]="tooltip()"
           [tag]="tag()"
+          [required]="required()"
+          [announceRequired]="true"
         />
         @if (hasDescription()) {
           <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
         }
-        @for (o of field().options!; track o.id) {
+        <!-- Options come from imported JSON: ids may repeat, so track by position. -->
+        @for (o of field().options!; track $index) {
           <label class="flex items-center gap-2 py-1">
             <input
               type="checkbox"
               class="focus-ring"
               [checked]="value().includes(o.name)"
-              [disabled]="readOnly()"
+              [attr.aria-readonly]="readOnly() || null"
+              [attr.aria-describedby]="describedBy()"
               [attr.aria-invalid]="error() ? 'true' : null"
+              (click)="blockIfReadOnly($event)"
               (change)="toggle(o.name, $any($event.target).checked)"
             />
             {{ o.name }}
@@ -50,12 +55,17 @@ import { FieldLabel } from './field-label';
             class="focus-ring"
             [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="error() ? 'true' : null"
+            [attr.aria-required]="required() || null"
+            [attr.aria-readonly]="readOnly() || null"
             [checked]="value().includes(label())"
-            [disabled]="readOnly()"
+            (click)="blockIfReadOnly($event)"
             (change)="toggle(label(), $any($event.target).checked)"
           />
           {{ label() }}<span class="sr-only">{{ tag() ? ', ' + tag() : '' }}</span>
         </label>
+        @if (required()) {
+          <span class="text-danger -ml-1.5" aria-hidden="true">*</span>
+        }
         @if (tooltip(); as text) {
           <app-field-tooltip [text]="text" [label]="label()" />
         }

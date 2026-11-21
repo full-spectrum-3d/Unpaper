@@ -50,12 +50,37 @@ export interface FieldStates {
   readOnly: ReadonlySet<string>;
 }
 
-/** Hidden and read-only field ids; hiding a section hides all its descendants, hidden fields are never read-only. */
+/** Enough for any realistic chain of dependent fields (A shows B shows C …). */
+const MAX_PASSES = 10;
+
+/**
+ * Hidden and read-only field ids; hiding a section hides all its descendants, hidden fields are never read-only.
+ * Answers of hidden fields are dropped from the jsonata input, so hiding A also hides what depended on A:
+ * repeated until the hidden set stops changing. A query that hides a field by its own answer can flip forever;
+ * the pass limit ends that and the last pass wins.
+ */
 export async function evaluateStates(
   def: FormDefinition,
   answers: ReadonlyMap<string, unknown>,
 ): Promise<FieldStates> {
-  const input = withUserAnswers(def, answers);
+  let states = await evaluatePass(def, answers, new Set());
+  for (let pass = 1; pass < MAX_PASSES; pass++) {
+    const next = await evaluatePass(def, answers, states.hidden);
+    const same =
+      next.hidden.size === states.hidden.size &&
+      [...next.hidden].every((id) => states.hidden.has(id));
+    states = next;
+    if (same) break;
+  }
+  return states;
+}
+
+async function evaluatePass(
+  def: FormDefinition,
+  answers: ReadonlyMap<string, unknown>,
+  omitted: ReadonlySet<string>,
+): Promise<FieldStates> {
+  const input = withUserAnswers(def, answers, omitted);
   const hidden = new Set<string>();
   const readOnly = new Set<string>();
   const collect = (field: FormField) => {

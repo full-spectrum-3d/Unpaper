@@ -1,7 +1,7 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnswersStore } from '../answers-store';
-import { findDictionary } from '../dictionaries.mock';
+import { findDictionary } from '../sample-dictionaries';
 import { FormField } from '../form-definition';
 import { FormState } from '../form-state';
 import { cascadeLevels, DictionaryCascadeField } from './dictionary-cascade';
@@ -78,6 +78,14 @@ describe('DictionaryCascadeField', () => {
     expect(labels()).toEqual(['Województwo']);
     await pick(0, 'mazowieckie');
     expect(labels()).toEqual(['Województwo', 'Powiat']);
+  });
+
+  it('announces the levels that appear or disappear', async () => {
+    await create(field());
+    const notice = () => el().querySelector('p[aria-live]')!.textContent?.trim();
+    expect(notice()).toBe('');
+    await pick(0, 'mazowieckie');
+    expect(notice()).toBe('Pola wyboru: Województwo, Powiat');
   });
 
   it('changing the top level drops the rest of the path', async () => {

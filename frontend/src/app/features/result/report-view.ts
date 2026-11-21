@@ -3,10 +3,9 @@ import { Button } from '../../shared/ui/button/button';
 import { pluralPl } from '../import/format';
 import type { LineRange } from './json-lines';
 import { ConversionReport, formatSeconds, pathTarget, ReportIssue } from './report';
+import { isObject, num, str } from '../../shared/utils/guards';
 
 const METHODS: Record<string, string> = { pdf_text: 'tekst z PDF', ocr: 'OCR', docx: 'DOCX', xlsx: 'XLSX' };
-const isObject = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
 
 const STAGES: Record<string, string> = {
   normalizeMs: 'normalizacja',
@@ -34,8 +33,6 @@ export class ReportView {
     if (!r) return null;
     const ranges = this.ranges();
     const obj = (v: unknown): Record<string, unknown> => (isObject(v) ? v : {});
-    const str = (v: unknown): string | undefined => (typeof v === 'string' && v ? v : undefined);
-    const num = (v: unknown): number | undefined => (typeof v === 'number' && isFinite(v) ? v : undefined);
     const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
     const issues = (v: unknown) =>
       list(v)

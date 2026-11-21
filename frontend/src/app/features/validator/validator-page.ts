@@ -23,6 +23,7 @@ import { pluralPl } from '../import/format';
 import { formatJson, JsonLines } from '../result/json-lines';
 import { JsonView } from '../result/json-view';
 import { parseJsonInput, readJsonFile } from './json-input';
+import { isObject, str } from '../../shared/utils/guards';
 
 interface Issue {
   code: string;
@@ -35,10 +36,6 @@ interface CheckResult {
   errors: Issue[];
   warnings: Issue[];
 }
-
-const isObject = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-const str = (v: unknown): string | undefined => (typeof v === 'string' && v ? v : undefined);
 
 /** Coerces the untyped response; entries that are not objects and non-string fields are dropped. */
 function normalize(body: unknown, lines: JsonLines): CheckResult {
@@ -82,6 +79,8 @@ export class ValidatorPage {
   protected readonly httpError = signal<string | null>(null);
   protected readonly highlight = signal<string | null>(null);
   protected readonly missingItem = signal(false);
+  /** Persistent live region text, e.g. "Wczytano plik X". */
+  protected readonly fileStatus = signal('');
 
   protected readonly stale = computed(
     () => this.result() !== null && this.text() !== this.checkedText(),
@@ -97,38 +96,35 @@ export class ValidatorPage {
 
   private readonly field = viewChild.required<ElementRef<HTMLTextAreaElement>>('field');
   private readonly resultHeading = viewChild<ElementRef<HTMLElement>>('resultHeading');
+  private readonly httpAlert = viewChild<ElementRef<HTMLElement>>('httpAlert');
   private readonly jsonView = viewChild(JsonView);
   private pending?: Subscription;
+  /** Bumped by every file pick and navigation: only the latest read may apply its result. */
+  private fileRead = 0;
 
   constructor() {
     // A late response must not touch a destroyed view (afterNextRender would throw NG0911).
     inject(DestroyRef).onDestroy(() => this.pending?.unsubscribe());
     // Runs on every `item` change only; the queue row is read once, so later store updates never overwrite edits.
+    // Without an item (also when leaving ?item=X for plain /validator) the page starts empty.
     effect(() => {
       const id = this.item();
-      if (id === undefined) return;
       untracked(() => {
-        const row = this.store.selectSignal(selectQueueItem(id))();
+        const row = id === undefined ? undefined : this.store.selectSignal(selectQueueItem(id))();
         const found = row?.status === 'done';
-        // A newer navigation wins over a request still in flight for the previous item.
+        // A newer navigation wins over a request or file read still in flight.
         this.pending?.unsubscribe();
+        this.fileRead++;
         this.checking.set(false);
-        this.missingItem.set(!found);
-        if (found) {
-          this.text.set(JSON.stringify(row.result, null, 2) ?? '');
-          this.result.set(null);
-          this.checkedText.set(null);
-          this.checkedLines.set(null);
-          this.httpError.set(null);
-          this.check();
-        } else {
-          this.text.set('');
-          this.result.set(null);
-          this.checkedText.set(null);
-          this.checkedLines.set(null);
-          this.httpError.set(null);
-          this.inputError.set(null);
-        }
+        this.missingItem.set(id !== undefined && !found);
+        this.text.set(found ? (JSON.stringify(row.result, null, 2) ?? '') : '');
+        this.result.set(null);
+        this.checkedText.set(null);
+        this.checkedLines.set(null);
+        this.httpError.set(null);
+        this.inputError.set(null);
+        this.highlight.set(null);
+        if (found) this.check();
       });
     });
   }
@@ -144,10 +140,14 @@ export class ValidatorPage {
     const file = input.files?.[0];
     input.value = ''; // lets the same file be picked again
     if (!file) return;
+    const token = ++this.fileRead;
     const read = await readJsonFile(file);
+    if (token !== this.fileRead) return; // a later pick or navigation superseded this read
     if (read.ok) {
       this.text.set(read.text);
       this.inputError.set(null);
+      this.missingItem.set(false);
+      this.fileStatus.set(`Wczytano plik ${file.name}`);
     } else {
       this.inputError.set(read.message);
       this.focusField();
@@ -155,7 +155,8 @@ export class ValidatorPage {
   }
 
   protected check(): void {
-    if (this.checking()) return;
+    // aria-disabled keeps the button focusable while checking, so clicks must be ignored here.
+    if (this.checking() || !this.text().trim()) return;
     const text = this.text();
     const parsed = parseJsonInput(text);
     if (!parsed.ok) {
@@ -187,6 +188,9 @@ export class ValidatorPage {
           e.status === 422 ? 'Serwer odrzucił JSON jako niepoprawny.' : toUserMessage(e),
         );
         this.checking.set(false);
+        afterNextRender(() => this.httpAlert()?.nativeElement.focus(), {
+          injector: this.injector,
+        });
       },
     });
   }

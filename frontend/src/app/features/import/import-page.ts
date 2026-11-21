@@ -17,7 +17,7 @@ import {
 import { downloadBlob } from './download';
 import { FileRegistry } from './file-registry';
 import { MAX_FILE_SIZE_MB, validateFile } from './file-validation';
-import { formatSize, queueSummary } from './format';
+import { formatSize, pluralPl, queueSummary } from './format';
 import { newId } from './new-id';
 
 /** Backend limit for the `password` multipart field (UTF-8 bytes). */
@@ -63,6 +63,8 @@ export class ImportPage {
         this.previous = new Map(items.map((i) => [i.id, i.status]));
         if (!prev) return; // no announcement for the initial render
         const messages: string[] = [];
+        const added = items.filter((i) => !prev.has(i.id)).length;
+        if (added) messages.push(`Dodano ${added} ${pluralPl(added, 'plik', 'pliki', 'plików')} do kolejki`);
         for (const i of items) {
           if (prev.get(i.id) === i.status) continue;
           if (i.status === 'done') messages.push(`${i.name}: gotowe`);
@@ -118,7 +120,8 @@ export class ImportPage {
         : null;
     this.passwordHint.set(problem ? { id: item.id, text: problem } : null);
     if (problem) {
-      input.focus();
+      // After render, so the hint referenced by aria-describedby exists when the field is announced.
+      this.focusAfterRender([`pw-${item.id}`]);
       return;
     }
     // The password stays in memory next to the file; the store only learns that one was given.
@@ -139,6 +142,7 @@ export class ImportPage {
   }
 
   protected async downloadZip(): Promise<void> {
+    if (this.counts().done === 0) return; // aria-disabled: still focusable, but inert
     const { buildResultsZip } = await import('./zip-results');
     downloadBlob(buildResultsZip(this.doneItems()), 'wyniki-konwersji.zip');
   }

@@ -1,4 +1,4 @@
-import { findDictionary } from './dictionaries.mock';
+import { findDictionary } from './sample-dictionaries';
 import { FormField } from './form-definition';
 
 const hasOptions = (field: FormField) => !!field.options?.length;

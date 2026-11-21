@@ -1,4 +1,4 @@
-import { findDictionary, DictionaryNode } from './dictionaries.mock';
+import { findDictionary, DictionaryNode } from './sample-dictionaries';
 import { FormField } from './form-definition';
 import { isEmptyAnswer, validateField } from './validators';
 

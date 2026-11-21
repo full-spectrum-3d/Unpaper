@@ -1,5 +1,5 @@
 <main class="flex flex-col gap-section max-w-[960px] mx-auto">
-  <h1 class="text-title font-semibold">Import formularzy</h1>
+  <h1 tabindex="-1" class="text-title font-semibold">Import formularzy</h1>
   <app-file-drop [maxSizeMb]="maxSizeMb" (filesSelected)="onFiles($event)" />
   <app-card>
     <h2 cardTitle id="queue-title" tabindex="-1">Kolejka</h2>
@@ -9,121 +9,133 @@
         appButton
         type="button"
         variant="primary"
-        [disabled]="counts().done === 0"
+        class="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+        [attr.aria-disabled]="counts().done === 0 ? 'true' : null"
+        [attr.aria-describedby]="counts().done === 0 ? 'zip-hint' : null"
         (click)="downloadZip()"
       >
         Pobierz wszystkie (ZIP)
       </button>
+      @if (counts().done === 0) {
+        <span id="zip-hint" class="sr-only"
+          >Dostępne, gdy co najmniej jeden plik zostanie przetworzony.</span
+        >
+      }
     </span>
     @if (items().length === 0) {
       <p class="p-[10px] text-fg-muted">Kolejka jest pusta. Dodaj pliki powyżej.</p>
     } @else {
-      <table appTable aria-labelledby="queue-title">
-        <thead>
-          <tr>
-            <th>Plik</th>
-            <th class="w-px whitespace-nowrap">Rozmiar</th>
-            <th class="w-px whitespace-nowrap">Status</th>
-            <th class="w-px whitespace-nowrap">Akcje</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (i of items(); track i.id) {
+      <!-- Scrolls on its own at narrow widths instead of the whole page (WCAG 1.4.10). -->
+      <div class="overflow-x-auto">
+        <table appTable aria-labelledby="queue-title">
+          <thead>
             <tr>
-              <td class="[overflow-wrap:anywhere]">
-                {{ i.name }}
-                @if (i.error) {
-                  <div [id]="'err-' + i.id" class="text-danger text-[12px]">{{ i.error }}</div>
-                }
-                @if (i.status === 'error' && i.passwordState) {
-                  <form
-                    novalidate
-                    class="mt-[6px] flex flex-wrap items-center gap-[8px]"
-                    (submit)="submitPassword($event, i, pw)"
-                  >
-                    <label [for]="'pw-' + i.id" class="sr-only">Hasło do {{ i.name }}</label>
-                    <input
-                      #pw
-                      [id]="'pw-' + i.id"
-                      type="password"
-                      autocomplete="off"
-                      required
-                      [attr.aria-describedby]="
-                        'err-' + i.id + (passwordHint()?.id === i.id ? ' pwhint-' + i.id : '')
-                      "
-                      [attr.aria-invalid]="
-                        i.passwordState === 'invalid' || passwordHint()?.id === i.id ? 'true' : null
-                      "
-                      class="border border-border-input rounded-field px-field-x py-field-y bg-surface text-fg text-body focus-ring"
-                    />
-                    <button
-                      appButton
-                      variant="primary"
-                      type="submit"
-                      [attr.aria-label]="'Odblokuj ' + i.name"
+              <th>Plik</th>
+              <th class="w-px whitespace-nowrap">Rozmiar</th>
+              <th class="w-px whitespace-nowrap">Status</th>
+              <th class="w-px whitespace-nowrap">Akcje</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of items(); track i.id) {
+              <tr>
+                <td class="[overflow-wrap:anywhere]">
+                  {{ i.name }}
+                  @if (i.error) {
+                    <div [id]="'err-' + i.id" class="text-danger text-[12px]">{{ i.error }}</div>
+                  }
+                  @if (i.status === 'error' && i.passwordState) {
+                    <form
+                      novalidate
+                      class="mt-[6px] flex flex-wrap items-center gap-[8px]"
+                      (submit)="submitPassword($event, i, pw)"
                     >
-                      Odblokuj
-                    </button>
-                  </form>
-                  @if (passwordHint(); as hint) {
-                    @if (hint.id === i.id) {
-                      <div [id]="'pwhint-' + i.id" class="text-danger text-[12px]">
-                        {{ hint.text }}
-                      </div>
+                      <label [for]="'pw-' + i.id" class="sr-only">Hasło do {{ i.name }}</label>
+                      <input
+                        #pw
+                        [id]="'pw-' + i.id"
+                        type="password"
+                        autocomplete="off"
+                        required
+                        [attr.aria-describedby]="
+                          'err-' + i.id + (passwordHint()?.id === i.id ? ' pwhint-' + i.id : '')
+                        "
+                        [attr.aria-invalid]="
+                          i.passwordState === 'invalid' || passwordHint()?.id === i.id
+                            ? 'true'
+                            : null
+                        "
+                        class="border border-border-input rounded-field px-field-x py-field-y bg-surface text-fg text-body focus-ring"
+                      />
+                      <button
+                        appButton
+                        variant="primary"
+                        type="submit"
+                        [attr.aria-label]="'Odblokuj ' + i.name"
+                      >
+                        Odblokuj
+                      </button>
+                    </form>
+                    @if (passwordHint(); as hint) {
+                      @if (hint.id === i.id) {
+                        <div [id]="'pwhint-' + i.id" class="text-danger text-[12px]">
+                          {{ hint.text }}
+                        </div>
+                      }
                     }
                   }
-                }
-              </td>
-              <td class="w-px whitespace-nowrap">{{ formatSize(i.size) }}</td>
-              <td class="w-px whitespace-nowrap">
-                <app-badge [status]="i.status" />
-                @if (i.status === 'processing') {
-                  <app-progress [label]="'Przetwarzanie ' + i.name" class="mt-[4px]" />
-                }
-                @if (i.status === 'done') {
-                  <span class="text-fg-muted text-[12px]">{{ seconds(i.durationMs) }}</span>
-                }
-              </td>
-              <td class="w-px whitespace-nowrap">
-                <span class="flex gap-[8px]">
-                  @if (i.status === 'done') {
-                    <a
-                      [routerLink]="['/result', i.id]"
-                      [attr.aria-label]="'Otwórz wynik ' + i.name"
-                      class="border rounded-field px-[12px] py-field-y font-semibold text-body focus-ring bg-surface text-primary border-primary hover:bg-primary-subtle"
-                    >
-                      Otwórz wynik
-                    </a>
+                </td>
+                <td class="w-px whitespace-nowrap">{{ formatSize(i.size) }}</td>
+                <td class="w-px whitespace-nowrap">
+                  <app-badge [status]="i.status" />
+                  @if (i.status === 'processing') {
+                    <app-progress [label]="'Przetwarzanie ' + i.name" class="mt-[4px]" />
                   }
-                  @if (i.status === 'error' && i.retryable && !i.passwordState) {
+                  @if (i.status === 'done') {
+                    <span class="text-fg-muted text-[12px]">{{ seconds(i.durationMs) }}</span>
+                  }
+                </td>
+                <td class="w-px whitespace-nowrap">
+                  <span class="flex gap-[8px]">
+                    @if (i.status === 'done') {
+                      <a
+                        [routerLink]="['/result', i.id]"
+                        [attr.aria-label]="'Otwórz wynik ' + i.name"
+                        class="border rounded-field px-[12px] py-field-y font-semibold text-body focus-ring bg-surface text-primary border-primary hover:bg-primary-subtle"
+                      >
+                        Otwórz wynik
+                      </a>
+                    }
+                    @if (i.status === 'error' && i.retryable && !i.passwordState) {
+                      <button
+                        appButton
+                        type="button"
+                        [attr.aria-label]="'Ponów ' + i.name"
+                        [attr.aria-describedby]="'err-' + i.id"
+                        (click)="retry(i.id)"
+                      >
+                        Ponów
+                      </button>
+                    }
                     <button
                       appButton
                       type="button"
-                      [attr.aria-label]="'Ponów ' + i.name"
-                      [attr.aria-describedby]="'err-' + i.id"
-                      (click)="retry(i.id)"
+                      [id]="'remove-' + i.id"
+                      [attr.aria-label]="'Usuń ' + i.name"
+                      [attr.aria-describedby]="i.error ? 'err-' + i.id : null"
+                      [attr.aria-disabled]="i.status === 'processing' ? 'true' : null"
+                      class="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                      (click)="remove(i)"
                     >
-                      Ponów
+                      Usuń
                     </button>
-                  }
-                  <button
-                    appButton
-                    type="button"
-                    [id]="'remove-' + i.id"
-                    [attr.aria-label]="'Usuń ' + i.name"
-                    [attr.aria-describedby]="i.error ? 'err-' + i.id : null"
-                    [attr.aria-disabled]="i.status === 'processing' ? 'true' : null"
-                    class="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
-                    (click)="remove(i)"
-                  >
-                    Usuń
-                  </button>
-                </span>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     }
   </app-card>
   <div aria-live="polite" class="sr-only">{{ announcement() }}</div>

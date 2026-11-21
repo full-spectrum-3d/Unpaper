@@ -4,6 +4,7 @@ import { AnswersStore } from '../answers-store';
 import { FieldHost } from '../field-host';
 import { FormField } from '../form-definition';
 import { FormState } from '../form-state';
+import { autocompleteFor } from './text';
 
 type El = HTMLElement;
 const q = <T extends Element = El>(root: El, sel: string) => root.querySelector<T>(sel)!;
@@ -22,7 +23,8 @@ interface Case {
   describer: (el: El) => El;
   /** Controls that must carry aria-invalid / readonly-or-disabled. */
   controls: (el: El) => El[];
-  readOnly: 'readonly' | 'disabled' | 'combobox';
+  /** aria-readonly: choices stay focusable, clicks are blocked (radio: on the radiogroup). */
+  readOnly: 'readonly' | 'disabled' | 'combobox' | 'aria-readonly';
   /** Element whose text is (part of) the field's accessible name; undefined = no title. */
   nameEl?: (el: El) => El;
 }
@@ -88,7 +90,7 @@ const cases: Case[] = [
     field: { type: 'RADIO', options: opts },
     describer: (el) => q(el, 'fieldset'),
     controls: (el) => qa(el, 'input[type=radio]'),
-    readOnly: 'disabled',
+    readOnly: 'aria-readonly',
     nameEl: labelledBy('fieldset'),
   },
   {
@@ -96,7 +98,7 @@ const cases: Case[] = [
     field: { type: 'CHECKBOX' },
     describer: input,
     controls: (el) => [input(el)],
-    readOnly: 'disabled',
+    readOnly: 'aria-readonly',
     nameEl: (el) => input(el).closest('label')!,
   },
   {
@@ -104,7 +106,7 @@ const cases: Case[] = [
     field: { type: 'CHECKBOX', options: opts },
     describer: (el) => q(el, 'fieldset'),
     controls: (el) => qa(el, 'input[type=checkbox]'),
-    readOnly: 'disabled',
+    readOnly: 'aria-readonly',
     nameEl: labelledBy('fieldset'),
   },
   {
@@ -121,7 +123,7 @@ const cases: Case[] = [
     },
     describer: (el) => q(el, 'fieldset'),
     controls: (el) => qa(el, 'input[type=checkbox]'),
-    readOnly: 'disabled',
+    readOnly: 'aria-readonly',
   },
   {
     name: 'FILE_UPLOADER',
@@ -161,7 +163,13 @@ describe('preview fields: error, read-only, tooltip, registry tag', () => {
         expect(c.describer(el()).getAttribute('aria-describedby')?.split(' ')).toContain(msg.id);
         const controls = c.controls(el());
         expect(controls.length).toBeGreaterThan(0);
-        for (const ctl of controls) expect(ctl.getAttribute('aria-invalid')).toBe('true');
+        for (const ctl of controls) {
+          expect(ctl.getAttribute('aria-invalid')).toBe('true');
+          // Each choice is linked too: the fieldset's description is not announced on every input.
+          if (c.readOnly === 'aria-readonly') {
+            expect(ctl.getAttribute('aria-describedby')?.split(' ')).toContain(msg.id);
+          }
+        }
       });
 
       it('has no error markup without an error', async () => {
@@ -176,6 +184,16 @@ describe('preview fields: error, read-only, tooltip, registry tag', () => {
           for (const ctl of controls) expect((ctl as HTMLInputElement).readOnly).toBe(true);
         } else if (c.readOnly === 'disabled') {
           for (const ctl of controls) expect((ctl as HTMLInputElement).disabled).toBe(true);
+        } else if (c.readOnly === 'aria-readonly') {
+          for (const ctl of controls) {
+            const box = ctl as HTMLInputElement;
+            expect(box.disabled).toBe(false);
+            const holder = box.type === 'radio' ? box.closest('[role=radiogroup]')! : box;
+            expect(holder.getAttribute('aria-readonly')).toBe('true');
+            box.click();
+            await fixture.whenStable();
+            expect(box.checked).toBe(false);
+          }
         } else {
           controls[0].click();
           await fixture.whenStable();
@@ -208,4 +226,102 @@ describe('preview fields: error, read-only, tooltip, registry tag', () => {
       }
     });
   }
+});
+
+describe('preview fields: required', () => {
+  const required = { id: 'f', techName: 'f', title: 'Pole', validation: ['REQUIRED'] };
+  const render = async (field: Partial<FormField>) => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection(), AnswersStore, FormState],
+    });
+    const fixture = TestBed.createComponent(FieldHost);
+    fixture.componentRef.setInput('field', { ...required, ...field } as FormField);
+    await fixture.whenStable();
+    return fixture.nativeElement as El;
+  };
+
+  for (const type of ['TEXT_FIELD', 'TEXTAREA', 'DATEPICKER', 'SELECT', 'CHECKBOX']) {
+    it(`${type} carries aria-required and a visible asterisk`, async () => {
+      const el = await render({ type, options: type === 'SELECT' ? opts : undefined });
+      expect(q(el, 'input, textarea').getAttribute('aria-required')).toBe('true');
+      const star = qa(el, '[aria-hidden=true]').find((s) => s.textContent?.trim() === '*');
+      expect(star).toBeTruthy();
+    });
+  }
+
+  it('RADIO marks the radiogroup', async () => {
+    const el = await render({ type: 'RADIO', options: opts });
+    expect(q(el, '[role=radiogroup]').getAttribute('aria-required')).toBe('true');
+  });
+
+  it('CHECKBOX group says it in the group name (role=group has no aria-required)', async () => {
+    const el = await render({ type: 'CHECKBOX', options: opts });
+    expect(labelledBy('fieldset')(el).textContent).toContain('(wymagane)');
+  });
+
+  it('FILE_UPLOADER names the field in its button', async () => {
+    const el = await render({ type: 'FILE_UPLOADER' });
+    expect(q(el, 'button').getAttribute('aria-label')).toBe(
+      'Dodaj lub przeciągnij plik: Pole (wymagane)',
+    );
+  });
+
+  it('is not marked without REQUIRED', async () => {
+    const el = await render({ type: 'TEXT_FIELD', validation: [] });
+    expect(q(el, 'input').hasAttribute('aria-required')).toBe(false);
+    expect(el.textContent).not.toContain('*');
+  });
+});
+
+describe('preview fields: smaller a11y details', () => {
+  const render = async (field: Partial<FormField>) => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection(), AnswersStore, FormState],
+    });
+    const fixture = TestBed.createComponent(FieldHost);
+    fixture.componentRef.setInput('field', { id: 'f', techName: 'f', title: 'Pole', ...field });
+    await fixture.whenStable();
+    return fixture;
+  };
+
+  it("autocomplete covers only the applicant's own data", () => {
+    expect(autocompleteFor('imie')).toBe('given-name');
+    expect(autocompleteFor('kod_pocztowy_zagranica')).toBe('postal-code');
+    expect(autocompleteFor('adres_e_mail')).toBe('email');
+    expect(autocompleteFor('nazwisko_inna_osoba')).toBeUndefined();
+    expect(autocompleteFor('ulica_siedziba')).toBeUndefined();
+    expect(autocompleteFor(undefined)).toBeUndefined();
+  });
+
+  it('sets autocomplete on the text input', async () => {
+    const fixture = await render({ type: 'TEXT_FIELD', techName: 'nazwisko' });
+    expect(q(fixture.nativeElement, 'input').getAttribute('autocomplete')).toBe('family-name');
+  });
+
+  it('nests section headings by depth, capped at h6', async () => {
+    const section = (id: string, inner: FormField[] = []): FormField =>
+      ({
+        id,
+        type: 'SECTION',
+        techName: id,
+        title: id,
+        repeatingSectionGrid: inner.map((field, y) => ({ x: 0, y, rows: 1, cols: 1, field })),
+      }) as FormField;
+    const fixture = await render(section('a', [section('b', [section('c', [section('d')])])]));
+    const el = fixture.nativeElement as El;
+    expect(['h4', 'h5', 'h6'].map((h) => q(el, h).textContent?.trim())).toEqual(['a', 'b', 'c']);
+    expect(qa(el, 'h6').map((h) => h.textContent?.trim())).toEqual(['c', 'd']);
+  });
+
+  it('textarea announces the character limit only near it', async () => {
+    const fixture = await render({ type: 'TEXTAREA' });
+    const el = fixture.nativeElement as El;
+    const notice = () => q(el, 'p[aria-live]').textContent?.trim();
+    expect(notice()).toBe('');
+    TestBed.inject(AnswersStore)
+      .answer({ id: 'f' } as FormField)
+      .set('x'.repeat(7900));
+    await fixture.whenStable();
+    expect(notice()).toBe('Zostało mniej niż 200 znaków');
+  });
 });

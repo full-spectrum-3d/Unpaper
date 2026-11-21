@@ -40,7 +40,7 @@ export const Pusty: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     expect(c.getByRole('heading', { level: 1, name: 'Walidator JSON' })).toBeVisible();
-    expect(c.getByRole('button', { name: 'Sprawdź' })).toBeDisabled();
+    expect(c.getByRole('button', { name: 'Sprawdź' })).toHaveAttribute('aria-disabled', 'true');
     expect(c.getByRole('button', { name: 'Wgraj plik .json' })).toBeEnabled();
   },
 };
@@ -60,8 +60,10 @@ export const ZBledami: Story = {
     const c = within(canvasElement);
     await fill(c, JSON.stringify(nadplata, null, 2));
     await userEvent.click(c.getByRole('button', { name: 'Sprawdź' }));
-    expect(await c.findByRole('status')).toHaveTextContent('Znaleziono 2 błędy i 1 ostrzeżenie.');
     await waitFor(() => expect(c.getByRole('heading', { level: 2, name: 'Wynik' })).toHaveFocus());
+    expect(c.getByRole('heading', { level: 2, name: 'Wynik' })).toHaveAccessibleDescription(
+      'Znaleziono 2 błędy i 1 ostrzeżenie.',
+    );
     expect(c.getByRole('heading', { level: 3, name: 'Błędy (2)' })).toBeVisible();
     expect(c.getByRole('heading', { level: 3, name: 'Ostrzeżenia (1)' })).toBeVisible();
     expect(c.queryByRole('button', { name: 'Pokaż w JSON: R01_SCHEMA' })).toBeNull();
@@ -78,7 +80,7 @@ export const Poprawny: Story = {
     const c = within(canvasElement);
     await fill(c, JSON.stringify(nadplata, null, 2));
     await userEvent.click(c.getByRole('button', { name: 'Sprawdź' }));
-    expect(await c.findByRole('status')).toHaveTextContent('JSON spełnia reguły COI.');
+    expect(await c.findByText('JSON spełnia reguły COI.')).toBeVisible();
     expect(c.getByLabelText('Sprawdzany JSON').textContent).toBe(JSON.stringify(nadplata, null, 2));
     await userEvent.type(c.getByLabelText('JSON formularza'), ' ');
     expect(c.getByText('JSON zmieniono po sprawdzeniu. Sprawdź ponownie.')).toBeVisible();

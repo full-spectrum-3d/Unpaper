@@ -82,12 +82,34 @@ export interface FormDefinition {
 
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/** Shallow shape check of a conversion result. */
+const optionalArrayOf = (v: unknown, item: (x: unknown) => boolean) =>
+  v == null || (Array.isArray(v) && v.every(item));
+const optionalString = (v: unknown) => v == null || typeof v === 'string';
+
+/** Fields read by the renderer without further checks: a wrong shape here would crash its computeds. */
+function isField(f: unknown): boolean {
+  return (
+    isObject(f) &&
+    typeof f['id'] === 'string' &&
+    typeof f['type'] === 'string' &&
+    optionalString(f['title']) &&
+    optionalString(f['techName']) &&
+    optionalArrayOf(f['options'], (o) => isObject(o) && typeof o['name'] === 'string') &&
+    optionalArrayOf(f['states'], isObject) &&
+    optionalArrayOf(f['repeatingSectionGrid'], isQuestion)
+  );
+}
+
+const isQuestion = (q: unknown): boolean => isObject(q) && isField(q['field']);
+
+/** Recursive shape check of a conversion result (untrusted JSON from the LLM). */
 export function isFormDefinition(value: unknown): value is FormDefinition {
   return (
     isObject(value) &&
     typeof value['title'] === 'string' &&
     Array.isArray(value['tabs']) &&
-    value['tabs'].every((t) => isObject(t) && Array.isArray(t['questions']))
+    value['tabs'].every(
+      (t) => isObject(t) && Array.isArray(t['questions']) && t['questions'].every(isQuestion),
+    )
   );
 }

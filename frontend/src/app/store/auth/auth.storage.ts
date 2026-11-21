@@ -53,7 +53,12 @@ export function authStorageMetaReducer<A extends { type: string }>(
       if (saved) current = { ...reducer(undefined, action), ...saved };
     }
     const next = reducer(current, action);
-    write(next);
+    // Only persisted fields matter; most actions do not touch them.
+    const changed =
+      next.token !== current?.token ||
+      next.expiresAt !== current?.expiresAt ||
+      next.username !== current?.username;
+    if (changed) write(next);
     return next;
   };
 }

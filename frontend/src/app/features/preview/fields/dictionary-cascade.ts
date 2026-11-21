@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { Combobox } from '../../../shared/ui/combobox/combobox';
-import { Dictionary, DictionaryNode, findDictionary } from '../dictionaries.mock';
+import { Dictionary, DictionaryNode, findDictionary } from '../sample-dictionaries';
 import { isSearchable } from '../select-options';
 import { FieldBase } from './field-base';
 import { FieldLabel } from './field-label';
@@ -39,6 +39,8 @@ export function cascadeLevels(
       @if (hasDescription()) {
         <div class="text-fg-muted" [id]="descId()" [innerHTML]="field().description"></div>
       }
+      <!-- Levels appear and disappear with the choice above them: say which ones are there now. -->
+      <p class="sr-only" aria-live="polite">{{ levelsNotice() }}</p>
       @for (level of levels(); track level.label; let i = $index) {
         <app-combobox
           [label]="level.label"
@@ -47,6 +49,7 @@ export function cascadeLevels(
           [describedBy]="i === 0 && hasDescription() ? descId() : null"
           [error]="i === errorLevel() ? (error() ?? undefined) : undefined"
           [readonly]="readOnly()"
+          [required]="required()"
           [tooltip]="i === 0 && !showTitle() ? tooltip() : undefined"
           [tag]="i === 0 && !showTitle() ? tag() : undefined"
           [value]="value()[i] ?? ''"
@@ -62,6 +65,14 @@ export class DictionaryCascadeField extends FieldBase<string[]> {
     const dict = findDictionary(this.field().dictionaryName);
     return dict ? cascadeLevels(dict, this.value()) : [];
   });
+  protected readonly levelsNotice = computed(() =>
+    this.levels().length > 1
+      ? 'Pola wyboru: ' +
+        this.levels()
+          .map((l) => l.label)
+          .join(', ')
+      : '',
+  );
   // A title equal to the dictionary name is a technical leftover, not a legend.
   protected readonly showTitle = computed(
     () => this.hasTitle() && this.label() !== this.field().dictionaryName,

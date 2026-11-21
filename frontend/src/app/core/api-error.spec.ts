@@ -33,6 +33,21 @@ describe('toUserMessage', () => {
     expect(toUserMessage(err(404, null, { url: '/api/v1/forms' }))).toBe('Wystąpił nieoczekiwany błąd');
   });
 
+  it('maps SERVER_BUSY', () => {
+    expect(toUserMessage(err(503, { code: 'SERVER_BUSY', detail: 'x' }))).toBe(
+      'Serwer jest zajęty. Spróbuj ponownie za chwilę.',
+    );
+  });
+
+  it('maps an HTML 413 from the proxy by status', () => {
+    expect(toUserMessage(err(413, '<html>413</html>'))).toBe('Plik jest zbyt duży');
+  });
+
+  it('prefers detail for 429, falls back by status without it', () => {
+    expect(toUserMessage(err(429, { code: 'TOO_MANY_REQUESTS', detail: 'Za minutę.' }))).toBe('Za minutę.');
+    expect(toUserMessage(err(429, null))).toBe('Zbyt wiele żądań. Spróbuj ponownie za chwilę.');
+  });
+
   it('falls back to detail', () => {
     expect(toUserMessage(err(500, { code: 'OTHER', detail: 'Coś poszło nie tak' }))).toBe('Coś poszło nie tak');
   });

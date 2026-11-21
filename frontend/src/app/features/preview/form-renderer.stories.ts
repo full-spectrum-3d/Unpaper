@@ -38,7 +38,9 @@ export const Nadplata: Story = {
     expect(c.getByRole('heading', { level: 3, name: 'Krok 1 z 3: Dane' })).toBeVisible();
 
     await userEvent.click(c.getByRole('button', { name: 'Przerwij wypełnianie' }));
+    await userEvent.click(await c.findByRole('button', { name: 'Tak, wyczyść' }));
     await heading(3, 'Krok 1 z 3: Dane');
+    await c.findByText('Wyczyszczono odpowiedzi');
     await waitFor(() =>
       expect(c.getAllByRole('textbox', { name: /^Numer budynku/ })[0]).toHaveValue(initial),
     );

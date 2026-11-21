@@ -3,7 +3,7 @@
     <a routerLink="/import" class="self-start text-primary focus-ring rounded-field">← Wróć do importu</a>
     @if (item(); as i) {
       <app-card>
-        <h1 cardTitle class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
+        <h1 cardTitle tabindex="-1" class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
         <span cardActions class="flex flex-wrap items-center gap-2">
           <span role="tablist" aria-label="Widok wyniku" class="flex gap-2">
             @for (t of tabs(); track t) {
@@ -48,7 +48,10 @@
           <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
         }
         <div id="result-panel-json" role="tabpanel" aria-labelledby="result-tab-json" [hidden]="activeTab() !== 'json'">
-          <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
+          <!-- Rendered only when shown: one span per line is a lot of DOM for a large form. -->
+          @if (activeTab() === 'json') {
+            <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
+          }
         </div>
         <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
           <app-review-panel
@@ -62,7 +65,7 @@
         </div>
       </app-card>
     } @else {
-      <h1 class="text-title font-semibold">Wynik</h1>
+      <h1 tabindex="-1" class="text-title font-semibold">Wynik</h1>
       <p class="text-fg-muted">Wynik niedostępny. Wróć do importu i przetwórz plik ponownie.</p>
     }
   </div>

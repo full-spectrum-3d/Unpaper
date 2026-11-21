@@ -1,7 +1,11 @@
 import { Component, computed, input } from '@angular/core';
 import { FieldTooltip } from '../../../shared/ui/field-tooltip/field-tooltip';
 
-/** Label row like app-text-field's: label (with sr-only tag), tooltip disclosure, visible tag. */
+/**
+ * Label row like app-text-field's: label (with sr-only tag and required marker), tooltip disclosure, visible tag.
+ * The asterisk sits outside the label, visual only: controls carry aria-required.
+ * Groups that cannot (role=group, labelled by the span) set announceRequired to put it into their name.
+ */
 @Component({
   selector: 'app-field-label',
   imports: [FieldTooltip],
@@ -13,8 +17,14 @@ import { FieldTooltip } from '../../../shared/ui/field-tooltip/field-tooltip';
         >
       } @else {
         <span [id]="labelId()" [class]="labelClass()"
-          >{{ label() }}<span class="sr-only">{{ tag() ? ', ' + tag() : '' }}</span></span
-        >
+          >{{ label() }}<span class="sr-only">{{ tag() ? ', ' + tag() : '' }}</span>
+          @if (required() && announceRequired()) {
+            <span class="sr-only"> (wymagane)</span>
+          }
+        </span>
+      }
+      @if (required() && !hidden()) {
+        <span class="text-danger -ml-1.5" aria-hidden="true">*</span>
       }
       @if (tooltip(); as text) {
         <app-field-tooltip [text]="text" [label]="label()" />
@@ -36,6 +46,8 @@ export class FieldLabel {
   readonly hidden = input(false);
   readonly tooltip = input<string>();
   readonly tag = input<string>();
+  readonly required = input(false);
+  readonly announceRequired = input(false);
   protected readonly labelClass = computed(() =>
     this.hidden() ? 'sr-only' : 'text-label font-label',
   );
