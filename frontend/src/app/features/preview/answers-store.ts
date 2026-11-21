@@ -1,6 +1,7 @@
 import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
 import { FormDefinition, FormField, Question } from './form-definition';
 import { SAMPLE_REGISTRY_DATA } from './sample-registry-data';
+import { isCascade } from './select-options';
 
 export function initialAnswer(field: FormField): unknown {
   const dv = field.defaultValue;
@@ -9,6 +10,7 @@ export function initialAnswer(field: FormField): unknown {
   if (field.type === 'CHECKBOX' || field.type === 'FILE_UPLOADER') {
     return field.type === 'CHECKBOX' && dv ? [dv].flat() : [];
   }
+  if (isCascade(field)) return [dv ?? []].flat().filter(Boolean);
   const first = Array.isArray(dv) ? dv[0] : dv;
   if (!first) return '';
   return field.defaultValueType === 'EXTERNAL_SYSTEM' ? (SAMPLE_REGISTRY_DATA[first] ?? '') : first;

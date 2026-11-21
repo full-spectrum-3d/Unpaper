@@ -20,6 +20,9 @@ describe('initialAnswer', () => {
     );
     expect(initialAnswer(f({ type: 'SELECT', defaultValue: ['Polska'] }))).toBe('Polska');
     expect(initialAnswer(f({ type: 'SELECT', defaultValue: [] }))).toBe('');
+    const teryt = { type: 'SELECT', dictionaryName: 'TERYT_4G_DOWODOWY' };
+    expect(initialAnswer(f({ ...teryt, defaultValue: [] }))).toEqual([]);
+    expect(initialAnswer(f({ ...teryt, defaultValue: ['mazowieckie'] }))).toEqual(['mazowieckie']);
     expect(initialAnswer(f({ type: 'CHECKBOX' }))).toEqual([]);
     expect(
       initialAnswer(
