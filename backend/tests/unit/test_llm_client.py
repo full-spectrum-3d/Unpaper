@@ -53,7 +53,7 @@ async def test_chat_sends_contract_body() -> None:
     assert body["think"] is False and body["stream"] is False
     assert body["format"] == SCHEMA and body["model"] == "qwen3:8b"
     assert body["messages"] == MESSAGES and body["keep_alive"] == "30m"
-    assert body["options"] == {"temperature": 0, "seed": 42, "num_ctx": 8192}
+    assert body["options"] == {"temperature": 0, "seed": 42, "num_ctx": 8192, "num_predict": 2048}
 
 
 async def test_chat_parses_reply() -> None:
@@ -129,7 +129,7 @@ async def test_warm_up_loads_model_with_chat_options() -> None:
             "stream": False,
             "think": False,
             "keep_alive": "30m",
-            "options": {"temperature": 0, "seed": 42, "num_ctx": 8192},
+            "options": {"temperature": 0, "seed": 42, "num_ctx": 8192, "num_predict": 2048},
         }
     ]
 

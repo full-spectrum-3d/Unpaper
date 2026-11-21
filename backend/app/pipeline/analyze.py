@@ -172,6 +172,7 @@ async def _analyze(
 
     prefix_chars = sum(len(m["content"]) for m in prompt_messages(""))
     max_chars = (settings.llm_num_ctx - RESPONSE_RESERVE_TOKENS) * CHARS_PER_TOKEN - prefix_chars
+    max_chars = min(max_chars, settings.llm_max_chunk_chars)
     chunks = split_prompt_text(text, max(max_chars, MIN_CHUNK_CHARS))
     if len(chunks) == 1:
         outcome = await _single(client, settings, result, text, deadline, clock)

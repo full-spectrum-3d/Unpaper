@@ -79,6 +79,11 @@ class Settings(BaseSettings):
     llm_temperature: Annotated[float, Field(ge=0, le=2)] = 0
     llm_seed: int = 42
     llm_num_ctx: PositiveInt = 8192
+    # Limit tokenów odpowiedzi: zapętlony model nie zużyje całego budżetu czasu.
+    llm_num_predict: PositiveInt = 2048
+    # Dłuższy dokument dzielimy na fragmenty: 8b na CPU gubi pola w długim tekście
+    # (stypendium), a pojedyncze wywołanie nie mieści się w czasie (odpady, §10.2).
+    llm_max_chunk_chars: PositiveInt = 4500
     extraction_vlm_enabled: bool = False
     vlm_model: str = "qwen2.5vl:7b"
 

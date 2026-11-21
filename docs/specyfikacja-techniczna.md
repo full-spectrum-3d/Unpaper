@@ -747,6 +747,8 @@ Wszystkie parametry przez zmienne środowiskowe (pydantic-settings). Plik `.env.
 | `LLM_TIMEOUT_S` | `240` | limit jednego wywołania modelu |
 | `LLM_TEMPERATURE` / `LLM_SEED` | `0` / `42` | powtarzalność |
 | `LLM_NUM_CTX` | `8192` | okno kontekstu (prompt z przykładem ok. 3 tys. tokenów + odpowiedź; większe okno tylko zajmuje RAM) |
+| `LLM_NUM_PREDICT` | `2048` | limit tokenów odpowiedzi (zapętlony model nie zużyje całego budżetu) |
+| `LLM_MAX_CHUNK_CHARS` | `4500` | dłuższy tekst blankietu dzielony na fragmenty analizowane osobno |
 | `EXTRACTION_VLM_ENABLED` / `VLM_MODEL` | `false` / `qwen2.5vl:7b` | tryb wizyjny dla skanów |
 | `OCR_LANG` | `pol` | |
 | `OCR_DPI` | `300` | |
