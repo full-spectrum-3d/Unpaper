@@ -1,1 +1,125 @@
-[]
+{
+  "dictionaries": [
+    {
+      "name": "Kraje",
+      "title": "Kraje",
+      "description": "Ustandaryzowany zbiór państw. Kraj urodzenia, obywatelstwa, zamieszkania lub adresu zagranicznego.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "defaultValue": ["Polska"],
+      "itemStructure": ["code", "name", "techName"],
+      "labelPatterns": [
+        "^(kraj|państwo)( (zamieszkania|urodzenia|pochodzenia|siedziby|wydania( dokumentu)?|adresu))?$",
+        "^obywatelstwo$",
+        "^(kraj|państwo) obywatelstwa$"
+      ]
+    },
+    {
+      "name": "TERYT_4G_DOWODOWY",
+      "title": "TERYT – województwo, powiat, gmina, miejscowość",
+      "description": "Wielopoziomowy słownik TERYT dla adresu w Polsce: jedno pole prowadzi przez województwo, powiat, gminę i miejscowość.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "multiLevelTree": true,
+      "itemStructure": ["code", "name", "techName", "parentCode", "level"],
+      "labelPatterns": [
+        "^teryt$",
+        "^województwo, powiat, gmina(,| i) miejscowość$"
+      ]
+    },
+    {
+      "name": "TERYT_DOWODOWY",
+      "title": "TERYT (wariant wzorca)",
+      "description": "Wariant TERYT użyty we wzorcu COI dla adresu innej osoby. Nie jest dobierany automatycznie.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "multiLevelTree": true,
+      "itemStructure": ["code", "name", "techName", "parentCode", "level"],
+      "labelPatterns": []
+    },
+    {
+      "name": "WOJEWODZTWO",
+      "title": "Województwo",
+      "description": "Ustandaryzowany zbiór województw w Polsce. Dane adresowe.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "itemStructure": ["code", "name", "techName"],
+      "labelPatterns": ["^województwo$"]
+    },
+    {
+      "name": "POWIAT",
+      "title": "Powiat",
+      "description": "Ustandaryzowany zbiór powiatów w Polsce. Dane adresowe.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "itemStructure": ["code", "name", "techName", "parentCode"],
+      "labelPatterns": ["^powiat$"]
+    },
+    {
+      "name": "GMINA",
+      "title": "Gmina",
+      "description": "Ustandaryzowany zbiór gmin w Polsce. Dane adresowe.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "itemStructure": ["code", "name", "techName", "parentCode"],
+      "labelPatterns": ["^gmina$"]
+    },
+    {
+      "name": "MIEJSCOWOSC",
+      "title": "Miejscowość",
+      "description": "Ustandaryzowany zbiór miejscowości w Polsce. Dane adresowe (nie dla adresu zagranicznego).",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "itemStructure": ["code", "name", "techName", "parentCode"],
+      "labelPatterns": ["^miejscowość$", "^nazwa miejscowości$"]
+    },
+    {
+      "name": "NUMERY_KIERUNKOWE",
+      "title": "Numery kierunkowe",
+      "description": "Międzynarodowe prefiksy telefoniczne przypisane do krajów, np. +48 dla Polski. Pole wyboru obok numeru telefonu.",
+      "status": "PREDEFINED",
+      "fieldTypes": ["SELECT"],
+      "defaultValue": ["+48"],
+      "itemStructure": ["code", "name", "techName", "countryCode"],
+      "labelPatterns": [
+        "^(numer )?kierunkowy$",
+        "^(numer|prefiks) kierunkowy( (kraju|telefonu))?$",
+        "^prefiks( telefonu| telefoniczny)?$"
+      ]
+    }
+  ],
+  "proposals": [
+    {
+      "name": "RODZAJE_PODATKOW_LOKALNYCH",
+      "title": "Rodzaje podatków lokalnych",
+      "description": "Podatki pobierane przez gminę. Np. wniosek o stwierdzenie nadpłaty, pole „Nazwa podatku”.",
+      "status": "PROPOSED",
+      "fieldTypes": ["SELECT", "RADIO"],
+      "itemStructure": ["code", "name", "techName", "validFrom", "validTo"],
+      "labelPatterns": ["^(nazwa|rodzaj) podatku$", "^podatek$"],
+      "items": [
+        {"code": "PN", "name": "Podatek od nieruchomości"},
+        {"code": "PR", "name": "Podatek rolny"},
+        {"code": "PL", "name": "Podatek leśny"},
+        {"code": "PST", "name": "Podatek od środków transportowych"},
+        {"code": "LZP", "name": "Łączne zobowiązanie pieniężne"}
+      ]
+    },
+    {
+      "name": "RODZAJE_DOKUMENTOW_TOZSAMOSCI",
+      "title": "Rodzaje dokumentów tożsamości",
+      "description": "Dokumenty potwierdzające tożsamość. Pola typu „Rodzaj dokumentu tożsamości”.",
+      "status": "PROPOSED",
+      "fieldTypes": ["SELECT", "RADIO"],
+      "itemStructure": ["code", "name", "techName"],
+      "labelPatterns": ["^rodzaj dokumentu( tożsamości| potwierdzającego tożsamość)?$", "^dokument tożsamości$"],
+      "items": [
+        {"code": "DO", "name": "Dowód osobisty"},
+        {"code": "PA", "name": "Paszport"},
+        {"code": "KP", "name": "Karta pobytu"},
+        {"code": "PDTC", "name": "Polski dokument tożsamości cudzoziemca"},
+        {"code": "DP", "name": "Dokument podróży"}
+      ]
+    }
+  ]
+}
