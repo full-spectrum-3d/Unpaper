@@ -30,7 +30,8 @@ _PERSONAL_WORDS = frozenset(
         "imię", "imiona", "nazwisko", "nazwa", "firmy", "adres", "zamieszkania",
         "korespondencji", "korespondencyjny", "do", "siedziby", "siedziba", "pesel", "nip",
         "regon", "numer", "nr", "telefonu", "telefon", "kontaktowy", "e-mail", "email",
-        "mail", "i", "lub", "oraz", "wnioskodawcy", "wnioskodawca", "opcjonalnie",
+        "mail", "i", "lub", "oraz", "wnioskodawcy", "wnioskodawca", "opcjonalnie", "pełna",
+        "skrócona", "pierwsze", "drugie",
     }
 )  # fmt: skip
 # ...i co najmniej jedno słowo, które jednoznacznie wskazuje dane osoby lub firmy.

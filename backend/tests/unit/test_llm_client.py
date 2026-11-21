@@ -56,6 +56,36 @@ async def test_chat_sends_contract_body() -> None:
     assert body["options"] == {"temperature": 0, "seed": 42, "num_ctx": 8192, "num_predict": 2048}
 
 
+async def test_chat_sends_modal_auth_headers_when_configured() -> None:
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return _ok(request)
+
+    settings = Settings(
+        app_env="development",
+        auth_enabled=False,
+        llm_auth_key="wk-1",
+        llm_auth_secret="ws-1",  # noqa: S106
+        _env_file=None,
+    )
+    await _chat(OllamaClient(settings, transport=httpx.MockTransport(handler)))
+    assert seen[0].headers["Modal-Key"] == "wk-1"
+    assert seen[0].headers["Modal-Secret"] == "ws-1"
+
+
+async def test_chat_sends_no_auth_headers_by_default() -> None:
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return _ok(request)
+
+    await _chat(_client(handler))
+    assert "Modal-Key" not in seen[0].headers
+
+
 async def test_chat_parses_reply() -> None:
     reply = await _chat(_client(_ok))
     assert reply.content == '{"title": "x"}'

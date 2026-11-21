@@ -74,6 +74,9 @@ class Settings(BaseSettings):
 
     # --- LLM ---
     llm_base_url: str = "http://llm:11434"
+    # Proxy auth Modala (nagłówki Modal-Key/Modal-Secret); puste = lokalna Ollama.
+    llm_auth_key: str | None = None
+    llm_auth_secret: SecretStr | None = None
     llm_model: str = "qwen3:8b"
     llm_timeout_s: PositiveInt = 240
     llm_temperature: Annotated[float, Field(ge=0, le=2)] = 0

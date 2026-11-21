@@ -177,3 +177,8 @@ def test_subject_section_title_wins_over_applicant_words() -> None:
 
 def test_applicant_person_section_is_not_other_person() -> None:
     assert applicant_field_reason("Nazwisko i imię", ["Osoba wnioskodawca"])
+
+
+def test_full_and_short_names_are_applicant_data() -> None:
+    assert applicant_field_reason("Nazwisko/Nazwa pełna", ["Podstawowe dane"])
+    assert applicant_field_reason("Pierwsze imię/ Nazwa skrócona", ["Podstawowe dane"])

@@ -368,3 +368,23 @@ def test_number_inside_statement_kept() -> None:
     out, warnings = normalize_draft(_make(mutate), doc)
     assert "W17_STATEMENT_REMOVED" not in _codes(warnings)
     assert _field(out, "f5").kind == "number"
+
+
+def test_example_choice_with_generic_label_removed() -> None:
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+        ("paragraph", "Rodzaj dokumentu: ……… Nie dotyczy."),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).append(
+            {"id": "f5", "label": "Rodzaj", "kind": "single_choice", "required": True,
+             "options": ["Drzewa", "Krzewy"]}
+        )  # fmt: skip
+        _fields(d).append(
+            {"id": "f6", "label": "Czy planowane są nasadzenia zastępcze?",
+             "kind": "single_choice", "required": True, "options": ["Tak", "Nie"]}
+        )  # fmt: skip
+
+    _, warnings = normalize_draft(_make(mutate), doc)
+    assert _codes(warnings).count("W28_EXAMPLE_FIELD_REMOVED") == 2

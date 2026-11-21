@@ -29,6 +29,7 @@ STATEMENT_FIELD_COVERAGE = 0.8
 # Pole innego typu niż `info` uznajemy za oświadczenie tylko przy dłuższej etykiecie:
 # krótkie etykiety („Rasa psa”) przypadkowo pokrywają się z tekstem oświadczeń.
 MIN_STATEMENT_LABEL_CHARS = 25
+GENERIC_OPTIONS = frozenset({"tak", "nie", "inne"})
 STATEMENT_LIKE_KINDS = frozenset({"single_choice", "multi_choice", "short_text", "long_text"})
 VARIANT_PAGE_TITLE = "Przedmiot wniosku"
 VARIANT_SECTION_TITLE = "Rodzaj sprawy"
@@ -174,8 +175,13 @@ def _remove_example_fields(
     def leaked(field: dict[str, Any]) -> bool:
         if _normalize(field["label"]) not in examples:
             return False
-        texts = [field["label"], *field["options"]]
-        return not any(matches_text(t, doc_text, LABEL_MATCH_THRESHOLD) for t in texts)
+        if not matches_text(field["label"], doc_text, LABEL_MATCH_THRESHOLD):
+            return True
+        # Ogólna etykieta („Rodzaj”) jest w każdym blankiecie - rozstrzygają opcje przykładu.
+        options = [o for o in field["options"] if o.casefold() not in GENERIC_OPTIONS]
+        return bool(options) and not any(
+            matches_text(o, doc_text, LABEL_MATCH_THRESHOLD) for o in options
+        )
 
     for path, field in iter_field_dicts(data):
         if leaked(field):
