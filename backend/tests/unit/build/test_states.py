@@ -142,3 +142,22 @@ def test_unknown_ref_removed_with_warning() -> None:
     assert len(issues) == 1
     assert issues[0].code == IssueCode.W06_STATE_REMOVED
     assert issues[0].path == "f2"
+
+
+def test_read_only_state_is_built_from_condition() -> None:
+    field = FieldNode(key="f1", type=FieldType.TEXT_FIELD, title="F", tech_name="f")
+    locked = FieldNode(
+        key="f2",
+        type=FieldType.TEXT_FIELD,
+        title="G",
+        tech_name="g",
+        read_only_when=Not(Eq("f1", "tak")),
+    )
+    section = SectionNode(
+        key="s", type=FieldType.SECTION, title="S", tech_name="s", fields=[field, locked]
+    )
+    pages = [PageNode(key="p", title="P", type=TabType.MAIN, sections=[section])]
+    states, issues = build_states(pages)
+    assert not issues
+    assert [s["type"] for s in states["f2"]] == ["READ_ONLY"]
+    assert query_compiles(states["f2"][0]["query"]) is None

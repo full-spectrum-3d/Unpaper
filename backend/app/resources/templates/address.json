@@ -45,6 +45,35 @@
         "REQUIRED"
       ],
       "showWhen": {
+        "all": [
+          {
+            "not": {
+              "eq": [
+                "kraj",
+                "Polska"
+              ]
+            }
+          },
+          {
+            "not": {
+              "eq": [
+                "brak_kodu_pocztowego_zagranica",
+                "Brak kodu pocztowego"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "key": "brak_kodu_pocztowego_zagranica",
+      "type": "CHECKBOX",
+      "title": "",
+      "techName": "brak_kodu_pocztowego{sfx}_zagranica",
+      "options": [
+        "Brak kodu pocztowego"
+      ],
+      "showWhen": {
         "not": {
           "eq": [
             "kraj",
@@ -60,6 +89,35 @@
       "techName": "ulica{sfx}_zagranica",
       "validation": [
         "REQUIRED"
+      ],
+      "showWhen": {
+        "all": [
+          {
+            "not": {
+              "eq": [
+                "kraj",
+                "Polska"
+              ]
+            }
+          },
+          {
+            "not": {
+              "eq": [
+                "brak_nazwy_ulicy_zagranica",
+                "Brak nazwy ulicy"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "key": "brak_nazwy_ulicy_zagranica",
+      "type": "CHECKBOX",
+      "title": "",
+      "techName": "brak_nazwy_ulicy{sfx}_zagranica",
+      "options": [
+        "Brak nazwy ulicy"
       ],
       "showWhen": {
         "not": {
@@ -100,6 +158,33 @@
       ],
       "initialData": "MLPZ.postCode",
       "showWhen": {
+        "all": [
+          {
+            "eq": [
+              "kraj",
+              "Polska"
+            ]
+          },
+          {
+            "not": {
+              "eq": [
+                "brak_kodu_pocztowego",
+                "Brak kodu pocztowego"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "key": "brak_kodu_pocztowego",
+      "type": "CHECKBOX",
+      "title": "",
+      "techName": "brak_kodu_pocztowego{sfx}",
+      "options": [
+        "Brak kodu pocztowego"
+      ],
+      "showWhen": {
         "eq": [
           "kraj",
           "Polska"
@@ -115,6 +200,33 @@
         "REQUIRED"
       ],
       "initialData": "MLPZ.street",
+      "showWhen": {
+        "all": [
+          {
+            "eq": [
+              "kraj",
+              "Polska"
+            ]
+          },
+          {
+            "not": {
+              "eq": [
+                "brak_nazwy_ulicy",
+                "Brak nazwy ulicy"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "key": "brak_nazwy_ulicy",
+      "type": "CHECKBOX",
+      "title": "",
+      "techName": "brak_nazwy_ulicy{sfx}",
+      "options": [
+        "Brak nazwy ulicy"
+      ],
       "showWhen": {
         "eq": [
           "kraj",
@@ -137,7 +249,24 @@
       "type": "TEXT_FIELD",
       "title": "Numer lokalu",
       "techName": "numer_lokalu{sfx}",
-      "initialData": "MLPZ.apartment"
+      "initialData": "MLPZ.apartment",
+      "showWhen": {
+        "not": {
+          "eq": [
+            "brak_numeru_lokalu",
+            "Brak numeru lokalu"
+          ]
+        }
+      }
+    },
+    {
+      "key": "brak_numeru_lokalu",
+      "type": "CHECKBOX",
+      "title": "",
+      "techName": "brak_numeru_lokalu{sfx}",
+      "options": [
+        "Brak numeru lokalu"
+      ]
     }
   ]
 }

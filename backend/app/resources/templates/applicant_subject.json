@@ -7,8 +7,8 @@
     {
       "key": "w_czyim_imieniu",
       "type": "RADIO",
-      "title": "Wybierz, w czyim imieniu wnioskujesz",
-      "techName": "wybierz_w_czyim_imieniu_wnioskujesz",
+      "title": "Wybierz, w czyim imieniu {verb}",
+      "techName": "wybierz_w_czyim_imieniu_{verb_ascii}",
       "validation": [
         "REQUIRED"
       ]
@@ -16,8 +16,8 @@
     {
       "key": "jako_kto",
       "type": "RADIO",
-      "title": "Wybierz, jako kto wnioskujesz",
-      "techName": "wybierz_jako_kto_wnioskujesz",
+      "title": "Wybierz, jako kto {verb}",
+      "techName": "wybierz_jako_kto_{verb_ascii}",
       "options": [
         "Pełnomocnik",
         "Reprezentant"
