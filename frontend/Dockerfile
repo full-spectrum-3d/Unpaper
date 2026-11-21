@@ -6,7 +6,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:1.28-alpine3.22
+FROM nginx:1.28-alpine3.23
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist/coi-cf-frontend/browser /usr/share/nginx/html
 USER nginx
