@@ -178,6 +178,18 @@ describe('Combobox', () => {
     expect(inputs[0].getAttribute('aria-expanded')).toBe('false');
   });
 
+  it('prevents default on pointerdown anywhere in the listbox (scrollbar drag keeps focus)', async () => {
+    inputs[0].click();
+    await render();
+    const listbox = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+    const ev = new PointerEvent('pointerdown', { bubbles: true, cancelable: true });
+    listbox.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+    options()[1].click();
+    await render();
+    expect(host.first()).toBe('Niemcy');
+  });
+
   it('renders the description slot between label and input', () => {
     const root = fixture.nativeElement.querySelector('app-combobox') as HTMLElement;
     const label = root.querySelector('label')!;

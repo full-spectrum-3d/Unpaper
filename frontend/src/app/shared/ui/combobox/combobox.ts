@@ -80,6 +80,7 @@ let nextId = 0;
         [id]="listboxId"
         [attr.aria-label]="label()"
         [hidden]="!open() || !visible().length"
+        (pointerdown)="$event.preventDefault()"
       >
         @if (open()) {
           @for (option of visible(); track option; let i = $index) {
@@ -89,7 +90,6 @@ let nextId = 0;
               [class.bg-primary-subtle]="i === active()"
               [id]="optionId(i)"
               [attr.aria-selected]="option === value()"
-              (pointerdown)="$event.preventDefault()"
               (click)="select(option)"
             >
               {{ option }}

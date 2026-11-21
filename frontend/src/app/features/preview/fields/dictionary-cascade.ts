@@ -26,7 +26,6 @@ export function cascadeLevels(
       role="group"
       class="space-y-4"
       [attr.aria-labelledby]="showTitle() ? id() + '-title' : null"
-      [attr.aria-label]="showTitle() ? null : label()"
     >
       @if (showTitle()) {
         <div [id]="id() + '-title'" class="text-label font-label">{{ label() }}</div>

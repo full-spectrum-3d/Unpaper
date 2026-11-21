@@ -64,6 +64,14 @@ describe('DictionaryCascadeField', () => {
     await fixture.whenStable();
   };
 
+  it('exposes no technical group name when the title is hidden', async () => {
+    await create(field());
+    const group = el().querySelector('[role=group]')!;
+    expect(group.hasAttribute('aria-label')).toBe(false);
+    expect(group.hasAttribute('aria-labelledby')).toBe(false);
+    expect(el().innerHTML).not.toContain('TERYT_4G_DOWODOWY');
+  });
+
   it('reveals the next level after a choice', async () => {
     await create(field());
     expect(labels()).toEqual(['Województwo']);
