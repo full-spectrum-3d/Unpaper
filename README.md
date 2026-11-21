@@ -61,7 +61,7 @@ wygenerowanego formularza tak, jak zobaczy go obywatel, podgląd i pobranie JSON
 | Kompletna konfiguracja Docker, izolowane środowisko | `docker-compose.yml` z trzema usługami ([Bezpieczeństwo kontenerów](#bezpieczeństwo-kontenerów)) |
 | Wymagania dla obrazów Docker | oficjalne obrazy, Alpine, wersje z digestem, bez `latest`, użytkownicy bez roota, tylko potrzebne porty, sekrety w runtime |
 | Konfiguracja: rozmiar pliku, JWT, parametry integracyjne | zmienne środowiskowe ([Konfiguracja](#konfiguracja)) |
-| Open source bez copyleftu, bez zewnętrznych API i SaaS | [Licencje](#licencje); model lokalny, sieć `internal` bez internetu |
+| Open source bez copyleftu, bez licencji komercyjnych, bez zewnętrznych API i SaaS | [Licencje](#licencje): biblioteki aplikacji na licencjach permisywnych, obraz `llm` bez bibliotek NVIDIA; model lokalny w sieci `internal` bez internetu, funkcje chmurowe Ollamy wyłączone (`OLLAMA_NO_CLOUD`) |
 | Python 3.14 | backend: Python 3.14, FastAPI |
 | Dokumentacja architektury | [Architektura](#architektura), `docs/specyfikacja-techniczna.md`, `docs/architecture/` |
 | README: budowanie, uruchomienie, konfiguracja, REST API | ten plik |
@@ -116,7 +116,8 @@ Dokumentacja szczegółowa:
 
 - Docker Engine 24+ z Docker Compose v2.20+ (`docker compose version`).
 - RAM: 16 GB (kontener `llm` z załadowanym qwen3:8b zajmuje ok. 6,5 GB).
-- Dysk: ok. 12 GB (obrazy 6,4 GB, model 5,2 GB).
+- Dysk: ok. 7 GB (obrazy 1,5 GB, model 5,2 GB); przy budowie obrazu `llm` Docker pobiera
+  dodatkowo obraz producenta Ollamy (5,1 GB, tylko etap budowania – można go potem usunąć).
 - CPU x86_64 (zalecane AVX2). Na samym CPU konwersja trwa zwykle 1,5–5 min.
   GPU NVIDIA jest opcjonalne (`docker-compose.gpu.yml`).
 - Internet tylko przy budowie obrazów i jednorazowym pobraniu modelu. Z lokalnym modelem
@@ -142,7 +143,8 @@ docker build -t coi-cf-llm:0.40.16 llm
 |---|---|---|---|---|
 | `coi-cf-api:0.1.0` | `backend/Dockerfile` | `python:3.14-alpine3.22`, multi-stage: builder z `uv`, runtime z Tesseract, LibreOffice, libmagic | `app` (10001) | 8000 |
 | `coi-cf-frontend:0.1.0` | `frontend/Dockerfile` | build `node:24-alpine3.22`, runtime `nginx:1.28-alpine3.23` | `nginx` (101) | 8080 |
-| `coi-cf-llm:0.40.16` | `llm/Dockerfile` | `ollama/ollama:0.40.16` | `ollama` (10002) | 11434 (tylko sieć wewnętrzna) |
+| `coi-cf-llm:0.40.16` | `llm/Dockerfile` (target `cpu`) | `ubuntu:24.04` + binarka i biblioteki CPU z `ollama/ollama:0.40.16`, bez bibliotek NVIDIA (161 MB) | `ollama` (10002) | 11434 (tylko sieć wewnętrzna) |
+| `coi-cf-llm:0.40.16-gpu` | `llm/Dockerfile` (target `gpu`) | `ollama/ollama:0.40.16` z CUDA; tylko z `docker-compose.gpu.yml` | `ollama` (10002) | jw. |
 
 Obrazy nie zawierają sekretów ani modelu. Model trafia do wolumenu `ollama-models`
 przy instalacji ([Uruchomienie](#uruchomienie-aplikacji), krok 3).
@@ -221,6 +223,9 @@ docker run --rm --user 0 -v ollama-models:/m -v "$PWD":/out --entrypoint sh coi-
 
 ### GPU NVIDIA
 
+Domyślny obraz `llm` działa tylko na CPU i nie zawiera bibliotek NVIDIA. Nakładka GPU
+buduje target `gpu`: obraz producenta Ollamy z CUDA i cuDNN. Te biblioteki są bezpłatne,
+ale na licencji własnościowej NVIDIA, a nie open source (patrz [Licencje](#licencje)).
 Wymaga NVIDIA Container Toolkit na hoście:
 
 ```bash
@@ -442,13 +447,13 @@ Format RFC 9457 (`application/problem+json`), pole `code` do obsługi w kliencie
 
 | Wymaganie (pkt 5 zadania) | Realizacja |
 |---|---|
-| oficjalne obrazy bazowe | `python`, `node`, `nginx` (Docker Official Images), `ollama/ollama` (oficjalny obraz producenta) |
-| lekkie dystrybucje | Alpine dla API i frontendu; Ollama ma wyłącznie obraz oparty na Ubuntu |
+| oficjalne obrazy bazowe | `python`, `node`, `nginx`, `ubuntu` (Docker Official Images); z oficjalnego obrazu `ollama/ollama` kopiujemy tylko binarkę i biblioteki CPU |
+| lekkie dystrybucje | Alpine dla API i frontendu; `llm` na `ubuntu:24.04` (161 MB), bo binarka Ollamy wymaga glibc |
 | jawne wersjonowanie, bez `latest` | każdy `FROM` z tagiem i `@sha256`; własne obrazy z wersją (`:0.1.0`), wersja `uv` też przypięta |
 | dedykowany użytkownik z ograniczonymi uprawnieniami | `USER app` / `nginx` / `ollama`; żaden kontener nie działa jako root |
 | tylko wymagane porty | na hoście 8000 (API) i 8080 (frontend); `llm` bez portu na hoście |
 | sekrety tylko w runtime | `.env` (`env_file`) albo Docker secrets; żadnych `ARG`/`ENV` z sekretami; `.env` w `.gitignore` i `.dockerignore` |
-| izolowane środowisko | `read_only: true`, `tmpfs /tmp`, `cap_drop: ALL`, `no-new-privileges`, `pids_limit`; `llm` w sieci `internal: true` bez internetu; model pobiera osobny jednorazowy kontener (`llm-pull`) |
+| izolowane środowisko | `read_only: true`, `tmpfs /tmp`, `cap_drop: ALL`, `no-new-privileges`, `pids_limit`; `llm` w sieci `internal: true` bez internetu i z `OLLAMA_NO_CLOUD=1`; model pobiera osobny jednorazowy kontener (`llm-pull`) |
 
 Dodatkowo: nagłówki bezpieczeństwa w nginx (CSP, `X-Content-Type-Options`,
 `Referrer-Policy`, `frame-ancestors 'none'`), `init: true` w API (sprzątanie procesów
@@ -483,20 +488,49 @@ ustaw w `.env` `APP_ENV=development`, `LLM_BASE_URL=http://localhost:11434` i ur
 
 ## Licencje
 
-Wyłącznie oprogramowanie open source, bez licencji copyleft wymagających ujawnienia
-kodu aplikacji i bez licencji komercyjnych:
+Domyślna konfiguracja (CPU) składa się wyłącznie z oprogramowania open source, bez
+licencji komercyjnych. Biblioteki i frameworki, z którymi łączy się kod aplikacji, mają
+licencje permisywne; żadna nie wymaga ujawnienia kodu aplikacji. Licencje sprawdzone
+w metadanych pakietów zainstalowanych w obrazach.
+
+Biblioteki i frameworki aplikacji:
 
 | Komponent | Licencja |
 |---|---|
-| FastAPI, pydantic, uvicorn, pdfplumber, python-docx, openpyxl, jsonschema | MIT / BSD |
-| Angular, NgRx | MIT |
-| Ollama | MIT |
-| Qwen3 8B (model) | Apache-2.0 |
-| Tesseract OCR | Apache-2.0 |
-| nginx | BSD-2-Clause |
-| LibreOffice | MPL-2.0 – niezmodyfikowany program uruchamiany jako osobny proces z wiersza poleceń; copyleft MPL dotyczy tylko jego własnych plików i nie obejmuje kodu aplikacji |
+| Backend: FastAPI, Starlette, pydantic, uvicorn, httpx, PyJWT, argon2-cffi, cryptography, jsonschema, jsonata-python, defusedxml (52 pakiety w obrazie) | MIT, BSD, Apache-2.0, PSF – lista: `cd backend && uv run pip-licenses` |
+| Ekstrakcja: pdfplumber, pdfminer.six, pypdfium2 (PDFium), python-docx, openpyxl, lxml, Pillow, pytesseract, python-magic, msoffcrypto-tool, olefile | MIT, BSD-3-Clause, Apache-2.0, MIT-CMU |
+| Biblioteki natywne dołączone do pakietów (libjpeg, libpng, libtiff, openjpeg, harfbuzz, ICU…) | permisywne; freetype na wybranej licencji FTL; libgcc/libstdc++ z wyjątkiem GCC Runtime Library Exception |
+| Frontend w przeglądarce: Angular, NgRx, RxJS, fflate, jsonata, tslib | MIT, Apache-2.0, 0BSD |
+| Fonty Open Sans, JetBrains Mono (`@fontsource`) | SIL OFL-1.1 (licencja fontu, nie obejmuje kodu aplikacji) |
 
-Pełna lista zależności Pythona z licencjami: `cd backend && uv run pip-licenses`.
+Programy uruchamiane jako osobne procesy lub usługi:
+
+| Komponent | Licencja |
+|---|---|
+| Ollama, llama.cpp / ggml | MIT |
+| Model Qwen3 8B | Apache-2.0 |
+| Tesseract OCR + dane `pol`, `osd`; Leptonica | Apache-2.0; BSD-2-Clause |
+| libmagic (`file`) | BSD-2-Clause |
+| nginx | BSD-2-Clause |
+| LibreOffice | MPL-2.0 |
+
+Uwagi:
+
+- **LibreOffice** (konwersja DOC i ODS) to niezmodyfikowany program wywoływany z wiersza
+  poleceń w osobnym procesie. Słaby copyleft MPL-2.0 dotyczy tylko jego własnych plików.
+  Pakiet `libreoffice-common` w Alpine wymaga też bibliotek systemowych na LGPL/GPL
+  (m.in. Qt6, GTK, GStreamer). Nie są one linkowane z kodem aplikacji, więc ich licencje
+  go nie obejmują. Format DOC wymaga konwertera, a nie ma alternatywy o licencji
+  permisywnej, która by go obsługiwała.
+- **certifi** (MPL-2.0, zależność `httpx`) to niezmodyfikowany zbiór certyfikatów CA.
+- **Pakiety systemowe** obrazów bazowych (busybox i apk-tools w Alpine, coreutils
+  w Ubuntu) mają licencje GPL, jak w każdym obrazie tych dystrybucji. Są to osobne
+  programy systemu, nie biblioteki aplikacji.
+- **Narzędzia budowania frontendu** (lightningcss i axe-core na MPL-2.0, dane caniuse-lite
+  na CC-BY-4.0) działają tylko przy budowie i nie trafiają do obrazu.
+- **Opcjonalny obraz GPU** (`docker-compose.gpu.yml`) zawiera biblioteki NVIDIA CUDA
+  i cuDNN: bezpłatne, ale na licencji własnościowej NVIDIA. Domyślny obraz `llm` ich nie
+  ma – Ollama działa w nim wyłącznie na CPU.
 
 ## Rozwiązywanie problemów
 

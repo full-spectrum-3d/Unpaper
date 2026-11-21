@@ -678,7 +678,7 @@ Do repozytorium dołączamy makiety trzech głównych widoków (Import, Wynik/Po
 |---|---|---|---|
 | api | `python:3.14-alpine3.22` (multi-stage: builder z `uv`, runtime z `tesseract-ocr`, `tesseract-ocr-data-pol`, `tesseract-ocr-data-osd` (orientacja skanów), `libmagic`, `libreoffice-writer`, `libreoffice-calc`) | `app` (UID 10001, bez powłoki logowania) | 8000 |
 | frontend | build: `node:24-alpine3.22`. Runtime: `nginx:1.28-alpine3.22` (nasłuch 8080, pid i cache w `/tmp`) | `nginx` (nie root) | 8080 |
-| llm | `ollama/ollama:0.40.16@sha256:…` (oficjalny obraz producenta) + użytkownik w `llm/Dockerfile` | `ollama` (UID 10002) | 11434 (tylko sieć wewnętrzna) |
+| llm | `ubuntu:24.04@sha256:…` + binarka i biblioteki CPU skopiowane z `ollama/ollama:0.40.16@sha256:…` (`llm/Dockerfile`, target `cpu`; bez bibliotek NVIDIA CUDA/cuDNN o licencji własnościowej). Target `gpu` = obraz producenta, tylko z `docker-compose.gpu.yml` | `ollama` (UID 10002) | 11434 (tylko sieć wewnętrzna) |
 
 Wszystkie obrazy przypinamy do konkretnej wersji (najlepiej z digestem `@sha256:` w compose dla wydania do oceny).
 
@@ -720,7 +720,8 @@ volumes:
 - Model pobieramy raz przy instalacji (`make model` → `docker compose --profile setup run --rm llm-pull`: ten sam obraz i wolumen co `llm`, ale w sieci `egress`, bo `internal` nie ma wyjścia do internetu) albo dostarczamy jako wolumen offline (README). W trakcie działania nie ma ruchu do internetu.
 - Rzeczywisty `docker-compose.yml` dodaje do zarysu: `init: true` dla `api` (tini zbiera procesy LibreOffice), `pids_limit`, `read_only` i `cap_drop` także dla `llm`, healthcheck frontendu, porty `API_PORT`/`FRONTEND_PORT` oraz `scripts/init-env.sh` do wygenerowania `.env`.
 - Kontener `llm` i pobieranie modelu są opcjonalne: profil `ollama` (`COMPOSE_PROFILES=ollama` w `.env`, domyślnie). Bez profilu `api` startuje samo (`depends_on` z `required: false`) i łączy się z zewnętrznym serwerem modelu pod `LLM_BASE_URL`; `extra_hosts: host.docker.internal` pozwala wskazać serwer na hoście.
-- GPU: `docker-compose.gpu.yml` (nakładka `-f`) dodaje `deploy.resources.reservations.devices` dla NVIDIA.
+- GPU: `docker-compose.gpu.yml` (nakładka `-f`) buduje target `gpu` (obraz producenta z CUDA) i dodaje `deploy.resources.reservations.devices` dla NVIDIA.
+- `OLLAMA_NO_CLOUD=1`: Ollama nie próbuje łączyć się z ollama.com (katalog modeli w chmurze, podpowiedzi modeli).
 - Sekrety (`JWT_SECRET`, `API_PASSWORD_HASH`) tylko przez `env_file` lub Docker secrets, nigdy przez `ARG`/`ENV` w Dockerfile.
 
 ---
