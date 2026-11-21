@@ -164,7 +164,16 @@ backend/
       security.py            # wydawanie i weryfikacja JWT
       errors.py              # wyjątki domenowe → problem+json
     pipeline/
-      upload_validation.py   # nazwa, rozmiar, rozszerzenie, MIME, bomby ZIP
+      upload_validation/     # nazwa, rozmiar, rozszerzenie, MIME, bomby ZIP
+        receive.py           #   strumieniowy odbiór multipart (1 plik, limit, spool, hasło)
+        filename.py          #   długość i znaki nazwy, rozszerzenie
+        mime.py              #   MIME z zawartości (libmagic) vs rozszerzenie
+        containers.py        #   DOCX/XLSX/ODS (ZIP, XML bez DTD), DOC (OLE)
+        documents.py         #   PDF (strony), obrazy (piksele)
+        encryption.py        #   pliki z hasłem: PDF, DOCX/XLSX/DOC (msoffcrypto), ODS
+        odf_encryption.py    #   ODF: AES-CBC+PBKDF2, AES-GCM+Argon2id
+        validate.py          #   kolejność sprawdzeń → ValidatedUpload
+      pdfium_lock.py         # PDFium nie jest thread-safe: wspólna blokada
       normalize.py           # LibreOffice: DOC→DOCX, ODS→XLSX (timeout, sandbox)
       extract/               # pdf.py, docx.py, xlsx.py, image.py → DocumentModel
       analyze.py             # prompt + wywołanie LLM → FormDraft
