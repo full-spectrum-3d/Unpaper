@@ -1,0 +1,37 @@
+# Zarys wg specyfikacji §11.2. Wersje obrazów do przypięcia przed wydaniem.
+services:
+  api:
+    build: ./backend
+    env_file: .env
+    read_only: true
+    tmpfs: ["/tmp:size=512m"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      llm: { condition: service_healthy }
+    networks: [internal, public]
+    ports: ["8000:8000"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/api/v1/health/live"]
+
+  frontend:
+    build: ./frontend
+    read_only: true
+    tmpfs: ["/tmp"]
+    ports: ["8080:8080"]
+    networks: [public]
+    depends_on: [api]
+
+  llm:
+    image: ollama/ollama:0.0.0  # TODO: przypiąć wersję (+ digest @sha256 dla wydania)
+    volumes: ["ollama-models:/root/.ollama"]
+    networks: [internal]          # bez portu na hoście
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+
+networks:
+  internal: { internal: true }
+  public: {}
+
+volumes:
+  ollama-models: {}

@@ -1,1 +1,15 @@
 /materials/*
+# sekrety
+.env
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
