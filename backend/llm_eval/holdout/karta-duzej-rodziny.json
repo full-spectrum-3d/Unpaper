@@ -1,0 +1,2405 @@
+{
+ "name": "karta-duzej-rodziny",
+ "source": "karta-duzej-rodziny.pdf",
+ "document": {
+  "source": {
+   "method": "pdf_text",
+   "pages": 5
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "heading",
+      "text": "KDR",
+      "bbox": {
+       "x0": 543.5,
+       "y0": 17.989551000000006,
+       "x1": 571.40148,
+       "y1": 30.769551000000092
+      }
+     },
+     {
+      "id": "b2",
+      "kind": "heading",
+      "text": "WNIOSEK",
+      "bbox": {
+       "x0": 274.83,
+       "y0": 54.93079899999998,
+       "x1": 324.27006,
+       "y1": 65.150799
+      }
+     },
+     {
+      "id": "b3",
+      "kind": "heading",
+      "text": "O PRZYZNANIE KARTY DUŻEJ RODZINY",
+      "bbox": {
+       "x0": 192.38,
+       "y0": 67.20079899999996,
+       "x1": 406.65980000000013,
+       "y1": 77.42079899999999
+      }
+     },
+     {
+      "id": "b4",
+      "kind": "heading",
+      "text": "LUB WYDANIE DUPLIKATU KARTY DUŻEJ RODZINY",
+      "bbox": {
+       "x0": 161.47,
+       "y0": 79.46079899999995,
+       "x1": 437.54638000000034,
+       "y1": 89.68079899999998
+      }
+     },
+     {
+      "id": "b5",
+      "kind": "heading",
+      "text": "1. Wypełniaj WIELKIMI LITERAMI.",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 111.57415149999997,
+       "x1": 147.53474999999997,
+       "y1": 119.24415150000004
+      }
+     },
+     {
+      "id": "b6",
+      "kind": "heading",
+      "text": "2. Pola \"Seria i numer dokumentu potwierdzającego tożsamość\" dotyczą tylko tych osób, którym nie nadano numeru PESEL.",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 124.35415149999994,
+       "x1": 484.858480000001,
+       "y1": 132.02415150000002
+      }
+     },
+     {
+      "id": "b7",
+      "kind": "heading",
+      "text": "3. Pola wyboru zaznaczaj v lub X .",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 135.035487,
+       "x1": 162.76459,
+       "y1": 145.895487
+      }
+     },
+     {
+      "id": "b8",
+      "kind": "heading",
+      "text": "NAZWA ORGANU WŁAŚCIWEGO PROWADZĄCEGO POSTĘPOWANIE W SPRAWIE KARTY DUŻEJ RODZINY (1)",
+      "bbox": {
+       "x0": 24.53,
+       "y0": 155.02415150000002,
+       "x1": 435.5925300000005,
+       "y1": 162.6941515000001
+      }
+     },
+     {
+      "id": "b9",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 165.1099999999999,
+       "x1": 579.8199999999999,
+       "y1": 208.55999999999995
+      }
+     },
+     {
+      "id": "b10",
+      "kind": "heading",
+      "text": "ADRES ORGANU WŁAŚCIWEGO PROWADZĄCEGO POSTĘPOWANIE W SPRAWIE KARTY DUŻEJ RODZINY (1)",
+      "bbox": {
+       "x0": 24.53,
+       "y0": 218.9241515,
+       "x1": 433.89746000000054,
+       "y1": 226.59415150000007
+      }
+     },
+     {
+      "id": "b11",
+      "kind": "label",
+      "text": "01. Gmina / Dzielnica",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 231.70415149999997,
+       "x1": 99.65198999999996,
+       "y1": 239.37415150000004
+      }
+     },
+     {
+      "id": "b12",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 240.51,
+       "x1": 563.16,
+       "y1": 257.76
+      }
+     },
+     {
+      "id": "b13",
+      "kind": "paragraph",
+      "text": "02. Kod pocztowy",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 259.82415149999997,
+       "x1": 87.06095999999997,
+       "y1": 267.49415150000004
+      }
+     },
+     {
+      "id": "b14",
+      "kind": "label",
+      "text": "03. Miejscowość",
+      "bbox": {
+       "x0": 133.16,
+       "y0": 259.82415149999997,
+       "x1": 190.10411,
+       "y1": 267.49415150000004
+      }
+     },
+     {
+      "id": "b15",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 268.63,
+       "x1": 56.480000000000004,
+       "y1": 285.88
+      }
+     },
+     {
+      "id": "b16",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 61.59,
+       "y0": 270.609551,
+       "x1": 65.84574,
+       "y1": 283.3895510000001
+      }
+     },
+     {
+      "id": "b17",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 71.81,
+       "y0": 268.63,
+       "x1": 563.16,
+       "y1": 285.88
+      }
+     },
+     {
+      "id": "b18",
+      "kind": "label",
+      "text": "04. Ulica",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 287.9441515,
+       "x1": 56.03096,
+       "y1": 295.61415150000005
+      }
+     },
+     {
+      "id": "b19",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 296.75,
+       "x1": 563.16,
+       "y1": 314.0
+      }
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "05. Numer domu",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 316.0541515,
+       "x1": 83.55547999999999,
+       "y1": 323.72415150000006
+      }
+     },
+     {
+      "id": "b21",
+      "kind": "label",
+      "text": "06. Numer mieszkania",
+      "bbox": {
+       "x0": 148.5,
+       "y0": 316.0541515,
+       "x1": 225.72047999999998,
+       "y1": 323.72415150000006
+      }
+     },
+     {
+      "id": "b22",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 324.86,
+       "x1": 240.8375,
+       "y1": 342.11
+      }
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "(1) Przez organ właściwy rozumie się wójta, burmistrza lub prezydenta miasta właściwego ze względu na miejsce zamieszkania osoby składającej wniosek.",
+      "bbox": {
+       "x0": 26.45,
+       "y0": 348.0041515,
+       "x1": 563.5058300000009,
+       "y1": 355.6741515
+      }
+     },
+     {
+      "id": "b24",
+      "kind": "heading",
+      "text": "CZĘŚĆ I - Dane wnioskodawcy",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 376.67352750000003,
+       "x1": 153.29104999999998,
+       "y1": 385.6235275
+      }
+     },
+     {
+      "id": "b25",
+      "kind": "heading",
+      "text": "DANE WNIOSKODAWCY",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 392.7341515,
+       "x1": 114.95055999999997,
+       "y1": 400.4041515
+      }
+     },
+     {
+      "id": "b26",
+      "kind": "label",
+      "text": "01. Imię",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 406.15415149999995,
+       "x1": 53.41918,
+       "y1": 413.82415149999997
+      }
+     },
+     {
+      "id": "b27",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 414.96,
+       "x1": 563.16,
+       "y1": 432.21
+      }
+     },
+     {
+      "id": "b28",
+      "kind": "label",
+      "text": "02. Nazwisko",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 434.27415149999996,
+       "x1": 71.95048,
+       "y1": 441.9441515
+      }
+     },
+     {
+      "id": "b29",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 443.08,
+       "x1": 563.16,
+       "y1": 460.33
+      }
+     },
+     {
+      "id": "b30",
+      "kind": "paragraph",
+      "text": "03. Numer PESEL",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 462.3841515,
+       "x1": 89.12021,
+       "y1": 470.0541515
+      }
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "04. Data urodzenia (dd / mm / rrrr)",
+      "bbox": {
+       "x0": 209.84,
+       "y0": 462.3841515,
+       "x1": 327.8171999999999,
+       "y1": 470.0541515
+      }
+     },
+     {
+      "id": "b32",
+      "kind": "label",
+      "text": "05. Seria i numer dokumentu potwierdzającego tożsamość (1)",
+      "bbox": {
+       "x0": 347.86,
+       "y0": 462.3841515,
+       "x1": 561.1978100000003,
+       "y1": 470.0541515
+      }
+     },
+     {
+      "id": "b33",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 471.19,
+       "x1": 563.16,
+       "y1": 488.44
+      }
+     },
+     {
+      "id": "b34",
+      "kind": "paragraph",
+      "text": "(1) Wypełnij tylko w przypadku, gdy nie nadano numeru PESEL.",
+      "bbox": {
+       "x0": 26.45,
+       "y0": 494.33415149999996,
+       "x1": 246.67576000000022,
+       "y1": 502.0041515
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "heading",
+      "text": "MIEJSCE ZAMIESZKANIA",
+      "bbox": {
+       "x0": 24.53,
+       "y0": 521.8141515,
+       "x1": 119.14603999999997,
+       "y1": 529.4841515
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "label",
+      "text": "01. Gmina / Dzielnica",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 535.2341515,
+       "x1": 99.65198999999996,
+       "y1": 542.9041515
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 544.04,
+       "x1": 563.16,
+       "y1": 561.29
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "02. Kod pocztowy",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 563.3441515,
+       "x1": 87.06095999999997,
+       "y1": 571.0141515
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "label",
+      "text": "03. Miejscowość",
+      "bbox": {
+       "x0": 133.16,
+       "y0": 563.3441515,
+       "x1": 190.10411,
+       "y1": 571.0141515
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 572.15,
+       "x1": 56.480000000000004,
+       "y1": 589.4
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 61.59,
+       "y0": 574.139551,
+       "x1": 65.84574,
+       "y1": 586.919551
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 71.81,
+       "y0": 572.15,
+       "x1": 563.16,
+       "y1": 589.4
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "label",
+      "text": "04. Ulica",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 591.4641515000001,
+       "x1": 56.03096,
+       "y1": 599.1341515
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 600.27,
+       "x1": 563.16,
+       "y1": 617.52
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "paragraph",
+      "text": "05. Numer domu",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 619.5841515,
+       "x1": 83.55547999999999,
+       "y1": 627.2541515
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "label",
+      "text": "06. Numer mieszkania",
+      "bbox": {
+       "x0": 148.5,
+       "y0": 619.5841515,
+       "x1": 225.72047999999998,
+       "y1": 627.2541515
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 628.39,
+       "x1": 240.8375,
+       "y1": 645.64
+      }
+     },
+     {
+      "id": "b48",
+      "kind": "heading",
+      "text": "ADRES DO KORESPONDENCJI",
+      "bbox": {
+       "x0": 24.53,
+       "y0": 662.3941515,
+       "x1": 140.17377999999997,
+       "y1": 670.0641515
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "checkbox_option",
+      "text": "Wypełnij jeżeli adres do korespondencji jest inny niż miejsce zamieszkania.",
+      "bbox": {
+       "x0": 184.92,
+       "y0": 658.5641515,
+       "x1": 448.2869200000007,
+       "y1": 666.2341515
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "label",
+      "text": "01. Gmina / Dzielnica",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 675.1741515,
+       "x1": 99.65198999999996,
+       "y1": 682.8441515
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 683.98,
+       "x1": 563.16,
+       "y1": 701.23
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "paragraph",
+      "text": "02. Kod pocztowy",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 703.2941515,
+       "x1": 87.06095999999997,
+       "y1": 710.9641515
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "label",
+      "text": "03. Miejscowość",
+      "bbox": {
+       "x0": 133.16,
+       "y0": 703.2941515,
+       "x1": 190.10411,
+       "y1": 710.9641515
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 712.1,
+       "x1": 56.480000000000004,
+       "y1": 729.35
+      }
+     },
+     {
+      "id": "b55",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 61.59,
+       "y0": 714.079551,
+       "x1": 65.84574,
+       "y1": 726.859551
+      }
+     },
+     {
+      "id": "b56",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 71.81,
+       "y0": 712.1,
+       "x1": 563.16,
+       "y1": 729.35
+      }
+     },
+     {
+      "id": "b57",
+      "kind": "label",
+      "text": "04. Ulica",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 731.4041515,
+       "x1": 56.03096,
+       "y1": 739.0741515
+      }
+     },
+     {
+      "id": "b58",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 740.21,
+       "x1": 563.16,
+       "y1": 757.46
+      }
+     },
+     {
+      "id": "b59",
+      "kind": "paragraph",
+      "text": "05. Numer domu",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 759.5241515,
+       "x1": 83.55547999999999,
+       "y1": 767.1941515
+      }
+     },
+     {
+      "id": "b60",
+      "kind": "label",
+      "text": "06. Numer mieszkania",
+      "bbox": {
+       "x0": 148.5,
+       "y0": 759.5241515,
+       "x1": 225.72047999999998,
+       "y1": 767.1941515
+      }
+     },
+     {
+      "id": "b61",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.35285714285714,
+       "y0": 768.33,
+       "x1": 240.8375,
+       "y1": 785.58
+      }
+     },
+     {
+      "id": "b62",
+      "kind": "paragraph",
+      "text": "strona: 1/5",
+      "bbox": {
+       "x0": 274.8,
+       "y0": 801.1219762000001,
+       "x1": 316.02020999999996,
+       "y1": 808.1519762
+      }
+     },
+     {
+      "id": "b63",
+      "kind": "paragraph",
+      "text": "wersja: KDR(7)",
+      "bbox": {
+       "x0": 509.98,
+       "y0": 801.1219762000001,
+       "x1": 566.30024,
+       "y1": 808.1519762
+      }
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "blocks": [
+     {
+      "id": "b64",
+      "kind": "heading",
+      "text": "KDR",
+      "bbox": {
+       "x0": 543.5,
+       "y0": 17.989551000000006,
+       "x1": 571.40148,
+       "y1": 30.769551000000092
+      }
+     },
+     {
+      "id": "b65",
+      "kind": "heading",
+      "text": "DANE KONTAKTOWE",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 44.48415149999994,
+       "x1": 104.20459999999999,
+       "y1": 52.15415150000001
+      }
+     },
+     {
+      "id": "b66",
+      "kind": "paragraph",
+      "text": "01. Numer telefonu stacjonarnego (1)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 57.264151500000025,
+       "x1": 154.53684999999993,
+       "y1": 64.9341515000001
+      }
+     },
+     {
+      "id": "b67",
+      "kind": "label",
+      "text": "02. Numer telefonu komórkowego (1)",
+      "bbox": {
+       "x0": 209.84,
+       "y0": 57.264151500000025,
+       "x1": 338.0373299999999,
+       "y1": 64.9341515000001
+      }
+     },
+     {
+      "id": "b68",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.169999999999998,
+       "y0": 66.07000000000005,
+       "x1": 333.17,
+       "y1": 83.32000000000005
+      }
+     },
+     {
+      "id": "b69",
+      "kind": "label",
+      "text": "03. Adres poczty elektronicznej (2)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 85.37415149999993,
+       "x1": 145.09876999999994,
+       "y1": 93.0441515
+      }
+     },
+     {
+      "id": "b70",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.169999999999998,
+       "y0": 94.17999999999995,
+       "x1": 563.2099999999999,
+       "y1": 111.42999999999995
+      }
+     },
+     {
+      "id": "b71",
+      "kind": "paragraph",
+      "text": "(1) Dotyczy osoby, która posiada telefon kontaktowy.",
+      "bbox": {
+       "x0": 26.45,
+       "y0": 117.32415149999997,
+       "x1": 208.3629500000002,
+       "y1": 124.99415150000004
+      }
+     },
+     {
+      "id": "b72",
+      "kind": "paragraph",
+      "text": "(2) Dotyczy osoby, która posiada adres poczty elektronicznej.",
+      "bbox": {
+       "x0": 26.45,
+       "y0": 126.27415150000002,
+       "x1": 237.79788000000036,
+       "y1": 133.9441515000001
+      }
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "strona: 2/5",
+      "bbox": {
+       "x0": 274.8,
+       "y0": 801.7619762,
+       "x1": 316.02020999999996,
+       "y1": 808.7919762
+      }
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "wersja: KDR(7)",
+      "bbox": {
+       "x0": 509.98,
+       "y0": 801.7619762,
+       "x1": 566.30024,
+       "y1": 808.7919762
+      }
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "blocks": [
+     {
+      "id": "b75",
+      "kind": "paragraph",
+      "text": "Stronę 3 i 4 należy powielić i wypełnić dla każdego członka rodziny wielodzietnej wskazanego we wniosku.",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 23.39415150000002,
+       "x1": 390.3737000000009,
+       "y1": 31.064151500000094
+      }
+     },
+     {
+      "id": "b76",
+      "kind": "heading",
+      "text": "KDR",
+      "bbox": {
+       "x0": 543.5,
+       "y0": 17.989551000000006,
+       "x1": 571.40148,
+       "y1": 30.769551000000092
+      }
+     },
+     {
+      "id": "b77",
+      "kind": "label",
+      "text": "CZĘŚĆ II - Członkowie rodziny wielodzietnej:",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 37.36352749999992,
+       "x1": 216.26330000000013,
+       "y1": 46.313527499999964
+      }
+     },
+     {
+      "id": "b78",
+      "kind": "heading",
+      "text": "DANE CZŁONKA RODZINY WIELODZIETNEJ",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 53.424151499999994,
+       "x1": 189.90441000000004,
+       "y1": 61.094151500000066
+      }
+     },
+     {
+      "id": "b79",
+      "kind": "label",
+      "text": "Dla członka rodziny wielodzietnej wskazanego poniżej:",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 84.01352750000001,
+       "x1": 259.4853500000002,
+       "y1": 92.96352750000005
+      }
+     },
+     {
+      "id": "b80",
+      "kind": "checkbox_option",
+      "text": "wnoszę o przyznanie Karty Dużej Rodziny",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 105.74352749999991,
+       "x1": 231.83070000000006,
+       "y1": 114.69352749999996
+      }
+     },
+     {
+      "id": "b81",
+      "kind": "checkbox_option",
+      "text": "wnoszę o przyznanie Karty Dużej Rodziny dla nowego członka rodziny wielodzietnej",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 130.6635275,
+       "x1": 399.96585000000067,
+       "y1": 139.61352750000003
+      }
+     },
+     {
+      "id": "b82",
+      "kind": "checkbox_option",
+      "text": "rezygnuję Karty Dużej z tradycyjnej Rodziny (1) formy",
+      "bbox": {
+       "x0": 439.24,
+       "y0": 127.37352750000002,
+       "x1": 564.9696,
+       "y1": 145.2635275
+      }
+     },
+     {
+      "id": "b83",
+      "kind": "checkbox_option",
+      "text": "wnoszę o przyznanie nowej Karty Dużej Rodziny dla członka rodziny wielodzietnej,",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 150.2435274999999,
+       "x1": 390.5295000000001,
+       "y1": 159.19352749999996
+      }
+     },
+     {
+      "id": "b84",
+      "kind": "paragraph",
+      "text": "który był wcześniej jej posiadaczem",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 160.98352749999992,
+       "x1": 204.0741500000001,
+       "y1": 169.93352749999997
+      }
+     },
+     {
+      "id": "b85",
+      "kind": "checkbox_option",
+      "text": "wnoszę rodziny wielodzietnej o przyznanie posiada dodatkowej, wyłącznie tradycyjnej elektroniczną formy Kartę Karty Dużej Dużej Rodziny) Rodziny (członek (2)",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 177.85352749999993,
+       "x1": 418.72270500000053,
+       "y1": 195.74352750000003
+      }
+     },
+     {
+      "id": "b86",
+      "kind": "checkbox_option",
+      "text": "wnoszę o wydanie duplikatu Karty Dużej Rodziny",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 204.7835275,
+       "x1": 260.0241500000002,
+       "y1": 213.73352750000004
+      }
+     },
+     {
+      "id": "b87",
+      "kind": "checkbox_option",
+      "text": "nie wnoszę o przyznanie Karty Dużej Rodziny",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 230.34352749999994,
+       "x1": 246.4491500000001,
+       "y1": 239.29352749999998
+      }
+     },
+     {
+      "id": "b88",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 17.884,
+       "y0": 247.86,
+       "x1": 579.4359999999999,
+       "y1": 267.35
+      }
+     },
+     {
+      "id": "b89",
+      "kind": "label",
+      "text": "01. Imię pierwsze:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 273.24415149999993,
+       "x1": 88.42650999999998,
+       "y1": 280.9141515
+      }
+     },
+     {
+      "id": "b90",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 282.04999999999995,
+       "x1": 563.2088888888889,
+       "y1": 299.29999999999995
+      }
+     },
+     {
+      "id": "b91",
+      "kind": "label",
+      "text": "02. Imię drugie:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 301.35415149999994,
+       "x1": 79.38328999999997,
+       "y1": 309.0241515
+      }
+     },
+     {
+      "id": "b92",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 310.15999999999997,
+       "x1": 563.2088888888889,
+       "y1": 327.40999999999997
+      }
+     },
+     {
+      "id": "b93",
+      "kind": "label",
+      "text": "03. Nazwisko:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 329.47415149999995,
+       "x1": 74.12506999999998,
+       "y1": 337.14415149999996
+      }
+     },
+     {
+      "id": "b94",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 338.28,
+       "x1": 563.2088888888889,
+       "y1": 355.53
+      }
+     },
+     {
+      "id": "b95",
+      "kind": "label",
+      "text": "04. Numer PESEL:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 357.59415149999995,
+       "x1": 91.29479999999998,
+       "y1": 365.26415149999997
+      }
+     },
+     {
+      "id": "b96",
+      "kind": "paragraph",
+      "text": "05. Data urodzenia: (dd / mm / rrrr)",
+      "bbox": {
+       "x0": 209.84,
+       "y0": 357.59415149999995,
+       "x1": 329.99178999999987,
+       "y1": 365.26415149999997
+      }
+     },
+     {
+      "id": "b97",
+      "kind": "label",
+      "text": "06. Seria i numer dokumentu potwierdzającego tożsamość: (3)",
+      "bbox": {
+       "x0": 347.86,
+       "y0": 357.59415149999995,
+       "x1": 563.3724000000004,
+       "y1": 365.26415149999997
+      }
+     },
+     {
+      "id": "b98",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 366.3999999999999,
+       "x1": 563.2088888888889,
+       "y1": 383.65
+      }
+     },
+     {
+      "id": "b99",
+      "kind": "label",
+      "text": "07. Imię ojca dziecka:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 385.70415149999997,
+       "x1": 100.56102999999996,
+       "y1": 393.3741515
+      }
+     },
+     {
+      "id": "b100",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 394.51,
+       "x1": 563.2088888888889,
+       "y1": 411.76
+      }
+     },
+     {
+      "id": "b101",
+      "kind": "label",
+      "text": "08. Nazwisko rodowe ojca dziecka:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 413.82415149999997,
+       "x1": 146.71684999999994,
+       "y1": 421.4941515
+      }
+     },
+     {
+      "id": "b102",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 422.63,
+       "x1": 563.2088888888889,
+       "y1": 439.88
+      }
+     },
+     {
+      "id": "b103",
+      "kind": "label",
+      "text": "09. Imię matki dziecka:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 441.9341515,
+       "x1": 104.86020999999995,
+       "y1": 449.6041515
+      }
+     },
+     {
+      "id": "b104",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 450.74,
+       "x1": 563.2088888888889,
+       "y1": 467.99
+      }
+     },
+     {
+      "id": "b105",
+      "kind": "label",
+      "text": "10. Nazwisko rodowe matki dziecka:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 470.0541515,
+       "x1": 151.01602999999994,
+       "y1": 477.7241515
+      }
+     },
+     {
+      "id": "b106",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 478.86,
+       "x1": 563.2088888888889,
+       "y1": 496.11
+      }
+     },
+     {
+      "id": "b107",
+      "kind": "label",
+      "text": "11. Numer telefonu komórkowego: (4)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 498.1741515,
+       "x1": 156.1819199999999,
+       "y1": 505.8441515
+      }
+     },
+     {
+      "id": "b108",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 506.98,
+       "x1": 148.82,
+       "y1": 524.23
+      }
+     },
+     {
+      "id": "b109",
+      "kind": "label",
+      "text": "12. Adres poczty elektronicznej: (5)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 526.2841515,
+       "x1": 147.27335999999994,
+       "y1": 533.9541515
+      }
+     },
+     {
+      "id": "b110",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 535.0899999999999,
+       "x1": 563.2088888888889,
+       "y1": 552.3399999999999
+      }
+     },
+     {
+      "id": "b111",
+      "kind": "paragraph",
+      "text": "1) Możesz zrezygnować z wnioskowania o tradycyjną formę Karty Dużej Rodziny i korzystać wyłącznie z elektronicznej formy Karty. Ewentualne późniejsze wnioskowanie o domówienie tradycyjnej formy będzie podlegało opłacie w wysokości 10 zł.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 603.4141515,
+       "x1": 561.9470961999991,
+       "y1": 620.2841515
+      }
+     },
+     {
+      "id": "b112",
+      "kind": "paragraph",
+      "text": "2) Przyznanie dodatkowej – tradycyjnej formy Karty Dużej Rodziny jest możliwe wyłącznie wtedy, gdy członek rodziny wielodzietnej posiada ważną Kartę w formie elektronicznej. Wniosek o domówienie tradycyjnej formy Karty do przyznanej już Karty elektronicznej podlega opłacie w wysokości 10 zł. Osoby posiadające tradycyjną formę Karty nie muszą wnioskować o przyznanie formy elektronicznej, ponieważ aktywne Karty Dużej Rodziny od 9 czerwca 2021 roku będą mogły zostać wyświetlone w publicznej aplikacji mobilnej (mObywatel) niezależnie od tego, w jakiej formie zostały przyznane.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 621.3041515,
+       "x1": 561.9512312999989,
+       "y1": 665.7841515
+      }
+     },
+     {
+      "id": "b113",
+      "kind": "paragraph",
+      "text": "3) Wypełnij tylko w przypadku, gdy nie nadano numeru PESEL.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 667.3141515,
+       "x1": 250.41843000000026,
+       "y1": 675.1741515
+      }
+     },
+     {
+      "id": "b114",
+      "kind": "paragraph",
+      "text": "4) Dotyczy osoby, która posiada numer telefonu komórkowego.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 676.8941515,
+       "x1": 250.01959000000042,
+       "y1": 684.7641515
+      }
+     },
+     {
+      "id": "b115",
+      "kind": "paragraph",
+      "text": "5) Dotyczy osoby, która posiada adres poczty elektronicznej.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 685.8441515,
+       "x1": 241.60055000000042,
+       "y1": 693.7041515
+      }
+     },
+     {
+      "id": "b116",
+      "kind": "paragraph",
+      "text": "strona: 3/5",
+      "bbox": {
+       "x0": 274.8,
+       "y0": 801.7619762,
+       "x1": 316.02020999999996,
+       "y1": 808.7919762
+      }
+     },
+     {
+      "id": "b117",
+      "kind": "paragraph",
+      "text": "wersja: KDR(7)",
+      "bbox": {
+       "x0": 509.98,
+       "y0": 801.7619762,
+       "x1": 566.30024,
+       "y1": 808.7919762
+      }
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "blocks": [
+     {
+      "id": "b118",
+      "kind": "heading",
+      "text": "KDR",
+      "bbox": {
+       "x0": 543.5,
+       "y0": 17.989551000000006,
+       "x1": 571.40148,
+       "y1": 30.769551000000092
+      }
+     },
+     {
+      "id": "b119",
+      "kind": "label",
+      "text": "Powyższe dane identyfikacyjne dotyczą:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 55.893527500000005,
+       "x1": 199.11515000000009,
+       "y1": 64.84352750000005
+      }
+     },
+     {
+      "id": "b120",
+      "kind": "checkbox_option",
+      "text": "rodzica",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 73.1535275,
+       "x1": 92.01585,
+       "y1": 82.10352750000004
+      }
+     },
+     {
+      "id": "b121",
+      "kind": "checkbox_option",
+      "text": "małżonka",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 98.07352749999995,
+       "x1": 101.51705000000001,
+       "y1": 107.0235275
+      }
+     },
+     {
+      "id": "b122",
+      "kind": "checkbox_option",
+      "text": "dziecka w wieku do 18. roku życia",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 124.2735275,
+       "x1": 199.2033,
+       "y1": 133.22352750000005
+      }
+     },
+     {
+      "id": "b123",
+      "kind": "checkbox_option",
+      "text": "dziecka w wieku do 18. roku życia umieszczonego w rodzinie zastępczej lub rodzinnym domu dziecka",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 148.97352749999993,
+       "x1": 465.6200000000003,
+       "y1": 157.92352749999998
+      }
+     },
+     {
+      "id": "b124",
+      "kind": "checkbox_option",
+      "text": "dziecka w wieku powyżej 18. roku życia kontynuującego naukę w szkole lub szkole wyższej",
+      "bbox": {
+       "x0": 63.51,
+       "y0": 173.8935275,
+       "x1": 425.4838000000004,
+       "y1": 182.84352750000005
+      }
+     },
+     {
+      "id": "b125",
+      "kind": "checkbox_option",
+      "text": "osoby, w wieku powyżej 18. roku życia, o której mowa w art. 37 ust. 2 ustawy o wspieraniu rodziny i systemie pieczy zastępczej",
+      "bbox": {
+       "x0": 63.51,
+       "y0": 198.81352749999996,
+       "x1": 567.5740000000005,
+       "y1": 207.7635275
+      }
+     },
+     {
+      "id": "b126",
+      "kind": "checkbox_option",
+      "text": "dziecka w wieku powyżej 18. roku życia legitymującego się orzeczeniem o umiarkowanym albo znacznym stopniu",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 219.2635275,
+       "x1": 512.8491500000003,
+       "y1": 228.21352750000005
+      }
+     },
+     {
+      "id": "b127",
+      "kind": "paragraph",
+      "text": "niepełnosprawności",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 229.9935274999999,
+       "x1": 141.45994999999996,
+       "y1": 238.94352749999996
+      }
+     },
+     {
+      "id": "b128",
+      "kind": "checkbox_option",
+      "text": "dziecka, które było na utrzymaniu rodzica/rodziców lub małżonka rodzica, niespełniającego obecnie warunków wskazanych w",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 244.18352749999997,
+       "x1": 559.6129000000004,
+       "y1": 253.1335275
+      }
+     },
+     {
+      "id": "b129",
+      "kind": "paragraph",
+      "text": "ustawie o Karcie Dużej Rodziny (1)",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 254.9135275,
+       "x1": 202.06935000000001,
+       "y1": 263.86352750000003
+      }
+     },
+     {
+      "id": "b130",
+      "kind": "paragraph",
+      "text": "1) Przez dziecko spełniające warunki wynikające z ustawy o Karcie Dużej Rodziny należy rozumieć dziecko, które w chwili składania wniosku jest w wieku do 18 roku życia lub w wieku do 25 roku życia, jeżeli uczy się w szkole lub szkole wyższej, bez ograniczeń wiekowych, jeżeli legitymuje się orzeczeniem o umiarkowanym lub znacznym stopniu niepełnosprawności. Dziecku niespełniającemu warunków wynikających z Karty Dużej Rodziny nie przysługuje prawo do Karty Dużej Rodziny. Ponadto prawo do posiadania Karty przysługuje dziecku wyłącznie, jeśli w dniu składania wniosku o przyznanie Karty co najmniej troje dzieci w rodzinie spełnia powyższe warunki. Rodzicowi/rodzicom oraz małżonkowi rodzica prawo do posiadania Karty przysługuje, jeśli mają lub mieli łącznie na utrzymaniu co najmniej troje dzieci, bez względu na ich wiek.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 267.9341515,
+       "x1": 575.3785584999993,
+       "y1": 321.61415150000005
+      }
+     },
+     {
+      "id": "b131",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 17.5,
+       "y0": 326.14,
+       "x1": 579.82,
+       "y1": 344.67
+      }
+     },
+     {
+      "id": "b132",
+      "kind": "heading",
+      "text": "Stopień niepełnosprawności: (1)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 350.47352750000005,
+       "x1": 164.9073,
+       "y1": 359.42352750000003
+      }
+     },
+     {
+      "id": "b133",
+      "kind": "checkbox_option",
+      "text": "umiarkowany",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 367.73352750000004,
+       "x1": 116.08549999999998,
+       "y1": 376.6835275
+      }
+     },
+     {
+      "id": "b134",
+      "kind": "checkbox_option",
+      "text": "znaczny",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 392.0135275,
+       "x1": 95.9986,
+       "y1": 400.9635275
+      }
+     },
+     {
+      "id": "b135",
+      "kind": "heading",
+      "text": "Okres ważności orzeczenia: (1)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 416.29352750000004,
+       "x1": 159.46939999999998,
+       "y1": 425.2435275
+      }
+     },
+     {
+      "id": "b136",
+      "kind": "label",
+      "text": "11. Data: (dd / mm / rrrr)",
+      "bbox": {
+       "x0": 41.14,
+       "y0": 432.3541515,
+       "x1": 124.98822999999992,
+       "y1": 440.0241515
+      }
+     },
+     {
+      "id": "b137",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 41.23846153846154,
+       "y0": 443.72,
+       "x1": 163.82999999999998,
+       "y1": 460.97
+      }
+     },
+     {
+      "id": "b138",
+      "kind": "checkbox_option",
+      "text": "bezterminowo",
+      "bbox": {
+       "x0": 206.64,
+       "y0": 448.8835275,
+       "x1": 262.88585,
+       "y1": 457.8335275
+      }
+     },
+     {
+      "id": "b139",
+      "kind": "paragraph",
+      "text": "1) Wypełnij zgodnie z orzeczeniem o umiarkowanym albo znacznym stopniu niepełnosprawności.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 466.8641515,
+       "x1": 365.84719000000086,
+       "y1": 474.5341515
+      }
+     },
+     {
+      "id": "b140",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 17.5,
+       "y0": 478.22,
+       "x1": 579.82,
+       "y1": 496.75
+      }
+     },
+     {
+      "id": "b141",
+      "kind": "label",
+      "text": "Planowany termin ukończenia nauki w danej szkole lub szkole wyższej:",
+      "bbox": {
+       "x0": 26.45,
+       "y0": 502.5635275,
+       "x1": 332.8738500000006,
+       "y1": 511.5135275
+      }
+     },
+     {
+      "id": "b142",
+      "kind": "label",
+      "text": "12. Data: (dd / mm / rrrr)",
+      "bbox": {
+       "x0": 41.14,
+       "y0": 518.6141514999999,
+       "x1": 124.98822999999992,
+       "y1": 526.2841515
+      }
+     },
+     {
+      "id": "b143",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 17.5,
+       "y0": 529.98,
+       "x1": 579.82,
+       "y1": 572.15
+      }
+     },
+     {
+      "id": "b144",
+      "kind": "heading",
+      "text": "Miejsce zamieszkania członka rodziny wielodzietnej",
+      "bbox": {
+       "x0": 23.89,
+       "y0": 577.9635275,
+       "x1": 245.9819500000002,
+       "y1": 586.9135275
+      }
+     },
+     {
+      "id": "b145",
+      "kind": "checkbox_option",
+      "text": "Wypełnij tylko jeżeli miejsce zamieszkania członka rodziny",
+      "bbox": {
+       "x0": 318.47,
+       "y0": 579.1341514999999,
+       "x1": 568.2631714000003,
+       "y1": 586.8041515
+      }
+     },
+     {
+      "id": "b146",
+      "kind": "paragraph",
+      "text": "wielodzietnej jest inne niż miejsce zamieszkania wnioskodawcy.",
+      "bbox": {
+       "x0": 318.47,
+       "y0": 588.3341515,
+       "x1": 569.1164807999997,
+       "y1": 596.0041515
+      }
+     },
+     {
+      "id": "b147",
+      "kind": "label",
+      "text": "01. Gmina / Dzielnica:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 593.3841515,
+       "x1": 101.82657999999995,
+       "y1": 601.0541515
+      }
+     },
+     {
+      "id": "b148",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 602.19,
+       "x1": 563.21,
+       "y1": 619.44
+      }
+     },
+     {
+      "id": "b149",
+      "kind": "label",
+      "text": "02. Kod pocztowy:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 621.4941515,
+       "x1": 89.23554999999998,
+       "y1": 629.1641515
+      }
+     },
+     {
+      "id": "b150",
+      "kind": "label",
+      "text": "03. Miejscowość:",
+      "bbox": {
+       "x0": 133.16,
+       "y0": 621.4941515,
+       "x1": 192.2787,
+       "y1": 629.1641515
+      }
+     },
+     {
+      "id": "b151",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 630.3,
+       "x1": 57.07076923076924,
+       "y1": 647.55
+      }
+     },
+     {
+      "id": "b152",
+      "kind": "label",
+      "text": "-",
+      "bbox": {
+       "x0": 61.59,
+       "y0": 632.289551,
+       "x1": 65.84574,
+       "y1": 645.069551
+      }
+     },
+     {
+      "id": "b153",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 71.39,
+       "y0": 630.3,
+       "x1": 563.21,
+       "y1": 647.55
+      }
+     },
+     {
+      "id": "b154",
+      "kind": "label",
+      "text": "04. Ulica:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 648.9741515000001,
+       "x1": 58.20555,
+       "y1": 656.6441515
+      }
+     },
+     {
+      "id": "b155",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 657.78,
+       "x1": 563.21,
+       "y1": 675.03
+      }
+     },
+     {
+      "id": "b156",
+      "kind": "label",
+      "text": "05. Numer domu:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 676.4541515,
+       "x1": 85.73006999999997,
+       "y1": 684.1241514999999
+      }
+     },
+     {
+      "id": "b157",
+      "kind": "label",
+      "text": "06. Numer lokalu:",
+      "bbox": {
+       "x0": 148.5,
+       "y0": 676.4541515,
+       "x1": 209.37143999999998,
+       "y1": 684.1241514999999
+      }
+     },
+     {
+      "id": "b158",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 685.26,
+       "x1": 241.16,
+       "y1": 702.51
+      }
+     },
+     {
+      "id": "b159",
+      "kind": "paragraph",
+      "text": "07. Zagraniczny kod pocztowy: (1)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 704.5641515,
+       "x1": 144.14739999999992,
+       "y1": 712.2341515
+      }
+     },
+     {
+      "id": "b160",
+      "kind": "label",
+      "text": "08. Nazwa państwa: (1)",
+      "bbox": {
+       "x0": 225.18,
+       "y0": 704.5641515,
+       "x1": 306.74965999999995,
+       "y1": 712.2341515
+      }
+     },
+     {
+      "id": "b161",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 25.809999999999995,
+       "y0": 713.37,
+       "x1": 563.21,
+       "y1": 730.62
+      }
+     },
+     {
+      "id": "b162",
+      "kind": "label",
+      "text": "(1) Wypełnij w przypadku, gdy adres jest inny niż polski.",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 735.8741515,
+       "x1": 218.1893900000003,
+       "y1": 743.5441515
+      }
+     },
+     {
+      "id": "b163",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 17.5,
+       "y0": 746.6,
+       "x1": 579.82,
+       "y1": 799.9549999999999
+      }
+     },
+     {
+      "id": "b164",
+      "kind": "paragraph",
+      "text": "strona: 4/5",
+      "bbox": {
+       "x0": 274.8,
+       "y0": 801.7619762,
+       "x1": 316.02020999999996,
+       "y1": 808.7919762
+      }
+     },
+     {
+      "id": "b165",
+      "kind": "paragraph",
+      "text": "wersja: KDR(7)",
+      "bbox": {
+       "x0": 509.98,
+       "y0": 801.7619762,
+       "x1": 566.30024,
+       "y1": 808.7919762
+      }
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "blocks": [
+     {
+      "id": "b166",
+      "kind": "heading",
+      "text": "KDR",
+      "bbox": {
+       "x0": 543.5,
+       "y0": 17.989551000000006,
+       "x1": 571.40148,
+       "y1": 30.769551000000092
+      }
+     },
+     {
+      "id": "b167",
+      "kind": "label",
+      "text": "CZĘŚĆ III - Oświadczenia:",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 39.28352749999999,
+       "x1": 132.81189999999995,
+       "y1": 48.23352750000004
+      }
+     },
+     {
+      "id": "b168",
+      "kind": "label",
+      "text": "Oświadczam, że:",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 58.45352749999995,
+       "x1": 92.90315,
+       "y1": 67.4035275
+      }
+     },
+     {
+      "id": "b169",
+      "kind": "heading",
+      "text": "− powyższe dane są prawdziwe,",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 71.23352749999992,
+       "x1": 156.73455,
+       "y1": 80.18352749999997
+      }
+     },
+     {
+      "id": "b170",
+      "kind": "heading",
+      "text": "− jestem umocowany/umocowana do złożenia wniosku o przyznanie Karty Dużej Rodziny lub wydanie duplikatu Karty Dużej",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 83.1535275,
+       "x1": 579.4163600000004,
+       "y1": 92.10352750000004
+      }
+     },
+     {
+      "id": "b171",
+      "kind": "heading",
+      "text": "Rodziny oraz do odebrania Karty Dużej Rodziny lub duplikatu Karty Dużej Rodziny w imieniu członków rodziny wielodzietnej,",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 93.88352750000001,
+       "x1": 580.4081920000011,
+       "y1": 102.83352750000006
+      }
+     },
+     {
+      "id": "b172",
+      "kind": "paragraph",
+      "text": "wskazanych w niniejszym wniosku.",
+      "bbox": {
+       "x0": 21.33,
+       "y0": 104.62352750000002,
+       "x1": 178.646521,
+       "y1": 113.57352750000007
+      }
+     },
+     {
+      "id": "b173",
+      "kind": "checkbox_option",
+      "text": "Zaznacz, jeżeli chcesz, aby rodzic/rodzice oraz małżonek rodzica mogli wyświetlać elektroniczne formy Karty wszystkich",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 139.3835275,
+       "x1": 576.2161609999991,
+       "y1": 148.33352750000006
+      }
+     },
+     {
+      "id": "b174",
+      "kind": "paragraph",
+      "text": "członków rodziny.",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 150.12352750000002,
+       "x1": 139.980947,
+       "y1": 159.07352750000007
+      }
+     },
+     {
+      "id": "b175",
+      "kind": "paragraph",
+      "text": "Jeżeli chcesz samodzielnie dokonać wyboru osób, których Karty będą mogli wyświetlać rodzice lub małżonek rodzica, nie zaznaczaj tego pola, tylko wypełnij załącznik ZKDR-04 Informacja o osobach, które będą mogły wyświetlać kartę elektroniczną na swoich urządzeniach mobilnych.",
+      "bbox": {
+       "x0": 62.87,
+       "y0": 161.75352750000002,
+       "x1": 576.2167919999991,
+       "y1": 192.17352749999998
+      }
+     },
+     {
+      "id": "b176",
+      "kind": "label",
+      "text": "Do wniosku dołączam następujące dokumenty:",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 220.12352750000002,
+       "x1": 214.33325000000016,
+       "y1": 229.07352750000007
+      }
+     },
+     {
+      "id": "b177",
+      "kind": "label",
+      "text": "1)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 237.37352750000002,
+       "x1": 33.81655,
+       "y1": 246.32352750000007
+      }
+     },
+     {
+      "id": "b178",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 41.14,
+       "y0": 233.48000000000002,
+       "x1": 547.23,
+       "y1": 250.73000000000002
+      }
+     },
+     {
+      "id": "b179",
+      "kind": "label",
+      "text": "2)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 259.7435274999999,
+       "x1": 33.81655,
+       "y1": 268.69352749999996
+      }
+     },
+     {
+      "id": "b180",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 41.14,
+       "y0": 255.85000000000002,
+       "x1": 547.23,
+       "y1": 273.1
+      }
+     },
+     {
+      "id": "b181",
+      "kind": "label",
+      "text": "3)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 282.1035274999999,
+       "x1": 33.81655,
+       "y1": 291.0535275
+      }
+     },
+     {
+      "id": "b182",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 41.14,
+       "y0": 278.21000000000004,
+       "x1": 547.23,
+       "y1": 295.46000000000004
+      }
+     },
+     {
+      "id": "b183",
+      "kind": "label",
+      "text": "4)",
+      "bbox": {
+       "x0": 25.81,
+       "y0": 304.47352749999993,
+       "x1": 33.81655,
+       "y1": 313.4235275
+      }
+     },
+     {
+      "id": "b184",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 41.14,
+       "y0": 300.58000000000004,
+       "x1": 547.23,
+       "y1": 317.83000000000004
+      }
+     },
+     {
+      "id": "b185",
+      "kind": "paragraph",
+      "text": "Oświadczam, że jestem świadoma/świadomy odpowiedzialności karnej za złożenie fałszywego oświadczenia.",
+      "bbox": {
+       "x0": 36.67,
+       "y0": 363.867304,
+       "x1": 475.74500000000114,
+       "y1": 372.817304
+      }
+     },
+     {
+      "id": "b186",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 23.57,
+       "y0": 432.21,
+       "x1": 577.7362999999999,
+       "y1": 451.11853299999996
+      }
+     },
+     {
+      "id": "b187",
+      "kind": "paragraph",
+      "text": "(Miejscowość)",
+      "bbox": {
+       "x0": 133.8,
+       "y0": 452.1641515,
+       "x1": 182.97411000000002,
+       "y1": 459.8341515
+      }
+     },
+     {
+      "id": "b188",
+      "kind": "paragraph",
+      "text": "(Data: dd / mm / rrrr)",
+      "bbox": {
+       "x0": 337.95,
+       "y0": 452.1641515,
+       "x1": 410.08000999999996,
+       "y1": 459.8341515
+      }
+     },
+     {
+      "id": "b189",
+      "kind": "paragraph",
+      "text": "(Podpis wnioskodawcy)",
+      "bbox": {
+       "x0": 474.4,
+       "y0": 453.8841515,
+       "x1": 556.71315,
+       "y1": 461.5541515
+      }
+     },
+     {
+      "id": "b190",
+      "kind": "paragraph",
+      "text": "strona: 5/5",
+      "bbox": {
+       "x0": 274.8,
+       "y0": 801.7619762,
+       "x1": 316.02020999999996,
+       "y1": 808.7919762
+      }
+     },
+     {
+      "id": "b191",
+      "kind": "paragraph",
+      "text": "wersja: KDR(7)",
+      "bbox": {
+       "x0": 509.98,
+       "y0": 801.7619762,
+       "x1": 566.30024,
+       "y1": 808.7919762
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o przyznanie Karty Dużej Rodziny lub wydanie duplikatu Karty Dużej Rodziny",
+  "authority_kind": "ORGAN",
+  "authority_name": "",
+  "fields": [
+   {
+    "label": "Rodzaj wniosku dla członka rodziny",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "wnoszę o przyznanie karty dużej rodziny",
+     "rodzaj wniosku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię pierwsze członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "imię pierwsze"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię drugie członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "imię drugie"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwisko członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwisko"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer PESEL członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "pesel"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Data urodzenia członka rodziny",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "data urodzenia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię ojca dziecka",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Nazwisko rodowe ojca dziecka",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Imię matki dziecka",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Nazwisko rodowe matki dziecka",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Status członka rodziny",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "powyższe dane identyfikacyjne dotyczą",
+     "członek rodziny"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Stopień niepełnosprawności",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Okres ważności orzeczenia",
+    "kind": [
+     "date",
+     "single_choice"
+    ],
+    "aliases": [
+     "data ważności orzeczenia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Planowany termin ukończenia nauki",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "termin ukończenia nauki"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Seria i numer dokumentu tożsamości członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "seria i numer dokumentu potwierdzającego tożsamość"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Numer telefonu komórkowego członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Adres poczty elektronicznej członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Gmina / dzielnica członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "gmina / dzielnica"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Kod pocztowy członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Miejscowość członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Ulica członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Numer domu członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Numer lokalu członka rodziny",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Zagraniczny kod pocztowy",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Nazwa państwa",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Miejsce zamieszkania członka rodziny",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "adres członka rodziny"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Wyświetlanie kart przez rodziców",
+    "kind": [
+     "single_choice",
+     "multi_choice"
+    ],
+    "aliases": [
+     "rodzice mogą wyświetlać elektroniczne formy karty"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Załączniki",
+    "kind": [
+     "file",
+     "long_text",
+     "short_text"
+    ],
+    "aliases": [
+     "dołączone dokumenty",
+     "do wniosku dołączam"
+    ],
+    "optional": true
+   }
+  ]
+ }
+}

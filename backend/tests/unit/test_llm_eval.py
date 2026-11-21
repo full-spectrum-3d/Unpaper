@@ -46,6 +46,16 @@ def test_cases_are_complete() -> None:
         assert case["expected"]["title"] and case["expected"]["fields"], case["slug"]
 
 
+def test_holdout_is_complete() -> None:
+    holdout = load_cases(set_name="holdout")
+    assert len(holdout) >= 6
+    assert not {c["slug"] for c in holdout} & {c["slug"] for c in CASES}
+    for case in holdout:
+        assert case["doc"].to_prompt_text(), case["slug"]
+        assert case["expected"]["title"] and case["expected"]["fields"], case["slug"]
+        assert any(not f["optional"] for f in case["expected"]["fields"]), case["slug"]
+
+
 @pytest.mark.parametrize(
     ("a", "b"),
     [

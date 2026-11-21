@@ -1,0 +1,639 @@
+{
+ "name": "deklaracja-dochody",
+ "source": "deklaracja-dochody.docx",
+ "document": {
+  "source": {
+   "method": "docx",
+   "pages": 1
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "Załącznik nr 2"
+     },
+     {
+      "id": "b2",
+      "kind": "paragraph",
+      "text": "do Uchwały Nr XXXIV/161/2021 Rady Gminy Lubenia"
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "z dnia 30 czerwca 2021 roku"
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "w sprawie określenia wzoru wniosku o przyznanie dodatku mieszkaniowego oraz wzoru deklaracji"
+     },
+     {
+      "id": "b5",
+      "kind": "paragraph",
+      "text": "o dochodach gospodarstwa domowego"
+     },
+     {
+      "id": "b6",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b7",
+      "kind": "paragraph",
+      "text": "(miejscowość i data)"
+     },
+     {
+      "id": "b8",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b9",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko wnioskodawcy)"
+     },
+     {
+      "id": "b10",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b11",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b12",
+      "kind": "paragraph",
+      "text": "(adres zamieszkania)"
+     },
+     {
+      "id": "b13",
+      "kind": "heading",
+      "text": "Deklaracja o dochodach gospodarstwa domowego za okres"
+     },
+     {
+      "id": "b14",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "(pełnych trzech miesięcy poprzedzających datę złożenia wniosku)"
+     },
+     {
+      "id": "b16",
+      "kind": "label",
+      "text": "Oświadczam, że moje gospodarstwo domowe składa się z następujących osób:"
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "1. Imię i nazwisko............................................................................................. - wnioskodawca,"
+     },
+     {
+      "id": "b18",
+      "kind": "paragraph",
+      "text": "data urodzenia...........................................................................................................................;"
+     },
+     {
+      "id": "b19",
+      "kind": "paragraph",
+      "text": "2. Imię i nazwisko........................................................................................................................,"
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "data urodzenia ......................., stopień pokrewieństwa ............................................................;"
+     },
+     {
+      "id": "b21",
+      "kind": "paragraph",
+      "text": "3. Imię i nazwisko .......................................................................................................................,"
+     },
+     {
+      "id": "b22",
+      "kind": "paragraph",
+      "text": "data urodzenia ......................., stopień pokrewieństwa ............................................................;"
+     },
+     {
+      "id": "b23",
+      "kind": "paragraph",
+      "text": "4. Imię i nazwisko........................................................................................................................,"
+     },
+     {
+      "id": "b24",
+      "kind": "paragraph",
+      "text": "data urodzenia ......................., stopień pokrewieństwa ............................................................;"
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "5. Imię i nazwisko........................................................................................................................,"
+     },
+     {
+      "id": "b26",
+      "kind": "paragraph",
+      "text": "data urodzenia ......................., stopień pokrewieństwa ............................................................;"
+     },
+     {
+      "id": "b27",
+      "kind": "paragraph",
+      "text": "6. Imię i nazwisko........................................................................................................................,"
+     },
+     {
+      "id": "b28",
+      "kind": "paragraph",
+      "text": "data urodzenia ......................., stopień pokrewieństwa ............................................................;"
+     },
+     {
+      "id": "b29",
+      "kind": "paragraph",
+      "text": "7. Imię i nazwisko........................................................................................................................,"
+     },
+     {
+      "id": "b30",
+      "kind": "paragraph",
+      "text": "data urodzenia ......................., stopień pokrewieństwa ............................................................;"
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "Oświadczam, że w podanym wyżej okresie dochody moje i wymienionych wyżej kolejno członków mojego gospodarstwa domowego wyniosły:"
+     },
+     {
+      "id": "b32",
+      "kind": "table",
+      "text": ""
+     },
+     {
+      "id": "b33",
+      "kind": "table_cell",
+      "text": "Lp.1)",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b34",
+      "kind": "table_cell",
+      "text": "Miejsce pracy lub nauki2)",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "table_cell",
+      "text": "Źródła dochodu",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "table_cell",
+      "text": "Wysokość dochodu w zł",
+      "table": {
+       "row": 0,
+       "col": 3
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 1,
+       "col": 3
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 2
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 2,
+       "col": 3
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 0
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 1
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 2
+      }
+     },
+     {
+      "id": "b48",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 3,
+       "col": 3
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 0
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 1
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 2
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 4,
+       "col": 3
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 0
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 1
+      }
+     },
+     {
+      "id": "b55",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 2
+      }
+     },
+     {
+      "id": "b56",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 5,
+       "col": 3
+      }
+     },
+     {
+      "id": "b57",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 0
+      }
+     },
+     {
+      "id": "b58",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 1
+      }
+     },
+     {
+      "id": "b59",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 2
+      }
+     },
+     {
+      "id": "b60",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 6,
+       "col": 3
+      }
+     },
+     {
+      "id": "b61",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 0
+      }
+     },
+     {
+      "id": "b62",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 1
+      }
+     },
+     {
+      "id": "b63",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 2
+      }
+     },
+     {
+      "id": "b64",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 7,
+       "col": 3
+      }
+     },
+     {
+      "id": "b65",
+      "kind": "table_cell",
+      "text": "Razem dochody gospodarstwa domowego:",
+      "table": {
+       "row": 8,
+       "col": 0
+      }
+     },
+     {
+      "id": "b66",
+      "kind": "table_cell",
+      "text": "",
+      "table": {
+       "row": 8,
+       "col": 3
+      }
+     },
+     {
+      "id": "b67",
+      "kind": "paragraph",
+      "text": "Średni dochód na jednego członka gospodarstwa domowego wynosi ................................. zł, to jest miesięcznie ................................................... zł."
+     },
+     {
+      "id": "b68",
+      "kind": "paragraph",
+      "text": "Jestem świadomy odpowiedzialności karnej za złożenie fałszywego oświadczenia."
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "Zgodnie z art. 7 ust. 14 ustawy z dnia 21 czerwca 2001 r. o dodatkach mieszkaniowych osoba korzystająca z dodatku mieszkaniowego jest obowiązana przechowywać dokumenty,"
+     },
+     {
+      "id": "b70",
+      "kind": "paragraph",
+      "text": "o których mowa w ust. 13 (tj. dokumenty na których podstawie zadeklarowała dochody), przez okres 3 lat od dnia wydania decyzji o przyznaniu tego dodatku."
+     },
+     {
+      "id": "b71",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b72",
+      "kind": "input_placeholder",
+      "text": ""
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "(podpis przyjmującego)"
+     },
+     {
+      "id": "b74",
+      "kind": "paragraph",
+      "text": "(podpis wnioskodawcy)"
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Deklaracja o dochodach gospodarstwa domowego",
+  "authority_kind": "ORGAN",
+  "authority_name": "",
+  "fields": [
+   {
+    "label": "Okres deklaracji",
+    "kind": [
+     "short_text",
+     "date"
+    ],
+    "aliases": [
+     "za okres",
+     "okres"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Imię i nazwisko członka gospodarstwa domowego",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "imię i nazwisko"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Data urodzenia członka gospodarstwa domowego",
+    "kind": [
+     "date"
+    ],
+    "aliases": [
+     "data urodzenia"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Stopień pokrewieństwa",
+    "kind": [
+     "short_text",
+     "single_choice"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Miejsce pracy lub nauki",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Źródło dochodu",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "źródła dochodu"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Wysokość dochodu",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "wysokość dochodu w zł"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba porządkowa członka gospodarstwa",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "lp"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Razem dochody gospodarstwa domowego",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "razem dochody"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Średni dochód na jednego członka gospodarstwa domowego",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "średni dochód"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Średni dochód miesięcznie",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "miesięcznie"
+    ],
+    "optional": true
+   }
+  ]
+ }
+}

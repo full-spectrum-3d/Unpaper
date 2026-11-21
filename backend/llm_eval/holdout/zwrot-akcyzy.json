@@ -1,0 +1,1884 @@
+{
+ "name": "zwrot-akcyzy",
+ "source": "zwrot-akcyzy.pdf",
+ "document": {
+  "source": {
+   "method": "pdf_text",
+   "pages": 2
+  },
+  "pages": [
+   {
+    "number": 1,
+    "blocks": [
+     {
+      "id": "b1",
+      "kind": "paragraph",
+      "text": "Załącznik do rozporządzenia Ministra Rolnictwa i Rozwoju Wsi z dnia 26 stycznia 2024 r. (Dz. U. poz. 106)",
+      "bbox": {
+       "x0": 211.284,
+       "y0": 41.291000000000054,
+       "x1": 559.884,
+       "y1": 49.291000000000054
+      }
+     },
+     {
+      "id": "b2",
+      "kind": "heading",
+      "text": "WNIOSEK",
+      "bbox": {
+       "x0": 169.084,
+       "y0": 61.274,
+       "x1": 227.764,
+       "y1": 73.274
+      }
+     },
+     {
+      "id": "b3",
+      "kind": "paragraph",
+      "text": "Potwierdzenie przyjęcia wniosku przez urząd gminy lub miasta",
+      "bbox": {
+       "x0": 389.107,
+       "y0": 59.93799999999999,
+       "x1": 541.2429999999999,
+       "y1": 65.93799999999999
+      }
+     },
+     {
+      "id": "b4",
+      "kind": "paragraph",
+      "text": "(pieczęć)",
+      "bbox": {
+       "x0": 454.177,
+       "y0": 67.13800000000003,
+       "x1": 476.161,
+       "y1": 73.13800000000003
+      }
+     },
+     {
+      "id": "b5",
+      "kind": "paragraph",
+      "text": "o zwrot podatku akcyzowego zawartego w cenie oleju",
+      "bbox": {
+       "x0": 61.94799999999999,
+       "y0": 75.67399999999998,
+       "x1": 334.90000000000003,
+       "y1": 87.67399999999998
+      }
+     },
+     {
+      "id": "b6",
+      "kind": "paragraph",
+      "text": "napędowego wykorzystywanego do produkcji rolnej",
+      "bbox": {
+       "x0": 65.092,
+       "y0": 90.07399999999996,
+       "x1": 331.7559999999999,
+       "y1": 102.07399999999996
+      }
+     },
+     {
+      "id": "b7",
+      "kind": "label",
+      "text": "na rok",
+      "bbox": {
+       "x0": 49.263999999999996,
+       "y0": 109.92199999999991,
+       "x1": 82.93599999999999,
+       "y1": 121.92199999999991
+      }
+     },
+     {
+      "id": "b8",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 88.441,
+       "y0": 105.83299999999997,
+       "x1": 167.89399999999998,
+       "y1": 125.67599999999993
+      }
+     },
+     {
+      "id": "b9",
+      "kind": "checkbox_option",
+      "text": "luty",
+      "bbox": {
+       "x0": 193.93600000000004,
+       "y0": 109.92199999999991,
+       "x1": 213.94,
+       "y1": 121.92199999999991
+      }
+     },
+     {
+      "id": "b10",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 217.979,
+       "y0": 105.83299999999997,
+       "x1": 237.822,
+       "y1": 125.67599999999993
+      }
+     },
+     {
+      "id": "b11",
+      "kind": "checkbox_option",
+      "text": "* sierpień",
+      "bbox": {
+       "x0": 240.932,
+       "y0": 109.918,
+       "x1": 310.6,
+       "y1": 121.918
+      }
+     },
+     {
+      "id": "b12",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 314.039,
+       "y0": 105.83299999999997,
+       "x1": 334.13357142857143,
+       "y1": 125.67599999999993
+      }
+     },
+     {
+      "id": "b13",
+      "kind": "checkbox_option",
+      "text": "**",
+      "bbox": {
+       "x0": 337.596,
+       "y0": 111.05200000000002,
+       "x1": 347.596,
+       "y1": 121.05200000000002
+      }
+     },
+     {
+      "id": "b14",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 426.164,
+       "y0": 112.73799999999994,
+       "x1": 504.164,
+       "y1": 118.73799999999994
+      }
+     },
+     {
+      "id": "b15",
+      "kind": "paragraph",
+      "text": "Data przyjęcia i podpis",
+      "bbox": {
+       "x0": 437.426,
+       "y0": 119.93799999999999,
+       "x1": 492.914,
+       "y1": 125.93799999999999
+      }
+     },
+     {
+      "id": "b16",
+      "kind": "label",
+      "text": "Podstawa prawna:",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 136.45799999999997,
+       "x1": 105.20300000000002,
+       "y1": 144.45799999999997
+      }
+     },
+     {
+      "id": "b17",
+      "kind": "paragraph",
+      "text": "ustawa z dnia 10 marca 2006 r. o zwrocie podatku akcyzowego zawartego w cenie oleju napędowego wykorzystywanego",
+      "bbox": {
+       "x0": 143.147,
+       "y0": 136.45799999999997,
+       "x1": 534.1470000000002,
+       "y1": 144.45799999999997
+      }
+     },
+     {
+      "id": "b18",
+      "kind": "paragraph",
+      "text": "do produkcji rolnej (Dz. U. z 2023 r. poz. 1948), zwana dalej „ustawą”.",
+      "bbox": {
+       "x0": 143.147,
+       "y0": 146.058,
+       "x1": 373.9789999999999,
+       "y1": 154.058
+      }
+     },
+     {
+      "id": "b19",
+      "kind": "paragraph",
+      "text": "Termin składania wniosku: od dnia 1 lutego do ostatniego dnia lutego; od dnia 1 sierpnia do dnia 31 sierpnia.",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 159.13799999999992,
+       "x1": 404.0189999999999,
+       "y1": 167.13800000000003
+      }
+     },
+     {
+      "id": "b20",
+      "kind": "paragraph",
+      "text": "Miejsce składania wniosku: wójt, burmistrz (prezydent miasta) właściwy ze względu na miejsce położenia gruntów będących w posiadaniu lub współposiadaniu producenta rolnego.",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 170.47399999999993,
+       "x1": 510.851,
+       "y1": 188.07400000000007
+      }
+     },
+     {
+      "id": "b21",
+      "kind": "heading",
+      "text": "I. MIEJSCE SKŁADANIA WNIOSKU",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 203.04099999999994,
+       "x1": 206.17149999999995,
+       "y1": 212.54099999999994
+      }
+     },
+     {
+      "id": "b22",
+      "kind": "label",
+      "text": "01. Wójt, burmistrz (prezydent miasta), do którego jest składany wniosek",
+      "bbox": {
+       "x0": 49.746,
+       "y0": 215.82799999999997,
+       "x1": 283.0659999999999,
+       "y1": 223.82799999999997
+      }
+     },
+     {
+      "id": "b23",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 51.319,
+       "y0": 227.95100000000002,
+       "x1": 537.176,
+       "y1": 240.94499999999994
+      }
+     },
+     {
+      "id": "b24",
+      "kind": "heading",
+      "text": "II. DANE IDENTYFIKACYJNE WNIOSKODAWCY",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 268.9409999999999,
+       "x1": 267.37999999999994,
+       "y1": 278.4409999999999
+      }
+     },
+     {
+      "id": "b25",
+      "kind": "paragraph",
+      "text": "02. Nazwisko / nazwa pełna",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 281.35900000000004,
+       "x1": 141.56100000000004,
+       "y1": 289.35900000000004
+      }
+     },
+     {
+      "id": "b26",
+      "kind": "label",
+      "text": "07. Numer dowodu osobistego****",
+      "bbox": {
+       "x0": 279.212,
+       "y0": 285.61199999999997,
+       "x1": 392.548,
+       "y1": 293.61199999999997
+      }
+     },
+     {
+      "id": "b27",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 53.859,
+       "y0": 293.16099999999994,
+       "x1": 405.142,
+       "y1": 321.50699999999995
+      }
+     },
+     {
+      "id": "b28",
+      "kind": "paragraph",
+      "text": "07a. Wydany przez",
+      "bbox": {
+       "x0": 279.212,
+       "y0": 313.95799999999997,
+       "x1": 339.868,
+       "y1": 321.95799999999997
+      }
+     },
+     {
+      "id": "b29",
+      "kind": "label",
+      "text": "03. Pierwsze imię / nazwa skrócona",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 332.38300000000004,
+       "x1": 167.105,
+       "y1": 340.38300000000004
+      }
+     },
+     {
+      "id": "b30",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 53.859,
+       "y0": 323.15100000000007,
+       "x1": 538.5833333333334,
+       "y1": 355.174
+      }
+     },
+     {
+      "id": "b31",
+      "kind": "paragraph",
+      "text": "08. Inny dokument potwierdzający tożsamość (rodzaj, numer dokumentu)****",
+      "bbox": {
+       "x0": 279.212,
+       "y0": 347.973,
+       "x1": 529.6279999999999,
+       "y1": 355.973
+      }
+     },
+     {
+      "id": "b32",
+      "kind": "label",
+      "text": "04. Drugie imię",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 365.82300000000004,
+       "x1": 102.88100000000001,
+       "y1": 373.82300000000004
+      }
+     },
+     {
+      "id": "b33",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 53.859,
+       "y0": 357.16499999999996,
+       "x1": 538.5833333333334,
+       "y1": 389.19
+      }
+     },
+     {
+      "id": "b34",
+      "kind": "label",
+      "text": "08a. Wydany przez",
+      "bbox": {
+       "x0": 279.212,
+       "y0": 376.319,
+       "x1": 339.868,
+       "y1": 384.319
+      }
+     },
+     {
+      "id": "b35",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 278.986,
+       "y0": 385.513,
+       "x1": 538.5833333333334,
+       "y1": 397.7548
+      }
+     },
+     {
+      "id": "b36",
+      "kind": "label",
+      "text": "05. NIP***",
+      "bbox": {
+       "x0": 52.801,
+       "y0": 398.99100000000004,
+       "x1": 89.689,
+       "y1": 406.99100000000004
+      }
+     },
+     {
+      "id": "b37",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 51.024,
+       "y0": 408.19,
+       "x1": 191.904,
+       "y1": 422.363
+      }
+     },
+     {
+      "id": "b38",
+      "kind": "paragraph",
+      "text": "09. Numer w Krajowym Rejestrze Sądowym (w przypadku gdy producent rolny",
+      "bbox": {
+       "x0": 279.212,
+       "y0": 410.336,
+       "x1": 531.86,
+       "y1": 418.336
+      }
+     },
+     {
+      "id": "b39",
+      "kind": "paragraph",
+      "text": "podlega wpisowi do tego rejestru)",
+      "bbox": {
+       "x0": 279.212,
+       "y0": 419.93600000000004,
+       "x1": 388.548,
+       "y1": 427.93600000000004
+      }
+     },
+     {
+      "id": "b40",
+      "kind": "label",
+      "text": "06. PESEL****",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 427.343,
+       "x1": 103.553,
+       "y1": 435.343
+      }
+     },
+     {
+      "id": "b41",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 51.206,
+       "y0": 430.86699999999996,
+       "x1": 418.628,
+       "y1": 450.709
+      }
+     },
+     {
+      "id": "b42",
+      "kind": "heading",
+      "text": "III. MIEJSCE ZAMIESZKANIA I ADRES / SIEDZIBA I ADRES PRODUCENTA ROLNEGO",
+      "bbox": {
+       "x0": 46.772,
+       "y0": 467.42099999999994,
+       "x1": 457.6420000000002,
+       "y1": 477.42099999999994
+      }
+     },
+     {
+      "id": "b43",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 57.125,
+       "y0": 487.07099999999997,
+       "x1": 533.277,
+       "y1": 499.567
+      }
+     },
+     {
+      "id": "b44",
+      "kind": "table",
+      "text": "",
+      "bbox": {
+       "x0": 45.354375,
+       "y0": 477.411,
+       "x1": 549.9215,
+       "y1": 545.442
+      }
+     },
+     {
+      "id": "b45",
+      "kind": "table_cell",
+      "text": "10. Państwo",
+      "table": {
+       "row": 0,
+       "col": 0
+      }
+     },
+     {
+      "id": "b46",
+      "kind": "table_cell",
+      "text": "11. Województwo",
+      "table": {
+       "row": 0,
+       "col": 1
+      }
+     },
+     {
+      "id": "b47",
+      "kind": "table_cell",
+      "text": "12. Powiat",
+      "table": {
+       "row": 0,
+       "col": 2
+      }
+     },
+     {
+      "id": "b48",
+      "kind": "table_cell",
+      "text": "13. Gmina",
+      "table": {
+       "row": 1,
+       "col": 0
+      }
+     },
+     {
+      "id": "b49",
+      "kind": "table_cell",
+      "text": "14. Ulica",
+      "table": {
+       "row": 1,
+       "col": 1
+      }
+     },
+     {
+      "id": "b50",
+      "kind": "table_cell",
+      "text": "15. Nr domu",
+      "table": {
+       "row": 1,
+       "col": 2
+      }
+     },
+     {
+      "id": "b51",
+      "kind": "table_cell",
+      "text": "16. Nr lokalu",
+      "table": {
+       "row": 1,
+       "col": 3
+      }
+     },
+     {
+      "id": "b52",
+      "kind": "table_cell",
+      "text": "17. Miejscowość",
+      "table": {
+       "row": 2,
+       "col": 0
+      }
+     },
+     {
+      "id": "b53",
+      "kind": "table_cell",
+      "text": "18. Kod pocztowy",
+      "table": {
+       "row": 2,
+       "col": 1
+      }
+     },
+     {
+      "id": "b54",
+      "kind": "table_cell",
+      "text": "19. Poczta",
+      "table": {
+       "row": 2,
+       "col": 2
+      }
+     },
+     {
+      "id": "b55",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 57.125,
+       "y0": 510.111,
+       "x1": 545.772,
+       "y1": 545.171
+      }
+     },
+     {
+      "id": "b56",
+      "kind": "heading",
+      "text": "IV. OŚWIADCZENIA",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 553.4749999999999,
+       "x1": 138.6075,
+       "y1": 562.9749999999999
+      }
+     },
+     {
+      "id": "b57",
+      "kind": "heading",
+      "text": "Oświadczam, że jestem posiadaczem użytków rolnych o powierzchni",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 569.191,
+       "x1": 330.15099999999995,
+       "y1": 579.191
+      }
+     },
+     {
+      "id": "b58",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 334.13357142857143,
+       "y0": 566.085,
+       "x1": 376.304,
+       "y1": 580.4195
+      }
+     },
+     {
+      "id": "b59",
+      "kind": "label",
+      "text": "ha",
+      "bbox": {
+       "x0": 382.65100000000007,
+       "y0": 569.191,
+       "x1": 392.09100000000007,
+       "y1": 579.191
+      }
+     },
+     {
+      "id": "b60",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 398.487,
+       "y0": 566.085,
+       "x1": 439.283,
+       "y1": 580.4195
+      }
+     },
+     {
+      "id": "b61",
+      "kind": "paragraph",
+      "text": "a,",
+      "bbox": {
+       "x0": 444.591,
+       "y0": 569.191,
+       "x1": 451.53100000000006,
+       "y1": 579.191
+      }
+     },
+     {
+      "id": "b62",
+      "kind": "label",
+      "text": "współposiadaczem użytków rolnych o powierzchni",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 583.2239999999999,
+       "x1": 257.40099999999995,
+       "y1": 593.2239999999999
+      }
+     },
+     {
+      "id": "b63",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 262.08,
+       "y0": 580.4195,
+       "x1": 302.876,
+       "y1": 594.9053333333333
+      }
+     },
+     {
+      "id": "b64",
+      "kind": "label",
+      "text": "ha",
+      "bbox": {
+       "x0": 309.90099999999995,
+       "y0": 583.2239999999999,
+       "x1": 319.34099999999995,
+       "y1": 593.2239999999999
+      }
+     },
+     {
+      "id": "b65",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 325.059,
+       "y0": 581.998,
+       "x1": 365.855,
+       "y1": 594.754
+      }
+     },
+     {
+      "id": "b66",
+      "kind": "paragraph",
+      "text": "a określonej w ewidencji",
+      "bbox": {
+       "x0": 371.8409999999999,
+       "y0": 583.2239999999999,
+       "x1": 479.04100000000005,
+       "y1": 593.2239999999999
+      }
+     },
+     {
+      "id": "b67",
+      "kind": "label",
+      "text": "gruntów i budynków według stanu na dzień 1 lutego",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 597.852,
+       "x1": 262.42099999999994,
+       "y1": 607.852
+      }
+     },
+     {
+      "id": "b68",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 266.483,
+       "y0": 594.9053333333333,
+       "x1": 322.755,
+       "y1": 609.299
+      }
+     },
+     {
+      "id": "b69",
+      "kind": "paragraph",
+      "text": "roku, wykorzystywanych do produkcji rolnej,",
+      "bbox": {
+       "x0": 327.42099999999994,
+       "y0": 597.852,
+       "x1": 510.17100000000005,
+       "y1": 607.852
+      }
+     },
+     {
+      "id": "b70",
+      "kind": "label",
+      "text": "położonych na obszarze gminy",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 612.479,
+       "x1": 176.58100000000002,
+       "y1": 622.479
+      }
+     },
+     {
+      "id": "b71",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 181.916,
+       "y0": 609.299,
+       "x1": 522.073,
+       "y1": 624.052
+      }
+     },
+     {
+      "id": "b72",
+      "kind": "heading",
+      "text": "Oświadczam, że średnia roczna liczba dużych jednostek przeliczeniowych bydła, którego byłam/byłem posiadaczem",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 627.354,
+       "x1": 519.821,
+       "y1": 637.354
+      }
+     },
+     {
+      "id": "b73",
+      "kind": "paragraph",
+      "text": "w roku poprzedzającym rok, w którym został złożony wniosek o zwrot podatku, wynosi",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 639.354,
+       "x1": 405.16099999999994,
+       "y1": 649.354
+      }
+     },
+     {
+      "id": "b74",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 408.521,
+       "y0": 636.8779999999999,
+       "x1": 449.26800000000003,
+       "y1": 651.0509999999999
+      }
+     },
+     {
+      "id": "b75",
+      "kind": "heading",
+      "text": "Oświadczam, że średnia roczna liczba świń, których byłam/byłem posiadaczem w roku poprzedzającym rok,",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 654.298,
+       "x1": 488.16099999999994,
+       "y1": 664.298
+      }
+     },
+     {
+      "id": "b76",
+      "kind": "label",
+      "text": "w którym został złożony wniosek o zwrot podatku, wynosi",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 666.298,
+       "x1": 288.251,
+       "y1": 676.298
+      }
+     },
+     {
+      "id": "b77",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 291.118,
+       "y0": 664.1569999999999,
+       "x1": 334.13357142857143,
+       "y1": 678.3299999999999
+      }
+     },
+     {
+      "id": "b78",
+      "kind": "heading",
+      "text": "Oświadczam, że średnia roczna liczba dużych jednostek przeliczeniowych owiec, których byłam/byłem posiadaczem",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 682.644,
+       "x1": 521.481,
+       "y1": 692.644
+      }
+     },
+     {
+      "id": "b79",
+      "kind": "paragraph",
+      "text": "w roku poprzedzającym rok, w którym został złożony wniosek o zwrot podatku, wynosi",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 694.644,
+       "x1": 405.16099999999994,
+       "y1": 704.644
+      }
+     },
+     {
+      "id": "b80",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 408.521,
+       "y0": 692.5699999999999,
+       "x1": 449.26800000000003,
+       "y1": 706.7429999999999
+      }
+     },
+     {
+      "id": "b81",
+      "kind": "heading",
+      "text": "Oświadczam, że średnia roczna liczba dużych jednostek przeliczeniowych kóz, których byłam/byłem posiadaczem",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 710.99,
+       "x1": 512.041,
+       "y1": 720.99
+      }
+     },
+     {
+      "id": "b82",
+      "kind": "paragraph",
+      "text": "w roku poprzedzającym rok, w którym został złożony wniosek o zwrot podatku, wynosi",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 722.99,
+       "x1": 405.16099999999994,
+       "y1": 732.99
+      }
+     },
+     {
+      "id": "b83",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 408.521,
+       "y0": 720.4159999999999,
+       "x1": 449.26800000000003,
+       "y1": 734.5889999999999
+      }
+     },
+     {
+      "id": "b84",
+      "kind": "heading",
+      "text": "Oświadczam, że średnia roczna liczba dużych jednostek przeliczeniowych koni, których byłam/byłem posiadaczem",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 739.337,
+       "x1": 515.3810000000001,
+       "y1": 749.337
+      }
+     },
+     {
+      "id": "b85",
+      "kind": "paragraph",
+      "text": "w roku poprzedzającym rok, w którym został złożony wniosek o zwrot podatku, wynosi",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 751.337,
+       "x1": 405.16099999999994,
+       "y1": 761.337
+      }
+     },
+     {
+      "id": "b86",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 408.521,
+       "y0": 748.262,
+       "x1": 449.26800000000003,
+       "y1": 763.0155
+      }
+     },
+     {
+      "id": "b87",
+      "kind": "paragraph",
+      "text": "*",
+      "bbox": {
+       "x0": 34.214,
+       "y0": 765.345,
+       "x1": 37.714,
+       "y1": 772.345
+      }
+     },
+     {
+      "id": "b88",
+      "kind": "paragraph",
+      "text": "Zaznaczyć w przypadku wniosku o zwrot podatku za okres od dnia 1 sierpnia do dnia 31 stycznia.",
+      "bbox": {
+       "x0": 57.129,
+       "y0": 765.436,
+       "x1": 369.79299999999995,
+       "y1": 773.436
+      }
+     },
+     {
+      "id": "b89",
+      "kind": "paragraph",
+      "text": "** Zaznaczyć w przypadku wniosku o zwrot podatku za okres od dnia 1 lutego do dnia 31 lipca.",
+      "bbox": {
+       "x0": 34.214,
+       "y0": 773.877,
+       "x1": 353.79299999999995,
+       "y1": 781.972
+      }
+     },
+     {
+      "id": "b90",
+      "kind": "paragraph",
+      "text": "*** Podają te podmioty, które są obowiązane posiadać NIP na podstawie przepisów ustawy z dnia 13 października 1995 r.",
+      "bbox": {
+       "x0": 34.214,
+       "y0": 782.441,
+       "x1": 437.80100000000016,
+       "y1": 790.531
+      }
+     },
+     {
+      "id": "b91",
+      "kind": "paragraph",
+      "text": "o zasadach ewidencji i identyfikacji podatników i płatników (Dz. U. z 2022 r. poz. 2500, z późn. zm.).",
+      "bbox": {
+       "x0": 57.129,
+       "y0": 790.443,
+       "x1": 380.90500000000014,
+       "y1": 798.443
+      }
+     },
+     {
+      "id": "b92",
+      "kind": "paragraph",
+      "text": "**** Podać numer PESEL albo numer dowodu osobistego, albo rodzaj i numer innego dokumentu potwierdzającego tożsamość.",
+      "bbox": {
+       "x0": 34.214,
+       "y0": 798.853,
+       "x1": 451.3370000000001,
+       "y1": 806.947
+      }
+     },
+     {
+      "id": "b93",
+      "kind": "paragraph",
+      "text": "1/2",
+      "bbox": {
+       "x0": 549.62,
+       "y0": 799.3149999999999,
+       "x1": 559.844,
+       "y1": 807.3149999999999
+      }
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "blocks": [
+     {
+      "id": "b94",
+      "kind": "heading",
+      "text": "V. INFORMACJA O ZAŁĄCZNIKACH",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 42.761999999999944,
+       "x1": 214.06599999999995,
+       "y1": 52.261999999999944
+      }
+     },
+     {
+      "id": "b95",
+      "kind": "label",
+      "text": "20. Liczba załączników *****",
+      "bbox": {
+       "x0": 47.366,
+       "y0": 56.738000000000056,
+       "x1": 143.81400000000002,
+       "y1": 64.73800000000006
+      }
+     },
+     {
+      "id": "b96",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 45.4135,
+       "y0": 67.57599999999996,
+       "x1": 81.58533333333332,
+       "y1": 84.584
+      }
+     },
+     {
+      "id": "b97",
+      "kind": "paragraph",
+      "text": "21. Załączniki",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 97.15999999999997,
+       "x1": 92.10700000000001,
+       "y1": 105.15999999999997
+      }
+     },
+     {
+      "id": "b98",
+      "kind": "paragraph",
+      "text": "Nazwa załączników",
+      "bbox": {
+       "x0": 186.656,
+       "y0": 95.92100000000005,
+       "x1": 258.872,
+       "y1": 104.92100000000005
+      }
+     },
+     {
+      "id": "b99",
+      "kind": "label",
+      "text": "Liczba załączników",
+      "bbox": {
+       "x0": 437.531,
+       "y0": 95.92100000000005,
+       "x1": 509.252,
+       "y1": 104.92100000000005
+      }
+     },
+     {
+      "id": "b100",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 45.4135,
+       "y0": 108.67899999999997,
+       "x1": 549.8210000000001,
+       "y1": 198.425
+      }
+     },
+     {
+      "id": "b101",
+      "kind": "label",
+      "text": "VI. Proszę o wypłacenie zwrotu podatku w gotówce",
+      "bbox": {
+       "x0": 47.317,
+       "y0": 210.98199999999997,
+       "x1": 267.07700000000006,
+       "y1": 220.98199999999997
+      }
+     },
+     {
+      "id": "b102",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 342.294,
+       "y0": 202.774,
+       "x1": 357.2742,
+       "y1": 238.399
+      }
+     },
+     {
+      "id": "b103",
+      "kind": "label",
+      "text": "Proszę o przekazanie zwrotu podatku na rachunek bankowy",
+      "bbox": {
+       "x0": 64.327,
+       "y0": 227.99199999999996,
+       "x1": 322.3870000000001,
+       "y1": 237.99199999999996
+      }
+     },
+     {
+      "id": "b104",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 342.294,
+       "y0": 222.89499999999998,
+       "x1": 356.294,
+       "y1": 236.89499999999998
+      }
+     },
+     {
+      "id": "b105",
+      "kind": "heading",
+      "text": "VII. NUMER RACHUNKU BANKOWEGO (w przypadku przelewu zwrotu podatku na rachunek bankowy)",
+      "bbox": {
+       "x0": 47.201,
+       "y0": 249.428,
+       "x1": 512.7709999999997,
+       "y1": 259.428
+      }
+     },
+     {
+      "id": "b106",
+      "kind": "label",
+      "text": "22. Nazwisko i imię / nazwa oraz adres posiadacza rachunku",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 265.68600000000004,
+       "x1": 266.77599999999995,
+       "y1": 274.68600000000004
+      }
+     },
+     {
+      "id": "b107",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 45.354,
+       "y0": 276.83399999999995,
+       "x1": 527.244,
+       "y1": 310.1269130434783
+      }
+     },
+     {
+      "id": "b108",
+      "kind": "label",
+      "text": "23. Nazwa pełna banku",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 319.999,
+       "x1": 131.272,
+       "y1": 328.999
+      }
+     },
+     {
+      "id": "b109",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 45.354,
+       "y0": 330.751,
+       "x1": 527.244,
+       "y1": 344.9268695652174
+      }
+     },
+     {
+      "id": "b110",
+      "kind": "label",
+      "text": "24. Pełny numer rachunku bankowego",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 351.03999999999996,
+       "x1": 185.497,
+       "y1": 360.03999999999996
+      }
+     },
+     {
+      "id": "b111",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 45.354,
+       "y0": 361.86,
+       "x1": 527.244,
+       "y1": 376.0355797101449
+      }
+     },
+     {
+      "id": "b112",
+      "kind": "heading",
+      "text": "VIII. ZGODA WSPÓŁPOSIADACZY NA WYPŁATĘ ZWROTU PODATKU******",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 389.179,
+       "x1": 412.62100000000015,
+       "y1": 399.179
+      }
+     },
+     {
+      "id": "b113",
+      "kind": "label",
+      "text": "1)",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 410.42699999999996,
+       "x1": 59.938,
+       "y1": 419.42699999999996
+      }
+     },
+     {
+      "id": "b114",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 73.701,
+       "y0": 403.31333333333333,
+       "x1": 345.827,
+       "y1": 419.37566666666663
+      }
+     },
+     {
+      "id": "b115",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko)",
+      "bbox": {
+       "x0": 103.46199999999999,
+       "y0": 421.7490000000001,
+       "x1": 166.45300000000003,
+       "y1": 430.7490000000001
+      }
+     },
+     {
+      "id": "b116",
+      "kind": "paragraph",
+      "text": "(data i podpis)",
+      "bbox": {
+       "x0": 433.222,
+       "y0": 421.7400000000002,
+       "x1": 485.215,
+       "y1": 430.7400000000002
+      }
+     },
+     {
+      "id": "b117",
+      "kind": "label",
+      "text": "2)",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 436.986,
+       "x1": 59.938,
+       "y1": 445.986
+      }
+     },
+     {
+      "id": "b118",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 73.701,
+       "y0": 431.15,
+       "x1": 345.827,
+       "y1": 445.8333333333333
+      }
+     },
+     {
+      "id": "b119",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko)",
+      "bbox": {
+       "x0": 103.46199999999999,
+       "y0": 448.3080000000001,
+       "x1": 166.45300000000003,
+       "y1": 457.3080000000001
+      }
+     },
+     {
+      "id": "b120",
+      "kind": "paragraph",
+      "text": "(data i podpis)",
+      "bbox": {
+       "x0": 433.222,
+       "y0": 448.2990000000002,
+       "x1": 485.215,
+       "y1": 457.2990000000002
+      }
+     },
+     {
+      "id": "b121",
+      "kind": "label",
+      "text": "3)",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 463.545,
+       "x1": 59.938,
+       "y1": 472.545
+      }
+     },
+     {
+      "id": "b122",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 73.701,
+       "y0": 458.092,
+       "x1": 345.827,
+       "y1": 472.5213333333333
+      }
+     },
+     {
+      "id": "b123",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko)",
+      "bbox": {
+       "x0": 103.46199999999999,
+       "y0": 474.86700000000013,
+       "x1": 166.45300000000003,
+       "y1": 483.86700000000013
+      }
+     },
+     {
+      "id": "b124",
+      "kind": "paragraph",
+      "text": "(data i podpis)",
+      "bbox": {
+       "x0": 433.222,
+       "y0": 474.85800000000023,
+       "x1": 485.215,
+       "y1": 483.85800000000023
+      }
+     },
+     {
+      "id": "b125",
+      "kind": "label",
+      "text": "4)",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 489.78900000000004,
+       "x1": 59.938,
+       "y1": 498.78900000000004
+      }
+     },
+     {
+      "id": "b126",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 73.701,
+       "y0": 484.389,
+       "x1": 345.827,
+       "y1": 498.785
+      }
+     },
+     {
+      "id": "b127",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko)",
+      "bbox": {
+       "x0": 103.46199999999999,
+       "y0": 501.11100000000016,
+       "x1": 166.45300000000003,
+       "y1": 510.11100000000016
+      }
+     },
+     {
+      "id": "b128",
+      "kind": "paragraph",
+      "text": "(data i podpis)",
+      "bbox": {
+       "x0": 433.222,
+       "y0": 501.10200000000026,
+       "x1": 485.215,
+       "y1": 510.10200000000026
+      }
+     },
+     {
+      "id": "b129",
+      "kind": "label",
+      "text": "5)",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 516.3480000000001,
+       "x1": 59.938,
+       "y1": 525.3480000000001
+      }
+     },
+     {
+      "id": "b130",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 73.701,
+       "y0": 510.674,
+       "x1": 345.827,
+       "y1": 525.2543333333333
+      }
+     },
+     {
+      "id": "b131",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko)",
+      "bbox": {
+       "x0": 103.46199999999999,
+       "y0": 527.6700000000002,
+       "x1": 166.45300000000003,
+       "y1": 536.6700000000002
+      }
+     },
+     {
+      "id": "b132",
+      "kind": "paragraph",
+      "text": "(data i podpis)",
+      "bbox": {
+       "x0": 433.222,
+       "y0": 527.6610000000003,
+       "x1": 485.215,
+       "y1": 536.6610000000003
+      }
+     },
+     {
+      "id": "b133",
+      "kind": "label",
+      "text": "6)",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 542.9070000000002,
+       "x1": 59.938,
+       "y1": 551.9070000000002
+      }
+     },
+     {
+      "id": "b134",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 73.701,
+       "y0": 537.431,
+       "x1": 345.827,
+       "y1": 551.8806666666667
+      }
+     },
+     {
+      "id": "b135",
+      "kind": "paragraph",
+      "text": "(imię i nazwisko)",
+      "bbox": {
+       "x0": 103.46199999999999,
+       "y0": 554.2290000000003,
+       "x1": 166.45300000000003,
+       "y1": 563.2290000000003
+      }
+     },
+     {
+      "id": "b136",
+      "kind": "paragraph",
+      "text": "(data i podpis)",
+      "bbox": {
+       "x0": 433.222,
+       "y0": 554.2200000000003,
+       "x1": 485.215,
+       "y1": 563.2200000000003
+      }
+     },
+     {
+      "id": "b137",
+      "kind": "heading",
+      "text": "IX. OŚWIADCZENIA",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 576.265,
+       "x1": 143.441,
+       "y1": 586.265
+      }
+     },
+     {
+      "id": "b138",
+      "kind": "label",
+      "text": "Oświadczam, że znane mi są:",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 588.9645,
+       "x1": 152.758,
+       "y1": 597.4645
+      }
+     },
+     {
+      "id": "b139",
+      "kind": "paragraph",
+      "text": "1) skutki składania fałszywych oświadczeń wynikające z art. 297 § 1 Kodeksu karnego;",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 599.1645,
+       "x1": 351.48599999999993,
+       "y1": 608.2355
+      }
+     },
+     {
+      "id": "b140",
+      "kind": "paragraph",
+      "text": "2 ) zasady przyznawania zwrotu podatku akcyzowego zawartego w cenie oleju napędowego wykorzystywanego do produkcji rolnej.",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 609.41,
+       "x1": 501.596,
+       "y1": 618.4354999999999
+      }
+     },
+     {
+      "id": "b141",
+      "kind": "label",
+      "text": "25. Data i podpis wnioskodawcy",
+      "bbox": {
+       "x0": 52.441,
+       "y0": 637.2,
+       "x1": 169.69300000000004,
+       "y1": 646.2
+      }
+     },
+     {
+      "id": "b142",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 63.772999999999996,
+       "y0": 649.135375,
+       "x1": 229.58666666666664,
+       "y1": 666.143375
+      }
+     },
+     {
+      "id": "b143",
+      "kind": "paragraph",
+      "text": "data wypełnienia wniosku",
+      "bbox": {
+       "x0": 92.126,
+       "y0": 671.306,
+       "x1": 196.55599999999998,
+       "y1": 681.306
+      }
+     },
+     {
+      "id": "b144",
+      "kind": "paragraph",
+      "text": "(dzień – miesiąc – rok)",
+      "bbox": {
+       "x0": 98.24600000000001,
+       "y0": 683.306,
+       "x1": 190.44600000000003,
+       "y1": 693.306
+      }
+     },
+     {
+      "id": "b145",
+      "kind": "paragraph",
+      "text": "czytelny podpis wnioskodawcy",
+      "bbox": {
+       "x0": 347.244,
+       "y0": 683.306,
+       "x1": 472.78400000000005,
+       "y1": 693.306
+      }
+     },
+     {
+      "id": "b146",
+      "kind": "heading",
+      "text": "X. ADNOTACJE URZĘDU GMINY/MIASTA",
+      "bbox": {
+       "x0": 46.774,
+       "y0": 704.026,
+       "x1": 246.764,
+       "y1": 714.026
+      }
+     },
+     {
+      "id": "b147",
+      "kind": "label",
+      "text": "26. Uwagi",
+      "bbox": {
+       "x0": 46.771,
+       "y0": 716.5699999999999,
+       "x1": 84.274,
+       "y1": 725.5699999999999
+      }
+     },
+     {
+      "id": "b148",
+      "kind": "input_placeholder",
+      "text": "",
+      "bbox": {
+       "x0": 45.4135,
+       "y0": 725.669,
+       "x1": 549.8210000000001,
+       "y1": 776.693
+      }
+     },
+     {
+      "id": "b149",
+      "kind": "paragraph",
+      "text": "***** Podać liczbę faktur VAT albo ich kopii oraz dokumentów, o których mowa w art. 6 ust. 3 ustawy.",
+      "bbox": {
+       "x0": 34.016,
+       "y0": 788.669,
+       "x1": 367.1330000000001,
+       "y1": 796.761
+      }
+     },
+     {
+      "id": "b150",
+      "kind": "paragraph",
+      "text": "****** Wypełnić w przypadku, gdy grunty gospodarstwa rolnego stanowią przedmiot współposiadania (nie dotyczy współmałżonków).",
+      "bbox": {
+       "x0": 34.016,
+       "y0": 797.314,
+       "x1": 464.24500000000006,
+       "y1": 805.406
+      }
+     },
+     {
+      "id": "b151",
+      "kind": "paragraph",
+      "text": "2/2",
+      "bbox": {
+       "x0": 549.621,
+       "y0": 799.35,
+       "x1": 559.845,
+       "y1": 807.35
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "expected": {
+  "title": "Wniosek o zwrot podatku akcyzowego zawartego w cenie oleju napędowego wykorzystywanego do produkcji rolnej",
+  "authority_kind": "ORGAN",
+  "authority_name": "",
+  "fields": [
+   {
+    "label": "Rok",
+    "kind": [
+     "short_text",
+     "number"
+    ],
+    "aliases": [
+     "na rok"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Okres składania wniosku",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "luty lub sierpień",
+     "termin składania"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Powierzchnia użytków rolnych w posiadaniu",
+    "kind": [
+     "number",
+     "short_text"
+    ],
+    "aliases": [
+     "posiadacz użytków rolnych o powierzchni"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Powierzchnia użytków rolnych we współposiadaniu",
+    "kind": [
+     "number",
+     "short_text"
+    ],
+    "aliases": [
+     "współposiadacz użytków rolnych o powierzchni"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Rok stanu ewidencji gruntów",
+    "kind": [
+     "short_text",
+     "number"
+    ],
+    "aliases": [
+     "według stanu na dzień 1 lutego roku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Gmina położenia użytków rolnych",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "położonych na obszarze gminy"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Średnia roczna liczba DJP bydła",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba dużych jednostek przeliczeniowych bydła"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Średnia roczna liczba świń",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba świń"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Średnia roczna liczba DJP owiec",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba dużych jednostek przeliczeniowych owiec"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Średnia roczna liczba DJP kóz",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba dużych jednostek przeliczeniowych kóz"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Średnia roczna liczba DJP koni",
+    "kind": [
+     "number"
+    ],
+    "aliases": [
+     "liczba dużych jednostek przeliczeniowych koni"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Liczba załączników",
+    "kind": [
+     "number"
+    ],
+    "aliases": [],
+    "optional": false
+   },
+   {
+    "label": "Sposób wypłaty zwrotu podatku",
+    "kind": [
+     "single_choice"
+    ],
+    "aliases": [
+     "wypłata w gotówce lub na rachunek bankowy"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwisko i imię oraz adres posiadacza rachunku",
+    "kind": [
+     "short_text",
+     "long_text"
+    ],
+    "aliases": [
+     "posiadacz rachunku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Nazwa banku",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "nazwa pełna banku"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Numer rachunku bankowego",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "pełny numer rachunku bankowego"
+    ],
+    "optional": false
+   },
+   {
+    "label": "Wójt, burmistrz (prezydent miasta), do którego jest składany wniosek",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "miejsce składania wniosku"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Powierzchnia użytków rolnych w posiadaniu – ary",
+    "kind": [
+     "number",
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Powierzchnia użytków rolnych we współposiadaniu – ary",
+    "kind": [
+     "number",
+     "short_text"
+    ],
+    "aliases": [],
+    "optional": true
+   },
+   {
+    "label": "Nazwy załączników",
+    "kind": [
+     "file",
+     "long_text",
+     "short_text"
+    ],
+    "aliases": [
+     "załączniki"
+    ],
+    "optional": true
+   },
+   {
+    "label": "Imię i nazwisko współposiadacza",
+    "kind": [
+     "short_text"
+    ],
+    "aliases": [
+     "zgoda współposiadaczy"
+    ],
+    "optional": true
+   }
+  ]
+ }
+}
