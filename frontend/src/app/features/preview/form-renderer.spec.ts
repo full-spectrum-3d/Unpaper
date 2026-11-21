@@ -1,7 +1,7 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
-import { FormDefinition } from './form-definition';
+import { FormDefinition, FormField } from './form-definition';
 import { FormRenderer, STATES_EVALUATOR } from './form-renderer';
 import { FieldStates, evaluateStates } from './visibility';
 
@@ -121,5 +121,161 @@ describe('FormRenderer visibility', () => {
     await pick('Kraj', 'Polska');
     expect(combo('Województwo')?.value).toBe('mazowieckie');
     expect(combo('Powiat')).toBeDefined();
+  });
+});
+
+describe('FormRenderer step validation', () => {
+  const q = (field: Partial<FormField> & { id: string }, y = 0) => ({
+    x: 0,
+    y,
+    rows: 1,
+    cols: 1,
+    field: { type: 'TEXT_FIELD', techName: field.id, title: field.id, ...field } as FormField,
+  });
+  const showPowod = `("Tak" in tabs['Dane' in title].questions['sek' in field.techName].field.repeatingSectionGrid['czy' in field.techName].field.__userAnswer)`;
+  const def: FormDefinition = {
+    title: 'Test',
+    flow: { links: [{ source: 't1', target: 't2' }] },
+    tabs: [
+      {
+        id: 't1',
+        title: 'Dane',
+        type: 'MAIN',
+        questions: [
+          q({
+            id: 'sek',
+            type: 'SECTION',
+            repeatingSectionGrid: [
+              q({ id: 'imie', validation: ['REQUIRED'] }, 0),
+              q({ id: 'nip', validation: ['NIP'] }, 1),
+              q(
+                {
+                  id: 'czy',
+                  type: 'RADIO',
+                  options: [
+                    { id: 'o1', name: 'Tak' },
+                    { id: 'o2', name: 'Nie' },
+                  ],
+                },
+                2,
+              ),
+              q(
+                {
+                  id: 'powod',
+                  validation: ['REQUIRED'],
+                  states: [{ type: 'SHOW', query: showPowod }],
+                },
+                3,
+              ),
+            ],
+          }),
+        ],
+      },
+      { id: 't2', title: 'Dalsze', type: 'MAIN', questions: [q({ id: 'x2' })] },
+    ],
+  };
+
+  let fixture: ComponentFixture<FormRenderer>;
+  const el = () => fixture.nativeElement as HTMLElement;
+  const host = (id: string) => el().querySelector(`[data-field-id="${id}"]`);
+  const input = (id: string) => host(id)?.querySelector('input') as HTMLInputElement;
+  const error = (id: string) =>
+    host(id)?.querySelector('.text-danger')?.textContent?.trim() ?? null;
+  const step = () => el().querySelector('h3')?.textContent?.trim() ?? '';
+  const button = (name: string) =>
+    [...el().querySelectorAll('button')].find((b) => b.textContent?.trim() === name)!;
+  const type = async (id: string, value: string) => {
+    input(id).value = value;
+    input(id).dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+  };
+  const click = async (name: string) => {
+    button(name).click();
+    await fixture.whenStable();
+  };
+  const choose = async (name: string) => {
+    host('czy')!
+      .querySelectorAll<HTMLInputElement>('input[type=radio]')
+      .forEach((r) => r.value === name && r.click());
+    await fixture.whenStable();
+  };
+
+  const create = async (stable = true) => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: STATES_EVALUATOR, useValue: evaluator },
+      ],
+    });
+    fixture = TestBed.createComponent(FormRenderer);
+    fixture.componentRef.setInput('definition', def);
+    if (stable) await fixture.whenStable();
+    else fixture.detectChanges();
+  };
+
+  beforeEach(() => {
+    impl = undefined;
+  });
+
+  it('stays on the step, shows the error and focuses the first invalid field', async () => {
+    await create();
+    await click('Dalej');
+    expect(step()).toBe('Krok 1 z 2: Dane');
+    expect(error('imie')).toBe('✕ Uzupełnij to pole');
+    expect(document.activeElement).toBe(input('imie'));
+  });
+
+  it('re-validates live once errors are shown', async () => {
+    await create();
+    await click('Dalej');
+    await type('imie', 'Jan');
+    expect(error('imie')).toBeNull();
+    await type('nip', '123');
+    expect(error('nip')).toBe('✕ Wpisz poprawny NIP: 10 cyfr');
+  });
+
+  it('shows errors of fields that appear and ignores fields that hide', async () => {
+    await create();
+    await click('Dalej');
+    await choose('Tak');
+    expect(error('powod')).toBe('✕ Uzupełnij to pole');
+    await choose('Nie');
+    expect(host('powod')).toBeNull();
+    await type('imie', 'Jan');
+    await type('nip', '1234563218');
+    await click('Dalej');
+    expect(step()).toBe('Krok 2 z 2: Dalsze');
+  });
+
+  it('uses the initially hidden fields before the first evaluation', async () => {
+    const held: ((s: FieldStates) => void)[] = [];
+    impl = () => new Promise((resolve) => held.push(resolve));
+    await create(false);
+    input('imie').value = 'Jan';
+    input('imie').dispatchEvent(new Event('input'));
+    button('Dalej').click();
+    fixture.detectChanges();
+    expect(step()).toBe('Krok 2 z 2: Dalsze');
+    impl = undefined; // evaluations not started yet run for real
+    held.forEach((release) => release({ hidden: new Set(), readOnly: new Set() }));
+    await fixture.whenStable();
+  });
+
+  it('does not show errors after going back', async () => {
+    await create();
+    await type('imie', 'Jan');
+    await click('Dalej');
+    await click('Wstecz');
+    await type('imie', '');
+    expect(step()).toBe('Krok 1 z 2: Dane');
+    expect(error('imie')).toBeNull();
+  });
+
+  it('clears errors on abort', async () => {
+    await create();
+    await click('Dalej');
+    expect(error('imie')).not.toBeNull();
+    await click('Przerwij wypełnianie');
+    expect(error('imie')).toBeNull();
   });
 });

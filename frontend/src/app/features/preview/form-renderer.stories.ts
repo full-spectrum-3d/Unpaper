@@ -17,7 +17,8 @@ export const Nadplata: Story = {
   args: { definition: nadplata as unknown as FormDefinition },
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
-    const heading = (level: number, name: string) => c.findByRole('heading', { level, name });
+    const heading = (level: number, name: string | RegExp) =>
+      c.findByRole('heading', { level, name });
     await heading(2, 'Wniosek o stwierdzenie nadpłaty podatku');
     const step1 = await heading(3, 'Krok 1 z 3: Dane');
     expect(step1).toHaveAttribute('tabindex', '-1');
@@ -47,7 +48,11 @@ export const Nadplata: Story = {
     );
     await waitFor(() => expect(c.queryByRole('heading', { name: 'Dane innej osoby' })).toBeNull());
 
-    for (let i = 0; i < 3; i++) await userEvent.click(c.getByRole('button', { name: 'Dalej' }));
+    for (let i = 0; i < 2; i++) await userEvent.click(c.getByRole('button', { name: 'Dalej' }));
+    await heading(3, /^Krok 3 z 3/);
+    // The consent section is always validated, so give the consents before finishing.
+    for (const box of c.getAllByRole('checkbox')) await userEvent.click(box);
+    await userEvent.click(c.getByRole('button', { name: 'Dalej' }));
     await heading(3, 'Podsumowanie');
     expect(c.queryByRole('button', { name: 'Dalej' })).toBeNull();
   },

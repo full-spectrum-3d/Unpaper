@@ -3,12 +3,13 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { AnswersStore } from './answers-store';
 import { FormField, Question } from './form-definition';
+import { FormState } from './form-state';
 import { RendererGrid } from './renderer-grid';
 
 @Component({
   selector: 'app-fields-harness',
   imports: [RendererGrid],
-  providers: [AnswersStore],
+  providers: [AnswersStore, FormState],
   template: `<app-renderer-grid [questions]="questions()" [hidden]="hidden()" />`,
 })
 class FieldsHarness {
