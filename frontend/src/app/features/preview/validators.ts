@@ -1,4 +1,4 @@
-import { DictionaryNode, findDictionary } from './dictionaries.mock';
+import { DictionaryNode, findDictionary } from './sample-dictionaries';
 import { FormField } from './form-definition';
 import { isCascade } from './select-options';
 
@@ -29,25 +29,37 @@ interface FormatRule {
   /** Strip spaces and dashes before checking. */
   digitsOnly?: boolean;
   test: (value: string) => boolean;
+  /** Runs once the format passes: a wrong check digit gets its own message, not "11 digits". */
+  checksum?: { message: string; test: (value: string) => boolean };
 }
 
 const FORMAT_RULES: Record<string, FormatRule> = {
   PESEL: {
-    message: 'Wpisz poprawny numer PESEL: 11 cyfr',
+    message: 'PESEL ma 11 cyfr',
     digitsOnly: true,
-    test: (v) =>
-      /^\d{11}$/.test(v) &&
-      (10 - (sum(v, [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]) % 10)) % 10 === Number(v[10]),
+    test: (v) => /^\d{11}$/.test(v),
+    checksum: {
+      message: 'Nieprawidłowy PESEL - sprawdź, czy cyfry są wpisane poprawnie',
+      test: (v) => (10 - (sum(v, [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]) % 10)) % 10 === Number(v[10]),
+    },
   },
   NIP: {
-    message: 'Wpisz poprawny NIP: 10 cyfr',
+    message: 'NIP ma 10 cyfr',
     digitsOnly: true,
-    test: (v) => /^\d{10}$/.test(v) && sum(v, [6, 5, 7, 2, 3, 4, 5, 6, 7]) % 11 === Number(v[9]),
+    test: (v) => /^\d{10}$/.test(v),
+    checksum: {
+      message: 'Nieprawidłowy NIP - sprawdź, czy cyfry są wpisane poprawnie',
+      test: (v) => sum(v, [6, 5, 7, 2, 3, 4, 5, 6, 7]) % 11 === Number(v[9]),
+    },
   },
   REGON: {
-    message: 'Wpisz poprawny REGON: 9 lub 14 cyfr',
+    message: 'REGON ma 9 lub 14 cyfr',
     digitsOnly: true,
-    test: (v) => /^(\d{9}|\d{14})$/.test(v) && regon(v),
+    test: (v) => /^(\d{9}|\d{14})$/.test(v),
+    checksum: {
+      message: 'Nieprawidłowy REGON - sprawdź, czy cyfry są wpisane poprawnie',
+      test: regon,
+    },
   },
   ZIP_CODE: { message: 'Wpisz kod w formacie 00-000', test: (v) => /^\d{2}-\d{3}$/.test(v) },
   EMAIL: {
@@ -119,7 +131,9 @@ export function validateField(field: FormField, answer: unknown): string | null 
       continue;
     }
     const value = answer.trim();
-    if (!rule.test(rule.digitsOnly ? value.replace(/[\s-]/g, '') : value)) return rule.message;
+    const checked = rule.digitsOnly ? value.replace(/[\s-]/g, '') : value;
+    if (!rule.test(checked)) return rule.message;
+    if (rule.checksum && !rule.checksum.test(checked)) return rule.checksum.message;
   }
   return null;
 }

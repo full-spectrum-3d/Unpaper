@@ -5,6 +5,14 @@
 #   internal - api ↔ llm, bez wyjścia do internetu (internal: true); llm nie ma portu na hoście
 #   egress   - tylko jednorazowe pobranie modelu (profil `setup`, make model)
 #
+# api zostaje w `public` mimo braku potrzeby wyjścia do internetu w trybie lokalnym: port
+# 127.0.0.1:8000 publikuje się tylko z sieci nie-internal, a tryb z zewnętrznym serwerem
+# modelu (LLM_BASE_URL na host.docker.internal albo URL w internecie) wymaga wyjścia.
+#
+# Limity pamięci (spec §13.2: api ≤ 1 GB, llm ≤ 8 GB to cele): zapas na tmpfs api (512m,
+# liczony do limitu kontenera) i MAX_CONCURRENT_JOBS=2 konwersje LibreOffice/Tesseract naraz.
+# Większy model lokalny albo więcej zadań: API_MEM_LIMIT / LLM_MEM_LIMIT w .env.
+#
 # Lokalny model (usługi llm i llm-pull) jest opcjonalny: profil `ollama`, włączany zmienną
 # COMPOSE_PROFILES=ollama w .env (domyślnie w .env.example). Bez niego API korzysta
 # z zewnętrznego serwera modelu pod LLM_BASE_URL.
@@ -28,6 +36,7 @@ services:
     # tini jako PID 1: zbiera procesy potomne LibreOffice po timeoucie konwersji.
     init: true
     pids_limit: 512
+    mem_limit: ${API_MEM_LIMIT:-2g}
     depends_on:
       # required: false - bez profilu `ollama` usługi llm nie ma, a API startuje samo.
       llm: { condition: service_healthy, required: false }
@@ -50,8 +59,11 @@ services:
     image: coi-cf-frontend:0.1.0
     tmpfs: ["/tmp"]
     pids_limit: 128
+    mem_limit: 128m
     depends_on:
-      api: { condition: service_started }
+      # nginx rozwiązuje nazwę `api` dynamicznie (resolver w nginx.conf), healthy tylko
+      # porządkuje pierwszy start.
+      api: { condition: service_healthy }
     networks: [public]
     ports: ["${FRONTEND_PORT:-8080}:8080"]
     healthcheck:
@@ -65,6 +77,8 @@ services:
     build: ./llm
     image: coi-cf-llm:0.40.16
     profiles: ["ollama"]
+    # qwen3:8b Q4 ~5 GB + kontekst; większy LLM_MODEL wymaga podniesienia LLM_MEM_LIMIT.
+    mem_limit: ${LLM_MEM_LIMIT:-10g}
     environment:
       # Jeden model w RAM: domyślnie Ollama trzyma do 3, a dwa modele naraz (np. po zmianie
       # LLM_MODEL albo przy porównaniu w llm_eval) nie mieszczą się w 16 GB razem z API.
@@ -93,6 +107,7 @@ services:
     image: coi-cf-llm:0.40.16
     profiles: ["setup"]
     restart: "no"
+    mem_limit: 1g
     entrypoint: ["pull-model"]
     environment:
       LLM_MODEL: ${LLM_MODEL:-qwen3:8b}

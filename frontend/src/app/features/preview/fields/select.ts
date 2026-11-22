@@ -15,6 +15,7 @@ import { FieldBase } from './field-base';
       [describedBy]="hasDescription() ? descId() : null"
       [error]="error() ?? undefined"
       [readonly]="readOnly()"
+      [required]="required()"
       [tooltip]="tooltip()"
       [tag]="tag()"
       [emptyText]="emptyText()"

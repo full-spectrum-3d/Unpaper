@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { findDictionary } from '../../../features/preview/dictionaries.mock';
+import { findDictionary } from '../../../features/preview/sample-dictionaries';
 import { Combobox } from './combobox';
 
 const countries = findDictionary('Kraje')!.items.map((n) => n.name);

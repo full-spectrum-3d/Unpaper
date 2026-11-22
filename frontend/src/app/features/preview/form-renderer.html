@@ -6,6 +6,18 @@
     <h3 #stepHeading tabindex="-1" class="m-0 mb-2 text-label text-fg-muted font-normal">
       {{ stepTitle() }}
     </h3>
+    <app-progress
+      class="mb-4"
+      label="Postęp wypełniania formularza"
+      [value]="progress()"
+      [valueText]="progressText()"
+    />
+    @if (pageHasRequired()) {
+      <p class="m-0 mb-4 text-fg-muted">
+        Pola oznaczone <span class="text-danger" aria-hidden="true">*</span
+        ><span class="sr-only">gwiazdką</span> są wymagane.
+      </p>
+    }
     <app-renderer-grid [questions]="p.questions" [hidden]="hidden()" />
     @if (summary().length) {
       <section aria-labelledby="summary-heading" class="mt-4 flex flex-col gap-4">
@@ -26,14 +38,26 @@
   }
 }
 
-<div class="mt-8 flex items-center justify-between gap-4">
-  <button
-    type="button"
-    class="focus-ring bg-transparent border-0 p-0 text-primary font-bold no-underline hover:text-primary-hover cursor-pointer"
-    (click)="abort()"
-  >
-    Przerwij wypełnianie
-  </button>
+<p role="status" class="sr-only">{{ announcement() }}</p>
+<div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+  @if (confirmingAbort()) {
+    <div role="group" aria-labelledby="abort-question" class="flex flex-wrap items-center gap-2">
+      <span id="abort-question">Wyczyścić wszystkie odpowiedzi?</span>
+      <button appButton variant="primary" (click)="abort()">Tak, wyczyść</button>
+      <button #cancelAbortButton appButton variant="secondary" (click)="cancelAbort()">
+        Anuluj
+      </button>
+    </div>
+  } @else {
+    <button
+      #abortButton
+      type="button"
+      class="focus-ring bg-transparent border-0 p-0 text-primary font-bold no-underline hover:text-primary-hover cursor-pointer"
+      (click)="askAbort()"
+    >
+      Przerwij wypełnianie
+    </button>
+  }
   <div class="flex gap-2">
     @if (index() > 0) {
       <button appButton variant="secondary" (click)="go(index() - 1)">Wstecz</button>

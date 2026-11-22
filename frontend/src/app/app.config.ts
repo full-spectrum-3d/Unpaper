@@ -1,14 +1,15 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { TitleStrategy, provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideApiConfiguration } from './shared/api/api-configuration';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { authInterceptor } from './core/auth.interceptor';
+import { AppTitleStrategy } from './core/title-strategy';
 import { errorInterceptor } from './core/error.interceptor';
-import { authActionSanitizer } from './store/auth/auth-devtools';
+import { authActionSanitizer, authStateSanitizer } from './store/auth/auth-devtools';
 import { AuthEffects } from './store/auth/auth.effects';
 import { authReducer, authFeatureKey } from './store/auth/auth.reducer';
 import { authStorageMetaReducer } from './store/auth/auth.storage';
@@ -20,6 +21,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
+    { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideApiConfiguration(''),
     // meta-reducer wraps the slice reducer: restore relies on @ngrx/store/init
@@ -29,10 +31,15 @@ export const appConfig: ApplicationConfig = {
     }),
     provideEffects(AuthEffects, ImportQueueEffects),
     provideHttpConvertFile(),
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-      actionSanitizer: authActionSanitizer,
-    }),
+    // Never in production: the store holds the JWT and conversion results (PII).
+    ...(isDevMode()
+      ? [
+          provideStoreDevtools({
+            maxAge: 25,
+            actionSanitizer: authActionSanitizer,
+            stateSanitizer: authStateSanitizer,
+          }),
+        ]
+      : []),
   ],
 };

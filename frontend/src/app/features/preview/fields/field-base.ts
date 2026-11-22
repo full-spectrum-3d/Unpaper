@@ -12,6 +12,11 @@ export abstract class FieldBase<T = string> {
   protected readonly formState = inject(FormState);
   protected readonly error = computed(() => this.formState.error(this.field()));
   protected readonly readOnly = computed(() => this.formState.isReadOnly(this.field()));
+  // Imported JSON is untrusted: anything but an array means no codes (as in validators.ts).
+  protected readonly required = computed(() => {
+    const codes = this.field().validation;
+    return Array.isArray(codes) && codes.includes('REQUIRED');
+  });
   // Call expressions are not allowed in two-way bindings, so bind one-way via this signal.
   protected readonly answer = computed(() => this.store.answer(this.field()));
   protected readonly value = computed(() => this.answer()() as T);
@@ -51,9 +56,13 @@ export abstract class FieldBase<T = string> {
     () =>
       'block w-full text-fg text-body border rounded-field px-field-x py-field-y focus-ring ' +
       (this.readOnly()
-        ? 'border-transparent bg-surface-readonly'
+        ? 'border-dashed border-border-input bg-surface-readonly'
         : (this.error() ? 'border-danger' : 'border-border-input') + ' bg-surface'),
   );
+  /** Blocks a click on a read-only choice: it stays focusable (unlike disabled) but cannot change. */
+  protected blockIfReadOnly(event: Event) {
+    if (this.readOnly()) event.preventDefault();
+  }
   protected set(v: T) {
     this.answer().set(v);
   }

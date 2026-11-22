@@ -82,6 +82,16 @@ describe('AuthEffects', () => {
     expect(out).toContainEqual(AuthActions.logout({ reason: 'expired' }));
   });
 
+  it('expiry beyond the setTimeout limit does not fire early', () => {
+    const { actions$, out } = setup();
+    const far = 2 ** 31 + 5000;
+    actions$.next(AuthActions.loginSuccess({ token: 't', expiresAt: NOW + far, username: 'u' }));
+    vi.advanceTimersByTime(2 ** 31);
+    expect(out).not.toContainEqual(AuthActions.logout({ reason: 'expired' }));
+    vi.advanceTimersByTime(5000);
+    expect(out).toContainEqual(AuthActions.logout({ reason: 'expired' }));
+  });
+
   it('logout cancels the expiry timer', () => {
     const { actions$, out } = setup();
     actions$.next(AuthActions.loginSuccess({ token: 't', expiresAt: NOW + 1000, username: 'u' }));

@@ -13,6 +13,15 @@ const MESSAGES: Record<string, string> = {
   DOCUMENT_PASSWORD_REQUIRED:
     'Dokument jest zabezpieczony hasłem. Podaj hasło, aby go przetworzyć.',
   DOCUMENT_PASSWORD_INVALID: 'Hasło jest niepoprawne. Spróbuj ponownie.',
+  SERVER_BUSY: 'Serwer jest zajęty. Spróbuj ponownie za chwilę.',
+};
+
+/** Used only without a `detail`: e.g. nginx answers 413 with an HTML page. */
+const FALLBACKS: Record<string, string> = {
+  FILE_TOO_LARGE: 'Plik jest zbyt duży',
+  413: 'Plik jest zbyt duży',
+  TOO_MANY_REQUESTS: 'Zbyt wiele żądań. Spróbuj ponownie za chwilę.',
+  429: 'Zbyt wiele żądań. Spróbuj ponownie za chwilę.',
 };
 
 /** Machine-readable `code` from a problem+json error body, if any. */
@@ -31,6 +40,8 @@ export function toUserMessage(error: HttpErrorResponse): string {
   if (code && MESSAGES[code]) return MESSAGES[code];
   const detail = (error.error as { detail?: unknown } | null)?.detail;
   if (typeof detail === 'string' && detail) return detail;
+  const fallback = (code && FALLBACKS[code]) || FALLBACKS[error.status];
+  if (fallback) return fallback;
   const requestId = error.headers?.get('X-Request-ID');
   return 'Wystąpił nieoczekiwany błąd' + (requestId ? ` (kod zgłoszenia: ${requestId})` : '');
 }

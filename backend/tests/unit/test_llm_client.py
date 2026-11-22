@@ -52,7 +52,9 @@ async def test_chat_sends_contract_body() -> None:
     body = json.loads(seen[0].content)
     assert body["think"] is False and body["stream"] is False
     assert body["format"] == SCHEMA and body["model"] == "qwen3:8b"
-    assert body["messages"] == MESSAGES and body["keep_alive"] == "30m"
+    assert body["messages"] == MESSAGES
+    # keep_alive zostawiamy serwerowi (OLLAMA_KEEP_ALIVE), żeby nie skracać jego ustawienia.
+    assert "keep_alive" not in body
     assert body["options"] == {"temperature": 0, "seed": 42, "num_ctx": 8192, "num_predict": 2048}
 
 
@@ -96,6 +98,18 @@ async def test_chat_parses_reply() -> None:
 async def test_missing_token_counts_default_to_zero() -> None:
     reply = await _chat(_client(lambda r: httpx.Response(200, json={"message": {"content": "{}"}})))
     assert (reply.prompt_tokens, reply.output_tokens) == (0, 0)
+
+
+async def test_null_token_counts_default_to_zero() -> None:
+    body = {"message": {"content": "{}"}, "prompt_eval_count": None, "eval_count": None}
+    reply = await _chat(_client(lambda r: httpx.Response(200, json=body)))
+    assert (reply.prompt_tokens, reply.output_tokens) == (0, 0)
+
+
+async def test_malformed_token_count_raises_unavailable() -> None:
+    body = {"message": {"content": "{}"}, "prompt_eval_count": {"x": 1}}
+    with pytest.raises(LlmUnavailableError):
+        await _chat(_client(lambda r: httpx.Response(200, json=body)))
 
 
 async def test_timeout_raises_llm_timeout() -> None:
@@ -158,7 +172,6 @@ async def test_warm_up_loads_model_with_chat_options() -> None:
             "messages": [],
             "stream": False,
             "think": False,
-            "keep_alive": "30m",
             "options": {"temperature": 0, "seed": 42, "num_ctx": 8192, "num_predict": 2048},
         }
     ]

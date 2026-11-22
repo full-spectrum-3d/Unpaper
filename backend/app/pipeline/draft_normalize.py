@@ -12,7 +12,7 @@ from functools import cache
 from importlib.resources import files
 from typing import Any
 
-from app.models.document import FIELD_MARKER, DocumentModel
+from app.models.document import FIELD_MARKER, FILL_RUN, DocumentModel
 from app.models.draft import CHOICE_KINDS, FormDraft
 from app.models.warning import ConversionWarning
 from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
@@ -40,9 +40,8 @@ VARIANT_SECTION_TITLE = "Rodzaj sprawy"
 VARIANT_LABEL_WORDS = frozenset({"rodzaj", "lub", "albo", "wybór", "wniosku", "sprawy"})
 LABEL_MATCH_THRESHOLD = 0.6
 UPPERCASE_TITLE_RATIO = 0.8
-ABBREVIATIONS = frozenset({"NIP", "PESEL", "REGON", "KRS", "RODO", "CEIDG", "VAT"})
+UPPERCASE_ACRONYMS = frozenset({"NIP", "PESEL", "REGON", "KRS", "RODO", "CEIDG", "VAT"})
 
-_FILL = re.compile(r"[.…_]{3,}")
 # „Załącznik 2”, „Zał. nr 3”, „2)”: pozycja listy załączników bez nazwy.
 _UNNAMED_ATTACHMENT = re.compile(r"(?i)^\s*(załącznik|zał\.?)?\s*(nr\.?\s*)?\d*\s*[.)]?\s*$")
 _WHITESPACE = re.compile(r"\s+")
@@ -59,7 +58,7 @@ _NOMINATIVES = {
     "dnia": "Data", "terminie": "Termin", "kwocie": "Kwota", "roku": "Rok",
 }  # fmt: skip
 # Skróty na początku etykiety; standard zakazuje skrótów w etykietach.
-_ABBREVIATIONS = {"nr": "Numer", "tel": "Telefon", "ul": "Ulica"}
+LABEL_ABBREVIATIONS = {"nr": "Numer", "tel": "Telefon", "ul": "Ulica"}
 
 
 def matches_text(needle: str, haystack: str, threshold: float) -> bool:
@@ -101,23 +100,14 @@ def normalize_draft(
 
 def _normalize(text: str) -> str:
     text = text.casefold().replace(FIELD_MARKER.casefold(), " ")
-    text = _FILL.sub(" ", text)
+    text = FILL_RUN.sub(" ", text)
     return _WHITESPACE.sub(" ", text).strip()
-
-
-def _fields_by_path(data: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    out: dict[str, dict[str, Any]] = {}
-    for i, page in enumerate(data["subject_pages"]):
-        for j, section in enumerate(page["sections"]):
-            for k, field in enumerate(section["fields"]):
-                out[f"subject_pages[{i}].sections[{j}].fields[{k}]"] = field
-    return out
 
 
 def _downgrade_choices_without_options(
     draft: FormDraft, data: dict[str, Any], warnings: list[ConversionWarning]
 ) -> None:
-    fields = _fields_by_path(data)
+    fields = dict(iter_field_dicts(data))
     downgraded: set[str] = set()
     for path, field in draft.iter_fields():
         too_few = (field.kind == "single_choice" and len(field.options) < 2) or (
@@ -541,7 +531,7 @@ def _normalize_title_case(data: dict[str, Any], warnings: list[ConversionWarning
         return
     fixed = title[0].upper() + title[1:].lower()
     fixed = _WORD.sub(
-        lambda m: m.group().upper() if m.group().upper() in ABBREVIATIONS else m.group(), fixed
+        lambda m: m.group().upper() if m.group().upper() in UPPERCASE_ACRONYMS else m.group(), fixed
     )
     data["title"] = fixed
     warnings.append(
@@ -553,15 +543,37 @@ def _normalize_title_case(data: dict[str, Any], warnings: list[ConversionWarning
     )
 
 
+# Odwołania do numerów pozycji blankietu: „Suma opłat (poz. 12 + 13)”, „Razem z poz. 5 i 6”.
+# W e-usłudze nie ma numerów pozycji, więc w etykiecie tylko mylą. Tylko w nawiasie albo na
+# końcu etykiety: „Kwota zwrotu z poz. 5 rachunku” to część nazwy pola.
+_POS = r"poz(?:\.|ycj\w*)"
+_POSITION_REFS = (
+    re.compile(rf"\s*\([^)]*\b{_POS}[^)]*\)", re.IGNORECASE),
+    re.compile(
+        rf"\s*,?\s*(?:\b(?:z|ze|w|wg|według)\s+)?\b{_POS}\s*\d[\w.]*"
+        rf"(?:\s*(?:[+\-\u2013,]|\bi\b|\boraz\b|\bdo\b)\s*(?:{_POS}\s*)?\d[\w.]*)*\s*$",
+        re.IGNORECASE,
+    ),
+)
+
+
+def strip_position_refs(label: str) -> str:
+    """Etykieta bez odwołań do numerów pozycji; sama „Poz. 12” zostaje bez zmian."""
+    text = label
+    for pattern in _POSITION_REFS:
+        text = pattern.sub("", text)
+    return text.strip() or label
+
+
 def normalize_label(label: str) -> str:
-    """Etykieta w formie rzeczownikowej: bez przyimka, skrótu i znaków brzegowych."""
-    text = _LABEL_EDGES.sub("", label)
+    """Etykieta rzeczownikowa: bez przyimka, skrótu, numerów pozycji i znaków brzegowych."""
+    text = _LABEL_EDGES.sub("", strip_position_refs(label))
     words = text.split()
     if len(words) == 2 and words[0].casefold() in _PREPOSITIONS:
         noun = _NOMINATIVES.get(words[1].casefold())
         if noun:
             return noun
-    if words and (full := _ABBREVIATIONS.get(words[0].casefold().removesuffix("."))):
+    if words and (full := LABEL_ABBREVIATIONS.get(words[0].casefold().removesuffix("."))):
         words[0] = full
     text = " ".join(words)
     return text[:1].upper() + text[1:]
@@ -580,7 +592,7 @@ def label_variants(label: str) -> list[str]:
     if len(words) > 1:
         variants += [
             " ".join([short, *words[1:]])
-            for short, full in _ABBREVIATIONS.items()
+            for short, full in LABEL_ABBREVIATIONS.items()
             if full == words[0]
         ]
     return variants

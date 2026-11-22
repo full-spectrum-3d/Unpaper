@@ -1,6 +1,7 @@
 import io
 
 import openpyxl
+import pytest
 from openpyxl.styles import Border, Font, Side
 
 from app.models.document import DocumentModel
@@ -96,3 +97,36 @@ def test_numbers_as_text() -> None:
 def test_empty_workbook_has_one_empty_page() -> None:
     doc = roundtrip(openpyxl.Workbook())
     assert len(doc.pages) == 1 and doc.pages[0].blocks == []
+
+
+def test_grouped_column_range_widths_and_hidden() -> None:
+    # Plik zapisuje C:F jednym <col min=3 max=6>: wszystkie cztery kolumny są wąskie.
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws["A1"] = "NIP"
+    ws.column_dimensions.group("B", "E", hidden=False)
+    ws.column_dimensions["B"].width = 2.5
+    ws.column_dimensions.group("G", "H", hidden=True)
+    ws["H1"] = "ukryte"  # H leży w ukrytym zakresie G:H
+    boxed(ws, "B1:E1")
+    doc = roundtrip(wb)
+    assert kinds(doc) == [("label", "NIP"), ("input_placeholder", "")]
+    field = doc.pages[0].blocks[1].bbox
+    assert field is not None and round(field.x1 - field.x0, 1) == round(4 * 2.5 * 5.6, 1)
+
+
+def test_too_many_cells_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.errors import AppError, ErrorCode
+    from app.pipeline.extract import xlsx
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    for row in range(1, 12):
+        ws.cell(row=row, column=1, value="x")
+    buffer = io.BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    monkeypatch.setattr(xlsx, "MAX_CELLS", 10)
+    with pytest.raises(AppError) as exc:
+        extract_xlsx(buffer)
+    assert exc.value.code == ErrorCode.DOCUMENT_TOO_COMPLEX

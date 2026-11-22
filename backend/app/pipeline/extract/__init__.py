@@ -50,7 +50,9 @@ def extract(
 ) -> ExtractionResult:
     """PDF / DOCX / XLSX / JPEG / PNG → `DocumentModel` + ostrzeżenia OCR."""
     started = clock()
-    engine = ocr if ocr is not None else TesseractOcr(settings.ocr_lang)
+    engine = (
+        ocr if ocr is not None else TesseractOcr(settings.ocr_lang, deadline=deadline, clock=clock)
+    )
 
     def check() -> None:
         if deadline is not None and clock() > deadline:

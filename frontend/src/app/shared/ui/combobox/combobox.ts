@@ -2,6 +2,8 @@ import {
   afterRenderEffect,
   Component,
   computed,
+  DOCUMENT,
+  effect,
   ElementRef,
   inject,
   input,
@@ -22,6 +24,10 @@ let nextId = 0;
       <label [for]="inputId" [class]="labelHidden() ? 'sr-only' : 'text-label font-label'"
         >{{ label() }}<span class="sr-only">{{ tag() ? ', ' + tag() : '' }}</span>
       </label>
+      <!-- Outside the label: visual only (aria-required carries it), and label text stays clean. -->
+      @if (required() && !labelHidden()) {
+        <span class="text-danger -ml-1.5" aria-hidden="true">*</span>
+      }
       @if (tooltip(); as text) {
         <app-field-tooltip [text]="text" [label]="label()" />
       }
@@ -40,11 +46,14 @@ let nextId = 0;
         class="block w-full text-fg text-body border rounded-field px-field-x py-field-y pr-16 focus-ring"
         [class]="
           readonly()
-            ? 'border-transparent bg-surface-readonly'
-            : (error() ? 'border-danger' : 'border-border-input') + ' bg-surface'
+            ? 'border-dashed border-border-input bg-surface-readonly'
+            : (error() ? 'border-danger' : 'border-border-input') +
+              ' bg-surface' +
+              (searchable() ? '' : ' caret-transparent cursor-pointer')
         "
         [id]="inputId"
-        [readOnly]="!searchable() || readonly()"
+        [readOnly]="readonly()"
+        [attr.inputmode]="searchable() ? null : 'none'"
         [placeholder]="placeholder()"
         [value]="open() && searchable() ? query() : value()"
         [attr.aria-autocomplete]="searchable() ? 'list' : null"
@@ -53,8 +62,10 @@ let nextId = 0;
         [attr.aria-activedescendant]="open() && visible().length ? optionId(active()) : null"
         [attr.aria-describedby]="describedByIds()"
         [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-required]="required() || null"
         (click)="show()"
         (keydown)="onKey($event)"
+        (beforeinput)="searchable() || $event.preventDefault()"
         (input)="onInput($any($event.target).value)"
         (blur)="close()"
       />
@@ -101,15 +112,27 @@ let nextId = 0;
         (pointerdown)="$event.preventDefault()"
       >
         @if (open()) {
-          @for (option of visible(); track option; let i = $index) {
+          <!-- Options come from imported JSON: duplicates are possible, so track by position. -->
+          @for (option of visible(); track $index; let i = $index) {
             <li
               role="option"
-              class="px-field-x py-field-y text-body text-fg cursor-pointer"
-              [class.bg-primary-subtle]="i === active()"
+              class="flex items-center gap-2 px-field-x py-field-y text-body cursor-pointer"
+              [class]="i === active() ? 'bg-primary text-on-primary' : 'text-fg'"
               [id]="optionId(i)"
               [attr.aria-selected]="option === value()"
               (click)="select(option)"
             >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+                class="size-4 shrink-0"
+                [class.invisible]="option !== value()"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M3 8.5l3 3 7-7" />
+              </svg>
               {{ option }}
             </li>
           }
@@ -132,7 +155,7 @@ let nextId = 0;
       >
     }
   `,
-  host: { class: 'block', '(document:pointerdown)': 'onDocPointer($event)' },
+  host: { class: 'block' },
 })
 export class Combobox implements FormValueControl<string> {
   readonly value = model('');
@@ -145,6 +168,7 @@ export class Combobox implements FormValueControl<string> {
   readonly emptyText = input('Brak wyników');
   readonly error = input<string>();
   readonly readonly = input(false);
+  readonly required = input(false);
   readonly tooltip = input<string>();
   readonly tag = input<string>();
 
@@ -163,8 +187,21 @@ export class Combobox implements FormValueControl<string> {
   );
 
   private readonly host = inject(ElementRef<HTMLElement>).nativeElement as HTMLElement;
+  private readonly document = inject(DOCUMENT);
+  /** Letters typed in select-only mode, cleared after a pause (listbox typeahead). */
+  private typed = '';
+  private typedAt = 0;
 
   constructor() {
+    // Listen for outside pointerdown only while open: one document listener per open list, not per instance.
+    effect((onCleanup) => {
+      if (!this.open()) return;
+      const onPointer = (event: Event) => {
+        if (!this.host.contains(event.target as Node)) this.close();
+      };
+      this.document.addEventListener('pointerdown', onPointer);
+      onCleanup(() => this.document.removeEventListener('pointerdown', onPointer));
+    });
     afterRenderEffect(() => {
       if (this.open()) {
         this.host
@@ -205,14 +242,16 @@ export class Combobox implements FormValueControl<string> {
     this.open.set(true);
   }
 
-  protected onDocPointer(event: Event): void {
-    if (!this.host.contains(event.target as Node)) this.close();
-  }
-
   protected onKey(event: KeyboardEvent): void {
     const last = this.visible().length - 1;
     const move = (i: number) => this.active.set(Math.min(Math.max(i, 0), Math.max(last, 0)));
     if (this.readonly()) return;
+    if (!this.searchable() && this.isTypeahead(event)) {
+      event.preventDefault();
+      this.show();
+      this.typeahead(event.key);
+      return;
+    }
     if (!this.open()) {
       const opens =
         ['ArrowDown', 'ArrowUp'].includes(event.key) ||
@@ -230,10 +269,13 @@ export class Combobox implements FormValueControl<string> {
       case 'ArrowUp':
         move(this.active() - 1);
         break;
+      // In the searchable input Home/End move the caret; they move the list only in select-only mode.
       case 'Home':
+        if (this.searchable()) return;
         move(0);
         break;
       case 'End':
+        if (this.searchable()) return;
         move(last);
         break;
       case 'Enter': {
@@ -248,5 +290,35 @@ export class Combobox implements FormValueControl<string> {
         return;
     }
     event.preventDefault();
+  }
+
+  private isTypeahead(event: KeyboardEvent): boolean {
+    return (
+      event.key.length === 1 &&
+      event.key !== ' ' &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.altKey
+    );
+  }
+
+  /** Moves to the next option starting with the typed letters; repeating one letter cycles through matches. */
+  private typeahead(key: string): void {
+    const now = Date.now();
+    this.typed = now - this.typedAt > 500 ? key : this.typed + key;
+    this.typedAt = now;
+    const prefix = this.typed.toLocaleLowerCase('pl');
+    const cycling = [...prefix].every((c) => c === prefix[0]);
+    const options = this.visible();
+    // A fresh or repeated single letter starts after the active option; a longer prefix may stay on it.
+    const start = cycling ? this.active() + 1 : this.active();
+    for (let k = 0; k < options.length; k++) {
+      const i = (start + k) % options.length;
+      const name = options[i].toLocaleLowerCase('pl');
+      if (name.startsWith(cycling ? prefix[0] : prefix)) {
+        this.active.set(i);
+        return;
+      }
+    }
   }
 }

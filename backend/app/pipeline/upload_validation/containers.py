@@ -38,6 +38,7 @@ _ODS_MIMETYPE = b"application/vnd.oasis.opendocument.spreadsheet"
 _ODF_MANIFEST = "META-INF/manifest.xml"
 _ODF_MANIFEST_NS = "{urn:oasis:names:tc:opendocument:xmlns:manifest:1.0}"
 _XML_SUFFIXES = (".xml", ".rels")
+_UTF16_BOMS = (b"\xff\xfe", b"\xfe\xff")
 _MAX_CONTENT_TYPES_BYTES = 1 * MIB
 
 _WORD_FIB_MAGIC = 0xA5EC
@@ -194,9 +195,15 @@ def _manifest_declares_encryption(archive: zipfile.ZipFile) -> bool:
 
 
 def _check_xml_parts(archive: zipfile.ZipFile) -> None:
-    """Każda część XML musi być poprawna składniowo i wolna od DTD/encji."""
+    """Każda część XML musi być poprawna składniowo i wolna od DTD/encji.
+
+    Część XML rozpoznajemy po rozszerzeniu albo po treści: [Content_Types].xml może
+    przypisać typ XML dowolnej nazwie (np. `word/document.bin`).
+    """
     for entry in archive.infolist():
-        if entry.is_dir() or not entry.filename.lower().endswith(_XML_SUFFIXES):
+        if entry.is_dir() or not (
+            entry.filename.lower().endswith(_XML_SUFFIXES) or _looks_like_xml(archive, entry)
+        ):
             continue
         with archive.open(entry) as stream:
             try:
@@ -208,3 +215,11 @@ def _check_xml_parts(archive: zipfile.ZipFile) -> None:
                 ) from exc
             except ParseError as exc:
                 raise _unreadable(f"Część {entry.filename} nie jest poprawnym XML") from exc
+
+
+def _looks_like_xml(archive: zipfile.ZipFile, entry: zipfile.ZipInfo) -> bool:
+    with archive.open(entry) as stream:
+        head = stream.read(64)
+    return head.startswith(_UTF16_BOMS) or head.removeprefix(b"\xef\xbb\xbf").lstrip().startswith(
+        b"<?xml"
+    )

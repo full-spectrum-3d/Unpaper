@@ -16,6 +16,11 @@ export interface ConvertApiV1FormsConvertPost$Params {
   report?: boolean;
 
 /**
+ * Model LLM z `LLM_MODEL` albo `LLM_MODELS`; domyślnie `LLM_MODEL`
+ */
+  model?: (string | null);
+
+/**
  * Źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; domyślnie INITIAL_DATA_IDENTITY_SOURCE
  */
   identitySource?: ('PESEL' | 'MLPZ' | null);
@@ -39,6 +44,7 @@ export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, 
   const rb = new RequestBuilder(rootUrl, convertApiV1FormsConvertPost.PATH, 'post');
   if (params) {
     rb.query('report', params.report, {});
+    rb.query('model', params.model, {});
     rb.query('identitySource', params.identitySource, {});
     rb.body(params.body, 'multipart/form-data');
   }

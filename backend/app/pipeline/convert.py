@@ -27,7 +27,7 @@ from app.core.config import Settings
 from app.core.errors import AppError, ErrorCode
 from app.models.document import DocumentModel
 from app.models.draft import FormDraft
-from app.models.form import FormJson
+from app.models.form import SECTION_TYPES, FormJson
 from app.models.warning import ConversionWarning
 from app.pipeline.analyze import AnalysisResult, analyze
 from app.pipeline.build import BuildOptions, BuildResult, build_fallback, build_form
@@ -40,8 +40,6 @@ from app.pipeline.upload_validation import UploadLimits, ValidatedUpload
 from app.pipeline.verify import VerifyResult, verify_form
 
 logger = logging.getLogger(__name__)
-
-SECTION_TYPES = frozenset({"SECTION", "REPEATING_SECTION"})
 
 
 @dataclass

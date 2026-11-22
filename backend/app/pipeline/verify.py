@@ -7,6 +7,7 @@ import uuid
 from collections import deque
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field
+from functools import cache
 from typing import Any
 
 from jsonschema import Draft202012Validator
@@ -484,9 +485,15 @@ def _is_null_option_tech_name(error: Any) -> bool:
     return error.instance is None and path[-1:] == ["techName"] and "options" in path
 
 
+@cache
+def _schema_validator() -> Draft202012Validator:
+    """Walidator budowany raz: schemat jest stały, a kompilacja referencji kosztowna."""
+    return Draft202012Validator(load_form_schema())
+
+
 def _rule_schema(form: dict[str, Any]) -> list[Issue]:
     issues: list[Issue] = []
-    for error in Draft202012Validator(load_form_schema()).iter_errors(form):
+    for error in _schema_validator().iter_errors(form):
         if _is_null_option_tech_name(error):
             continue
         issues.append(

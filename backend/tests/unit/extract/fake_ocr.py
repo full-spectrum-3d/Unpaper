@@ -6,10 +6,16 @@ from app.pipeline.extract.image import OcrUnavailableError, OcrWord
 
 
 class FakeOcr:
-    def __init__(self, pages: list[list[OcrWord]] | None = None, *, fail: bool = False) -> None:
+    def __init__(
+        self, pages: list[list[OcrWord]] | None = None, *, fail: bool = False, rotate: int = 0
+    ) -> None:
         self.pages = list(pages or [])
         self.fail = fail
+        self.rotate = rotate
         self.sizes: list[tuple[int, int]] = []
+
+    def orient(self, image: Image.Image) -> Image.Image:
+        return image.rotate(self.rotate, expand=True) if self.rotate else image
 
     def recognize(self, image: Image.Image) -> list[OcrWord]:
         self.sizes.append(image.size)

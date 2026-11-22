@@ -9,6 +9,8 @@ from app.pipeline.upload_validation.policy import FileKind, UploadLimits
 from app.pipeline.upload_validation.validate import validate_file
 from tests.unit.fakes import office_bytes
 
+pytestmark = pytest.mark.libmagic
+
 
 def test_doc_with_docx_content_is_docx() -> None:
     upload = validate_file("Wniosek.DOC", io.BytesIO(office_bytes("docx")), UploadLimits())

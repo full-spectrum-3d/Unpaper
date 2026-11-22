@@ -3,7 +3,7 @@
     <a routerLink="/import" class="self-start text-primary focus-ring rounded-field">← Wróć do importu</a>
     @if (item(); as i) {
       <app-card>
-        <h1 cardTitle class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
+        <h1 cardTitle tabindex="-1" class="[overflow-wrap:anywhere]">{{ i.name }}</h1>
         <span cardActions class="flex flex-wrap items-center gap-2">
           <span role="tablist" aria-label="Widok wyniku" class="flex gap-2">
             @for (t of tabs(); track t) {
@@ -32,6 +32,9 @@
             Sprawdź w walidatorze
           </a>
         </span>
+        @if (i.edited) {
+          <p class="text-warning font-semibold">Formularz zmieniony ręcznie — sprawdź go w walidatorze.</p>
+        }
         @if (summary(); as s) {
           <p class="flex flex-wrap items-center gap-2">
             <span>Pewność konwersji: <strong>{{ s.score }}</strong>.</span>
@@ -48,9 +51,15 @@
           <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
         }
         <div id="result-panel-json" role="tabpanel" aria-labelledby="result-tab-json" [hidden]="activeTab() !== 'json'">
-          <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
+          <!-- Rendered only when shown: one span per line is a lot of DOM for a large form. -->
+          @if (activeTab() === 'json') {
+            <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
+          }
         </div>
         <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
+          @if (i.edited) {
+            <p class="text-fg-muted mb-section">Raport dotyczy pierwotnej konwersji — nie uwzględnia ręcznych zmian.</p>
+          }
           <app-review-panel
             class="mb-section"
             [report]="report()"
@@ -60,9 +69,17 @@
           />
           <app-report-view [report]="report()" [ranges]="json().ranges" (showInJson)="onShowInJson($event)" />
         </div>
+        @if (form(); as f) {
+          <div id="result-panel-edit" role="tabpanel" aria-labelledby="result-tab-edit" [hidden]="activeTab() !== 'edit'">
+            <!-- Rendered only when shown: a full set of controls per field. -->
+            @if (activeTab() === 'edit') {
+              <app-form-editor [definition]="f" (edited)="onEdited($event)" />
+            }
+          </div>
+        }
       </app-card>
     } @else {
-      <h1 class="text-title font-semibold">Wynik</h1>
+      <h1 tabindex="-1" class="text-title font-semibold">Wynik</h1>
       <p class="text-fg-muted">Wynik niedostępny. Wróć do importu i przetwórz plik ponownie.</p>
     }
   </div>

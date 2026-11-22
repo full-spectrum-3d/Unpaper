@@ -1,6 +1,6 @@
 <main class="flex flex-col gap-section w-full max-w-[960px] mx-auto">
   <div>
-    <h1 class="text-title font-semibold">Walidator JSON</h1>
+    <h1 tabindex="-1" class="text-title font-semibold">Walidator JSON</h1>
     <p class="text-fg-muted">Sprawdź, czy JSON formularza spełnia reguły COI.</p>
   </div>
   @if (missingItem()) {
@@ -37,15 +37,18 @@
       type="button"
       variant="primary"
       data-check
-      [disabled]="checking() || !text().trim()"
+      class="aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+      [attr.aria-disabled]="checking() || !text().trim() ? 'true' : null"
       (click)="check()"
     >
       {{ checking() ? 'Sprawdzanie…' : 'Sprawdź' }}
     </button>
   </div>
 
+  <p aria-live="polite" class="sr-only">{{ fileStatus() }}</p>
+
   @if (httpError(); as message) {
-    <p role="alert" class="text-danger">{{ message }}</p>
+    <p #httpAlert role="alert" tabindex="-1" class="text-danger">{{ message }}</p>
   }
 
   @if (result(); as r) {
@@ -54,6 +57,7 @@
         #resultHeading
         id="validator-result"
         tabindex="-1"
+        aria-describedby="validator-summary"
         class="text-section-title font-semibold focus-ring"
       >
         Wynik
@@ -61,7 +65,7 @@
       @if (stale()) {
         <p class="text-warning">JSON zmieniono po sprawdzeniu. Sprawdź ponownie.</p>
       }
-      <p role="status" [class]="r.valid ? 'text-success' : ''">
+      <p id="validator-summary" [class]="r.valid ? 'text-success' : ''">
         @if (r.valid) {
           <span aria-hidden="true">✓ </span>
         }

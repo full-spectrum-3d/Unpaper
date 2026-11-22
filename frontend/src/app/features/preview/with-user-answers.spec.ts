@@ -58,4 +58,19 @@ describe('withUserAnswers', () => {
     const out = withUserAnswers(def(), new Map([['inner', 'I']]));
     expect('__userAnswer' in out.tabs[0].questions[1].field).toBe(false);
   });
+
+  it('omits answers of hidden fields', () => {
+    const out = withUserAnswers(
+      def(),
+      new Map([
+        ['inner', 'I'],
+        ['other', 'O'],
+      ]),
+      new Set(['inner']),
+    );
+    expect('__userAnswer' in out.tabs[0].questions[0].field.repeatingSectionGrid![0].field).toBe(
+      false,
+    );
+    expect(userAnswer(out.tabs[0].questions[1].field)).toBe('O');
+  });
 });

@@ -196,6 +196,21 @@ describe('ImportQueueEffects', () => {
     expect(out[0]).toEqual(expect.objectContaining({ type: A.convertStarted.type, id: '1' }));
   });
 
+  it.each([
+    ['manual logout', AuthActions.logout({ reason: 'manual' }), true],
+    ['cleared', A.cleared(), true],
+    ['expired logout', AuthActions.logout({ reason: 'expired' }), false],
+  ])('in-flight conversion on %s: cancelled = %s', (_, action, cancelled) => {
+    const upload = new Subject<never>();
+    const { actions$, out, registry } = setup([running('1')], () => upload);
+    registry.add('1', new File(['x'], '1.pdf'));
+    actions$.next(A.convertStarted({ id: '1', startedAt: 0 }));
+    expect(upload.observed).toBe(true);
+    actions$.next(action);
+    expect(upload.observed).toBe(!cancelled);
+    expect(out).toEqual([]);
+  });
+
   it('clears the registry on manual logout only', () => {
     const { actions$, registry } = setup([]);
     registry.add('1', new File(['x'], '1.pdf'));

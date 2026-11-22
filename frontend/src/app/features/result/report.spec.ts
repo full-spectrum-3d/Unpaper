@@ -68,6 +68,21 @@ describe('fieldPaths', () => {
     ]);
   });
 
+  it('follows nested grids to any depth and keeps the first path of a duplicate', () => {
+    const deep = { field: { techName: 'c', repeatingSectionGrid: [{ field: { techName: 'd' } }] } };
+    const form = {
+      tabs: [
+        { questions: [{ field: { techName: 'a', repeatingSectionGrid: [deep] } }] },
+        { questions: [{ field: { techName: 'd' } }] },
+      ],
+    };
+    expect([...fieldPaths(form)]).toEqual([
+      ['a', 'tabs[0].questions[0]'],
+      ['c', 'tabs[0].questions[0].field.repeatingSectionGrid[0]'],
+      ['d', 'tabs[0].questions[0].field.repeatingSectionGrid[0].field.repeatingSectionGrid[0]'],
+    ]);
+  });
+
   it('returns an empty map for a non-form value', () => {
     expect(fieldPaths(null).size).toBe(0);
     expect(fieldPaths({ tabs: 'x' }).size).toBe(0);

@@ -2,10 +2,15 @@
 .superpowers/
 */CLAUDE.md
 */.claude
+# root: launch.json (lokalny podgląd) i worktrees agentów - nic do współdzielenia
+/.claude/
+.idea/
 .DS_Store
 
 # sekrety
 .env
+.env.*
+!.env.example
 
 # Python
 .venv/

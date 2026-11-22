@@ -3,7 +3,7 @@
 import re
 from typing import Any
 
-from app.models.draft import CHOICE_KINDS, FormDraft
+from app.models.draft import FormDraft
 
 _PAGE_HEADER = re.compile(r"^=== strona \d+$")
 _WHITESPACE = re.compile(r"\s+")
@@ -37,49 +37,32 @@ def split_prompt_text(text: str, max_chars: int) -> list[str]:
 def merge_drafts(drafts: list[FormDraft]) -> FormDraft:
     """Łączy szkice fragmentów: metadane z pierwszego, id f1…fn.
 
-    Pole z etykietą, która wystąpiła we wcześniejszym fragmencie, jest pomijane
-    (fragmenty mogą się nakładać). Powtórzenia w obrębie jednego fragmentu zostają.
+    Fragmenty z `split_prompt_text` się nie nakładają, więc pola o tej samej etykiecie
+    w różnych fragmentach (np. dane drugiej osoby) zostają. Warunki wskazują pola
+    z tego samego fragmentu, więc po przenumerowaniu zawsze trafiają w istniejące pole.
     """
     first = drafts[0]
-    seen_labels: dict[str, str] = {}
-    new_fields: dict[str, dict[str, Any]] = {}
     pages: list[dict[str, Any]] = []
     pages_by_title: dict[str, dict[str, Any]] = {}
 
     counter = 0
     for draft in drafts:
         id_map: dict[str, str] = {}
-        skipped: set[str] = set()
-        earlier = dict(seen_labels)  # duplikaty tylko względem wcześniejszych fragmentów
         for _, field in draft.iter_fields():
-            key = _key(field.label)
-            if key in earlier:
-                id_map[field.id] = earlier[key]
-                skipped.add(field.id)
-            else:
-                counter += 1
-                id_map[field.id] = f"f{counter}"
-                seen_labels.setdefault(key, id_map[field.id])
+            counter += 1
+            id_map[field.id] = f"f{counter}"
 
         for page in draft.subject_pages:
             sections = []
             for section in page.sections:
                 fields = []
                 for field in section.fields:
-                    if field.id in skipped:
-                        continue
                     data = field.model_dump()
                     data["id"] = id_map[field.id]
-                    conditions = []
-                    for cond in data["visible_when"]:
-                        target_id = id_map[cond["field_id"]]
-                        if cond["field_id"] in skipped and not _valid_target(
-                            new_fields.get(target_id), cond["value"]
-                        ):
-                            continue
-                        conditions.append({**cond, "field_id": target_id})
-                    data["visible_when"] = conditions
-                    new_fields[data["id"]] = data
+                    data["visible_when"] = [
+                        {**cond, "field_id": id_map[cond["field_id"]]}
+                        for cond in data["visible_when"]
+                    ]
                     fields.append(data)
                 if fields:
                     sections.append({**section.model_dump(), "fields": fields})
@@ -115,11 +98,6 @@ def _split_pages(text: str) -> list[str]:
 
 def _key(text: str) -> str:
     return _WHITESPACE.sub(" ", text.casefold()).strip()
-
-
-def _valid_target(target: dict[str, Any] | None, value: str) -> bool:
-    """Warunek na zachowany duplikat ma sens tylko dla pola wyboru z tą opcją."""
-    return target is not None and target["kind"] in CHOICE_KINDS and value in target["options"]
 
 
 def _union(groups: Any) -> list[str]:

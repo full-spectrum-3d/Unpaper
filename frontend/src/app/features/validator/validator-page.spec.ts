@@ -65,16 +65,21 @@ describe('ValidatorPage', () => {
     };
     const text = () => el.textContent!.replace(/\s+/g, ' ');
     const role = (r: string) => el.querySelector<HTMLElement>(`[role="${r}"]`);
-    return { fixture, el, http, field, button, checkButton, type, check, text, role };
+    const summary = () => el.querySelector<HTMLElement>('#validator-summary');
+    const disabled = () => checkButton().getAttribute('aria-disabled') === 'true';
+    return { fixture, el, http, field, button, checkButton, type, check, text, role, summary, disabled };
   };
 
-  it('disables Sprawdź for empty text', () => {
-    const { checkButton, type } = setup();
-    expect(checkButton().disabled).toBe(true);
-    type('   ');
-    expect(checkButton().disabled).toBe(true);
-    type('{}');
+  it('disables Sprawdź for empty text, keeping it focusable', () => {
+    const { http, checkButton, type, check, disabled } = setup();
+    expect(disabled()).toBe(true);
     expect(checkButton().disabled).toBe(false);
+    type('   ');
+    expect(disabled()).toBe(true);
+    check();
+    http.expectNone(URL);
+    type('{}');
+    expect(disabled()).toBe(false);
   });
 
   it('reports a syntax error without a request and focuses the field', () => {
@@ -106,34 +111,36 @@ describe('ValidatorPage', () => {
   });
 
   it('posts the parsed object once and shows the pending state', () => {
-    const { http, checkButton, type, check } = setup();
+    const { http, checkButton, type, check, disabled } = setup();
     type(JSON.stringify(FORM));
     check();
     const req = http.expectOne(URL);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(FORM);
     expect(checkButton().textContent!.trim()).toBe('Sprawdzanie…');
-    expect(checkButton().disabled).toBe(true);
+    expect(disabled()).toBe(true);
+    expect(checkButton().disabled).toBe(false);
     check();
     http.expectNone(URL);
     req.flush({ valid: true, errors: [], warnings: [] });
     http.verify();
   });
 
-  it('shows success and focuses the Wynik heading', () => {
-    const { fixture, el, http, type, check, role } = setup();
+  it('shows success and focuses the Wynik heading, described by the summary', () => {
+    const { fixture, el, http, type, check, summary } = setup();
     type(JSON.stringify(FORM));
     check();
     http.expectOne(URL).flush({ valid: true, errors: [], warnings: [] });
     fixture.detectChanges();
-    expect(role('status')!.textContent).toContain('JSON spełnia reguły COI.');
+    expect(summary()!.textContent).toContain('JSON spełnia reguły COI.');
     const h2 = el.querySelector('h2')!;
     expect(h2.textContent!.trim()).toBe('Wynik');
+    expect(h2.getAttribute('aria-describedby')).toBe('validator-summary');
     expect(document.activeElement).toBe(h2);
   });
 
   it('lists errors and warnings with links only for existing paths', () => {
-    const { fixture, el, http, button, type, check, text, role } = setup();
+    const { fixture, el, http, button, type, check, text, summary } = setup();
     Element.prototype.scrollIntoView = vi.fn();
     type(JSON.stringify(FORM));
     check();
@@ -146,7 +153,7 @@ describe('ValidatorPage', () => {
       warnings: [{ code: 'W02_LABEL_TOO_LONG', message: 'w' }],
     });
     fixture.detectChanges();
-    expect(role('status')!.textContent).toContain('Znaleziono 2 błędy i 1 ostrzeżenie.');
+    expect(summary()!.textContent).toContain('Znaleziono 2 błędy i 1 ostrzeżenie.');
     expect(text()).toContain('Błędy (2)');
     expect(text()).toContain('Ostrzeżenia (1)');
     expect(button('Pokaż w JSON: R06_REQUIREDNESS')).toBeTruthy();
@@ -184,7 +191,7 @@ describe('ValidatorPage', () => {
   });
 
   it('shows a dedicated message for 422 and toUserMessage otherwise, dropping the old result', () => {
-    const { fixture, http, type, check, role } = setup();
+    const { fixture, http, type, check, role, summary } = setup();
     type(JSON.stringify(FORM));
     check();
     http.expectOne(URL).flush({ valid: true, errors: [], warnings: [] });
@@ -195,7 +202,8 @@ describe('ValidatorPage', () => {
       .flush({ code: 'VALIDATION_ERROR' }, { status: 422, statusText: 'Unprocessable' });
     fixture.detectChanges();
     expect(role('alert')!.textContent).toContain('Serwer odrzucił JSON jako niepoprawny.');
-    expect(role('status')).toBeNull();
+    expect(document.activeElement).toBe(role('alert'));
+    expect(summary()).toBeNull();
     check();
     http.expectOne(URL).flush({ code: 'X', detail: 'd' }, { status: 500, statusText: 'Error' });
     fixture.detectChanges();
@@ -279,6 +287,22 @@ describe('ValidatorPage', () => {
     expect(text()).toContain('Nie znaleziono wyniku do sprawdzenia. Wklej JSON ręcznie.');
   });
 
+  it('starts empty again when leaving ?item for plain /validator', () => {
+    const { fixture, el, http, field, text } = setup();
+    fixture.componentRef.setInput('item', 'nope');
+    fixture.detectChanges();
+    fixture.componentRef.setInput('item', 'd1');
+    fixture.detectChanges();
+    http.expectOne(URL).flush({ valid: true, errors: [], warnings: [] });
+    fixture.detectChanges();
+    fixture.componentRef.setInput('item', undefined);
+    fixture.detectChanges();
+    expect(field().value).toBe('');
+    expect(el.querySelector('h2')).toBeNull();
+    expect(text()).not.toContain('Nie znaleziono wyniku');
+    http.verify();
+  });
+
   it('clears the missing-item notice and the input error on input', () => {
     const { fixture, field, type, check, text } = setup();
     fixture.componentRef.setInput('item', 'nope');
@@ -317,6 +341,7 @@ describe('ValidatorPage', () => {
       fixture.detectChanges();
       expect(field().value).toBe('{"a": 1}');
     });
+    expect(el.querySelector('[aria-live="polite"]')!.textContent).toBe('Wczytano plik form.JSON');
     upload(new File(['x'], 'form.pdf'));
     await vi.waitFor(() => {
       fixture.detectChanges();
@@ -324,5 +349,28 @@ describe('ValidatorPage', () => {
     });
     expect(document.activeElement).toBe(field());
     expect(field().getAttribute('aria-describedby')).toBe('validator-input-error');
+  });
+
+  it('applies only the latest of two quick file picks', async () => {
+    const { fixture, el, field } = setup();
+    const input = el.querySelector<HTMLInputElement>('input[type="file"]')!;
+    const upload = (file: File) => {
+      Object.defineProperty(input, 'files', { value: [file], configurable: true });
+      input.dispatchEvent(new Event('change'));
+    };
+    let releaseSlow!: () => void;
+    const slow = new File(['{"slow": 1}'], 'slow.json');
+    const slowText = slow.text.bind(slow);
+    slow.text = () => new Promise<string>((done) => (releaseSlow = () => void slowText().then(done)));
+    upload(slow);
+    upload(new File(['{"fast": 1}'], 'fast.json'));
+    await vi.waitFor(() => {
+      fixture.detectChanges();
+      expect(field().value).toBe('{"fast": 1}');
+    });
+    releaseSlow();
+    await new Promise((r) => setTimeout(r, 10));
+    fixture.detectChanges();
+    expect(field().value).toBe('{"fast": 1}');
   });
 });

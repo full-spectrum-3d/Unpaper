@@ -71,6 +71,8 @@ export const Pending: Story = {
 export const SessionExpired: Story = {
   decorators: [withAuth({ sessionExpired: true })],
   play: async ({ canvasElement }) => {
-    expect(within(canvasElement).getByText('Sesja wygasła, zaloguj się ponownie')).toBeVisible();
+    expect(await within(canvasElement).findByRole('status')).toHaveTextContent(
+      'Sesja wygasła, zaloguj się ponownie',
+    );
   },
 };

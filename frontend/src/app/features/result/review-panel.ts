@@ -11,12 +11,9 @@ import {
   ReportField,
   ReviewItem,
 } from './report';
+import { isObject, num, str as optionalStr } from '../../shared/utils/guards';
 
-const isObject = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-const str = (v: unknown): string => (typeof v === 'string' ? v : '');
-const num = (v: unknown): number | undefined =>
-  typeof v === 'number' && isFinite(v) ? v : undefined;
+const str = (v: unknown): string => optionalStr(v) ?? '';
 const level = (v: unknown): ConfidenceLevel => (v === 'low' || v === 'medium' ? v : 'high');
 
 const LEVELS: Record<ConfidenceLevel, { label: string; classes: string }> = {

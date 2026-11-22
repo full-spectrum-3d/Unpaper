@@ -3,7 +3,9 @@ import { Component, input, output } from '@angular/core';
 @Component({
   selector: 'app-topbar',
   template: `
-    <header class="bg-topbar text-on-topbar h-[44px] flex items-center gap-[20px] px-[16px]">
+    <header
+      class="bg-topbar text-on-topbar min-h-[44px] flex flex-wrap items-center gap-x-[20px] gap-y-[4px] px-[16px] py-[4px]"
+    >
       <span class="font-bold">{{ appName() }}</span>
       <nav
         aria-label="Główna"

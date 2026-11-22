@@ -52,7 +52,7 @@ const backPath = (c: ReturnType<typeof within>, name: string) =>
 const previewMessage = 'Nie można wyświetlić podglądu: wynik nie ma struktury formularza.';
 
 const tab = (c: ReturnType<typeof within>, name: string) => c.getByRole('tab', { name });
-// Found by label so the check also works while the JSON panel is hidden.
+// The JSON view is rendered only while its tab is active.
 const jsonRegion = (c: ReturnType<typeof within>) => c.getByLabelText('Wynik konwersji w formacie JSON');
 
 export const Done: Story = {
@@ -68,18 +68,18 @@ export const Done: Story = {
 
     const tablist = c.getByRole('tablist', { name: 'Widok wyniku' });
     const tabs = within(tablist).getAllByRole('tab');
-    expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Podgląd formularza', 'JSON', 'Raport']);
+    expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Podgląd formularza', 'JSON', 'Raport', 'Edycja']);
     for (const t of tabs) {
       const panel = canvasElement.querySelector(`#${t.getAttribute('aria-controls')}`)!;
       expect(panel).toHaveAttribute('role', 'tabpanel');
       expect(panel).toHaveAttribute('aria-labelledby', t.id);
     }
-    const [preview, json, report] = tabs;
+    const [preview, json, report, edit] = tabs;
     expect(preview).toHaveAttribute('aria-selected', 'true');
     expect(preview).toHaveAttribute('tabindex', '0');
     expect(json).toHaveAttribute('aria-selected', 'false');
     expect(json).toHaveAttribute('tabindex', '-1');
-    expect(jsonRegion(c)).not.toBeVisible();
+    expect(c.queryByLabelText('Wynik konwersji w formacie JSON')).toBeNull();
 
     // Answers survive leaving the preview tab.
     const input = (c.getAllByRole('textbox') as HTMLInputElement[]).find((t) => !t.readOnly && !t.disabled)!;
@@ -91,21 +91,24 @@ export const Done: Story = {
     await userEvent.keyboard('{ArrowRight}');
     expect(json).toHaveAttribute('aria-selected', 'true');
     expect(json).toHaveFocus();
-    expect(c.getByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(jsonRegion(c));
+    expect(await c.findByRole('region', { name: 'Wynik konwersji w formacie JSON' })).toBe(jsonRegion(c));
     expect(jsonRegion(c).tagName).toBe('PRE');
     expect(jsonRegion(c).textContent).toBe(JSON.stringify(nadplata, null, 2));
     expect(c.getByRole('heading', { level: 2, name: nadplata.title, hidden: true })).not.toBeVisible();
-    await userEvent.keyboard('{End}');
+    await userEvent.keyboard('{ArrowRight}');
     expect(report).toHaveAttribute('aria-selected', 'true');
     expect(report).toHaveFocus();
     expect(c.getByText('Raport niedostępny dla tego wyniku.')).toBeVisible();
+    await userEvent.keyboard('{End}');
+    expect(edit).toHaveAttribute('aria-selected', 'true');
+    expect(edit).toHaveFocus();
     await userEvent.keyboard('{Home}');
     expect(preview).toHaveAttribute('aria-selected', 'true');
     expect(preview).toHaveFocus();
     expect(input.value).toBe('Jan');
     await userEvent.keyboard('{ArrowLeft}');
-    expect(report).toHaveAttribute('aria-selected', 'true');
-    expect(report).toHaveFocus();
+    expect(edit).toHaveAttribute('aria-selected', 'true');
+    expect(edit).toHaveFocus();
     await userEvent.click(preview);
     expect(c.getByRole('heading', { level: 2, name: nadplata.title })).toBeVisible();
     expect(input).toBeVisible();
@@ -150,7 +153,8 @@ export const ZRaportem: Story = {
 
     // Leaving the JSON tab clears the highlight.
     await userEvent.click(tab(c, 'Podgląd formularza'));
-    expect(jsonRegion(c).querySelector('.bg-warning-subtle')).toBeNull();
+    await userEvent.click(tab(c, 'JSON'));
+    expect((await c.findByRole('region', { name: 'Wynik konwersji w formacie JSON' })).querySelector('.bg-warning-subtle')).toBeNull();
 
     await userEvent.click(tab(c, 'Raport'));
     await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W02_LABEL_TOO_LONG' }));
@@ -182,5 +186,17 @@ export const Unavailable: Story = {
     ).toBeVisible();
     expect(c.queryByRole('button', { name: 'Pobierz .json' })).toBeNull();
     expect(backPath(c, '← Wróć do importu')).toBe('/import');
+  },
+};
+
+/** Field editor tab; the MockStore ignores edits, so this shows the controls (and runs the a11y scan on them). */
+export const Edycja: Story = {
+  args: { id: 'd1' },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(tab(c, 'Edycja'));
+    expect(c.getByRole('heading', { level: 2, name: `Strona 1: ${nadplata.tabs[0].title}` })).toBeVisible();
+    await userEvent.click(c.getByRole('button', { name: 'Dodaj pole w sekcji Dane podmiotu' }));
+    expect(c.getByRole('group', { name: 'Nowe pole w sekcji „Dane podmiotu”' })).toBeVisible();
   },
 };

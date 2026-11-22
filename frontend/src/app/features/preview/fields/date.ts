@@ -12,6 +12,7 @@ import { FieldLabel } from './field-label';
       [hidden]="!hasTitle()"
       [tooltip]="tooltip()"
       [tag]="tag()"
+      [required]="required()"
     />
     @if (hasDescription()) {
       <div class="text-fg-muted mb-1.5" [id]="descId()" [innerHTML]="field().description"></div>
@@ -21,6 +22,7 @@ import { FieldLabel } from './field-label';
       [class]="controlClass()"
       [id]="id()"
       [readOnly]="readOnly()"
+      [attr.aria-required]="required() || null"
       [attr.aria-describedby]="describedBy()"
       [attr.aria-invalid]="error() ? 'true' : null"
       [value]="value()"

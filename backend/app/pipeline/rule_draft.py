@@ -14,7 +14,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.models.document import Block, DocumentModel
+from app.models.document import FIELD_MARKER, FILL_RUN, Block, DocumentModel
 from app.models.draft import FormDraft
 from app.pipeline.draft_rules import clean_text, has_fill
 
@@ -25,7 +25,7 @@ MAX_LABEL_BLOCK_CHARS = 120
 MAX_TITLE_PARTS = 3
 MAX_ATTACHMENTS = 15
 
-_FILL_SPLIT = re.compile(r"[.…_]{3,}|\[POLE\]")
+_FILL_SPLIT = re.compile(rf"{FILL_RUN.pattern}|{re.escape(FIELD_MARKER)}")
 _PAREN_LABEL = re.compile(r"^\s*[(/]\s*([^()/]{2,}?)\s*[)/]{1,2}")
 _NUMBERING = re.compile(r"^\s*(\d{1,2}(\.\d{1,2})*[.)]|[a-z][.)/])(\s+|$)")
 _FOOTNOTE = re.compile(r"(?<=\w)\d\)|\*+")

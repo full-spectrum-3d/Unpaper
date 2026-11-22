@@ -48,6 +48,8 @@ class ErrorCode(StrEnum):
     # Przetwarzanie (spec §6.4)
     LLM_UNAVAILABLE = "LLM_UNAVAILABLE"
     PROCESSING_TIMEOUT = "PROCESSING_TIMEOUT"
+    SERVER_BUSY = "SERVER_BUSY"
+    SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE"
     # Ogólne
     VALIDATION_ERROR = "VALIDATION_ERROR"
     NOT_FOUND = "NOT_FOUND"
@@ -103,6 +105,14 @@ _ERROR_META: dict[ErrorCode, tuple[HTTPStatus, str]] = {
     ErrorCode.PROCESSING_TIMEOUT: (
         HTTPStatus.GATEWAY_TIMEOUT,
         "Przekroczono czas przetwarzania",
+    ),
+    ErrorCode.SERVER_BUSY: (
+        HTTPStatus.SERVICE_UNAVAILABLE,
+        "Serwer jest zajęty, spróbuj ponownie za chwilę",
+    ),
+    ErrorCode.SERVICE_UNAVAILABLE: (
+        HTTPStatus.SERVICE_UNAVAILABLE,
+        "Brak wymaganych komponentów serwera",
     ),
     ErrorCode.VALIDATION_ERROR: (HTTPStatus.UNPROCESSABLE_CONTENT, "Niepoprawne dane żądania"),
     ErrorCode.NOT_FOUND: (HTTPStatus.NOT_FOUND, "Nie znaleziono zasobu"),
@@ -245,14 +255,30 @@ async def _handle_unexpected(request: Request, exc: Exception) -> Response:
 async def request_id_middleware(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
 ) -> Response:
-    """Nadaje żądaniu `request_id` (z nagłówka klienta, jeśli to poprawny UUID)."""
-    incoming = request.headers.get(REQUEST_ID_HEADER, "")
-    try:
-        request_id = str(uuid.UUID(incoming))
-    except ValueError:
-        request_id = str(uuid.uuid4())
+    """Nadaje żądaniu `request_id` i zamienia nieobsłużone wyjątki na problem+json.
+
+    Identyfikator zawsze generuje serwer; poprawny UUID z nagłówka klienta tylko logujemy
+    (`client_request_id`), żeby dało się powiązać zgłoszenie z logami.
+    Middleware leży wewnątrz `CORSMiddleware`, więc odpowiedź 500 dostaje nagłówki CORS
+    (handler `Exception` Starlette działa poza wszystkimi middleware).
+    """
+    request_id = str(uuid.uuid4())
     request.state.request_id = request_id
-    response = await call_next(request)
+    try:
+        client_request_id = str(uuid.UUID(request.headers.get(REQUEST_ID_HEADER, "")))
+    except ValueError:
+        pass
+    else:
+        logger.info(
+            "request_id=%s client_request_id=%s",
+            request_id,
+            client_request_id,
+            extra={"request_id": request_id, "client_request_id": client_request_id},
+        )
+    try:
+        response = await call_next(request)
+    except Exception as exc:  # ostatnia linia obrony; handler loguje wyjątek
+        return await _handle_unexpected(request, exc)
     response.headers[REQUEST_ID_HEADER] = request_id
     return response
 

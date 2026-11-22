@@ -2,7 +2,20 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Actions, ROOT_EFFECTS_INIT, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, asapScheduler, catchError, filter, from, map, mergeMap, observeOn, of, tap, withLatestFrom } from 'rxjs';
+import {
+  EMPTY,
+  asapScheduler,
+  catchError,
+  filter,
+  from,
+  map,
+  mergeMap,
+  observeOn,
+  of,
+  takeUntil,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 import { errorCode, toUserMessage } from '../../core/api-error';
 import { BATCH_CONCURRENCY, CONVERT_FILE } from '../../features/import/convert-file';
 import { FileRegistry } from '../../features/import/file-registry';
@@ -25,6 +38,11 @@ export class ImportQueueEffects {
   private readonly convert = inject(CONVERT_FILE);
   /** Username the queue belongs to; in memory only, seeded from the restored session after a reload. */
   private owner: string | null = null;
+  /** The queue is being emptied: in-flight uploads are aborted instead of running to completion. */
+  private readonly queueDropped$ = this.actions$.pipe(
+    ofType(A.cleared, AuthActions.logout),
+    filter((a) => a.type !== AuthActions.logout.type || a.reason === 'manual'),
+  );
 
   schedule$ = createEffect(() =>
     this.actions$.pipe(
@@ -123,6 +141,7 @@ export class ImportQueueEffects {
               }),
             );
           }),
+          takeUntil(this.queueDropped$),
         );
       }),
     ),

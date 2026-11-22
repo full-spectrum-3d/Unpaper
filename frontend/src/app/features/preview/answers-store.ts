@@ -11,9 +11,31 @@ export function initialAnswer(field: FormField): unknown {
     return field.type === 'CHECKBOX' && dv ? [dv].flat() : [];
   }
   if (isCascade(field)) return [dv ?? []].flat().filter(Boolean);
-  const first = Array.isArray(dv) ? dv[0] : dv;
-  if (!first) return '';
-  return field.defaultValueType === 'EXTERNAL_SYSTEM' ? (SAMPLE_REGISTRY_DATA[first] ?? '') : first;
+  // Imported JSON is untrusted: a numeric or boolean default must still become text (0 included).
+  const raw: unknown = Array.isArray(dv) ? dv[0] : dv;
+  if (raw == null || typeof raw === 'object') return '';
+  const first = String(raw);
+  const value =
+    field.defaultValueType === 'EXTERNAL_SYSTEM' ? (SAMPLE_REGISTRY_DATA[first] ?? '') : first;
+  return field.type === 'DATEPICKER' ? toIsoDate(value) : value;
+}
+
+/**
+ * Value for <input type=date>: yyyy-mm-dd. Accepts dd.mm.yyyy (also with / or -) and ISO date-times;
+ * anything else is cleared, as the input would show it blank while REQUIRED counted it as filled.
+ */
+export function toIsoDate(text: string): string {
+  const t = text.trim();
+  const iso = /^(\d{4}-\d{2}-\d{2})(?:[T ].*)?$/.exec(t);
+  const pl = /^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/.exec(t);
+  const date = iso
+    ? iso[1]
+    : pl
+      ? `${pl[3]}-${pl[2].padStart(2, '0')}-${pl[1].padStart(2, '0')}`
+      : '';
+  // Reject impossible dates such as 2024-02-31: Date would roll them over.
+  const d = new Date(date + 'T00:00:00Z');
+  return date && !isNaN(d.getTime()) && d.toISOString().startsWith(date) ? date : '';
 }
 
 /** Component-level provider: one signal per field id, created lazily. */

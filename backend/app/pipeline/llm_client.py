@@ -14,7 +14,6 @@ from fastapi import Request
 
 from app.core.config import Settings
 
-KEEP_ALIVE = "30m"
 TAGS_TIMEOUT_S = 3.0
 
 
@@ -87,7 +86,6 @@ class OllamaClient:
             "format": schema,
             "stream": False,
             "think": False,
-            "keep_alive": KEEP_ALIVE,
             "options": self._options(),
         }
         started = time.perf_counter()
@@ -101,8 +99,8 @@ class OllamaClient:
             raise LlmUnavailableError("message.content nie jest tekstem")
         return LlmReply(
             content=content,
-            prompt_tokens=int(data.get("prompt_eval_count", 0)),
-            output_tokens=int(data.get("eval_count", 0)),
+            prompt_tokens=_count(data, "prompt_eval_count"),
+            output_tokens=_count(data, "eval_count"),
             duration_ms=duration_ms,
         )
 
@@ -125,7 +123,6 @@ class OllamaClient:
             "messages": messages or [],
             "stream": False,
             "think": False,
-            "keep_alive": KEEP_ALIVE,
             "options": options,
         }
         await self._request("POST", "/api/chat", self._settings.llm_timeout_s, json=body)
@@ -172,6 +169,14 @@ class OllamaClient:
         if not isinstance(data, dict):
             raise LlmUnavailableError(f"nieoczekiwana odpowiedź z {path}")
         return data
+
+
+def _count(data: dict[str, Any], key: str) -> int:
+    """Licznik tokenów z odpowiedzi; brak/`null` to 0, śmieci to błąd serwera modelu."""
+    try:
+        return int(data.get(key) or 0)
+    except (TypeError, ValueError) as exc:
+        raise LlmUnavailableError(f"niepoprawne {key} w odpowiedzi Ollamy") from exc
 
 
 def get_llm_client(request: Request) -> LlmClient:

@@ -48,6 +48,7 @@ def _post(
     return client.post(CONVERT, files=files, params=params)
 
 
+@pytest.mark.libmagic
 def test_convert_returns_valid_import_json() -> None:
     client, fake = _client()
     with client:
@@ -61,6 +62,7 @@ def test_convert_returns_valid_import_json() -> None:
     assert "<dokument>" in fake.calls[0]["messages"][-1]["content"]
 
 
+@pytest.mark.libmagic
 def test_convert_with_report() -> None:
     client, _ = _client()
     with client:
@@ -84,6 +86,7 @@ def test_convert_with_report() -> None:
     assert all(item["techName"] in names for item in report["review"] if item["kind"] == "field")
 
 
+@pytest.mark.libmagic
 def test_llm_unavailable_still_returns_form() -> None:
     client, _ = _client([LlmUnavailableError("brak serwera")])
     with client:
@@ -102,7 +105,7 @@ def test_llm_unavailable_still_returns_form() -> None:
         ("wniosek.exe", b"MZ\x90\x00", 415, "UNSUPPORTED_EXTENSION"),
         ("wniosek:1.docx", None, 400, "FILENAME_FORBIDDEN_CHARS"),
         ("a" * 251 + ".pdf", b"%PDF-1.7", 400, "FILENAME_TOO_LONG"),
-        ("wniosek.pdf", None, 415, "MIME_MISMATCH"),
+        pytest.param("wniosek.pdf", None, 415, "MIME_MISMATCH", marks=pytest.mark.libmagic),
     ],
 )
 def test_invalid_upload_is_problem_json(
@@ -130,6 +133,7 @@ def test_file_size_limit_from_settings() -> None:
     assert response.status_code == 413 and response.json()["code"] == "FILE_TOO_LARGE"
 
 
+@pytest.mark.libmagic
 def test_corrupted_doc_is_unreadable() -> None:
     # Nagłówek OLE bez treści dokumentu Word. Brak LibreOffice (415) sprawdza test_normalize.
     ole = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" + b"\x00" * 504
@@ -139,13 +143,23 @@ def test_corrupted_doc_is_unreadable() -> None:
     assert response.status_code == 422 and response.json()["code"] == "DOCUMENT_UNREADABLE"
 
 
-def test_busy_server_times_out() -> None:
+@pytest.mark.libmagic
+def test_busy_server_is_503_with_retry_after() -> None:
     client, fake = _client(request_timeout_s=1)
     with client:
         client.app.state.job_semaphore = asyncio.Semaphore(0)  # type: ignore[attr-defined]
         response = _post(client)
-    assert response.status_code == 504 and response.json()["code"] == "PROCESSING_TIMEOUT"
+    assert response.status_code == 503 and response.json()["code"] == "SERVER_BUSY"
+    assert response.headers["Retry-After"] == "30"
     assert fake.calls == []
+
+
+def test_busy_validation_slot_is_503() -> None:
+    client, _ = _client([], request_timeout_s=1)
+    with client:
+        client.app.state.validation_semaphore = asyncio.Semaphore(0)  # type: ignore[attr-defined]
+        response = client.post(VALIDATE, json={})
+    assert response.status_code == 503 and response.json()["code"] == "SERVER_BUSY"
 
 
 def test_convert_requires_token() -> None:
@@ -169,6 +183,7 @@ def test_convert_requires_token() -> None:
     assert response.json()["code"] == "NOT_AUTHENTICATED"
 
 
+@pytest.mark.libmagic
 def test_validate_reports_errors_without_fixing() -> None:
     client, _ = _client()
     with client:
@@ -198,6 +213,7 @@ def test_initial_data_sources() -> None:
     assert {"attribute": "name", "ref": "MLPZ.name"}.items() <= mlpz["attributes"][0].items()
 
 
+@pytest.mark.libmagic
 def test_convert_uses_model_from_query_when_allowed() -> None:
     client, fake = _client(llm_models="qwen3.5:35b-a3b")
     with client:
@@ -235,12 +251,14 @@ def _identity_prefixes(source: str | None, default: str = "MLPZ") -> set[str]:
     return refs
 
 
+@pytest.mark.libmagic
 @pytest.mark.parametrize("source", ["PESEL", "MLPZ"])
 def test_identity_source_per_request(source: str) -> None:
     other = "MLPZ" if source == "PESEL" else "PESEL"
     assert _identity_prefixes(source, default=other) == {source}
 
 
+@pytest.mark.libmagic
 def test_identity_source_defaults_to_settings() -> None:
     assert _identity_prefixes(None, default="PESEL") == {"PESEL"}
     assert _identity_prefixes(None, default="MLPZ") == {"MLPZ"}
@@ -254,6 +272,7 @@ def test_identity_source_invalid_is_validation_error() -> None:
     assert response.json()["code"] == "VALIDATION_ERROR"
 
 
+@pytest.mark.libmagic
 def test_missing_rodo_url_warns_in_report() -> None:
     def codes(**settings: Any) -> set[str]:
         client, _ = _client(**settings)

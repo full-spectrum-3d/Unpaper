@@ -50,18 +50,25 @@ def extract_pdf(
     data = file.read()
     builder = DocumentBuilder("pdf_text")
     stats = OcrStats()
-    used_ocr = False
-    with pdfplumber.open(io.BytesIO(data)) as pdf:
-        for number, page in enumerate(pdf.pages, start=1):
-            check()
-            builder.new_page((float(page.width), float(page.height)))
-            if _text_chars(page) >= MIN_TEXT_CHARS:
-                _text_page(builder, page)
-                continue
-            used_ocr = True
-            image, scale = _render(data, number - 1, dpi, max_pixels)
-            run_ocr(builder, preprocess(image), engine, scale * 72, number, stats)
-    if used_ocr:
+    scanned: pdfium.PdfDocument | None = None  # otwierany raz, przy pierwszym skanie
+    try:
+        with pdfplumber.open(io.BytesIO(data)) as pdf:
+            for number, page in enumerate(pdf.pages, start=1):
+                check()
+                builder.new_page((float(page.width), float(page.height)))
+                if _text_chars(page) >= MIN_TEXT_CHARS:
+                    _text_page(builder, page)
+                    continue
+                if scanned is None:
+                    with PDFIUM_LOCK:
+                        scanned = pdfium.PdfDocument(data)
+                image, scale = _render(scanned, number - 1, dpi, max_pixels)
+                run_ocr(builder, preprocess(image), engine, scale * 72, number, stats)
+    finally:
+        if scanned is not None:
+            with PDFIUM_LOCK:
+                scanned.close()
+    if scanned is not None:
         builder.method = "ocr"
     return builder.build(), stats
 
@@ -172,24 +179,23 @@ def _widgets(page: PlumberPage) -> list[Frame]:
     return frames
 
 
-def _render(data: bytes, index: int, dpi: int, max_pixels: int) -> tuple[Image.Image, float]:
+def _render(
+    document: pdfium.PdfDocument, index: int, dpi: int, max_pixels: int
+) -> tuple[Image.Image, float]:
+    """Rasteryzacja strony; pdfium nie jest wątkowo bezpieczne, więc wszystko pod lockiem."""
     with PDFIUM_LOCK:
-        document = pdfium.PdfDocument(data)
+        page = document[index]
         try:
-            page = document[index]
+            width, height = page.get_size()
+            scale = render_scale(width, height, dpi, max_pixels)
+            bitmap = page.render(scale=scale, grayscale=True)
             try:
-                width, height = page.get_size()
-                scale = render_scale(width, height, dpi, max_pixels)
-                bitmap = page.render(scale=scale, grayscale=True)
-                try:
-                    image: Image.Image = bitmap.to_pil()
-                    image.load()
-                finally:
-                    bitmap.close()
+                image: Image.Image = bitmap.to_pil()
+                image.load()
             finally:
-                page.close()
+                bitmap.close()
         finally:
-            document.close()
+            page.close()
     return image, scale
 
 

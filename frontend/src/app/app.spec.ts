@@ -1,5 +1,8 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { Router, TitleStrategy, provideRouter } from '@angular/router';
+import { AppTitleStrategy } from './core/title-strategy';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { App } from './app';
 import { AuthActions } from './store/auth/auth.actions';
@@ -35,5 +38,36 @@ describe('App', () => {
     const spy = vi.spyOn(store, 'dispatch');
     (el.querySelector('button') as HTMLButtonElement).click();
     expect(spy).toHaveBeenCalledWith(AuthActions.logout({ reason: 'manual' }));
+  });
+
+  it('focuses the page h1 after an in-app navigation, not on the first load', async () => {
+    @Component({ selector: 'app-page-a', template: '<h1 tabindex="-1">A</h1>' })
+    class PageA {}
+    @Component({ selector: 'app-page-b', template: '<h1 tabindex="-1">B</h1>' })
+    class PageB {}
+    TestBed.configureTestingModule({
+      imports: [App],
+      providers: [
+        provideRouter([
+          { path: 'a', component: PageA, title: 'Strona A' },
+          { path: 'b', component: PageB },
+        ]),
+        { provide: TitleStrategy, useClass: AppTitleStrategy },
+        provideMockStore({ initialState: { [authFeatureKey]: initialAuthState } }),
+      ],
+    });
+    const fixture = TestBed.createComponent(App);
+    document.body.appendChild(fixture.nativeElement);
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/a');
+    await fixture.whenStable();
+    expect(document.activeElement?.tagName).not.toBe('H1');
+    expect(TestBed.inject(Title).getTitle()).toBe('Strona A – Cyfryzacja formularzy');
+    await router.navigateByUrl('/b');
+    await fixture.whenStable();
+    expect(document.activeElement?.tagName).toBe('H1');
+    expect(document.activeElement?.textContent).toBe('B');
+    expect(TestBed.inject(Title).getTitle()).toBe('Cyfryzacja formularzy');
+    fixture.nativeElement.remove();
   });
 });

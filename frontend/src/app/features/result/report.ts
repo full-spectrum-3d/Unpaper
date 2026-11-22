@@ -1,4 +1,5 @@
 import type { LineRange } from './json-lines';
+import { isObject } from '../../shared/utils/guards';
 
 export interface ReportIssue {
   code: string;
@@ -67,9 +68,6 @@ export interface ConversionReport {
   durationMs?: number;
 }
 
-const isObject = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-
 // Never mutates (NgRx state is frozen): returns the input when it is fine, else a shallow copy.
 export function asReport(value: unknown): ConversionReport | null {
   if (!isObject(value)) return null;
@@ -99,23 +97,22 @@ export function formatSeconds(ms: number): string {
 
 type FormNode = { field?: { techName?: unknown; repeatingSectionGrid?: unknown } };
 
-/** JSON path of every field by `techName`, in the syntax of `formatJson` ranges. */
+/**
+ * JSON path of every field by `techName`, in the syntax of `formatJson` ranges.
+ * Nested `repeatingSectionGrid`s are followed to any depth; a duplicated techName keeps its first path.
+ */
 export function fieldPaths(form: unknown): ReadonlyMap<string, string> {
   const paths = new Map<string, string>();
-  const tabs = isObject(form) && Array.isArray(form['tabs']) ? form['tabs'] : [];
-  tabs.forEach((tab, i) => {
-    const questions = isObject(tab) && Array.isArray(tab['questions']) ? (tab['questions'] as FormNode[]) : [];
-    questions.forEach((question, j) => {
-      const base = `tabs[${i}].questions[${j}]`;
-      const name = question?.field?.techName;
-      if (typeof name === 'string') paths.set(name, base);
-      const grid = question?.field?.repeatingSectionGrid;
-      (Array.isArray(grid) ? (grid as FormNode[]) : []).forEach((child, k) => {
-        const childName = child?.field?.techName;
-        if (typeof childName === 'string') paths.set(childName, `${base}.field.repeatingSectionGrid[${k}]`);
-      });
+  const walk = (nodes: unknown, base: (k: number) => string): void => {
+    (Array.isArray(nodes) ? (nodes as FormNode[]) : []).forEach((node, k) => {
+      const path = base(k);
+      const name = node?.field?.techName;
+      if (typeof name === 'string' && !paths.has(name)) paths.set(name, path);
+      walk(node?.field?.repeatingSectionGrid, (n) => `${path}.field.repeatingSectionGrid[${n}]`);
     });
-  });
+  };
+  const tabs = isObject(form) && Array.isArray(form['tabs']) ? form['tabs'] : [];
+  tabs.forEach((tab, i) => walk(isObject(tab) ? tab['questions'] : [], (j) => `tabs[${i}].questions[${j}]`));
   return paths;
 }
 

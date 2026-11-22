@@ -28,20 +28,20 @@ describe('FieldTooltip', () => {
   it('is collapsed with an accessible name', () => {
     expect(button.getAttribute('aria-label')).toBe('Więcej informacji: Numer PESEL');
     expect(button.getAttribute('aria-expanded')).toBe('false');
-    expect(panel().hidden).toBe(true);
+    expect(panel().textContent.trim()).toBe('');
+    expect(panel().getAttribute('aria-live')).toBe('polite');
   });
 
   it('toggles on click and renders HTML text', async () => {
     button.click();
     await render();
     expect(button.getAttribute('aria-expanded')).toBe('true');
-    expect(panel().hidden).toBe(false);
-    expect(panel().textContent).toBe('Jedenaście cyfr');
+    expect(panel().textContent.trim()).toBe('Jedenaście cyfr');
     expect(panel().querySelector('b')).not.toBeNull();
     button.click();
     await render();
     expect(button.getAttribute('aria-expanded')).toBe('false');
-    expect(panel().hidden).toBe(true);
+    expect(panel().textContent.trim()).toBe('');
   });
 
   it('collapses on Escape', async () => {

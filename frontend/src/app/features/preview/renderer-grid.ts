@@ -13,7 +13,8 @@ export function gridRows(visible: Question[]): Map<Question, number> {
   selector: 'app-renderer-grid',
   imports: [forwardRef(() => FieldHost)],
   template: `
-    @for (q of visible(); track q.field.id) {
+    <!-- By object, not field id: ids from imported JSON may repeat (NG0955); parsed questions are distinct objects. -->
+    @for (q of visible(); track q) {
       <div
         [style.grid-row]="rows().get(q) + ' / span 1'"
         [style.grid-column]="q.x + 1 + ' / span ' + q.cols"

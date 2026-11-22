@@ -5,6 +5,7 @@ w testach atrapa. Obrazy z kilkoma stronami A4 sklejonymi w pionie dzielimy na s
 """
 
 import math
+import time
 import warnings
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -23,7 +24,8 @@ DEFAULT_IMAGE_DPI = 200.0
 A4_WIDTH_IN = 8.27
 PAGE_SPLIT_RATIO = 1.6
 """Obraz wyższy niż 1,6 szerokości to kilka stron A4 (proporcja √2) jedna pod drugą."""
-MIN_METADATA_DPI = 50
+MIN_METADATA_DPI = 150
+"""Niższe DPI z metadanych to zwykle domyślne 72/96 aparatu lub telefonu, a nie skaner."""
 TESSERACT_CONFIG = "--psm 11"
 """Tryb „tekst rozproszony”: blankiet to etykiety i pola, nie akapity. Tryb 3 gubił całe
 regiony (nagłówek z datą, imieniem i PESEL). Kolejność czytania i tak wyznacza `layout`."""
@@ -49,6 +51,10 @@ class OcrUnavailableError(Exception):
 
 
 class OcrEngine(Protocol):
+    def orient(self, image: Image.Image) -> Image.Image:
+        """Obraz obrócony do pionu; ramki i rozmiar strony liczymy już z wyniku."""
+        ...
+
     def recognize(self, image: Image.Image) -> list[OcrWord]: ...
 
 
@@ -61,20 +67,37 @@ class OcrStats:
 
 
 class TesseractOcr:
-    def __init__(self, lang: str, timeout_s: float = OCR_PAGE_TIMEOUT_S) -> None:
+    def __init__(
+        self,
+        lang: str,
+        timeout_s: float = OCR_PAGE_TIMEOUT_S,
+        *,
+        deadline: float | None = None,
+        clock: Callable[[], float] = time.monotonic,
+    ) -> None:
         self.lang = lang
         self.timeout_s = timeout_s
+        self.deadline = deadline
+        self.clock = clock
         self._osd: bool | None = None
+
+    def _timeout(self) -> float:
+        """Limit wywołania Tesseracta: stały na stronę, ale nie dłuższy niż czas do deadline'u."""
+        if self.deadline is None:
+            return self.timeout_s
+        remaining = self.deadline - self.clock()
+        if remaining <= 0:  # timeout=0 w pytesseract oznacza brak limitu
+            raise OcrUnavailableError("timeout")
+        return min(self.timeout_s, remaining)
 
     def recognize(self, image: Image.Image) -> list[OcrWord]:
         try:
-            image = self._orient(image)
             data = pytesseract.image_to_data(
                 image,
                 lang=self.lang,
                 config=TESSERACT_CONFIG,
                 output_type=pytesseract.Output.DICT,
-                timeout=self.timeout_s,
+                timeout=self._timeout(),
             )
         except (pytesseract.TesseractNotFoundError, pytesseract.TesseractError) as exc:
             raise OcrUnavailableError(type(exc).__name__) from exc
@@ -82,7 +105,7 @@ class TesseractOcr:
             raise OcrUnavailableError("timeout") from exc
         return _words(data)
 
-    def _orient(self, image: Image.Image) -> Image.Image:
+    def orient(self, image: Image.Image) -> Image.Image:
         """Obrót według Tesseract OSD; bez danych `osd` albo przy błędzie - bez zmian."""
         if self._osd is None:
             try:
@@ -93,7 +116,7 @@ class TesseractOcr:
             return image
         try:
             osd = pytesseract.image_to_osd(
-                image, output_type=pytesseract.Output.DICT, timeout=self.timeout_s
+                image, output_type=pytesseract.Output.DICT, timeout=self._timeout()
             )
         except pytesseract.TesseractError, RuntimeError:
             return image
@@ -199,8 +222,8 @@ def extract_image(
                 # Dekodowanie od razu w skali szarości: 1 bajt na piksel zamiast 3.
                 original.draft("L", original.size)
             original.load()
-            dpi = image_dpi(original)
             prepared = preprocess(original)
+    dpi = image_dpi(prepared)  # po obrocie EXIF: szerokość to już szerokość strony
     pages = split_pages(prepared, max_pages)
     del prepared
     for number, page in enumerate(pages, start=1):
@@ -219,9 +242,16 @@ def run_ocr(
     number: int,
     stats: OcrStats,
 ) -> None:
-    """`ocr_page` z zapisem statystyk; nieudany OCR zostawia stronę pustą."""
+    """`ocr_page` z zapisem statystyk; nieudany OCR zostawia stronę pustą.
+
+    Obraz obracamy raz, przed OCR i detekcją ramek, żeby współrzędne słów, ramek
+    i rozmiar strony były w tym samym układzie.
+    """
     try:
-        confidence = ocr_page(builder, image, engine, dpi)
+        oriented = engine.orient(image)
+        if oriented.size != image.size:
+            builder.rotate_page()
+        confidence = ocr_page(builder, oriented, engine, dpi)
     except OcrUnavailableError:
         stats.failed.append(number)
         return

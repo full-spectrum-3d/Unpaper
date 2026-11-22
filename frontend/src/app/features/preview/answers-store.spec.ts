@@ -2,7 +2,7 @@ import { Component, inject, model, provideZonelessChangeDetection } from '@angul
 import { TestBed } from '@angular/core/testing';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
 import { FormDefinition, FormField } from './form-definition';
-import { AnswersStore, initialAnswer } from './answers-store';
+import { AnswersStore, initialAnswer, toIsoDate } from './answers-store';
 import { SAMPLE_REGISTRY_DATA } from './sample-registry-data';
 
 const f = (p: Partial<FormField>): FormField => ({
@@ -32,6 +32,26 @@ describe('initialAnswer', () => {
         }),
       ),
     ).toEqual([false, false]);
+  });
+
+  it('turns numeric and boolean defaults into text, keeping 0', () => {
+    const untyped = (dv: unknown) => f({ defaultValue: dv as string });
+    expect(initialAnswer(untyped(0))).toBe('0');
+    expect(initialAnswer(untyped(1250.5))).toBe('1250.5');
+    expect(initialAnswer(untyped([false]))).toBe('false');
+    expect(initialAnswer(untyped(null))).toBe('');
+    expect(initialAnswer(untyped({}))).toBe('');
+  });
+
+  it('normalises date defaults to yyyy-mm-dd or clears them', () => {
+    expect(toIsoDate('2024-05-01')).toBe('2024-05-01');
+    expect(toIsoDate('01.05.2024')).toBe('2024-05-01');
+    expect(toIsoDate('1/5/2024')).toBe('2024-05-01');
+    expect(toIsoDate('2024-05-01T10:00:00Z')).toBe('2024-05-01');
+    expect(toIsoDate('31.02.2024')).toBe('');
+    expect(toIsoDate('jutro')).toBe('');
+    expect(initialAnswer(f({ type: 'DATEPICKER', defaultValue: '01.05.2024' }))).toBe('2024-05-01');
+    expect(initialAnswer(f({ type: 'DATEPICKER', defaultValue: 'maj' }))).toBe('');
   });
 
   it('reads registry data for EXTERNAL_SYSTEM', () => {

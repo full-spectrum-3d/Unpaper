@@ -21,4 +21,3 @@ export const selectQueueCounts = createSelector(selectQueueItems, (items) => {
     pending: count('pending'),
   };
 });
-export const selectProcessingCount = createSelector(selectQueueCounts, (c) => c.processing);

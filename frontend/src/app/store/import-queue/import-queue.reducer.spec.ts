@@ -133,6 +133,21 @@ describe('importQueueReducer session handling', () => {
     expect(importQueueReducer(before, AuthActions.logout({ reason }))).toBe(before);
   });
 
+  it('resultEdited replaces the result of a done item, keeps the report and marks it edited', () => {
+    const { resultEdited, convertSucceeded } = ImportQueueActions;
+    const done = withItems(item('a', { status: 'done', result: { v: 1 }, report: { r: 1 } }));
+    const edited = importQueueReducer(done, resultEdited({ id: 'a', result: { v: 2 } }));
+    expect(edited.entities['a']).toMatchObject({ result: { v: 2 }, report: { r: 1 }, edited: true });
+    const pending = withItems(item('a'));
+    expect(importQueueReducer(pending, resultEdited({ id: 'a', result: {} }))).toBe(pending);
+    // A fresh conversion clears the flag.
+    const reconverted = importQueueReducer(
+      withItems(item('c', { status: 'processing', edited: true })),
+      convertSucceeded({ id: 'c', result: {}, report: null, durationMs: 1 }),
+    );
+    expect(reconverted.entities['c']!.edited).toBe(false);
+  });
+
   it('late result for a cleared item is a no-op', () => {
     const cleared = importQueueReducer(withItems(item('1', { status: 'processing' })), ImportQueueActions.cleared());
     expect(importQueueReducer(cleared, ImportQueueActions.convertSucceeded({ id: '1', result: {}, report: null, durationMs: 1 }))).toBe(cleared);
