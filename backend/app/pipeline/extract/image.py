@@ -2,12 +2,20 @@
 
 OCR jest za protokołem `OcrEngine`: w produkcji Tesseract (`pol`) przez pytesseract,
 w testach atrapa. Obrazy z kilkoma stronami A4 sklejonymi w pionie dzielimy na strony.
+
+Strona przechodzi dwa kroki. `read_page` (piksele i OCR, może działać w kilku wątkach naraz)
+wymazuje wykropkowania, rozpoznaje tekst i wykrywa ramki. `place_page` (w wątku składającym
+dokument, strona po stronie) układa z tego bloki.
 """
 
 import math
+import os
+import re
 import time
 import warnings
-from collections.abc import Callable
+from collections import deque
+from collections.abc import Callable, Generator, Iterable
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import IO, Protocol
 
@@ -17,7 +25,8 @@ from PIL import Image, ImageOps
 from app.models.document import BBox, DocumentModel
 from app.pipeline.extract.builder import DocumentBuilder
 from app.pipeline.extract.layout import Frame, Span, layout_page
-from app.pipeline.extract.raster import frames_from_image
+from app.pipeline.extract.raster import detect_dotted, erase, frames_from_image
+from app.pipeline.extract.text_rules import has_checkbox_glyph, is_fill_only
 
 OCR_PAGE_TIMEOUT_S = 60
 DEFAULT_IMAGE_DPI = 200.0
@@ -31,6 +40,18 @@ TESSERACT_CONFIG = "--psm 11"
 regiony (nagłówek z datą, imieniem i PESEL). Kolejność czytania i tak wyznacza `layout`."""
 TSV_LINE_LEVEL = 4
 """Poziom „linia” w wyniku `image_to_data`."""
+OMP_THREADS_ENV = "OMP_THREAD_LIMIT"
+"""Wątki OpenMP jednego procesu Tesseracta. Bez limitu kilka procesów naraz (strony
+równolegle, dwa żądania) dławi się nawzajem: 4 strony trwały 36 s zamiast 4 s."""
+REJECTED_CONFIDENCE = 0.1
+"""Poniżej tej pewności Tesseract sam odrzucił słowo: to kratki i linie wzięte za litery."""
+STRAY_MARK_CONFIDENCE = 0.5
+"""Niepewny token bez liter i cyfr („|”, „=”) to krawędź ramki, nie znak z dokumentu."""
+SURE_CONFIDENCE = 0.8
+MISORIENTED_MIN_WORDS = 5
+MISORIENTED_SURE_SHARE = 0.3
+"""Strona leżąca na boku albo do góry nogami daje 6-14% pewnych słów, czytelna 40-90%."""
+_WORD_CHAR = re.compile(r"\w")
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,6 +72,9 @@ class OcrUnavailableError(Exception):
 
 
 class OcrEngine(Protocol):
+    workers: int
+    """Ile stron silnik może rozpoznawać jednocześnie."""
+
     def orient(self, image: Image.Image) -> Image.Image:
         """Obraz obrócony do pionu; ramki i rozmiar strony liczymy już z wyniku."""
         ...
@@ -72,14 +96,18 @@ class TesseractOcr:
         lang: str,
         timeout_s: float = OCR_PAGE_TIMEOUT_S,
         *,
+        workers: int = 1,
         deadline: float | None = None,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self.lang = lang
         self.timeout_s = timeout_s
+        self.workers = workers
         self.deadline = deadline
         self.clock = clock
         self._osd: bool | None = None
+        # pytesseract przekazuje procesowi Tesseracta środowisko tego procesu.
+        os.environ.setdefault(OMP_THREADS_ENV, "1")
 
     def _timeout(self) -> float:
         """Limit wywołania Tesseracta: stały na stronę, ale nie dłuższy niż czas do deadline'u."""
@@ -179,14 +207,79 @@ def image_dpi(image: Image.Image) -> float:
     return width / A4_WIDTH_IN if width else DEFAULT_IMAGE_DPI
 
 
-def ocr_page(
-    builder: DocumentBuilder, image: Image.Image, engine: OcrEngine, dpi: float
-) -> float | None:
-    """OCR jednej strony do bieżącej strony buildera; zwraca średnią pewność.
+@dataclass(frozen=True, slots=True)
+class PageRead:
+    """Wynik `read_page`: wszystko, czego `place_page` potrzebuje do ułożenia strony."""
 
-    Ramki i podkreślenia wykrywamy z pikseli - OCR ich nie zwraca.
+    words: list[OcrWord]
+    frames: list[BBox]
+    """Ramki i pola nad podkreśleniami, w punktach."""
+    dpi: float
+    rotated: bool
+    """Strona była obrócona o 90° - szerokość i wysokość zamienione."""
+
+
+def read_page(image: Image.Image, engine: OcrEngine, dpi: float) -> PageRead | None:
+    """Piksele strony → słowa i ramki; `None`, gdy OCR się nie udał.
+
+    Orientację sprawdzamy dopiero po słabym odczycie: jej wykrywanie to 1,5-3 s na stronę,
+    a prawie każdy skan jest już w pionie. Obróconą stronę czytamy drugi raz.
     """
-    scale = 72.0 / dpi
+    try:
+        dotted = detect_dotted(image, dpi)
+        words = engine.recognize(erase(image, dotted, dpi))
+        rotated = False
+        if _looks_misoriented(words):
+            oriented = engine.orient(image)
+            if oriented is not image:
+                rotated = oriented.size != image.size
+                image = oriented
+                dotted = detect_dotted(image, dpi)
+                words = engine.recognize(erase(image, dotted, dpi))
+    except OcrUnavailableError:
+        return None
+    return PageRead(
+        words=[w for w in words if not _is_noise(w)],
+        frames=frames_from_image(image, dpi, dotted),
+        dpi=dpi,
+        rotated=rotated,
+    )
+
+
+def _looks_misoriented(words: list[OcrWord]) -> bool:
+    texts = [w for w in words if _WORD_CHAR.search(w.text)]
+    if len(texts) < MISORIENTED_MIN_WORDS:
+        return False
+    sure = sum(1 for w in texts if w.confidence >= SURE_CONFIDENCE)
+    return sure < MISORIENTED_SURE_SHARE * len(texts)
+
+
+def _is_noise(word: OcrWord) -> bool:
+    """Token, którego nie ma w dokumencie: odrzucony przez OCR albo ślad linii.
+
+    Wykropkowania i kratki zostają bez względu na pewność - `layout` robi z nich pola.
+    """
+    if is_fill_only(word.text) or has_checkbox_glyph(word.text):
+        return False
+    if word.confidence < REJECTED_CONFIDENCE:
+        return True
+    return not _WORD_CHAR.search(word.text) and word.confidence < STRAY_MARK_CONFIDENCE
+
+
+def place_page(
+    builder: DocumentBuilder, read: PageRead | None, number: int, stats: OcrStats
+) -> None:
+    """Układa odczytaną stronę na bieżącej stronie buildera i zapisuje statystyki.
+
+    Nieudany OCR zostawia stronę pustą. Pewność strony to średnia ze słów: wykropkowania
+    i znaki przestankowe jej nie zmieniają.
+    """
+    if read is None:
+        stats.failed.append(number)
+        return
+    if read.rotated:
+        builder.rotate_page()
+    scale = 72.0 / read.dpi
     spans = [
         Span(
             word.text,
@@ -200,13 +293,35 @@ def ocr_page(
             # Wysokość z OCR jest zbyt szumna na regułę rozmiaru nagłówka - zostają wersaliki.
             size=None,
         )
-        for word in engine.recognize(image)
+        for word in read.words
     ]
-    frames = [Frame(box) for box in frames_from_image(image, dpi)]
-    layout_page(builder, spans, frames)
-    if not spans:
-        return None
-    return sum(s.confidence or 0.0 for s in spans) / len(spans)
+    layout_page(builder, spans, [Frame(box) for box in read.frames])
+    confidences = [w.confidence for w in read.words if _WORD_CHAR.search(w.text)]
+    if confidences:
+        stats.confidences[number] = sum(confidences) / len(confidences)
+
+
+def read_ahead[T](jobs: Iterable[Callable[[], T]], workers: int) -> Generator[T]:
+    """Wyniki `jobs` w kolejności zgłoszenia, liczone do `workers` naraz.
+
+    `jobs` pobieramy leniwie, najwyżej o `workers` do przodu, więc w pamięci jest tylko
+    kilka wyrenderowanych stron. Porzucenie iteratora anuluje zadania, które nie ruszyły.
+    """
+    if workers <= 1:
+        for job in jobs:
+            yield job()
+        return
+    pool = ThreadPoolExecutor(max_workers=workers, thread_name_prefix="ocr")
+    pending: deque[Future[T]] = deque()
+    try:
+        for job in jobs:
+            pending.append(pool.submit(job))
+            if len(pending) >= workers:
+                yield pending.popleft().result()
+        while pending:
+            yield pending.popleft().result()
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
 
 
 def extract_image(
@@ -226,34 +341,19 @@ def extract_image(
     dpi = image_dpi(prepared)  # po obrocie EXIF: szerokość to już szerokość strony
     pages = split_pages(prepared, max_pages)
     del prepared
-    for number, page in enumerate(pages, start=1):
-        check()
-        scale = 72.0 / dpi
-        builder.new_page((page.size[0] * scale, page.size[1] * scale))
-        run_ocr(builder, page, engine, dpi, number, stats)
+    scale = 72.0 / dpi
+    jobs = (read_job(page, engine, dpi) for page in pages)
+    reads = read_ahead(jobs, engine.workers)
+    try:
+        for number, page in enumerate(pages, start=1):
+            check()
+            builder.new_page((page.size[0] * scale, page.size[1] * scale))
+            place_page(builder, next(reads), number, stats)
+    finally:
+        reads.close()
     return builder.build(), stats
 
 
-def run_ocr(
-    builder: DocumentBuilder,
-    image: Image.Image,
-    engine: OcrEngine,
-    dpi: float,
-    number: int,
-    stats: OcrStats,
-) -> None:
-    """`ocr_page` z zapisem statystyk; nieudany OCR zostawia stronę pustą.
-
-    Obraz obracamy raz, przed OCR i detekcją ramek, żeby współrzędne słów, ramek
-    i rozmiar strony były w tym samym układzie.
-    """
-    try:
-        oriented = engine.orient(image)
-        if oriented.size != image.size:
-            builder.rotate_page()
-        confidence = ocr_page(builder, oriented, engine, dpi)
-    except OcrUnavailableError:
-        stats.failed.append(number)
-        return
-    if confidence is not None:
-        stats.confidences[number] = confidence
+def read_job(image: Image.Image, engine: OcrEngine, dpi: float) -> Callable[[], PageRead | None]:
+    """`read_page` do wykonania później, z obrazem związanym już teraz."""
+    return lambda: read_page(image, engine, dpi)

@@ -121,6 +121,7 @@ wystartuje bez sekretów JWT i konta technicznego.
 | `LLM_MAX_CHUNK_CHARS` | `4500` | rozmiar fragmentu dokumentu wysyłanego do modelu |
 | `LLM_TEMPERATURE` / `LLM_SEED` | `0` / `42` | powtarzalność wyników |
 | `OCR_LANG` / `OCR_DPI` | `pol` / `300` | Tesseract |
+| `OCR_WORKERS` | `4` | strony skanu rozpoznawane jednocześnie (po jednym rdzeniu na stronę) |
 | `CONVERTER_TIMEOUT_S` | `60` | limit konwersji LibreOffice |
 | `INITIAL_DATA_IDENTITY_SOURCE` | `MLPZ` | źródło danych „Twoje dane”: `MLPZ` / `PESEL` |
 | `FINISH_PAGE_STYLE` | `info_section` | układ strony końcowej (`sample` – jak we wzorcach) |

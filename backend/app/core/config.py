@@ -97,6 +97,8 @@ class Settings(BaseSettings):
     # --- Ekstrakcja i konwersja ---
     ocr_lang: str = "pol"
     ocr_dpi: PositiveInt = 300
+    ocr_workers: PositiveInt = 4
+    """Strony skanu rozpoznawane jednocześnie (osobne procesy Tesseracta, po jednym wątku)."""
     converter_timeout_s: PositiveInt = 60
 
     # --- Budowa formularza ---
