@@ -75,7 +75,11 @@ export class ReviewPanel {
   readonly ranges = input.required<ReadonlyMap<string, LineRange>>();
   /** JSON path of each field by `techName` (see `fieldPaths`). */
   readonly paths = input.required<ReadonlyMap<string, string>>();
+  /** Editor row id of each field by `techName`; fields absent here have no row to show. */
+  readonly editIds = input<ReadonlyMap<string, string>>(new Map());
   readonly showInJson = output<string>();
+  /** Emits the id of the field to reveal in the editor. */
+  readonly showInEditor = output<string>();
 
   protected readonly levels = LEVELS;
   protected readonly pluralPl = pluralPl;
@@ -88,6 +92,7 @@ export class ReviewPanel {
     if (!report || !confidence || score === undefined) return null;
     const ranges = this.ranges();
     const paths = this.paths();
+    const editIds = this.editIds();
     const jsonPath = (techName: string): string | undefined => {
       const path = paths.get(techName);
       return path !== undefined && ranges.has(path) ? path : undefined;
@@ -124,11 +129,12 @@ export class ReviewPanel {
           confidence: field?.confidence,
           source: field?.source,
           path: item.kind === 'field' ? jsonPath(techName) : undefined,
+          editId: item.kind === 'field' ? editIds.get(techName) : undefined,
         };
       });
     const fromDocument = fields
       .filter((f) => f.origin === 'document')
-      .map((f) => ({ ...f, path: jsonPath(f.techName) }));
+      .map((f) => ({ ...f, path: jsonPath(f.techName), editId: editIds.get(f.techName) }));
     return {
       score,
       level: level(confidence['level']),

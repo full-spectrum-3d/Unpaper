@@ -1,7 +1,7 @@
 @let v = view();
 @if (v) {
   <div class="flex flex-col gap-section">
-    <section aria-labelledby="review-confidence">
+    <section aria-labelledby="review-confidence" class="rounded-field border border-border bg-surface p-section">
       <h2 id="review-confidence" class="text-section-title font-semibold">Pewność konwersji</h2>
       <p class="mt-2 flex flex-wrap items-center gap-2">
         <span
@@ -25,14 +25,14 @@
       </p>
     </section>
 
-    <section aria-labelledby="review-list">
+    <section aria-labelledby="review-list" class="rounded-field border border-border bg-surface p-section">
       <h2 id="review-list" class="text-section-title font-semibold">
         Do sprawdzenia ({{ v.review.length }})
       </h2>
       @if (v.review.length) {
-        <ul class="mt-2 flex flex-col gap-3">
+        <ul class="mt-2 flex flex-col divide-y divide-border">
           @for (item of v.review; track $index) {
-            <li class="flex flex-wrap items-start gap-3">
+            <li class="flex flex-wrap items-start gap-3 py-3 first:pt-0 last:pb-0">
               @if (item.source?.mark; as mark) {
                 <ng-container
                   *ngTemplateOutlet="miniature; context: { mark, page: item.source!.page }"
@@ -74,6 +74,17 @@
                     Pokaż w JSON
                   </button>
                 }
+                @if (item.editId; as editId) {
+                  <button
+                    appButton
+                    type="button"
+                    class="mt-1 ml-2"
+                    [attr.aria-label]="'Pokaż w edycji: ' + item.title"
+                    (click)="showInEditor.emit(editId)"
+                  >
+                    Pokaż w edycji
+                  </button>
+                }
               </div>
             </li>
           }
@@ -83,7 +94,7 @@
       }
     </section>
 
-    <section aria-labelledby="review-origin">
+    <section aria-labelledby="review-origin" class="rounded-field border border-border bg-surface p-section">
       <h2 id="review-origin" class="text-section-title font-semibold">
         Pochodzenie pól ({{ v.fromDocument.length }})
       </h2>
@@ -92,9 +103,9 @@
           <summary class="cursor-pointer text-primary focus-ring rounded-field">
             Pokaż, skąd w dokumencie pochodzi każde pole
           </summary>
-          <ul class="mt-2 flex flex-col gap-3">
+          <ul class="mt-2 flex flex-col divide-y divide-border">
             @for (f of v.fromDocument; track f.techName) {
-              <li class="flex flex-wrap items-start gap-3">
+              <li class="flex flex-wrap items-start gap-3 py-3 first:pt-0 last:pb-0">
                 @if (f.source?.mark; as mark) {
                   <ng-container
                     *ngTemplateOutlet="miniature; context: { mark, page: f.source!.page }"
@@ -128,6 +139,17 @@
                       (click)="showInJson.emit(path)"
                     >
                       Pokaż w JSON
+                    </button>
+                  }
+                  @if (f.editId; as editId) {
+                    <button
+                      appButton
+                      type="button"
+                      class="mt-1 ml-2"
+                      [attr.aria-label]="'Pokaż w edycji: ' + f.title"
+                      (click)="showInEditor.emit(editId)"
+                    >
+                      Pokaż w edycji
                     </button>
                   }
                 </div>

@@ -105,6 +105,27 @@ describe('ReviewPanel', () => {
     expect(ranges.has(paths[0])).toBe(true);
   });
 
+  it('offers "Pokaż w edycji" only for fields that have an editor row', () => {
+    const report = mockReport(nadplata);
+    const withRow = render(report);
+    expect(withRow.el.querySelector('button[aria-label^="Pokaż w edycji"]')).toBeNull();
+    const fixture = TestBed.createComponent(ReviewPanel);
+    fixture.componentRef.setInput('report', asReport(report));
+    fixture.componentRef.setInput('ranges', ranges);
+    fixture.componentRef.setInput('paths', fieldPaths(nadplata));
+    const names = (asReport(report)!.fields ?? []).map((f) => String(f.techName));
+    fixture.componentRef.setInput('editIds', new Map(names.map((n) => [n, `id-${n}`])));
+    fixture.detectChanges();
+    const ids: string[] = [];
+    fixture.componentInstance.showInEditor.subscribe((id) => ids.push(id));
+    const btn = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
+      'button[aria-label^="Pokaż w edycji"]',
+    );
+    expect(btn?.textContent!.trim()).toBe('Pokaż w edycji');
+    btn!.click();
+    expect(ids).toEqual([expect.stringMatching(/^id-/)]);
+  });
+
   it('survives malformed entries', () => {
     const { text } = render({
       confidence: { score: 0.5, level: 'weird' },
