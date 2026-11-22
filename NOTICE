@@ -1,0 +1,19 @@
+Unpaper
+Copyright 2026 Unpaper contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+The following third-party materials in this repository are not covered by
+that license and remain under their owners' terms:
+
+- wymagania/: task materials provided by Centralny Ośrodek Informatyki
+  (COI) for HackNation 2026.
+- backend/llm_eval/: blank forms published by Polish public offices,
+  used as evaluation inputs.
+- backend/app/resources/teryt.json.gz: TERYT register data published by
+  Główny Urząd Statystyczny (GUS).
+- Fonts bundled with the frontend via @fontsource: SIL Open Font License 1.1.
+
+Runtime components shipped in the Docker images keep their own licenses,
+among them LibreOffice (MPL-2.0, run as a separate process), certifi
+(MPL-2.0), Tesseract OCR (Apache-2.0) and Ollama (MIT).

@@ -190,3 +190,7 @@ MIME z zawartości zgodny z rozszerzeniem; limity archiwów, stron i pikseli.
 make test             # backend (pytest)
 make test-frontend    # frontend
 ```
+
+## Licencja
+
+Kod udostępniamy na licencji [Apache-2.0](LICENSE), informacje o prawach i materiałach osób trzecich są w pliku [NOTICE](NOTICE). Zależności aplikacji mają licencje permisywne (MIT, BSD, Apache-2.0, PSF) lub MPL-2.0 (`certifi`, LibreOffice uruchamiany jako osobny proces), bez GPL i AGPL. Materiały osób trzecich w repozytorium nie są objęte tą licencją: materiały zadania COI w `wymagania/`, blankiety urzędów w `backend/llm_eval/`, dane TERYT (GUS) i fonty na licencji OFL-1.1.

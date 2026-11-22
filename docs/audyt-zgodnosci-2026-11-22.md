@@ -11,7 +11,7 @@ Testy w dniu audytu: backend `pytest` 758 ✔, 17 pominiętych; frontend `tsc` (
 Kod pokrywa cały zakres obowiązkowy i wszystkie rozszerzenia 3.3. Brakuje prawie wyłącznie
 **materiałów zgłoszeniowych z pkt 4**: wynikowych plików JSON, prezentacji PDF, filmu
 i opisu projektu. Największe ryzyko merytoryczne: jakość analizy domyślnym modelem
-`qwen3:8b` nie była zmierzona (baseline jest dla `qwen3.5:35b-a3b`), a sprawdzian na
+`qwen3:8b` nie ma zapisanego pomiaru `llm_eval`, a sprawdzian na
 obronie (pkt 6) to nowe, nieznane pliki.
 
 ## Pkt 4 — wymagania formalne (zgłoszenie)
@@ -66,8 +66,7 @@ obronie (pkt 6) to nowe, nieznane pliki.
 
 | Ryzyko | Stan | Działanie |
 |---|---|---|
-| Jakość domyślnego modelu | ❌ | `llm_eval/baseline.json` ma tylko `qwen3.5:35b-a3b` i `rules`. Brak pomiaru dla `qwen3:8b`, który uruchamia się domyślnie. Puścić `llm_eval` na 8B (cases + holdout) i zdecydować, którym modelem iść na obronę. |
-| Precyzja na nieznanych formularzach | ⚠️ | Holdout (35B): recall 0,43–1,0, precision 0,47–0,80; `odpady` precision 0,32, `pas-drogowy` 0,49 — dużo nadmiarowych pól. |
+| Jakość domyślnego modelu | ❌ | Brak zapisanego pomiaru `llm_eval` dla `qwen3:8b`, który uruchamia się domyślnie. Puścić `llm_eval` na 8B (cases + holdout) i zapisać wynik `--save-baseline`. |
 | Tryb regułowy (fallback) | ⚠️ | `rules` = 1,0 tylko na dwóch formularzach wzorcowych; na holdoucie 0–0,5. Jeśli model nie odpowie w czasie, wynik na obronie będzie słaby. |
 | Czas konwersji na CPU | ⚠️ | README: 1,5–5 min. Sprawdzić sprzęt na obronę, rozważyć GPU lub wcześniejsze rozgrzanie modelu. |
 | Pliki `.JPE` | ⚠️ | W materiałach jest `…psów….JPE`; decyzja Q8 = 415. Zgodne z literą zadania, ale jeśli jury wrzuci `.jpe`/`.jfif`, dostanie błąd. Potwierdzić u mentorów albo akceptować (MIME i tak weryfikowane). |
@@ -97,7 +96,7 @@ Pkt 5 spełniony w kodzie (digesty, non-root, `read_only`, `cap_drop`, sekrety w
 | Krytyczne ✔ | `docker-compose.yml:86`, `backend/app/main.py:86`, frontend `BATCH_CONCURRENCY=2` | 2 zadania naraz, `OLLAMA_NUM_PARALLEL=1`: drugi plik czeka w kolejce Ollamy, zjada `LLM_TIMEOUT_S`, cicho spada na szkic z reguł. | Semafor LLM = `OLLAMA_NUM_PARALLEL`, timeout liczony od wejścia do slotu (S) |
 | Krytyczne | `backend/app/api/v1/forms.py:88,150`, `analyze.py:43,300` | Czekanie na slot zjada deadline żądania; 503 dopiero po całym budżecie. | Osobny limit kolejki (np. 30 s) + szybkie 503 z `Retry-After` (S) |
 | Krytyczne ✔ | lokalny `.env` | `REQUEST_TIMEOUT_S=180`, `LLM_TIMEOUT_S=120`, `LLM_NUM_CTX=16384` vs `.env.example` 540/240/8192. | Wyrównać przed obroną (S) |
-| Krytyczne ✔ | `llm_eval/baseline.json` | Brak pomiaru `qwen3:8b`. | `llm_eval` dla 8B, decyzja CPU/GPU/natywna Ollama z Metal (M) |
+| Krytyczne ✔ | `llm_eval` | Brak pomiaru `qwen3:8b`. | `llm_eval` dla 8B, decyzja CPU/GPU/natywna Ollama z Metal (M) |
 | Ważne | `core/config.py:59-63` | `num_predict=2048` nie mieści się w 240 s na CPU; porażka 1. fragmentu = cały dokument na regułach (`analyze.py:270`). | `num_predict` z pozostałego czasu, kolejne fragmenty mimo porażki (S) |
 | Ważne | `extract/__init__.py:55-58`, `extract/pdf.py:57` | OCR długich skanów → 504 zamiast częściowego wyniku; parsowania PDF w wątku nie da się przerwać. | Limit OCR + częściowy tekst; PDF w procesie potomnym (M) |
 | Ważne ✔ | `pipeline/llm_client.py:66-69`, `core/config.py:77`, `scripts/modal_ollama.py`, `docs/superpowers/plans/2026-11-21-llm-eval-quality.md:15` | Nagłówki Modal (SaaS) w kliencie produkcyjnym, prywatny URL endpointu w śledzonym pliku. | Usunąć nagłówki i URL, skrypt do `tools/experimental` lub poza repo (S) |

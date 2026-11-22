@@ -1,6 +1,7 @@
 {
   "name": "coi-cf-frontend",
   "version": "0.0.0",
+  "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
     "api:check": "sh scripts/api-check.sh",
