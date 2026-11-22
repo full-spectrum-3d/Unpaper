@@ -3,7 +3,7 @@ name = "coi-cf-api"
 version = "0.1.0"
 description = "Cyfryzacja formularzy – konwersja blankietów do JSON Generatora Formularzy COI"
 requires-python = ">=3.14"
-license = "MIT"
+license = "Apache-2.0"
 # Wersje do przypięcia (najnowsze stabilne) przy pierwszym `uv lock`.
 dependencies = [
     "fastapi",
