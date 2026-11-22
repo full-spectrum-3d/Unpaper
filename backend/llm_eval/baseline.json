@@ -4,12 +4,12 @@
   "case": "nadplata",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.8866666666666667,
+  "recall": 0.83,
   "recall_min": 0.83,
-  "recall_max": 1.0,
-  "precision": 0.84,
+  "recall_max": 0.83,
+  "precision": 0.83,
   "precision_min": 0.83,
-  "precision_max": 0.86
+  "precision_max": 0.83
  },
  {
   "set": "cases",
@@ -28,24 +28,24 @@
   "case": "odpady",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.7600000000000001,
-  "recall_min": 0.76,
-  "recall_max": 0.76,
-  "precision": 0.32,
-  "precision_min": 0.32,
-  "precision_max": 0.32
+  "recall": 0.94,
+  "recall_min": 0.94,
+  "recall_max": 0.94,
+  "precision": 0.52,
+  "precision_min": 0.51,
+  "precision_max": 0.54
  },
  {
   "set": "cases",
   "case": "pas-drogowy",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.89,
-  "recall_min": 0.83,
+  "recall": 0.92,
+  "recall_min": 0.92,
   "recall_max": 0.92,
-  "precision": 0.48666666666666664,
-  "precision_min": 0.48,
-  "precision_max": 0.5
+  "precision": 0.6,
+  "precision_min": 0.5,
+  "precision_max": 0.65
  },
  {
   "set": "cases",
@@ -67,9 +67,9 @@
   "recall": 1.0,
   "recall_min": 1.0,
   "recall_max": 1.0,
-  "precision": 0.73,
-  "precision_min": 0.68,
-  "precision_max": 0.76
+  "precision": 0.6233333333333334,
+  "precision_min": 0.61,
+  "precision_max": 0.63
  },
  {
   "set": "cases",
@@ -103,8 +103,8 @@
   "recall": 1.0,
   "recall_min": 1.0,
   "recall_max": 1.0,
-  "precision": 0.9766666666666667,
-  "precision_min": 0.93,
+  "precision": 1.0,
+  "precision_min": 1.0,
   "precision_max": 1.0
  },
  {
@@ -124,12 +124,12 @@
   "case": "deklaracja-dochody",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.43,
+  "recall": 0.7166666666666667,
   "recall_min": 0.43,
-  "recall_max": 0.43,
-  "precision": 0.75,
+  "recall_max": 0.86,
+  "precision": 0.85,
   "precision_min": 0.75,
-  "precision_max": 0.75
+  "precision_max": 0.9
  },
  {
   "set": "holdout",
@@ -148,9 +148,9 @@
   "case": "karta-duzej-rodziny",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.93,
-  "recall_min": 0.93,
-  "recall_max": 0.93,
+  "recall": 1.0,
+  "recall_min": 1.0,
+  "recall_max": 1.0,
   "precision": 0.67,
   "precision_min": 0.67,
   "precision_max": 0.67
@@ -160,12 +160,12 @@
   "case": "podatek-in1",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.77,
-  "recall_min": 0.77,
-  "recall_max": 0.77,
-  "precision": 0.5,
+  "recall": 0.8333333333333334,
+  "recall_min": 0.81,
+  "recall_max": 0.88,
+  "precision": 0.5166666666666667,
   "precision_min": 0.5,
-  "precision_max": 0.5
+  "precision_max": 0.55
  },
  {
   "set": "holdout",
@@ -175,21 +175,21 @@
   "recall": 0.83,
   "recall_min": 0.83,
   "recall_max": 0.83,
-  "precision": 0.6,
-  "precision_min": 0.6,
-  "precision_max": 0.6
+  "precision": 0.56,
+  "precision_min": 0.56,
+  "precision_max": 0.56
  },
  {
   "set": "holdout",
   "case": "zwrot-akcyzy",
   "model": "qwen3.5:35b-a3b",
   "runs": 3,
-  "recall": 0.81,
-  "recall_min": 0.81,
-  "recall_max": 0.81,
-  "precision": 0.47,
-  "precision_min": 0.47,
-  "precision_max": 0.47
+  "recall": 0.88,
+  "recall_min": 0.88,
+  "recall_max": 0.88,
+  "precision": 0.6999999999999998,
+  "precision_min": 0.7,
+  "precision_max": 0.7
  },
  {
   "set": "cases",

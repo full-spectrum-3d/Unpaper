@@ -101,11 +101,12 @@ def test_statements_attachments_and_plain_lists_unchanged() -> None:
         _p("odpowiadam za porządek"),
     )
     _unchanged(_p("Załączniki do wniosku:"), _p("plan sytuacyjny"), _p("harmonogram robót"))
-    _unchanged(
+    lines = _lines(
         _p("B.2 Dane współmałżonka (wypełnić w przypadku zaznaczenia kratki)"),
         _p("5. Nazwisko, imię"),
         _p("6. Adres zamieszkania"),
     )
+    assert not any(line.startswith("[OPCJA]") for line in lines)
     _unchanged(
         _p("1. Powierzchnia pasa drogowego potrzebna do zajęcia:"),
         _p("a/ jezdnia (przy zajęciu do 20% szerokości)"),
@@ -143,3 +144,66 @@ def test_ocr_brackets_as_boxes() -> None:
 
 def test_short_list_of_field_labels_is_not_a_choice() -> None:
     _unchanged(_p("Wnioskodawca:"), _p("Imię i nazwisko"), _p("Adres"), _p("Nr telefonu"))
+
+
+def test_numbered_position_becomes_field() -> None:
+    assert _lines(_p("26. Miejscowość"), _p("27. Ulica")) == [
+        "26. Miejscowość [POLE]",
+        "27. Ulica [POLE]",
+    ]
+    assert _lines(_p("4. Numer działki"), ("heading", "B. ZAKRES PRAC")) == [
+        "4. Numer działki [POLE]",
+        "[NAGŁÓWEK] B. ZAKRES PRAC",
+    ]
+
+
+def test_numbered_position_continued_by_text_kept() -> None:
+    _unchanged(
+        _p("36. Liczba lokali zajmowanych"),
+        _p("przez najemców o powierzchni do 50 m²"),
+        _p("37. Liczba garaży"),
+        ("input_placeholder", "……"),
+    )
+    # Nagłówek kolumn tabeli: seria pozycji, po której idzie ciąg dalszy etykiet.
+    _unchanged(
+        _p("12. Liczba lokali zajmowanych"),
+        _p("13. Stawka"),
+        _p("za lokal"),
+        _p("przez najemców o powierzchni do 50 m²"),
+    )
+
+
+def test_numbered_heading_or_notice_kept() -> None:
+    _unchanged(
+        _p("12. Pouczenie"),
+        _p("4. Objaśnienia do części B"),
+        _p("7. Informacja o zmianie"),
+        _p("9. Uwaga"),
+        _p("A. DANE SKŁADAJĄCEGO"),
+        _p("3. Do wniosku należy dołączyć dokumenty potwierdzające prawo do nieruchomości"),
+        _p("5. DANE NIERUCHOMOŚCI"),
+        _p("6. Rodzaj wniosku:"),
+        ("heading", "8. Miejscowość"),
+    )
+
+
+def test_numbered_instruction_or_attachment_list_kept() -> None:
+    _unchanged(
+        _p("1. Pisz drukowanymi literami."),
+        _p("2. Kratki zaznaczaj krzyżykiem lub"),
+        _p("3. Załączniki do deklaracji"),
+        _p("4. Forma odbioru (postaw „x” w wybranym polu)"),
+        _p("Podpis"),
+    )
+
+
+def test_numbered_position_before_options_kept() -> None:
+    _unchanged(
+        _p("25. Okoliczności"),
+        ("checkbox_option", "pierwsza deklaracja"),
+        ("checkbox_option", "korekta deklaracji"),
+    )
+
+
+def test_numbered_position_with_fill_unchanged() -> None:
+    _unchanged(_p("26. Miejscowość ……"), _p("27. Ulica"), ("input_placeholder", "……"))
