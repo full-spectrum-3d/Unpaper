@@ -17,6 +17,9 @@ Pipeline API: walidacja pliku → normalizacja (LibreOffice) → ekstrakcja (tek
 → analiza AI → budowa formularza → weryfikacja z autonaprawą.
 Szczegóły: `docs/specyfikacja-techniczna.md`, `docs/architecture/`.
 
+## Wideo demonstracyjne
+https://youtu.be/ot5qAPIEubU
+
 ## Budowanie obrazów Docker
 
 ```bash
