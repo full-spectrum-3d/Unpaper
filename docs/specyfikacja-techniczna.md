@@ -409,9 +409,9 @@ FormDefinition
 │       { x, y, rows, cols, field: {
 │           id (UUID), type, techName, title, description, tooltipMessage,
 │           options[], validation[], readOnly, states[], questionOrder,
-│           repeatingSectionGrid[]   ← pola sekcji (ta sama struktura question)
-│           [defaultValue, defaultValueType, dictionaryName, searchEnabled,
-│            multiLevelTree, consentSectionConfig, selectAllEnabled] } }
+│           repeatingSectionGrid[]    ← pola sekcji (ta sama struktura question)
+│           [defaultValue (string), defaultValueType, dictionaryName,
+│            consentSectionConfig {consents[{description}], required, files[]}] } }
 └── flow: { links[]: { id (UUID), source (tab.id), target (tab.id) } }
 ```
 
@@ -448,12 +448,12 @@ FormDefinition
 
 | # | Rozbieżność | Decyzja |
 |---|---|---|
-| D1 | Schemat ma `repetingSectionGrid`, wzorce i reguły mają `repeatingSectionGrid` | Generujemy `repeatingSectionGrid` (wzorce = oczekiwany wynik). Schemat w `resources/` poprawiamy lokalnie |
+| D1 | Schemat i `OpisImportowanegoPlikuJSON.md` mają `repetingSectionGrid`, wzorce i reguły mają `repeatingSectionGrid` | Literówkę traktujemy jako błąd w dokumencie: generujemy `repeatingSectionGrid`. JSON z `repetingSectionGrid` (także w zapytaniach JSONata) tłumaczy `to_document_format` (`app/models/form.py`), a weryfikator robi to jako autonaprawę. Schemat w `resources/` poprawiamy lokalnie |
 | D2 | Opis typu `CONSENT_SECTIOM` vs `CONSENT_SECTION` | `CONSENT_SECTION` (literówka w opisie) |
 | D3 | Reguły: na `FINISH` tylko `INFO_SECTION`. Wzorce: `SECTION` + `TEXT_BLOCK` „Podgląd” | Domyślnie jak wzorce. Przełącznik `FINISH_PAGE_STYLE=sample|info_section` do decyzji po konsultacji (Q1) |
 | D4 | Wzorce mają puste `validation`, choć reguły wymagają obligatoryjności | Dodajemy `REQUIRED` (Q2) |
 | D5 | Schemat: `defaultValue` string. Wzorzec: `["Polska"]` dla `SELECT` | Jak wzorzec |
-| D6 | Wzorce używają kluczy spoza schematu: `multiLevelTree`, `searchEnabled` | Zachowujemy (schemat nie zabrania dodatkowych pól) |
+| D6 | Wzorce używają kluczy spoza dokumentu importu: `multiLevelTree`, `searchEnabled`, `selectAllEnabled`, `minItemRows`; `required` per zgoda; `defaultValue` jako lista | Nie emitujemy ich. `required` jest na poziomie `consentSectionConfig`, `defaultValue` to string (pierwszy element listy wzorca). Opis zgody to `description` jak w schemacie (`descripton` w tabeli dokumentu to literówka) |
 | D7 | Słowniki w dokumencie: Województwo/Powiat/Gmina/Miejscowość/Kraje/Numery kierunkowe. We wzorcach: `TERYT_4G_DOWODOWY` (`multiLevelTree: true`), `TERYT_DOWODOWY`, `Kraje` | Używamy nazw ze wzorców dla adresu (jedno pole wielopoziomowe TERYT). Nazwę słownika numerów kierunkowych ustalamy z mentorami (Q3) |
 | D8 | Standard: `FILE_UPLOADER` ma formaty, limit rozmiaru i liczbę plików, ale schemat nie ma na to pól | Wartości wpisujemy do `description` pola (czytelne dla obywatela). Dedykowane klucze tylko po potwierdzeniu (Q4) |
 | D9 | Standard wymienia walidację telefonu i wzorzec regex (KRS `^\d{10}$`), lista walidatorów ich nie ma | Telefon: słownik numerów kierunkowych + pole tekstowe bez walidatora. KRS: opis z formatem. Regex tylko po potwierdzeniu klucza (Q5) |
@@ -494,7 +494,7 @@ Strony przedmiotu dzielimy, gdy szkic ma > `MAX_SECTIONS_PER_PAGE` sekcji albo L
 | Urząd, do którego jest składany wniosek / Organ… | zawsze | `nazwa_urzedu` TEXT_FIELD, `readOnly`, `defaultValue` = adresat odczytany z blankietu |
 | Podmiot wniosku | `applicantKinds` ≠ tylko SELF | RADIO „Wybierz, w czyim imieniu wnioskujesz” z opcjami według `applicantKinds`, REQUIRED. RADIO „Wybierz, jako kto wnioskujesz” (Pełnomocnik/Reprezentant), SHOW gdy „Osoby prawnej…” |
 | Twoje dane | zawsze | Imię, Nazwisko, Numer PESEL: `readOnly`, EXTERNAL_SYSTEM (`MLPZ.name`, `MLPZ.surname`, `MLPZ.pesel`), PESEL z walidatorem `PESEL` |
-| Adres zamieszkania / siedziby / innej osoby | według `addresses` i `applicantKinds` | Kraj (SELECT, `Kraje`, `searchEnabled`, default `["Polska"]`). Dla Polski: TERYT (SELECT wielopoziomowy), kod pocztowy (`ZIP_CODE`), ulica, nr budynku, nr lokalu. Dla innego kraju: miejscowość, kod pocztowy bez walidacji, ulica, nr budynku, nr lokalu. Widoczność przez SHOW na polu „Kraj” |
+| Adres zamieszkania / siedziby / innej osoby | według `addresses` i `applicantKinds` | Kraj (SELECT, `Kraje`, default `"Polska"`). Dla Polski: TERYT (SELECT wielopoziomowy), kod pocztowy (`ZIP_CODE`), ulica, nr budynku, nr lokalu. Dla innego kraju: miejscowość, kod pocztowy bez walidacji, ulica, nr budynku, nr lokalu. Widoczność przez SHOW na polu „Kraj” |
 | Dane innej osoby | OTHER_PERSON | Imię, Nazwisko, PESEL (`PESEL`), SHOW gdy „Innej osoby” |
 | Dane podmiotu | LEGAL_ENTITY | Nazwa, NIP (`NIP`), REGON (`REGON`), Numer KRS (opcjonalny), SHOW gdy „Osoby prawnej…” |
 | Potwierdzenie, że jesteś reprezentantem | LEGAL_ENTITY | FILE_UPLOADER, SHOW gdy „Reprezentant” |
@@ -522,7 +522,7 @@ Szablony powstają przez wycięcie sekcji z dwóch wzorcowych JSON-ów, więc 1:
 | number | NUMBER | kwoty, liczby sztuk, powierzchnie |
 | date | DATEPICKER | |
 | single_choice, ≤ 5 opcji | RADIO | |
-| single_choice, > 5 opcji lub słownik | SELECT | `searchEnabled: true` gdy > 15 opcji lub słownik |
+| single_choice, > 5 opcji lub słownik | SELECT | – |
 | multi_choice | CHECKBOX | |
 | file | FILE_UPLOADER | |
 | info | TEXT_BLOCK | nie dla opisu konkretnego pola: wtedy `description` pola |
@@ -556,7 +556,7 @@ Katalog w `resources/dictionaries.json`:
 | Województwo / Powiat / Gmina / Miejscowość | wariant z osobnymi polami (jeśli import tego wymaga, Q3) | SELECT |
 | Numery kierunkowe | prefiks telefonu | SELECT |
 
-Powiązanie: semantyka pola (adres, kraj, prefiks telefonu) → słownik. Pole dostaje `dictionaryName`, `options: []` i `searchEnabled: true`.
+Powiązanie: semantyka pola (adres, kraj, prefiks telefonu) → słownik. Pole dostaje `dictionaryName` i `options: []`.
 
 ### 8.5. Dane inicjalne (O1)
 

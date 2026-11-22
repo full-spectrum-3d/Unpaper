@@ -1,10 +1,15 @@
 """FormDefinition - wynik końcowy w formacie importu COI (spec §7.1, projekt LLM §5.3).
 
-Odwzorowuje wzorcowe `konfiguracja_form_*.json` (nie schemat, por. spec §7.4).
+Format wyznacza `wymagania/OpisImportowanegoPlikuJSON.md`. Literówki dokumentu traktujemy
+jako błędy w dokumencie: siatka sekcji to `repeatingSectionGrid` (dokument i schemat piszą
+`repetingSectionGrid`), opis zgody to `description` (dokument pisze `descripton`).
+Klucze spoza dokumentu nie są emitowane; starsze formularze (wzorce `konfiguracja_form_*.json`)
+oraz JSON-y z kluczem z literówką tłumaczy `to_document_format`.
 Klucze bazowe pola (spec §7.2) są zawsze serializowane, klucze dodatkowe tylko
 gdy są ustawione. Model sprawdza wyłącznie typy - reguły R01-R15 są w `verify.py`.
 """
 
+import copy
 from enum import StrEnum
 from typing import Any, Literal
 
@@ -118,13 +123,12 @@ class State(_CoiModel):
 
 class Consent(_CoiModel):
     description: str
-    required: bool | None = None
 
 
 class ConsentSectionConfig(_CoiModel):
     consents: list[Consent]
-    required: bool | None = None
-    files: list[dict[str, Any]] = []
+    required: bool
+    files: list[str] = []
 
 
 class Field(_CoiModel):
@@ -142,13 +146,10 @@ class Field(_CoiModel):
     question_order: int = 0
     tooltip_message: str = ""
     # Klucze dodatkowe - tylko gdy ustawione.
-    default_value: str | list[str] | None = None
+    default_value: str | None = None
     default_value_type: Literal["EXTERNAL_SYSTEM"] | None = None
     dictionary_name: str | None = None
-    search_enabled: bool | None = None
-    multi_level_tree: bool | None = None
     consent_section_config: ConsentSectionConfig | None = None
-    select_all_enabled: bool | None = None
 
     @field_validator("validation", mode="before")
     @classmethod
@@ -162,7 +163,6 @@ class Question(_CoiModel):
     y: int
     rows: int
     cols: int
-    min_item_rows: int | None = None
     field: Field
 
 
@@ -191,3 +191,109 @@ class FormDefinition(_CoiModel):
     def to_import_json(self) -> dict[str, Any]:
         """JSON zwracany przez API: camelCase, bez nieustawionych kluczy dodatkowych."""
         return self.model_dump(by_alias=True, exclude_none=True, mode="json")
+
+
+# --- Tłumaczenie starszego formatu (wzorce COI) na format z dokumentu ---
+
+# Pisownia z dokumentu i schematu importu (literówka) - przyjmowana na wejściu.
+LEGACY_GRID_KEY = "repetingSectionGrid"
+GRID_KEY = "repeatingSectionGrid"
+DROPPED_FIELD_KEYS: tuple[str, ...] = ("searchEnabled", "multiLevelTree", "selectAllEnabled")
+DROPPED_QUESTION_KEYS: tuple[str, ...] = ("minItemRows",)
+
+
+def default_value_string(value: object) -> object:
+    """`defaultValue` jako string (dokument): lista wzorca -> pierwszy element, pusta -> brak."""
+    if isinstance(value, list):
+        items = [v for v in value if isinstance(v, str)]
+        return items[0] if items else None
+    return value
+
+
+def _rename_key(node: dict[str, Any], old: str, new: str) -> None:
+    """Zmienia nazwę klucza w miejscu, zachowując kolejność (czytelny diff JSON-a)."""
+    items = [(new if k == old else k, v) for k, v in node.items() if not (k == new and old in node)]
+    node.clear()
+    node.update(items)
+
+
+def _legacy_consents(config: dict[str, Any], changes: list[str], path: str) -> None:
+    consents = config.get("consents")
+    if not isinstance(consents, list):
+        return
+    flags: list[bool] = []
+    for consent in consents:
+        if not isinstance(consent, dict):
+            continue
+        if "required" in consent:
+            flag = consent.pop("required")
+            flags.append(flag is True)
+            changes.append(f"{path}.consents: required -> consentSectionConfig.required")
+    if "required" not in config and flags:
+        config["required"] = any(flags)
+    files = config.get("files")
+    if isinstance(files, list) and any(not isinstance(f, str) for f in files):
+        config["files"] = [f["name"] for f in files if isinstance(f, dict) and "name" in f]
+        changes.append(f"{path}.files: tylko nazwy plików")
+
+
+def _legacy_field(field: dict[str, Any], changes: list[str], path: str) -> None:
+    if LEGACY_GRID_KEY in field:
+        _rename_key(field, LEGACY_GRID_KEY, GRID_KEY)
+        changes.append(f"{path}: {LEGACY_GRID_KEY} -> {GRID_KEY}")
+    states = field.get("states")
+    for state in states if isinstance(states, list) else ():
+        query = state.get("query") if isinstance(state, dict) else None
+        if isinstance(query, str) and LEGACY_GRID_KEY in query:
+            state["query"] = query.replace(LEGACY_GRID_KEY, GRID_KEY)
+            changes.append(f"{path}.states: ścieżka {LEGACY_GRID_KEY} -> {GRID_KEY}")
+    for key in DROPPED_FIELD_KEYS:
+        if key in field:
+            del field[key]
+            changes.append(f"{path}: usunięto {key}")
+    if field.get("validation") == {}:
+        field["validation"] = []
+        changes.append(f"{path}: validation {{}} -> []")
+    if isinstance(field.get("defaultValue"), list):
+        value = default_value_string(field["defaultValue"])
+        if value is None:
+            del field["defaultValue"]
+        else:
+            field["defaultValue"] = value
+        changes.append(f"{path}: defaultValue jako string")
+    config = field.get("consentSectionConfig")
+    if isinstance(config, dict):
+        _legacy_consents(config, changes, f"{path}.consentSectionConfig")
+    _legacy_questions(field.get(GRID_KEY), changes, f"{path}.{GRID_KEY}")
+
+
+def _legacy_questions(questions: object, changes: list[str], path: str) -> None:
+    if not isinstance(questions, list):
+        return
+    for i, question in enumerate(questions):
+        if not isinstance(question, dict):
+            continue
+        for key in DROPPED_QUESTION_KEYS:
+            if key in question:
+                del question[key]
+                changes.append(f"{path}[{i}]: usunięto {key}")
+        field = question.get("field")
+        if isinstance(field, dict):
+            _legacy_field(field, changes, f"{path}[{i}].field")
+
+
+def to_document_format(form: Any) -> tuple[Any, list[str]]:
+    """Kopia formularza w formacie z dokumentu oraz lista wprowadzonych zmian.
+
+    Nie zmienia formularza już zgodnego z dokumentem (lista zmian jest wtedy pusta).
+    """
+    if not isinstance(form, dict):
+        return form, []
+    result = copy.deepcopy(form)
+    changes: list[str] = []
+    tabs = result.get("tabs")
+    if isinstance(tabs, list):
+        for i, tab in enumerate(tabs):
+            if isinstance(tab, dict):
+                _legacy_questions(tab.get("questions"), changes, f"tabs[{i}].questions")
+    return result, changes

@@ -150,6 +150,45 @@ def test_reference_samples_are_repairable(sample: Path):
         assert IssueCode.R06_REQUIREDNESS in _codes(result.fixes)
 
 
+def _keys(node: Any) -> set[str]:
+    if isinstance(node, list):
+        return set().union(*map(_keys, node)) if node else set()
+    if isinstance(node, dict):
+        return set(node).union(*map(_keys, node.values()))
+    return set()
+
+
+@pytest.mark.parametrize("sample", SAMPLES, ids=lambda p: p.stem)
+def test_reference_samples_are_converted_to_document_format(sample: Path):
+    result = verify_form(json.loads(sample.read_text(encoding="utf-8")), autofix=True)
+    assert result.valid, result.errors
+    legacy = {"repetingSectionGrid", "searchEnabled", "multiLevelTree", "minItemRows"}
+    assert not legacy & _keys(result.form)
+    assert any("Dostosowano klucze" in f.message for f in result.fixes)
+
+
+def test_document_typo_grid_key_is_renamed():
+    form = _form()
+    section = form["tabs"][0]["questions"][0]["field"]
+    section["repetingSectionGrid"] = section.pop("repeatingSectionGrid")
+    for q in section["repetingSectionGrid"]:
+        for state in q["field"]["states"]:
+            state["query"] = state["query"].replace("repeatingSectionGrid", "repetingSectionGrid")
+    result = verify_form(form, autofix=True)
+    assert result.valid, result.errors
+    fixed = result.form["tabs"][0]["questions"][0]["field"]
+    assert "repetingSectionGrid" not in fixed
+    assert fixed["repeatingSectionGrid"]
+    assert "repetingSectionGrid" not in json.dumps(result.form)
+    assert not verify_form(form, autofix=False).valid
+
+
+@pytest.mark.parametrize("sample", SAMPLES, ids=lambda p: p.stem)
+def test_legacy_keys_are_errors_without_autofix(sample: Path):
+    result = verify_form(json.loads(sample.read_text(encoding="utf-8")), autofix=False)
+    assert any("Klucz spoza dokumentu importu" in e.message for e in result.errors)
+
+
 def test_state_with_unknown_tech_name_removed():
     form = _form()
     query = _query("nie_ma")

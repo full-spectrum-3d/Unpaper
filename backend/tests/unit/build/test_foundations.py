@@ -3,7 +3,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from app.models.form import ALLOWED_VALIDATORS, EMPTY_HTML, FieldType, Validator
+from app.models.form import ALLOWED_VALIDATORS, EMPTY_HTML, FieldType, Validator, to_document_format
 from app.pipeline.build.catalogs import (
     load_dictionary_catalog,
     load_form_schema,
@@ -45,14 +45,20 @@ def test_dictionary_catalog() -> None:
     assert Semantic.COUNTRY in catalog["Kraje"].semantics
 
 
-def test_schema_accepts_reference_samples() -> None:
+def test_schema_accepts_reference_samples_in_document_format() -> None:
     schema = load_form_schema()
     validator = Draft202012Validator(schema)
     samples = sorted(WYMAGANIA.glob("konfiguracja_form_*.json"))
     assert len(samples) == 2
     for sample in samples:
-        errors = list(validator.iter_errors(json.loads(sample.read_text(encoding="utf-8"))))
-        assert errors == []
+        data = to_document_format(json.loads(sample.read_text(encoding="utf-8")))[0]
+        assert list(validator.iter_errors(data)) == []
+
+
+def test_schema_rejects_list_default_value() -> None:
+    nested = {"x": 0, "y": 0, "rows": 1, "cols": 3, "field": {"defaultValue": ["Polska"]}}
+    form = {"tabs": [{"questions": [{"field": {"repeatingSectionGrid": [nested]}}]}]}
+    assert list(Draft202012Validator(load_form_schema()).iter_errors(form))
 
 
 def test_schema_rejects_numeric_default_in_nested_grid() -> None:

@@ -3,7 +3,12 @@
 from collections.abc import Callable
 from typing import Any
 
-from app.models.form import FieldType, FormJson
+from app.models.form import (
+    GRID_KEY,
+    FieldType,
+    FormJson,
+    default_value_string,
+)
 from app.pipeline.build.fields import slugify
 from app.pipeline.build.html import html_document
 from app.pipeline.build.ir import FieldNode, PageNode, SectionNode
@@ -42,29 +47,27 @@ def _field(
         result["validation"] = [str(v) for v in node.validation]
         result["readOnly"] = node.read_only
         tooltip = node.tooltip
-    result["repeatingSectionGrid"] = grid
+    result[GRID_KEY] = grid
     result["states"] = list(states.get(node.key, []))
     result["questionOrder"] = placement.y
     result["tooltipMessage"] = tooltip
     if isinstance(node, FieldNode):
         optional: dict[str, Any] = {
-            "defaultValue": node.default_value,
+            "defaultValue": default_value_string(node.default_value),
             "defaultValueType": node.default_value_type,
             "dictionaryName": node.dictionary_name,
-            "searchEnabled": node.search_enabled,
-            "multiLevelTree": node.multi_level_tree,
             "consentSectionConfig": (
                 {
                     "consents": [
-                        {"description": html_document(c.description_html), "required": c.required}
-                        for c in node.consents
+                        {"description": html_document(c.description_html)} for c in node.consents
                     ],
+                    # OpisImportowanegoPlikuJSON.md: wymagalność na poziomie sekcji zgód.
+                    "required": any(c.required for c in node.consents),
                     "files": [],
                 }
                 if node.type is FieldType.CONSENT_SECTION
                 else None
             ),
-            "selectAllEnabled": node.select_all_enabled,
         }
         result.update({k: v for k, v in optional.items() if v is not None})
     return result

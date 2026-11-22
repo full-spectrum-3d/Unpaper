@@ -27,7 +27,7 @@ from app.core.config import Settings
 from app.core.errors import AppError, ErrorCode
 from app.models.document import DocumentModel
 from app.models.draft import FormDraft
-from app.models.form import SECTION_TYPES, FormJson
+from app.models.form import GRID_KEY, SECTION_TYPES, FormJson
 from app.models.warning import ConversionWarning
 from app.pipeline.analyze import AnalysisResult, analyze
 from app.pipeline.build import BuildOptions, BuildResult, build_fallback, build_form
@@ -220,7 +220,7 @@ def form_stats(form: FormJson) -> dict[str, int]:
                 fields += 1
                 continue
             sections += 1
-            for child in field.get("repeatingSectionGrid") or []:
+            for child in field.get(GRID_KEY) or []:
                 fields += 1
                 states += len(child.get("field", {}).get("states") or [])
     return {

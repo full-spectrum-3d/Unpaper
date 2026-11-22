@@ -50,3 +50,30 @@ def test_built_form_matches_original_schema(sample: str, style: str) -> None:
 def test_reference_form_matches_original_schema(sample: str) -> None:
     data = json.loads((REFERENCES / SAMPLES[sample][0]).read_text(encoding="utf-8"))
     assert _errors(data) == []
+
+
+_OUTSIDE_DOCUMENT = {
+    "repetingSectionGrid",
+    "searchEnabled",
+    "multiLevelTree",
+    "selectAllEnabled",
+    "minItemRows",
+}
+
+
+def _all_keys(node: Any) -> set[str]:
+    if isinstance(node, list):
+        return set().union(*map(_all_keys, node)) if node else set()
+    if isinstance(node, dict):
+        return set(node).union(*map(_all_keys, node.values()))
+    return set()
+
+
+@pytest.mark.parametrize("sample", sorted(SAMPLES))
+def test_built_form_uses_only_document_keys(sample: str) -> None:
+    _, draft_name, base = SAMPLES[sample]
+    draft = FormDraft.model_validate_json((DRAFTS / draft_name).read_text(encoding="utf-8"))
+    options = BuildOptions(identity_source=base.identity_source, signed=base.signed)
+    form = build_form(draft, options).form.to_import_json()
+    assert not _OUTSIDE_DOCUMENT & _all_keys(form)
+    assert "repetingSectionGrid" not in json.dumps(form)  # także w zapytaniach JSONata

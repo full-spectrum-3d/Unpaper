@@ -17,7 +17,7 @@ from typing import Any
 
 import jsonata
 
-from app.models.form import FieldType, StateType
+from app.models.form import GRID_KEY, FieldType, StateType
 from app.models.warning import ConversionWarning
 from app.pipeline.build.ir import AllOf, AnyOf, Condition, Eq, Not, PageNode
 from app.pipeline.issues import IssueCode
@@ -60,7 +60,7 @@ def _path(loc: FieldLocation, context_section_key: str | None) -> str:
     tab = f"tabs[{_name_literal(loc.page_title)} in title]"
     section = f"questions[{_name_literal(loc.section_tech_name)} in field.techName]"
     if not loc.repeating:
-        fld = f"repeatingSectionGrid[{_name_literal(loc.field_tech_name)} in field.techName]"
+        fld = f"{GRID_KEY}[{_name_literal(loc.field_tech_name)} in field.techName]"
         return f"{tab}.{section}.field.{fld}.field.__userAnswer"
     if context_section_key != loc.section_key:
         raise ValueError(
@@ -167,7 +167,7 @@ def _document(answers: dict[str, str], locate: Locate) -> dict[str, Any]:
                 field: dict[str, Any] = {"techName": tech, "__userAnswer": [row]}
             else:
                 grid = [{"field": {"techName": f, "__userAnswer": [v]}} for f, v in data["fields"]]
-                field = {"techName": tech, "repeatingSectionGrid": grid}
+                field = {"techName": tech, GRID_KEY: grid}
             questions.append({"field": field})
         doc_tabs.append({"title": title, "questions": questions})
     return {"tabs": doc_tabs}

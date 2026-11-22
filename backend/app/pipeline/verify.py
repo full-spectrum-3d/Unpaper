@@ -18,12 +18,14 @@ from app.models.form import (
     CHOICE_TYPES,
     EMPTY_HTML,
     EXTERNAL_SYSTEM,
+    GRID_KEY,
     INPUT_TYPES,
     SECTION_TYPES,
     FieldType,
     FormJson,
     StateType,
     TabType,
+    to_document_format,
 )
 from app.models.warning import ConversionWarning
 from app.pipeline.build.catalogs import load_form_schema, load_initial_data_catalog
@@ -46,7 +48,7 @@ BASE_DEFAULTS: dict[str, Any] = {
     "options": [],
     "validation": [],
     "readOnly": False,
-    "repeatingSectionGrid": [],
+    GRID_KEY: [],
     "states": [],
     "questionOrder": 0,
     "tooltipMessage": "",
@@ -107,8 +109,8 @@ def _walk(
         fld = question.get("field")
         if isinstance(fld, dict):
             yield _Node(path, question, fld, tab, parent)
-            grid = f"{path}.field.repeatingSectionGrid"
-            yield from _walk(fld.get("repeatingSectionGrid"), grid, tab, fld)
+            grid = f"{path}.field.{GRID_KEY}"
+            yield from _walk(fld.get(GRID_KEY), grid, tab, fld)
 
 
 def _nodes(form: dict[str, Any]) -> list[_Node]:
@@ -143,6 +145,17 @@ def _tech_names(form: dict[str, Any]) -> set[str]:
 
 
 # --- Autonaprawy ---
+
+
+def _fix_document_format(form: dict[str, Any], ctx: _Ctx) -> None:
+    """Starszy format (wzorce COI) -> klucze z OpisImportowanegoPlikuJSON.md."""
+    converted, changes = to_document_format(form)
+    if not changes:
+        return
+    form.clear()
+    form.update(converted)
+    message = f"Dostosowano klucze do dokumentu importu ({len(changes)} zmian)"
+    ctx.fix(IssueCode.SCHEMA, message, None)
 
 
 def _fix_base_keys(form: dict[str, Any], ctx: _Ctx) -> None:
@@ -182,7 +195,7 @@ def _fix_field_outside_section(form: dict[str, Any], ctx: _Ctx) -> None:
                 "techName": wrapper_tech[:MAX_TECH_NAME],
                 "title": fld.get("title", ""),
                 "description": EMPTY_HTML,
-                "repeatingSectionGrid": [inner],
+                GRID_KEY: [inner],
                 "questionOrder": fld.get("questionOrder", 0),
             }
             question["field"] = wrapper
@@ -196,7 +209,7 @@ def _flatten(grid: list[Any], base: str, ctx: _Ctx) -> list[Any]:
     for i, item in enumerate(grid):
         inner = item.get("field") if isinstance(item, dict) else None
         if isinstance(inner, dict) and _is_section(inner):
-            nested = inner.get("repeatingSectionGrid")
+            nested = inner.get(GRID_KEY)
             result.extend(_flatten(nested if isinstance(nested, list) else [], base, ctx))
             ctx.fix(
                 IssueCode.R04_NESTED_SECTION,
@@ -210,10 +223,10 @@ def _flatten(grid: list[Any], base: str, ctx: _Ctx) -> list[Any]:
 
 def _fix_nested_sections(form: dict[str, Any], ctx: _Ctx) -> None:
     for node in _nodes(form):
-        grid = node.field.get("repeatingSectionGrid")
+        grid = node.field.get(GRID_KEY)
         if node.parent is None and _is_section(node.field) and isinstance(grid, list):
-            base = f"{node.path}.field.repeatingSectionGrid"
-            node.field["repeatingSectionGrid"] = _flatten(grid, base, ctx)
+            base = f"{node.path}.field.{GRID_KEY}"
+            node.field[GRID_KEY] = _flatten(grid, base, ctx)
 
 
 def _fix_empty_pages(form: dict[str, Any], ctx: _Ctx) -> None:
@@ -274,7 +287,7 @@ def _fix_section_titles(form: dict[str, Any], ctx: _Ctx) -> None:
             continue
         titles = (
             q["field"].get("title")
-            for _, q in _items(node.field.get("repeatingSectionGrid"), "")
+            for _, q in _items(node.field.get(GRID_KEY), "")
             if isinstance(q.get("field"), dict)
         )
         title = next((t for t in titles if not _blank(t)), DEFAULT_SECTION_TITLE)
@@ -457,6 +470,7 @@ def _fix_flow(form: dict[str, Any], ctx: _Ctx) -> None:
 
 
 FIXES: tuple[Callable[[dict[str, Any], _Ctx], None], ...] = (
+    _fix_document_format,
     _fix_base_keys,
     _fix_field_outside_section,
     _fix_nested_sections,
@@ -505,6 +519,8 @@ def _rule_schema(form: dict[str, Any]) -> list[Issue]:
         if _ftype(node.field) is None:
             msg = f"Nieznany typ pola: {node.field.get('type')!r}"
             issues.append(Issue(IssueCode.SCHEMA, msg, node.path))
+    for change in to_document_format(form)[1][:MAX_SCHEMA_ISSUES]:
+        issues.append(Issue(IssueCode.SCHEMA, f"Klucz spoza dokumentu importu: {change}", None))
     return issues
 
 
@@ -691,9 +707,9 @@ def _consent_ok(config: Any) -> bool:
             isinstance(c, dict)
             and isinstance(c.get("description"), str)
             and bool(c["description"].strip())
-            and isinstance(c.get("required"), bool)
             for c in consents
         )
+        and isinstance(config.get("required"), bool)
     )
 
 

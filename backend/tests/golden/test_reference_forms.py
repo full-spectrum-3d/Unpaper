@@ -11,6 +11,7 @@ from typing import Any
 import pytest
 
 from app.models.draft import FormDraft
+from app.models.form import to_document_format
 from app.pipeline.build import BuildOptions, build_form
 from app.pipeline.verify import verify_form
 
@@ -80,7 +81,9 @@ MIN_COUNTS = {
 
 
 def _load(name: str) -> dict[str, Any]:
-    data: dict[str, Any] = json.loads((REFERENCES / name).read_text(encoding="utf-8"))
+    """Wzorzec COI przetłumaczony na format z dokumentu importu (jak nasz wynik)."""
+    raw = json.loads((REFERENCES / name).read_text(encoding="utf-8"))
+    data: dict[str, Any] = to_document_format(raw)[0]
     return data
 
 

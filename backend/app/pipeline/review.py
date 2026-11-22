@@ -13,7 +13,7 @@ from typing import Any
 
 from app.models.document import FILL_RUN, Block, DocumentModel, Page
 from app.models.draft import DraftField, FormDraft
-from app.models.form import SECTION_TYPES, FieldType
+from app.models.form import GRID_KEY, SECTION_TYPES, FieldType
 from app.models.warning import ConversionWarning
 from app.pipeline.draft_normalize import LABEL_MATCH_THRESHOLD, label_variants, matches_text
 
@@ -211,7 +211,7 @@ def _iter_form_fields(form: dict[str, Any]) -> list[tuple[str, str, dict[str, An
                 children = [top]
                 section = ""
             else:
-                children = [c.get("field", {}) for c in top.get("repeatingSectionGrid") or []]
+                children = [c.get("field", {}) for c in top.get(GRID_KEY) or []]
                 section = str(top.get("title", ""))
             for child in children:
                 if child.get("type") not in _NOT_REVIEWED:

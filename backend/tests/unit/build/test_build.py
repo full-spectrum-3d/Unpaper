@@ -228,8 +228,8 @@ def test_contact_section_has_phone_prefix_before_phone() -> None:
     assert prefix["type"] == "SELECT"
     assert prefix["dictionaryName"] == "NUMERY_KIERUNKOWE"
     assert prefix["options"] == []
-    assert prefix["defaultValue"] == ["+48"]
-    assert prefix["searchEnabled"] is True
+    assert prefix["defaultValue"] == "+48"
+    assert "searchEnabled" not in prefix  # klucz spoza dokumentu importu
     assert prefix["validation"] == []
 
 

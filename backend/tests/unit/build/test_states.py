@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from app.models.form import FieldType, TabType
+from app.models.form import FieldType, TabType, to_document_format
 from app.pipeline.build.ir import AllOf, AnyOf, Condition, Eq, FieldNode, Not, PageNode, SectionNode
 from app.pipeline.build.states import (
     FieldLocation,
@@ -82,7 +82,8 @@ CASES: list[tuple[str, Condition]] = [
 
 @pytest.mark.parametrize(("tech_name", "cond"), CASES)
 def test_matches_reference_queries(tech_name: str, cond: Condition) -> None:
-    expected = _find_state(json.loads(REFERENCE.read_text(encoding="utf-8")), tech_name)
+    reference = to_document_format(json.loads(REFERENCE.read_text(encoding="utf-8")))[0]
+    expected = _find_state(reference, tech_name)
     assert expected is not None
     query = condition_to_jsonata(cond, locate, context_section_key=None)
     assert "\n" not in query

@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 
 from app.models.draft import ApplicantKind, FormDraft
-from app.models.form import FieldType
+from app.models.form import FieldType, to_document_format
 from app.pipeline.build import BuildOptions, build_form
 from app.pipeline.build.ir import AllOf, Eq, Not, SectionNode
 from app.pipeline.build.sections import (
@@ -191,14 +191,19 @@ def test_consent_required_matches_reference_layout() -> None:
         "konfiguracja_form_wniosekOStwierdzenieNadplatyPodatku.json",
         "konfiguracja_form_wniosekOUstalenieNumeruPorzadkowegoNieruchomosci.json",
     ):
-        reference = json.loads((root / name).read_text(encoding="utf-8"))
+        raw = json.loads((root / name).read_text(encoding="utf-8"))
+        reference = to_document_format(raw)[0]
         config = next(
             f["consentSectionConfig"] for f in walk(reference) if f.get("type") == "CONSENT_SECTION"
         )
-        # wzorce: `required` tylko per zgoda, nie na poziomie consentSectionConfig
-        assert set(config) == {"consents", "files"}
-        assert all(c["required"] is True for c in config["consents"])
+        # wzorce mają `required` per zgoda; po tłumaczeniu jest na poziomie sekcji zgód
+        assert set(config) == {"consents", "required", "files"}
+        assert config["required"] is True
+        assert all(set(c) == {"description"} for c in config["consents"])
     form = build_form(make_draft(statements=["A"]), BuildOptions()).form.to_import_json()
     ours = next(f for f in walk(form) if f.get("type") == "CONSENT_SECTION")
-    assert set(ours["consentSectionConfig"]) == {"consents", "files"}
-    assert all(c["required"] is True for c in ours["consentSectionConfig"]["consents"])
+    # OpisImportowanegoPlikuJSON.md: `required` tylko na poziomie consentSectionConfig
+    assert set(ours["consentSectionConfig"]) == {"consents", "required", "files"}
+    assert ours["consentSectionConfig"]["required"] is True
+    assert ours["consentSectionConfig"]["files"] == []
+    assert all(set(c) == {"description"} for c in ours["consentSectionConfig"]["consents"])
