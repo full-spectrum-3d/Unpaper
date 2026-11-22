@@ -1,0 +1,1748 @@
+{
+  "sourceFile": {
+    "name": "8. Deklaracja o wysokości opłaty.jpeg",
+    "mime": "image/jpeg",
+    "sizeBytes": 4814119,
+    "pages": 6,
+    "decrypted": false
+  },
+  "extraction": {
+    "method": "ocr",
+    "convertedToOpenXml": false,
+    "ocrMeanConfidence": 0.9042427060339457,
+    "blocks": 341
+  },
+  "llm": {
+    "model": "qwen3:8b",
+    "durationMs": 29183,
+    "retries": 0,
+    "fallback": false,
+    "fallbackReason": null,
+    "ruleBasedDraft": false,
+    "promptTokens": 9902,
+    "outputTokens": 2961
+  },
+  "stats": {
+    "tabs": 8,
+    "sections": 27,
+    "fields": 98,
+    "states": 48
+  },
+  "dictionaryProposals": [],
+  "warnings": [
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Nazwisko, imię / Nazwa pełna”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[1]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „PESEL”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[2]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Adres zamieszkania”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[5]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Województwo”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[7]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Kraj”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[8]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Gmina”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[9]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Miejscowość”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[10]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Ulica”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[11]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Numer”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[12]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Numer lokalu”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[13]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Kraj”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[0]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Województwo”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[1]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Gmina”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[2]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Miejscowość”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[3]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Ulica”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[4]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Numer lokalu”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[6]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Kod pocztowy”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[1].sections[0].fields[7]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Nr tel./fax”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[4].sections[1].fields[0]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Adres e-mail”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[4].sections[1].fields[1]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Podpis składającego deklarację / osoby reprezentującej”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
+      "path": "subject_pages[4].sections[2].fields[2]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Imię”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[4].sections[3].fields[0]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Nazwisko”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[4].sections[3].fields[1]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Podpis składającego deklarację / osoby reprezentującej”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
+      "path": "subject_pages[4].sections[3].fields[3]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Podpis współmałżonka (wypełnić tylko w przypadku zaznaczenia poz. B 1.1.2)”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
+      "path": "subject_pages[4].sections[3].fields[4]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[1]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[2]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[4]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[5]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[7]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[8]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[10]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[11]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka zwolnienia od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[13]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „SUMA poz. 38, 41, 44 i 47 pomniejszona o kwotę z poz. 50”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[15]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[17]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[18]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[20]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[21]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[23]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[24]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka opłaty od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[26]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Wysokość miesięcznej opłaty”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[27]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „Stawka zwolnienia od gospodarstwa domowego”: stawka wynika z uchwały lub cennika, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[29]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „SUMA poz. 54, 57, 60 i 63 pomniejszona o kwotę z poz. 66”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[31]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „KWOTA z poz. 29 załącznika A”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[32]"
+    },
+    {
+      "code": "W33_COMPUTED_FIELD_REMOVED",
+      "message": "Usunięto pole „SUMA poz. 51 lub 67 oraz 68”: wartość wylicza się z innych pól, wnioskodawca jej nie wpisuje.",
+      "path": "subject_pages[4].sections[0].fields[33]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej nie przekraczającej 45 m”.",
+      "path": "subject_pages[4].sections[0].fields[6]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 45 m jednak nie większej niż 60 m”.",
+      "path": "subject_pages[4].sections[0].fields[7]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 60 m jednak nie większej niż 80 m”.",
+      "path": "subject_pages[4].sections[0].fields[8]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 80 m”.",
+      "path": "subject_pages[4].sections[0].fields[9]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Liczba gospodarstw domowych objętych zwolnieniem dochodowym”.",
+      "path": "subject_pages[4].sections[0].fields[10]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Wysokość miesięcznego zwolnienia dochodowego”.",
+      "path": "subject_pages[4].sections[0].fields[11]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Nazwisko, imię współmałżonka” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[0].fields[2]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Data zdarzenia powodującego korektę złożonej deklaracji” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[2].sections[1].fields[2]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Część nieruchomości generująca odpady” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[3].sections[2].fields[1]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Oświadczenie o wyposażeniu w kompostownik” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[3].sections[3].fields[0]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej nie przekraczającej 45 m” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[4].sections[0].fields[0]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 45 m jednak nie większej niż 60 m” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[4].sections[0].fields[1]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 60 m jednak nie większej niż 80 m” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[4].sections[0].fields[2]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 80 m” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[4].sections[0].fields[3]"
+    },
+    {
+      "code": "W18_EMPTY_CONTAINER_REMOVED",
+      "message": "Usunięto pustą sekcję „Dane do kontaktu”.",
+      "path": "subject_pages[4].sections[1]"
+    },
+    {
+      "code": "W02_LABEL_TOO_LONG",
+      "message": "Etykieta ma 106 znaków.",
+      "path": "p5.s1.f1"
+    },
+    {
+      "code": "W02_LABEL_TOO_LONG",
+      "message": "Etykieta ma 131 znaków.",
+      "path": "p5.s1.f2"
+    },
+    {
+      "code": "W02_LABEL_TOO_LONG",
+      "message": "Etykieta ma 131 znaków.",
+      "path": "p5.s1.f3"
+    },
+    {
+      "code": "W02_LABEL_TOO_LONG",
+      "message": "Etykieta ma 102 znaków.",
+      "path": "p5.s1.f4"
+    },
+    {
+      "code": "W28_RODO_CLAUSE_URL_MISSING",
+      "message": "Zgoda RODO nie ma linku do klauzuli informacyjnej: ustaw RODO_CLAUSE_URL (np. adres w BIP) albo dodaj link w Generatorze."
+    }
+  ],
+  "fixes": [],
+  "timings": {
+    "normalizeMs": 0,
+    "extractMs": 25028,
+    "analyzeMs": 29349,
+    "buildMs": 172
+  },
+  "confidence": {
+    "score": 0.77,
+    "level": "medium",
+    "fieldsTotal": 94,
+    "fieldsFromDocument": 30,
+    "toReview": 8
+  },
+  "fields": [
+    {
+      "techName": "nazwa_organu",
+      "title": "Nazwa organu",
+      "tab": "Dane",
+      "section": "Organ, do którego jest składany wniosek",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_w_czyim_imieniu_deklarujesz",
+      "title": "Wybierz, w czyim imieniu deklarujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_jako_kto_deklarujesz",
+      "title": "Wybierz, jako kto deklarujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwa",
+      "title": "Nazwa",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nip",
+      "title": "NIP",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "regon",
+      "title": "REGON",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_krs",
+      "title": "Numer KRS",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_siedziba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_siedziba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_siedziba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_siedziba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_siedziba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_siedziba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_odpisem_danych",
+      "title": "Plik z odpisem danych",
+      "tab": "Dane",
+      "section": "Potwierdzenie, że jesteś reprezentantem",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie_inna_osoba",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko_inna_osoba",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel_inna_osoba",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_inna_osoba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_inna_osoba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_inna_osoba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_inna_osoba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_inna_osoba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_inna_osoba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_dokumentu_z_pelnomocnictwem",
+      "title": "Plik dokumentu z pełnomocnictwem",
+      "tab": "Dane",
+      "section": "Pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+      "title": "Czy złożenie pełnomocnictwa wymaga opłaty skarbowej?",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu_2",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa za pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "skladajacy_deklaracje",
+      "title": "Składający deklarację",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b16",
+        "text": "1. Składający deklarację (zaznaczyć właściwą kratkę)",
+        "box": {
+          "x": 0.0889,
+          "y": 0.3711,
+          "width": 0.3622,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.923
+      }
+    },
+    {
+      "techName": "nip_regon_dot_tylko_osob_prawnych",
+      "title": "NIP/REGON (dot. tylko osób prawnych)",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b27",
+        "text": "4. NIP/REGON (dot. tylko osób prawnych)",
+        "box": {
+          "x": 0.5895,
+          "y": 0.5626,
+          "width": 0.2805,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.913
+      }
+    },
+    {
+      "techName": "nazwisko_imie_wspolmalzonka",
+      "title": "Nazwisko, imię współmałżonka",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Nazwisko, imię współmałżonka” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "pesel_wspolmalzonka",
+      "title": "PESEL współmałżonka",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.88,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b29",
+        "text": "B.2 DANE IDENTYFIKACYJNE WSPÓŁMAŁŻONKA (wypełnić tylko w przypadku zaznaczenia kratki w poz. B 1.1.2)",
+        "box": {
+          "x": 0.0719,
+          "y": 0.6105,
+          "width": 0.8295,
+          "height": 0.0137
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.918
+      }
+    },
+    {
+      "techName": "kod_pocztowy_nieruchomosci_domu",
+      "title": "Kod pocztowy nieruchomości/domu",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.85,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b58",
+        "text": "22. Numer nieruchomości/domu",
+        "box": {
+          "x": 0.0846,
+          "y": 0.1586,
+          "width": 0.2207,
+          "height": 0.0086
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "numer_y_dzialki_dzialek",
+      "title": "Numer/y działki/działek",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.94,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b95",
+        "text": "32. Numer/y działki/działek",
+        "box": {
+          "x": 0.6904,
+          "y": 0.5498,
+          "width": 0.1941,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.887
+      }
+    },
+    {
+      "techName": "numer_nieruchomosci_domu",
+      "title": "Numer nieruchomości/domu",
+      "tab": "Adres do korespondencji",
+      "section": "Dane adresowe",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b58",
+        "text": "22. Numer nieruchomości/domu",
+        "box": {
+          "x": 0.0846,
+          "y": 0.1586,
+          "width": 0.2207,
+          "height": 0.0086
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "rodzaj_deklaracji_2",
+      "title": "Rodzaj deklaracji",
+      "tab": "Okoliczności uzasadniające złożenie deklaracji",
+      "section": "Rodzaj deklaracji",
+      "origin": "document",
+      "confidence": 0.87,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b75",
+        "text": "4. korekta złożonej, obowiązującej deklaracji data",
+        "box": {
+          "x": 0.5816,
+          "y": 0.3283,
+          "width": 0.3561,
+          "height": 0.0103
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.918
+      }
+    },
+    {
+      "techName": "data_wystapienia_zmiany_danych",
+      "title": "Data wystąpienia zmiany danych",
+      "tab": "Okoliczności uzasadniające złożenie deklaracji",
+      "section": "Dane zmieniające obowiązek opłaty",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b71",
+        "text": "data wystąpienia zmiany danych:",
+        "box": {
+          "x": 0.7056,
+          "y": 0.2552,
+          "width": 0.2225,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.917
+      }
+    },
+    {
+      "techName": "data_zdarzenia_powodujacego_ustanie_obowiazku_oplaty",
+      "title": "Data zdarzenia powodującego ustanie obowiązku opłaty",
+      "tab": "Okoliczności uzasadniające złożenie deklaracji",
+      "section": "Dane zmieniające obowiązek opłaty",
+      "origin": "document",
+      "confidence": 0.88,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b78",
+        "text": "powodującego ustanie obowiązku opłaty:",
+        "box": {
+          "x": 0.1354,
+          "y": 0.3425,
+          "width": 0.2769,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.917
+      }
+    },
+    {
+      "techName": "data_zdarzenia_powodujacego_korekte_zlozonej_deklaracji",
+      "title": "Data zdarzenia powodującego korektę złożonej deklaracji",
+      "tab": "Okoliczności uzasadniające złożenie deklaracji",
+      "section": "Dane zmieniające obowiązek opłaty",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Data zdarzenia powodującego korektę złożonej deklaracji” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "miejscowosc",
+      "title": "Miejscowość",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Adres nieruchomości",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b43",
+        "text": "11 Miejscowość",
+        "box": {
+          "x": 0.0889,
+          "y": 0.8593,
+          "width": 0.1112,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "kod_pocztowy_2",
+      "title": "Kod pocztowy",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Adres nieruchomości",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b48",
+        "text": "15. Kod pocztowy",
+        "box": {
+          "x": 0.679,
+          "y": 0.8876,
+          "width": 0.1227,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.917
+      }
+    },
+    {
+      "techName": "ulica_2",
+      "title": "Ulica",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Adres nieruchomości",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b44",
+        "text": "12. Ulica",
+        "box": {
+          "x": 0.2757,
+          "y": 0.8602,
+          "width": 0.0623,
+          "height": 0.0077
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.915
+      }
+    },
+    {
+      "techName": "numer_nieruchomosci_domu_2",
+      "title": "Numer nieruchomości/domu",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Adres nieruchomości",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b58",
+        "text": "22. Numer nieruchomości/domu",
+        "box": {
+          "x": 0.0846,
+          "y": 0.1586,
+          "width": 0.2207,
+          "height": 0.0086
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "numer_lokalu_2",
+      "title": "Numer lokalu",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Adres nieruchomości",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b47",
+        "text": "14. Numer lokalu",
+        "box": {
+          "x": 0.2757,
+          "y": 0.8876,
+          "width": 0.1179,
+          "height": 0.0077
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.91
+      }
+    },
+    {
+      "techName": "adres_lub_opis_miejsca_lokalizacji_pojemnikow",
+      "title": "Adres lub opis miejsca lokalizacji pojemników",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Miejsce gromadzenia odpadów",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b94",
+        "text": "31. Adres lub opis miejsca lokalizacji pojemników",
+        "box": {
+          "x": 0.0852,
+          "y": 0.549,
+          "width": 0.3416,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "numer_y_dzialki_dzialek_geodezyjnych",
+      "title": "Numer/y działki/działek geodezyjnych",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Miejsce gromadzenia odpadów",
+      "origin": "document",
+      "confidence": 0.84,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b95",
+        "text": "32. Numer/y działki/działek",
+        "box": {
+          "x": 0.6904,
+          "y": 0.5498,
+          "width": 0.1941,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.887
+      }
+    },
+    {
+      "techName": "rodzaj_nieruchomosci",
+      "title": "Rodzaj nieruchomości",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b98",
+        "text": "33. Rodzaj nieruchomości",
+        "box": {
+          "x": 0.0852,
+          "y": 0.6293,
+          "width": 0.1759,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "czesc_nieruchomosci_generujaca_odpady",
+      "title": "Część nieruchomości generująca odpady",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Dane identyfikacyjne",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Część nieruchomości generująca odpady” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "oplata_za_gospodarowanie_odpadami_komunalnymi",
+      "title": "Opłata za gospodarowanie odpadami komunalnymi",
+      "tab": "Dane adresowe nieruchomości",
+      "section": "Obliczenie wysokości opłaty",
+      "origin": "document",
+      "confidence": 0.92,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b109",
+        "text": "E. OŚWIADCZENIE O WYSOKOŚCI OPŁATY ZA GOSPODAROWANIE ODPADAMI KOMUNALNYMI",
+        "box": {
+          "x": 0.0719,
+          "y": 0.8174,
+          "width": 0.7007,
+          "height": 0.0111
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.921
+      }
+    },
+    {
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_o",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej nie przekraczającej 45 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Opłata dla właścicieli nieruchomości",
+      "origin": "document",
+      "confidence": 0.28,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej nie przekraczającej 45 m” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        },
+        {
+          "code": "W02_LABEL_TOO_LONG",
+          "message": "Etykieta ma 106 znaków."
+        }
+      ]
+    },
+    {
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_2",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 45 m jednak nie większej niż 60 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Opłata dla właścicieli nieruchomości",
+      "origin": "document",
+      "confidence": 0.28,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 45 m jednak nie większej niż 60 m” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        },
+        {
+          "code": "W02_LABEL_TOO_LONG",
+          "message": "Etykieta ma 131 znaków."
+        }
+      ]
+    },
+    {
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_3",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 60 m jednak nie większej niż 80 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Opłata dla właścicieli nieruchomości",
+      "origin": "document",
+      "confidence": 0.28,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 60 m jednak nie większej niż 80 m” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        },
+        {
+          "code": "W02_LABEL_TOO_LONG",
+          "message": "Etykieta ma 131 znaków."
+        }
+      ]
+    },
+    {
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_4",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 80 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Opłata dla właścicieli nieruchomości",
+      "origin": "document",
+      "confidence": 0.28,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 80 m” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        },
+        {
+          "code": "W02_LABEL_TOO_LONG",
+          "message": "Etykieta ma 102 znaków."
+        }
+      ]
+    },
+    {
+      "techName": "liczba_gospodarstw_domowych_objetych_zwolnieniem_dochodowym",
+      "title": "Liczba gospodarstw domowych objętych zwolnieniem dochodowym",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Opłata dla właścicieli nieruchomości",
+      "origin": "document",
+      "confidence": 0.85,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 3,
+        "blockId": "b160",
+        "text": "48 Liczba gospodarstw domowych objętych",
+        "box": {
+          "x": 0.0846,
+          "y": 0.3814,
+          "width": 0.3307,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.918
+      }
+    },
+    {
+      "techName": "wysokosc_miesiecznego_zwolnienia_dochodowego",
+      "title": "Wysokość miesięcznego zwolnienia dochodowego",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Opłata dla właścicieli nieruchomości",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Wysokość miesięcznego zwolnienia dochodowego” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "rodzaje_zalacznikow",
+      "title": "Rodzaje załączników",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Informacja o załącznikach",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 4,
+        "blockId": "b259",
+        "text": "73. Rodzaje załączników",
+        "box": {
+          "x": 0.1457,
+          "y": 0.4027,
+          "width": 0.1699,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.917
+      }
+    },
+    {
+      "techName": "inne_podac_jakie",
+      "title": "Inne: (podać jakie)",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Informacja o załącznikach",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 4,
+        "blockId": "b269",
+        "text": "4. Inne: (podać jakie)",
+        "box": {
+          "x": 0.1802,
+          "y": 0.4669,
+          "width": 0.1457,
+          "height": 0.0107
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "data_wypelnienia",
+      "title": "Data wypełnienia",
+      "tab": "Obliczenie wysokości opłaty",
+      "section": "Podpis",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 4,
+        "blockId": "b274",
+        "text": "76. Data wypełnienia",
+        "box": {
+          "x": 0.1457,
+          "y": 0.5742,
+          "width": 0.1457,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.923
+      }
+    },
+    {
+      "techName": "numer_kierunkowy",
+      "title": "Numer kierunkowy",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_telefonu",
+      "title": "Numer telefonu",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "adres_e_mail",
+      "title": "Adres e-mail",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "zgoda",
+      "title": "Zgody i oświadczenia",
+      "tab": "Kontakt i zgody",
+      "section": "Zgoda",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    }
+  ],
+  "review": [
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "nazwisko_imie_wspolmalzonka",
+      "title": "Nazwisko, imię współmałżonka",
+      "tab": "Dane podmiotu zobowiązania do składania deklaracji",
+      "messages": [
+        "Etykiety „Nazwisko, imię współmałżonka” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "data_zdarzenia_powodujacego_korekte_zlozonej_deklaracji",
+      "title": "Data zdarzenia powodującego korektę złożonej deklaracji",
+      "tab": "Okoliczności uzasadniające złożenie deklaracji",
+      "messages": [
+        "Etykiety „Data zdarzenia powodującego korektę złożonej deklaracji” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "czesc_nieruchomosci_generujaca_odpady",
+      "title": "Część nieruchomości generująca odpady",
+      "tab": "Dane adresowe nieruchomości",
+      "messages": [
+        "Etykiety „Część nieruchomości generująca odpady” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_o",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej nie przekraczającej 45 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "messages": [
+        "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej nie przekraczającej 45 m” nie ma w treści dokumentu - pole mogło zostać dopisane.",
+        "Etykieta ma 106 znaków."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_2",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 45 m jednak nie większej niż 60 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "messages": [
+        "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 45 m jednak nie większej niż 60 m” nie ma w treści dokumentu - pole mogło zostać dopisane.",
+        "Etykieta ma 131 znaków."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_3",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 60 m jednak nie większej niż 80 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "messages": [
+        "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 60 m jednak nie większej niż 80 m” nie ma w treści dokumentu - pole mogło zostać dopisane.",
+        "Etykieta ma 131 znaków."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "liczba_gospodarstw_domowych_zajmujacych_lokale_mieszkalne_4",
+      "title": "Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 80 m",
+      "tab": "Obliczenie wysokości opłaty",
+      "messages": [
+        "Etykiety „Liczba gospodarstw domowych zajmujących lokale mieszkalne o powierzchni użytkowej przekraczającej 80 m” nie ma w treści dokumentu - pole mogło zostać dopisane.",
+        "Etykieta ma 102 znaków."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "wysokosc_miesiecznego_zwolnienia_dochodowego",
+      "title": "Wysokość miesięcznego zwolnienia dochodowego",
+      "tab": "Obliczenie wysokości opłaty",
+      "messages": [
+        "Etykiety „Wysokość miesięcznego zwolnienia dochodowego” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    }
+  ],
+  "durationMs": 54551
+}

@@ -1,0 +1,1001 @@
+{
+  "sourceFile": {
+    "name": "7. Wniosek o wydanie zezwolenia na hodowanie lub utrzymywanie psów ras uznawanychza agresywne.JPG",
+    "mime": "image/jpeg",
+    "sizeBytes": 1009090,
+    "pages": 2,
+    "decrypted": false
+  },
+  "extraction": {
+    "method": "ocr",
+    "convertedToOpenXml": false,
+    "ocrMeanConfidence": 0.9060641631840918,
+    "blocks": 89
+  },
+  "llm": {
+    "model": "qwen3:8b",
+    "durationMs": 6641,
+    "retries": 0,
+    "fallback": false,
+    "fallbackReason": null,
+    "ruleBasedDraft": false,
+    "promptTokens": 2814,
+    "outputTokens": 661
+  },
+  "stats": {
+    "tabs": 4,
+    "sections": 17,
+    "fields": 76,
+    "states": 44
+  },
+  "dictionaryProposals": [],
+  "warnings": [
+    {
+      "code": "W21_CONDITION_REMOVED",
+      "message": "Usunięto warunek widoczności pola „Oświadczenie 1”: pole „Oświadczenie 2” nie jest polem wyboru.",
+      "path": "subject_pages[0].sections[2].fields[0]"
+    },
+    {
+      "code": "W21_CONDITION_REMOVED",
+      "message": "Usunięto warunek widoczności pola „Oświadczenie 2”: pole „Oświadczenie 3” nie jest polem wyboru.",
+      "path": "subject_pages[0].sections[2].fields[1]"
+    },
+    {
+      "code": "W21_CONDITION_REMOVED",
+      "message": "Usunięto warunek widoczności pola „Oświadczenie 3”: pole „Oświadczenie 4” nie jest polem wyboru.",
+      "path": "subject_pages[0].sections[2].fields[2]"
+    },
+    {
+      "code": "W21_CONDITION_REMOVED",
+      "message": "Usunięto warunek widoczności pola „Oświadczenie 4”: pole „Opłata skarbowa” nie jest polem wyboru.",
+      "path": "subject_pages[0].sections[2].fields[3]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Imię i nazwisko”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[0]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Ulica”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[1]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Nr domu”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[2]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Nr lokalu”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[3]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Miejscowość”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[4]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Kod pocztowy”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[5]"
+    },
+    {
+      "code": "W20_APPLICANT_FIELD_REMOVED",
+      "message": "Usunięto pole „Telefon”: dane wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[0].fields[6]"
+    },
+    {
+      "code": "W17_STATEMENT_REMOVED",
+      "message": "Usunięto pole „Oświadczenie 1”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
+      "path": "subject_pages[0].sections[2].fields[0]"
+    },
+    {
+      "code": "W17_STATEMENT_REMOVED",
+      "message": "Usunięto pole „Oświadczenie 2”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
+      "path": "subject_pages[0].sections[2].fields[1]"
+    },
+    {
+      "code": "W17_STATEMENT_REMOVED",
+      "message": "Usunięto pole „Oświadczenie 3”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
+      "path": "subject_pages[0].sections[2].fields[2]"
+    },
+    {
+      "code": "W17_STATEMENT_REMOVED",
+      "message": "Usunięto pole „Oświadczenie 4”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
+      "path": "subject_pages[0].sections[2].fields[3]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Pochodzenie psa (metryka, numer rodowodu, imię, nazwisko i adres poprzedniego właściciela)” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[1].fields[0]"
+    },
+    {
+      "code": "W18_EMPTY_CONTAINER_REMOVED",
+      "message": "Usunięto pustą sekcję „Dane wnioskodawcy”.",
+      "path": "subject_pages[0].sections[0]"
+    },
+    {
+      "code": "W02_LABEL_TOO_LONG",
+      "message": "Etykieta ma 90 znaków.",
+      "path": "p1.s1.f1"
+    },
+    {
+      "code": "W28_RODO_CLAUSE_URL_MISSING",
+      "message": "Zgoda RODO nie ma linku do klauzuli informacyjnej: ustaw RODO_CLAUSE_URL (np. adres w BIP) albo dodaj link w Generatorze."
+    }
+  ],
+  "fixes": [],
+  "timings": {
+    "normalizeMs": 0,
+    "extractMs": 8029,
+    "analyzeMs": 6661,
+    "buildMs": 153
+  },
+  "confidence": {
+    "score": 0.88,
+    "level": "high",
+    "fieldsTotal": 73,
+    "fieldsFromDocument": 9,
+    "toReview": 1
+  },
+  "fields": [
+    {
+      "techName": "nazwa_urzedu",
+      "title": "Nazwa urzędu",
+      "tab": "Dane",
+      "section": "Urząd, do którego jest składany wniosek",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_w_czyim_imieniu_wnioskujesz",
+      "title": "Wybierz, w czyim imieniu wnioskujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_jako_kto_wnioskujesz",
+      "title": "Wybierz, jako kto wnioskujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwa",
+      "title": "Nazwa",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nip",
+      "title": "NIP",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "regon",
+      "title": "REGON",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_krs",
+      "title": "Numer KRS",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_siedziba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_siedziba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_siedziba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_siedziba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_siedziba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_siedziba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_odpisem_danych",
+      "title": "Plik z odpisem danych",
+      "tab": "Dane",
+      "section": "Potwierdzenie, że jesteś reprezentantem",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie_inna_osoba",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko_inna_osoba",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel_inna_osoba",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_inna_osoba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_inna_osoba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_inna_osoba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_inna_osoba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_inna_osoba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_inna_osoba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_dokumentu_z_pelnomocnictwem",
+      "title": "Plik dokumentu z pełnomocnictwem",
+      "tab": "Dane",
+      "section": "Pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+      "title": "Czy złożenie pełnomocnictwa wymaga opłaty skarbowej?",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu_2",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa za pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "pochodzenie_psa_metryka_numer_rodowodu_imie_nazwisko_i",
+      "title": "Pochodzenie psa (metryka, numer rodowodu, imię, nazwisko i adres poprzedniego właściciela)",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.28,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Pochodzenie psa (metryka, numer rodowodu, imię, nazwisko i adres poprzedniego właściciela)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        },
+        {
+          "code": "W02_LABEL_TOO_LONG",
+          "message": "Etykieta ma 90 znaków."
+        }
+      ]
+    },
+    {
+      "techName": "rasa_psa",
+      "title": "Rasa psa",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b20",
+        "text": "Rasa psa:",
+        "box": {
+          "x": 0.1034,
+          "y": 0.5109,
+          "width": 0.0635,
+          "height": 0.009
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.925
+      }
+    },
+    {
+      "techName": "data_urodzenia_psa",
+      "title": "Data urodzenia psa",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b22",
+        "text": "Data urodzenia psa:",
+        "box": {
+          "x": 0.1034,
+          "y": 0.5353,
+          "width": 0.1336,
+          "height": 0.0094
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "data_szczepienia_w_przypadku_jego_braku",
+      "title": "Data szczepienia (w przypadku jego braku)",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b24",
+        "text": "Data szczepienia (w przypadku jego braku)",
+        "box": {
+          "x": 0.1034,
+          "y": 0.5584,
+          "width": 0.2914,
+          "height": 0.0094
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "plec",
+      "title": "Płeć",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.97,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b26",
+        "text": "Płeć:",
+        "box": {
+          "x": 0.1034,
+          "y": 0.5823,
+          "width": 0.0296,
+          "height": 0.0077
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.93
+      }
+    },
+    {
+      "techName": "sposob_oznakowania_psa_nr_ident",
+      "title": "Sposób oznakowania psa / nr ident.",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b30",
+        "text": "Sposób oznakowania psa / nr ident.:",
+        "box": {
+          "x": 0.1034,
+          "y": 0.634,
+          "width": 0.2455,
+          "height": 0.0133
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.928
+      }
+    },
+    {
+      "techName": "adres_miejsca_utrzymywania_psa_psow",
+      "title": "Adres miejsca utrzymywania psa/psów",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b33",
+        "text": "Adres miejsca utrzymywania psa/psów:",
+        "box": {
+          "x": 0.0859,
+          "y": 0.6999,
+          "width": 0.2666,
+          "height": 0.0098
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "opis_miejsca_i_warunkow_w_jakich_wnioskodawca_zamierza",
+      "title": "Opis miejsca i warunków w jakich wnioskodawca zamierza utrzymywać psa/psy",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Dane psa",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b34",
+        "text": "Opis miejsca i warunków w jakich wnioskodawca zamierza utrzymywać psa/psy:",
+        "box": {
+          "x": 0.0865,
+          "y": 0.7499,
+          "width": 0.5423,
+          "height": 0.0133
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.916
+      }
+    },
+    {
+      "techName": "oplata_skarbowa",
+      "title": "Opłata skarbowa",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "section": "Oświadczenia",
+      "origin": "document",
+      "confidence": 0.94,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b40",
+        "text": "Opłata skarbowa 82 zł.",
+        "box": {
+          "x": 0.0865,
+          "y": 0.9453,
+          "width": 0.1669,
+          "height": 0.0094
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.878
+      }
+    },
+    {
+      "techName": "numer_kierunkowy",
+      "title": "Numer kierunkowy",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_telefonu",
+      "title": "Numer telefonu",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "adres_e_mail",
+      "title": "Adres e-mail",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "zgoda",
+      "title": "Zgody i oświadczenia",
+      "tab": "Kontakt i zgody",
+      "section": "Zgody i oświadczenia",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    }
+  ],
+  "review": [
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "pochodzenie_psa_metryka_numer_rodowodu_imie_nazwisko_i",
+      "title": "Pochodzenie psa (metryka, numer rodowodu, imię, nazwisko i adres poprzedniego właściciela)",
+      "tab": "Dane identyfikacyjne wnioskodawcy",
+      "messages": [
+        "Etykiety „Pochodzenie psa (metryka, numer rodowodu, imię, nazwisko i adres poprzedniego właściciela)” nie ma w treści dokumentu - pole mogło zostać dopisane.",
+        "Etykieta ma 90 znaków."
+      ]
+    }
+  ],
+  "durationMs": 14845
+}

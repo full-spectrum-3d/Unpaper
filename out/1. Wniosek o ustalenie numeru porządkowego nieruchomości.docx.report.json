@@ -1,0 +1,771 @@
+{
+  "sourceFile": {
+    "name": "1. Wniosek o ustalenie numeru porządkowego nieruchomości.docx",
+    "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "sizeBytes": 21883,
+    "pages": 1,
+    "decrypted": false
+  },
+  "extraction": {
+    "method": "docx",
+    "convertedToOpenXml": false,
+    "ocrMeanConfidence": null,
+    "blocks": 39
+  },
+  "llm": {
+    "model": "qwen3:8b",
+    "durationMs": 77056,
+    "retries": 0,
+    "fallback": false,
+    "fallbackReason": null,
+    "ruleBasedDraft": false,
+    "promptTokens": 2273,
+    "outputTokens": 177
+  },
+  "stats": {
+    "tabs": 4,
+    "sections": 17,
+    "fields": 72,
+    "states": 44
+  },
+  "dictionaryProposals": [],
+  "warnings": [
+    {
+      "code": "W28_RODO_CLAUSE_URL_MISSING",
+      "message": "Zgoda RODO nie ma linku do klauzuli informacyjnej: ustaw RODO_CLAUSE_URL (np. adres w BIP) albo dodaj link w Generatorze."
+    }
+  ],
+  "fixes": [],
+  "timings": {
+    "normalizeMs": 0,
+    "extractMs": 9,
+    "analyzeMs": 77060,
+    "buildMs": 153
+  },
+  "confidence": {
+    "score": 0.99,
+    "level": "high",
+    "fieldsTotal": 69,
+    "fieldsFromDocument": 5,
+    "toReview": 0
+  },
+  "fields": [
+    {
+      "techName": "nazwa_organu",
+      "title": "Nazwa organu",
+      "tab": "Dane",
+      "section": "Organ, do którego jest składany wniosek",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_w_czyim_imieniu_wnioskujesz",
+      "title": "Wybierz, w czyim imieniu wnioskujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_jako_kto_wnioskujesz",
+      "title": "Wybierz, jako kto wnioskujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwa",
+      "title": "Nazwa",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nip",
+      "title": "NIP",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "regon",
+      "title": "REGON",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_krs",
+      "title": "Numer KRS",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_siedziba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_siedziba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_siedziba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_siedziba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_siedziba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_siedziba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_odpisem_danych",
+      "title": "Plik z odpisem danych",
+      "tab": "Dane",
+      "section": "Potwierdzenie, że jesteś reprezentantem",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie_inna_osoba",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko_inna_osoba",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel_inna_osoba",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_inna_osoba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_inna_osoba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_inna_osoba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_inna_osoba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_inna_osoba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_inna_osoba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_dokumentu_z_pelnomocnictwem",
+      "title": "Plik dokumentu z pełnomocnictwem",
+      "tab": "Dane",
+      "section": "Pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+      "title": "Czy złożenie pełnomocnictwa wymaga opłaty skarbowej?",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu_2",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa za pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc",
+      "title": "Miejscowość",
+      "tab": "Informacje o budynku",
+      "section": "Lokalizacja budynku",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b17",
+        "text": "w miejscowości … przy ulicy1) …"
+      }
+    },
+    {
+      "techName": "ulica_2",
+      "title": "Ulica",
+      "tab": "Informacje o budynku",
+      "section": "Lokalizacja budynku",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b17",
+        "text": "w miejscowości … przy ulicy1) …"
+      }
+    },
+    {
+      "techName": "numer_ewidencyjny_dzialki",
+      "title": "Numer ewidencyjny działki",
+      "tab": "Informacje o budynku",
+      "section": "Lokalizacja budynku",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b18",
+        "text": "nr ewidencyjny działki … w obrębie …"
+      }
+    },
+    {
+      "techName": "obreb",
+      "title": "Obręb",
+      "tab": "Informacje o budynku",
+      "section": "Lokalizacja budynku",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b18",
+        "text": "nr ewidencyjny działki … w obrębie …"
+      }
+    },
+    {
+      "techName": "numer_porzadkowy",
+      "title": "Numer porządkowy",
+      "tab": "Informacje o budynku",
+      "section": "Dane budynku",
+      "origin": "document",
+      "confidence": 0.93,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b15",
+        "text": "WNIOSEK O USTALENIE NUMERU PORZĄDKOWEGO"
+      }
+    },
+    {
+      "techName": "numer_kierunkowy",
+      "title": "Numer kierunkowy",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_telefonu",
+      "title": "Numer telefonu",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "adres_e_mail",
+      "title": "Adres e-mail",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "zgoda",
+      "title": "Zgody i oświadczenia",
+      "tab": "Kontakt i zgody",
+      "section": "Zgoda",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    }
+  ],
+  "review": [],
+  "durationMs": 77223
+}

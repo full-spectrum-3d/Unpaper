@@ -1,0 +1,1434 @@
+{
+  "sourceFile": {
+    "name": "6. Wniosek o wydanie zezwolenia na zajęcie pasa drogowego.png",
+    "mime": "image/png",
+    "sizeBytes": 666381,
+    "pages": 2,
+    "decrypted": false
+  },
+  "extraction": {
+    "method": "ocr",
+    "convertedToOpenXml": false,
+    "ocrMeanConfidence": 0.8987022396111252,
+    "blocks": 89
+  },
+  "llm": {
+    "model": "qwen3:8b",
+    "durationMs": 6889,
+    "retries": 0,
+    "fallback": false,
+    "fallbackReason": null,
+    "ruleBasedDraft": false,
+    "promptTokens": 2977,
+    "outputTokens": 680
+  },
+  "stats": {
+    "tabs": 4,
+    "sections": 20,
+    "fields": 94,
+    "states": 44
+  },
+  "dictionaryProposals": [],
+  "warnings": [
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Długość”.",
+      "path": "subject_pages[0].sections[1].fields[4]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Szerokość”.",
+      "path": "subject_pages[0].sections[1].fields[5]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Długość”.",
+      "path": "subject_pages[0].sections[1].fields[7]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Szerokość”.",
+      "path": "subject_pages[0].sections[1].fields[8]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Długość”.",
+      "path": "subject_pages[0].sections[1].fields[10]"
+    },
+    {
+      "code": "W25_DUPLICATE_FIELD_REMOVED",
+      "message": "Usunięto powtórzone pole „Szerokość”.",
+      "path": "subject_pages[0].sections[1].fields[11]"
+    },
+    {
+      "code": "W34_ATTACHMENT_FROM_DOCUMENT",
+      "message": "Dodano załącznik „Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego” z listy załączników na blankiecie.",
+      "path": "attachments"
+    },
+    {
+      "code": "W34_ATTACHMENT_FROM_DOCUMENT",
+      "message": "Dodano załącznik „Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego” z listy załączników na blankiecie.",
+      "path": "attachments"
+    },
+    {
+      "code": "W34_ATTACHMENT_FROM_DOCUMENT",
+      "message": "Dodano załącznik „Szczegółowy harmonogram robót” z listy załączników na blankiecie.",
+      "path": "attachments"
+    },
+    {
+      "code": "W34_ATTACHMENT_FROM_DOCUMENT",
+      "message": "Dodano załącznik „Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazdów lub pieszych” z listy załączników na blankiecie.",
+      "path": "attachments"
+    },
+    {
+      "code": "W34_ATTACHMENT_FROM_DOCUMENT",
+      "message": "Dodano załącznik „Informację o sposobie zabezpieczenia robót, jeżeli nie jest wymagany projekt organizacji ruchu” z listy załączników na blankiecie.",
+      "path": "attachments"
+    },
+    {
+      "code": "W34_ATTACHMENT_FROM_DOCUMENT",
+      "message": "Dodano załącznik „Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł w przypadku, gdy w sprawie występuje pełnomocnik” z listy załączników na blankiecie.",
+      "path": "attachments"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Numer działki ewidencji” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[0].fields[2]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Powierzchnia jezdni (do 20% szerokości)” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[1].fields[0]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Powierzchnia jezdni (do 50% szerokości)” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[1].fields[3]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Powierzchnia jezdni (powyżej 50% szerokości)” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[1].fields[4]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Termin realizacji robót” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[2].fields[0]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Wykonawca robót” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[2].fields[1]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Osoba odpowiedzialna za wykonanie robót” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[2].fields[2]"
+    },
+    {
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Informacja o zabezpieczeniu robót” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[3].fields[4]"
+    },
+    {
+      "code": "W28_RODO_CLAUSE_URL_MISSING",
+      "message": "Zgoda RODO nie ma linku do klauzuli informacyjnej: ustaw RODO_CLAUSE_URL (np. adres w BIP) albo dodaj link w Generatorze."
+    }
+  ],
+  "fixes": [],
+  "timings": {
+    "normalizeMs": 0,
+    "extractMs": 6639,
+    "analyzeMs": 6927,
+    "buildMs": 160
+  },
+  "confidence": {
+    "score": 0.77,
+    "level": "medium",
+    "fieldsTotal": 91,
+    "fieldsFromDocument": 27,
+    "toReview": 8
+  },
+  "fields": [
+    {
+      "techName": "nazwa_urzedu",
+      "title": "Nazwa urzędu",
+      "tab": "Dane",
+      "section": "Urząd, do którego jest składany wniosek",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_w_czyim_imieniu_wnioskujesz",
+      "title": "Wybierz, w czyim imieniu wnioskujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wybierz_jako_kto_wnioskujesz",
+      "title": "Wybierz, jako kto wnioskujesz",
+      "tab": "Dane",
+      "section": "Podmiot wniosku",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Twoje dane",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwa",
+      "title": "Nazwa",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nip",
+      "title": "NIP",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "regon",
+      "title": "REGON",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_krs",
+      "title": "Numer KRS",
+      "tab": "Dane",
+      "section": "Dane podmiotu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_siedziba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_siedziba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_siedziba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_siedziba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_siedziba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_siedziba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_siedziba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_siedziba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_siedziba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_siedziba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres siedziby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_odpisem_danych",
+      "title": "Plik z odpisem danych",
+      "tab": "Dane",
+      "section": "Potwierdzenie, że jesteś reprezentantem",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "imie_inna_osoba",
+      "title": "Imię",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwisko_inna_osoba",
+      "title": "Nazwisko",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_pesel_inna_osoba",
+      "title": "Numer PESEL",
+      "tab": "Dane",
+      "section": "Dane innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kraj_inna_osoba",
+      "title": "Kraj",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "miejscowosc_inna_osoba_zagranica",
+      "title": "Miejscowość",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba_zagranica",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba_zagranica",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba_zagranica",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba_zagranica",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "wojewodztwo_inna_osoba",
+      "title": "TERYT_4G_DOWODOWY",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "kod_pocztowy_inna_osoba",
+      "title": "Kod pocztowy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_kodu_pocztowego_inna_osoba",
+      "title": "Brak kodu pocztowego",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ulica_inna_osoba",
+      "title": "Ulica",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_nazwy_ulicy_inna_osoba",
+      "title": "Brak nazwy ulicy",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_budynku_inna_osoba",
+      "title": "Numer budynku",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_lokalu_inna_osoba",
+      "title": "Numer lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "brak_numeru_lokalu_inna_osoba",
+      "title": "Brak numeru lokalu",
+      "tab": "Dane",
+      "section": "Adres zamieszkania innej osoby",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_dokumentu_z_pelnomocnictwem",
+      "title": "Plik dokumentu z pełnomocnictwem",
+      "tab": "Dane",
+      "section": "Pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "czy_zlozenie_pelnomocnictwa_wymaga_oplaty_skarbowej",
+      "title": "Czy złożenie pełnomocnictwa wymaga opłaty skarbowej?",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "plik_z_potwierdzeniem_przelewu_2",
+      "title": "Plik z potwierdzeniem przelewu",
+      "tab": "Dane",
+      "section": "Opłata skarbowa za pełnomocnictwo",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "nazwa_drogi_oraz_jej_nr",
+      "title": "Nazwa drogi oraz jej nr",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Opis zajęcia",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b14",
+        "text": "nazwa drogi oraz jej nr",
+        "box": {
+          "x": 0.3694,
+          "y": 0.3959,
+          "width": 0.1348,
+          "height": 0.009
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.928
+      }
+    },
+    {
+      "techName": "miejscowosc",
+      "title": "Miejscowość",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Opis zajęcia",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b15",
+        "text": "w miejscowości",
+        "box": {
+          "x": 0.1264,
+          "y": 0.4151,
+          "width": 0.1258,
+          "height": 0.0124
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.925
+      }
+    },
+    {
+      "techName": "numer_dzialki_ewidencji",
+      "title": "Numer działki ewidencji",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Opis zajęcia",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Numer działki ewidencji” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "rodzaj_robot_i_sposob_wykonania",
+      "title": "Rodzaj robót i sposób wykonania",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Opis zajęcia",
+      "origin": "document",
+      "confidence": 0.95,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b19",
+        "text": "! rodzaj robót i sposób wykonania /",
+        "box": {
+          "x": 0.283,
+          "y": 0.4848,
+          "width": 0.208,
+          "height": 0.0124
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.906
+      }
+    },
+    {
+      "techName": "powierzchnia_jezdni_do_20_szerokosci",
+      "title": "Powierzchnia jezdni (do 20% szerokości)",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Powierzchnia jezdni (do 20% szerokości)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "dlugosc",
+      "title": "Długość",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.95,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b22",
+        "text": "długość",
+        "box": {
+          "x": 0.217,
+          "y": 0.5639,
+          "width": 0.0574,
+          "height": 0.0111
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.9
+      }
+    },
+    {
+      "techName": "szerokosc",
+      "title": "Szerokość",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b23",
+        "text": "szerokość",
+        "box": {
+          "x": 0.422,
+          "y": 0.5639,
+          "width": 0.075,
+          "height": 0.0086
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "powierzchnia_jezdni_do_50_szerokosci",
+      "title": "Powierzchnia jezdni (do 50% szerokości)",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Powierzchnia jezdni (do 50% szerokości)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "powierzchnia_jezdni_powyzej_50_szerokosci",
+      "title": "Powierzchnia jezdni (powyżej 50% szerokości)",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Powierzchnia jezdni (powyżej 50% szerokości)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "powierzchnia_chodnika",
+      "title": "Powierzchnia chodnika",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.85,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b59",
+        "text": "Całkowita powierzchnia zajęcia:",
+        "box": {
+          "x": 0.127,
+          "y": 0.823,
+          "width": 0.2582,
+          "height": 0.0124
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.913
+      }
+    },
+    {
+      "techName": "calkowita_powierzchnia_zajecia",
+      "title": "Całkowita powierzchnia zajęcia",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Powierzchnia zajęcia",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b59",
+        "text": "Całkowita powierzchnia zajęcia:",
+        "box": {
+          "x": 0.127,
+          "y": 0.823,
+          "width": 0.2582,
+          "height": 0.0124
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.913
+      }
+    },
+    {
+      "techName": "termin_realizacji_robot",
+      "title": "Termin realizacji robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Termin i wykonawca",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Termin realizacji robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "wykonawca_robot",
+      "title": "Wykonawca robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Termin i wykonawca",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Wykonawca robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "osoba_odpowiedzialna_za_wykonanie_robot",
+      "title": "Osoba odpowiedzialna za wykonanie robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Termin i wykonawca",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Osoba odpowiedzialna za wykonanie robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "telefon",
+      "title": "Telefon",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Termin i wykonawca",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 1,
+        "blockId": "b8",
+        "text": "nr telefonu i e-mail",
+        "box": {
+          "x": 0.1536,
+          "y": 0.1932,
+          "width": 0.1082,
+          "height": 0.0068
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.927
+      }
+    },
+    {
+      "techName": "ogolny_plan_orientacyjny",
+      "title": "Ogólny plan orientacyjny",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b76",
+        "text": "Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego.",
+        "box": {
+          "x": 0.1626,
+          "y": 0.2689,
+          "width": 0.737,
+          "height": 0.0252
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "szczegolowy_plan_sytuacyjny",
+      "title": "Szczegółowy plan sytuacyjny",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b77",
+        "text": "Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego.",
+        "box": {
+          "x": 0.162,
+          "y": 0.2971,
+          "width": 0.737,
+          "height": 0.0257
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.915
+      }
+    },
+    {
+      "techName": "harmonogram_robot",
+      "title": "Harmonogram robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.95,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b78",
+        "text": "Szczegółowy harmonogram robót.",
+        "box": {
+          "x": 0.1626,
+          "y": 0.3258,
+          "width": 0.2527,
+          "height": 0.0111
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.89
+      }
+    },
+    {
+      "techName": "projekt_organizacji_ruchu",
+      "title": "Projekt organizacji ruchu",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b79",
+        "text": "Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazd…",
+        "box": {
+          "x": 0.162,
+          "y": 0.3399,
+          "width": 0.7376,
+          "height": 0.0398
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.919
+      }
+    },
+    {
+      "techName": "informacja_o_zabezpieczeniu_robot",
+      "title": "Informacja o zabezpieczeniu robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Informacja o zabezpieczeniu robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "pelnomocnictwo_2",
+      "title": "Pełnomocnictwo",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.94,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b81",
+        "text": "Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł w przypadku, gdy w spr…",
+        "box": {
+          "x": 0.162,
+          "y": 0.3972,
+          "width": 0.7376,
+          "height": 0.0393
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.921
+      }
+    },
+    {
+      "techName": "numer_kierunkowy",
+      "title": "Numer kierunkowy",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "numer_telefonu",
+      "title": "Numer telefonu",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "adres_e_mail",
+      "title": "Adres e-mail",
+      "tab": "Kontakt i zgody",
+      "section": "Dane do kontaktu",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    },
+    {
+      "techName": "ogolny_plan_orientacyjny_w_skali_1_10_000_lub_1_25_000_z",
+      "title": "Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego",
+      "tab": "Kontakt i zgody",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b76",
+        "text": "Ogólny plan orientacyjny w skali 1:10 000 lub 1:25 000 z zaznaczeniem zajmowanego odcinka pasa drogowego.",
+        "box": {
+          "x": 0.1626,
+          "y": 0.2689,
+          "width": 0.737,
+          "height": 0.0252
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.92
+      }
+    },
+    {
+      "techName": "szczegolowy_plan_sytuacyjny_w_skali_1_1000_lub_1_500_z",
+      "title": "Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego",
+      "tab": "Kontakt i zgody",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b77",
+        "text": "Szczegółowy plan sytuacyjny w skali 1:1000 lub 1:500 z zaznaczeniem granic i podaniem wymiarów planowanej powierzchni zajęcia pasa drogowego.",
+        "box": {
+          "x": 0.162,
+          "y": 0.2971,
+          "width": 0.737,
+          "height": 0.0257
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.915
+      }
+    },
+    {
+      "techName": "szczegolowy_harmonogram_robot",
+      "title": "Szczegółowy harmonogram robót",
+      "tab": "Kontakt i zgody",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.95,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b78",
+        "text": "Szczegółowy harmonogram robót.",
+        "box": {
+          "x": 0.1626,
+          "y": 0.3258,
+          "width": 0.2527,
+          "height": 0.0111
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.89
+      }
+    },
+    {
+      "techName": "zatwierdzony_projekt_organizacji_ruchu_jezeli_zajecie_pasa",
+      "title": "Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazdów lub pieszych",
+      "tab": "Kontakt i zgody",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b79",
+        "text": "Zatwierdzony projekt organizacji ruchu, jeżeli zajęcie pasa drogowego wpływa na ruch drogowy lub ogranicza widoczność na drodze albo powoduje wprowadzenie zmian w istniejącej organizacji ruchu pojazd…",
+        "box": {
+          "x": 0.162,
+          "y": 0.3399,
+          "width": 0.7376,
+          "height": 0.0398
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.919
+      }
+    },
+    {
+      "techName": "informacje_o_sposobie_zabezpieczenia_robot_jezeli_nie_jest",
+      "title": "Informację o sposobie zabezpieczenia robót, jeżeli nie jest wymagany projekt organizacji ruchu",
+      "tab": "Kontakt i zgody",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.95,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b80",
+        "text": "Informację o sposobie zabezpieczenia robót, jeżeli nie jest wymagany projekt organizacji ruchu.",
+        "box": {
+          "x": 0.1638,
+          "y": 0.3826,
+          "width": 0.7056,
+          "height": 0.0111
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.909
+      }
+    },
+    {
+      "techName": "oryginal_pelnomocnictwa_lub_poswiadczony_odpis",
+      "title": "Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł w przypadku, gdy w sprawie występuje pełnomocnik",
+      "tab": "Kontakt i zgody",
+      "section": "Załączniki",
+      "origin": "document",
+      "confidence": 0.96,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b81",
+        "text": "Oryginał pełnomocnictwa lub poświadczony odpis pełnomocnictwa stosownie do zapisów art. 33 ustawy Kodeks postępowania administracyjnego wraz z opłatą skarbową w wysokości 17 zł w przypadku, gdy w spr…",
+        "box": {
+          "x": 0.162,
+          "y": 0.3972,
+          "width": 0.7376,
+          "height": 0.0393
+        },
+        "pageAspect": 0.7071,
+        "ocrConfidence": 0.921
+      }
+    },
+    {
+      "techName": "zgoda",
+      "title": "Zgody i oświadczenia",
+      "tab": "Kontakt i zgody",
+      "section": "Zgoda",
+      "origin": "template",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": []
+    }
+  ],
+  "review": [
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "numer_dzialki_ewidencji",
+      "title": "Numer działki ewidencji",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Numer działki ewidencji” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "powierzchnia_jezdni_do_20_szerokosci",
+      "title": "Powierzchnia jezdni (do 20% szerokości)",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Powierzchnia jezdni (do 20% szerokości)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "powierzchnia_jezdni_do_50_szerokosci",
+      "title": "Powierzchnia jezdni (do 50% szerokości)",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Powierzchnia jezdni (do 50% szerokości)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "powierzchnia_jezdni_powyzej_50_szerokosci",
+      "title": "Powierzchnia jezdni (powyżej 50% szerokości)",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Powierzchnia jezdni (powyżej 50% szerokości)” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "termin_realizacji_robot",
+      "title": "Termin realizacji robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Termin realizacji robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "wykonawca_robot",
+      "title": "Wykonawca robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Wykonawca robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "osoba_odpowiedzialna_za_wykonanie_robot",
+      "title": "Osoba odpowiedzialna za wykonanie robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Osoba odpowiedzialna za wykonanie robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    },
+    {
+      "kind": "field",
+      "level": "low",
+      "techName": "informacja_o_zabezpieczeniu_robot",
+      "title": "Informacja o zabezpieczeniu robót",
+      "tab": "Informacje o zajęciu pasa drogowego",
+      "messages": [
+        "Etykiety „Informacja o zabezpieczeniu robót” nie ma w treści dokumentu - pole mogło zostać dopisane."
+      ]
+    }
+  ],
+  "durationMs": 13727
+}
