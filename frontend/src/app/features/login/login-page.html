@@ -1,13 +1,3 @@
-<main class="w-full max-w-sm">
-  <app-card>
-    <h1 cardTitle tabindex="-1">Unpaper</h1>
-    <form class="flex flex-col gap-[12px] p-[16px]" novalidate (submit)="submit($event)">
-      <!-- Always in the DOM and filled after render: a live region inserted with its text is often not read. -->
-      <p role="status" class="text-fg-muted" [class.sr-only]="!statusText()">{{ statusText() }}</p>
-      @if (status() === 'error' && error(); as text) {
-        <p #loginError role="alert" tabindex="-1" class="text-danger">
-          <span aria-hidden="true">✕</span> {{ text }}
-
 <main class="w-full max-w-[400px]">
   <div class="mb-[24px] flex flex-col items-center gap-[8px] text-center">
     <span
@@ -29,7 +19,7 @@
         <path d="M9 13l2 2 4-4" />
       </svg>
     </span>
-    <h1 tabindex="-1" class="text-title font-bold text-fg">Cyfryzacja formularzy</h1>
+    <h1 tabindex="-1" class="text-title font-bold text-fg">Unpaper</h1>
     <p class="text-fg-muted">Zamieniaj papierowe blankiety na formularze e-usług.</p>
   </div>
 
