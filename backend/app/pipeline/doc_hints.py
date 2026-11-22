@@ -11,14 +11,18 @@ oznacza takie linie jako `checkbox_option`, więc w prompcie stają się `[OPCJA
   „(postaw „x” w wybranym polu)”, „(zaznaczyć właściwą kratkę)”, „Rodzaje wniosków:”;
 - opcje numerowane w jednej linii („1. właściciel 2. najemca 3. …”) → osobne opcje.
 
+Osobno numerowane pozycje deklaracji („26. Miejscowość”, „27. Ulica”) bez wykropkowania
+(kratki do wpisania są rysowane) dostają znacznik `[POLE]`, żeby model nie wziął ich
+za nagłówki albo zwykły tekst.
+
 Wstęp do oświadczeń i do listy załączników nie zapowiada wyboru. Moduł nie zmienia
-treści, tylko rodzaj bloków (i dzieli bloki z kilkoma opcjami), więc błąd tutaj
-najwyżej pogarsza podpowiedź dla modelu.
+treści, tylko rodzaj bloków (i dzieli bloki z kilkoma opcjami) oraz dokleja `[POLE]`,
+więc błąd tutaj najwyżej pogarsza podpowiedź dla modelu.
 """
 
 import re
 
-from app.models.document import Block, DocumentModel, Page
+from app.models.document import FIELD_MARKER, Block, DocumentModel
 from app.pipeline.draft_rules import clean_text, has_fill
 
 MIN_OPTIONS = 2
@@ -51,11 +55,78 @@ _FIELD_LABEL = re.compile(
     r"miejscowość|ulica|kod|kwota|podpis)\b"
 )
 
+# Numerowana pozycja deklaracji: „26. Miejscowość”, krótka etykieta bez dwukropka na końcu.
+MAX_POSITION_WORDS = 6
+_NUMBERED_POSITION = re.compile(r"^\d{1,3}\.\s+(?P<label>\S.*)$")
+# Słowa tekstu informacyjnego; „…” albo „..” w etykiecie to już miejsce na wpis.
+_NOT_A_POSITION = re.compile(r"(?i)\b(pouczeni|objaśnieni|informacj|uwaga)|[.…_]{2,}|…")
+# Zdanie urwane w pół (instrukcja wypełniania) albo nagłówek listy załączników.
+_POSITION_STOP = re.compile(r"(?i)\s(lub|i|oraz|albo|a|w|z|na|do|od|o)$|^załącznik")
+_POSITION_KINDS = frozenset({"paragraph", "label"})
+
 
 def annotate_choices(doc: DocumentModel) -> DocumentModel:
-    """Kopia dokumentu z liniami wyboru oznaczonymi jako `checkbox_option`."""
-    pages = [Page(number=page.number, blocks=_annotate(page.blocks)) for page in doc.pages]
+    """Kopia dokumentu z liniami wyboru oznaczonymi jako `checkbox_option`
+    i numerowanymi pozycjami bez wykropkowania oznaczonymi jako pola."""
+    pages = [
+        page.model_copy(update={"blocks": _mark_positions(_annotate(page.blocks))})
+        for page in doc.pages
+    ]
     return doc.model_copy(update={"pages": pages})
+
+
+def _mark_positions(blocks: list[Block]) -> list[Block]:
+    """Dokleja `[POLE]` do numerowanych pozycji, po których nie ma od razu miejsca na wpis.
+
+    Pozycje idą seriami („26. Miejscowość”, „27. Kod pocztowy”, „28. Ulica”). Seria musi
+    się kończyć nagłówkiem, miejscem na wpis albo końcem strony. Zwykły tekst po serii to
+    ciąg dalszy etykiet, czyli nagłówek kolumn tabeli („36. Liczba gospodarstw domowych
+    zajmujących” | „37. Stawka” + „lokale o powierzchni do 45 m²”), a opcje po pozycji
+    to pytanie wyboru - takich pozycji nie oznaczamy.
+    """
+    out = list(blocks)
+    i = 0
+    while i < len(blocks):
+        end = i
+        while end < len(blocks) and _is_numbered(blocks[end]):
+            end += 1
+        if end == i:
+            i += 1
+            continue
+        after = blocks[end] if end < len(blocks) else None
+        if after is None or after.kind == "heading" or has_fill(after):
+            for k in range(i, end):
+                nxt = blocks[k + 1] if k + 1 < len(blocks) else None
+                if not (nxt is not None and has_fill(nxt)) and _is_position(blocks[k]):
+                    text = f"{blocks[k].text.rstrip()} {FIELD_MARKER}"
+                    out[k] = blocks[k].model_copy(update={"text": text})
+        i = end
+    return out
+
+
+def _is_numbered(block: Block) -> bool:
+    return (
+        block.kind in _POSITION_KINDS
+        and not has_fill(block)
+        and bool(_NUMBERED_POSITION.match(clean_text(block.text)))
+    )
+
+
+def _is_position(block: Block) -> bool:
+    if block.kind not in _POSITION_KINDS or has_fill(block) or FIELD_MARKER in block.text:
+        return False
+    match = _NUMBERED_POSITION.match(clean_text(block.text))
+    if not match:
+        return False
+    label = match["label"]
+    return (
+        len(label.split()) <= MAX_POSITION_WORDS
+        and not label.endswith((":", "."))
+        and not label.isupper()
+        and not _NOT_A_POSITION.search(label)
+        and not _POSITION_STOP.search(label)
+        and not _STRONG_CUE.search(label)
+    )
 
 
 def _annotate(blocks: list[Block]) -> list[Block]:
