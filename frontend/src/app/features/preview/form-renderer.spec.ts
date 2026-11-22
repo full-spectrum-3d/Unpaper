@@ -234,6 +234,17 @@ describe('FormRenderer step validation', () => {
     impl = undefined;
   });
 
+  it('shows the progress of the steps', async () => {
+    await create();
+    const bar = () => el().querySelector('[role=progressbar]')!;
+    expect(bar().getAttribute('aria-valuenow')).toBe('50');
+    expect(bar().getAttribute('aria-valuetext')).toBe('Krok 1 z 2');
+    await type('imie', 'Jan');
+    await click('Dalej');
+    expect(bar().getAttribute('aria-valuenow')).toBe('100');
+    expect(bar().getAttribute('aria-valuetext')).toBe('Krok 2 z 2');
+  });
+
   it('stays on the step, shows the error and focuses the first invalid field', async () => {
     await create();
     await click('Dalej');
@@ -248,7 +259,7 @@ describe('FormRenderer step validation', () => {
     await type('imie', 'Jan');
     expect(error('imie')).toBeNull();
     await type('nip', '123');
-    expect(error('nip')).toBe('✕ Wpisz poprawny NIP: 10 cyfr');
+    expect(error('nip')).toBe('✕ NIP ma 10 cyfr');
   });
 
   it('shows errors of fields that appear and ignores fields that hide', async () => {
@@ -297,7 +308,7 @@ describe('FormRenderer step validation', () => {
     await type('nip', '123');
     expect(error('nip')).toBeNull();
     await leave('nip');
-    expect(error('nip')).toBe('✕ Wpisz poprawny NIP: 10 cyfr');
+    expect(error('nip')).toBe('✕ NIP ma 10 cyfr');
     await leave('imie');
     expect(error('imie')).toBeNull();
   });

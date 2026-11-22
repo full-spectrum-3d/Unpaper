@@ -12,9 +12,9 @@ const f = (type: string, validation: string[], extra: Partial<FormField> = {}): 
 });
 
 const MSG = {
-  PESEL: 'Wpisz poprawny numer PESEL: 11 cyfr',
-  NIP: 'Wpisz poprawny NIP: 10 cyfr',
-  REGON: 'Wpisz poprawny REGON: 9 lub 14 cyfr',
+  PESEL: 'PESEL ma 11 cyfr',
+  NIP: 'NIP ma 10 cyfr',
+  REGON: 'REGON ma 9 lub 14 cyfr',
   ZIP_CODE: 'Wpisz kod w formacie 00-000',
   EMAIL: 'Wpisz adres e-mail, np. jan@domena.pl',
   EPUAP: 'Wpisz adres skrytki ePUAP, np. /urzad/SkrytkaESP',
@@ -38,11 +38,9 @@ const valid: [keyof typeof MSG, string][] = [
   ['SERIAL_NUMBER_ID_CARD', 'aba300000'],
 ];
 const invalid: [keyof typeof MSG, string][] = [
-  ['PESEL', '44051401459'],
   ['PESEL', '4405140145'],
-  ['NIP', '1234563219'],
-  ['REGON', '123456784'],
-  ['REGON', '12345678901234'],
+  ['NIP', '123456321'],
+  ['NIP', '12345632181'],
   ['REGON', '1234567890'],
   ['ZIP_CODE', '00001'],
   ['EMAIL', 'jan@domena'],
@@ -59,6 +57,19 @@ describe('validateField', () => {
 
   it.each(invalid)('%s rejects %s', (code, value) => {
     expect(validateField(f('TEXT_FIELD', [code]), value)).toBe(MSG[code]);
+  });
+
+  // Right length, wrong check digit: the message must not claim the length is wrong.
+  it.each([
+    ['PESEL', '44051401459'],
+    ['NIP', '1234563219'],
+    ['NIP', '123-456-32-19'],
+    ['REGON', '123456784'],
+    ['REGON', '12345678901234'],
+  ])('%s with a wrong check digit %s says so', (code, value) => {
+    expect(validateField(f('TEXT_FIELD', [code]), value)).toBe(
+      `Nieprawidłowy ${code} - sprawdź, czy cyfry są wpisane poprawnie`,
+    );
   });
 
   it('NUMBER accepts only numbers, with comma or dot and spaces', () => {

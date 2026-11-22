@@ -11,6 +11,8 @@ export const ImportQueueActions = createActionGroup({
     /** The password itself lives in FileRegistry, never in the store. */
     passwordSubmitted: props<{ id: string }>(),
     retry: props<{ id: string }>(),
+    /** The user edited the converted form on the result screen; the report stays the original one. */
+    resultEdited: props<{ id: string; result: unknown }>(),
     removed: props<{ id: string }>(),
     /** A different user signed in: drop the previous user's queue. */
     cleared: emptyProps(),

@@ -543,9 +543,31 @@ def _normalize_title_case(data: dict[str, Any], warnings: list[ConversionWarning
     )
 
 
+# Odwołania do numerów pozycji blankietu: „Suma opłat (poz. 12 + 13)”, „Razem z poz. 5 i 6”.
+# W e-usłudze nie ma numerów pozycji, więc w etykiecie tylko mylą. Tylko w nawiasie albo na
+# końcu etykiety: „Kwota zwrotu z poz. 5 rachunku” to część nazwy pola.
+_POS = r"poz(?:\.|ycj\w*)"
+_POSITION_REFS = (
+    re.compile(rf"\s*\([^)]*\b{_POS}[^)]*\)", re.IGNORECASE),
+    re.compile(
+        rf"\s*,?\s*(?:\b(?:z|ze|w|wg|według)\s+)?\b{_POS}\s*\d[\w.]*"
+        rf"(?:\s*(?:[+\-\u2013,]|\bi\b|\boraz\b|\bdo\b)\s*(?:{_POS}\s*)?\d[\w.]*)*\s*$",
+        re.IGNORECASE,
+    ),
+)
+
+
+def strip_position_refs(label: str) -> str:
+    """Etykieta bez odwołań do numerów pozycji; sama „Poz. 12” zostaje bez zmian."""
+    text = label
+    for pattern in _POSITION_REFS:
+        text = pattern.sub("", text)
+    return text.strip() or label
+
+
 def normalize_label(label: str) -> str:
-    """Etykieta w formie rzeczownikowej: bez przyimka, skrótu i znaków brzegowych."""
-    text = _LABEL_EDGES.sub("", label)
+    """Etykieta rzeczownikowa: bez przyimka, skrótu, numerów pozycji i znaków brzegowych."""
+    text = _LABEL_EDGES.sub("", strip_position_refs(label))
     words = text.split()
     if len(words) == 2 and words[0].casefold() in _PREPOSITIONS:
         noun = _NOMINATIVES.get(words[1].casefold())

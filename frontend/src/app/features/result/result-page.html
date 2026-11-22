@@ -32,6 +32,9 @@
             Sprawdź w walidatorze
           </a>
         </span>
+        @if (i.edited) {
+          <p class="text-warning font-semibold">Formularz zmieniony ręcznie — sprawdź go w walidatorze.</p>
+        }
         @if (summary(); as s) {
           <p class="flex flex-wrap items-center gap-2">
             <span>Pewność konwersji: <strong>{{ s.score }}</strong>.</span>
@@ -54,6 +57,9 @@
           }
         </div>
         <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
+          @if (i.edited) {
+            <p class="text-fg-muted mb-section">Raport dotyczy pierwotnej konwersji — nie uwzględnia ręcznych zmian.</p>
+          }
           <app-review-panel
             class="mb-section"
             [report]="report()"
@@ -63,6 +69,14 @@
           />
           <app-report-view [report]="report()" [ranges]="json().ranges" (showInJson)="onShowInJson($event)" />
         </div>
+        @if (form(); as f) {
+          <div id="result-panel-edit" role="tabpanel" aria-labelledby="result-tab-edit" [hidden]="activeTab() !== 'edit'">
+            <!-- Rendered only when shown: a full set of controls per field. -->
+            @if (activeTab() === 'edit') {
+              <app-form-editor [definition]="f" (edited)="onEdited($event)" />
+            }
+          </div>
+        }
       </app-card>
     } @else {
       <h1 tabindex="-1" class="text-title font-semibold">Wynik</h1>

@@ -15,6 +15,8 @@ export function authActionSanitizer(action: Action, _id: number): Action {
       return { ...action, token: MASK } as Action;
     case ImportQueueActions.convertSucceeded.type:
       return { ...action, result: MASK, report: MASK } as Action;
+    case ImportQueueActions.resultEdited.type:
+      return { ...action, result: MASK } as Action;
     default:
       return action;
   }

@@ -14,25 +14,32 @@ import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { appTitle } from '../../core/title-strategy';
 import { Store } from '@ngrx/store';
+import { ImportQueueActions } from '../../store/import-queue/import-queue.actions';
 import { Button } from '../../shared/ui/button/button';
 import { Card } from '../../shared/ui/card/card';
 import { selectQueueItem } from '../../store/import-queue/import-queue.selectors';
 import { downloadJson } from '../import/download';
 import { resultFileName } from '../import/zip-results';
-import { isFormDefinition } from '../preview/form-definition';
+import { FormDefinition, isFormDefinition } from '../preview/form-definition';
 import { FormRenderer } from '../preview/form-renderer';
+import { FormEditor } from './form-editor';
 import { formatJson } from './json-lines';
 import { JsonView } from './json-view';
 import { asReport, fieldPaths, formatPercent } from './report';
 import { ReportView } from './report-view';
 import { ReviewPanel } from './review-panel';
 
-type Tab = 'preview' | 'json' | 'report';
-const TAB_LABELS: Record<Tab, string> = { preview: 'Podgląd formularza', json: 'JSON', report: 'Raport' };
+type Tab = 'preview' | 'json' | 'report' | 'edit';
+const TAB_LABELS: Record<Tab, string> = {
+  preview: 'Podgląd formularza',
+  json: 'JSON',
+  report: 'Raport',
+  edit: 'Edycja',
+};
 
 @Component({
   selector: 'app-result-page',
-  imports: [Card, Button, RouterLink, FormRenderer, ReportView, ReviewPanel, JsonView],
+  imports: [Card, Button, RouterLink, FormRenderer, ReportView, ReviewPanel, JsonView, FormEditor],
   templateUrl: './result-page.html',
   host: { class: 'block p-section' },
 })
@@ -53,10 +60,18 @@ export class ResultPage {
     const result = this.item()?.result;
     return isFormDefinition(result) ? result : null;
   });
-  protected readonly tabs = computed<Tab[]>(() => (this.form() ? ['preview', 'json', 'report'] : ['json', 'report']));
+  protected readonly tabs = computed<Tab[]>(() => (this.form() ? ['preview', 'json', 'report', 'edit'] : ['json', 'report']));
   protected readonly tabLabels = TAB_LABELS;
-  // Resets to the default tab when the result changes; no preview tab for a non-form result.
-  readonly activeTab = linkedSignal<Tab>(() => (this.form() ? 'preview' : 'json'));
+  // Resets to the default tab when another result is shown (not on edits); no preview tab for a non-form result.
+  readonly activeTab = linkedSignal<{ id: string; isForm: boolean }, Tab>({
+    source: () => ({ id: this.id(), isForm: !!this.form() }),
+    computation: (s, prev) =>
+      prev && prev.source.id === s.id && prev.source.isForm === s.isForm
+        ? prev.value
+        : s.isForm
+          ? 'preview'
+          : 'json',
+  });
   readonly highlightPath = signal<string | null>(null);
   protected readonly report = computed(() => asReport(this.item()?.report));
   protected readonly json = computed(() => formatJson(this.item()?.result));
@@ -99,6 +114,10 @@ export class ResultPage {
     this.activeTab.set('json');
     // The JSON view exists only once the tab has rendered.
     afterNextRender(() => this.jsonView()?.reveal(), { injector: this.injector });
+  }
+
+  protected onEdited(result: FormDefinition): void {
+    this.store.dispatch(ImportQueueActions.resultEdited({ id: this.id(), result }));
   }
 
   protected download(): void {

@@ -56,5 +56,8 @@ describe('authActionSanitizer secrets', () => {
         0,
       ),
     ).toMatchObject({ result: '***', report: '***' });
+    expect(
+      authActionSanitizer(ImportQueueActions.resultEdited({ id: 'a', result: {} }), 0),
+    ).toMatchObject({ result: '***' });
   });
 });

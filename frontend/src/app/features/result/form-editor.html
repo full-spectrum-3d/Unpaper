@@ -1,0 +1,56 @@
+<p class="text-fg-muted mb-section">
+  Zmiany od razu trafiają do podglądu, widoku JSON i pobieranego pliku. Pola dodasz tylko w sekcjach
+  — tak wymaga format importu.
+</p>
+<p role="status" class="font-semibold mb-section">{{ status() }}</p>
+<div class="flex flex-col gap-section">
+  @for (page of pages(); track page.tab.id; let n = $index) {
+    <section class="flex flex-col gap-3" [attr.aria-labelledby]="'edit-page-' + page.tab.id">
+      <h2 [id]="'edit-page-' + page.tab.id" class="text-section-title font-semibold">
+        Strona {{ n + 1 }}: {{ page.tab.title }}
+      </h2>
+      @if (page.tab.type === 'FINISH') {
+        <p class="text-fg-muted">Strona końcowa — nie można na niej dodawać pól.</p>
+      }
+      <!-- shortcut: tracks by field id (made unique by backend verify, rule R12); duplicated ids in raw JSON would edit together. -->
+      <ul class="flex flex-col gap-3">
+        @for (q of page.questions; track q.field.id) {
+          <li class="flex flex-col gap-3">
+            <app-field-row
+              [field]="q.field"
+              [removable]="page.questions.length > 1"
+              (patch)="onPatch(q.field, $event)"
+              (remove)="onRemove(q.field, page.questions, null)"
+            />
+            @if (isSection(q.field)) {
+              @let kids = children(q);
+              @if (kids.length) {
+                <ul
+                  class="flex flex-col gap-3 ml-2 pl-4 border-l-2 border-border"
+                  [attr.aria-label]="'Pola sekcji ' + q.field.title"
+                >
+                  @for (c of kids; track c.field.id) {
+                    <li>
+                      <app-field-row
+                        [field]="c.field"
+                        (patch)="onPatch(c.field, $event)"
+                        (remove)="onRemove(c.field, kids, q.field)"
+                      />
+                    </li>
+                  }
+                </ul>
+              }
+              @if (page.tab.type !== 'FINISH') {
+                <app-add-field
+                  class="ml-2 pl-4"
+                  [sectionTitle]="q.field.title"
+                  (add)="onAdd(q.field, $event)"
+                />
+              }
+            }
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>

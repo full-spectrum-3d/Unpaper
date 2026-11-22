@@ -15,6 +15,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Button } from '../../shared/ui/button/button';
+import { Progress } from '../../shared/ui/progress/progress';
 import { AnswersStore } from './answers-store';
 import { FormDefinition, Question } from './form-definition';
 import { FormState } from './form-state';
@@ -79,7 +80,7 @@ export const STATES_EVALUATOR = new InjectionToken<typeof evaluateStates>('STATE
 
 @Component({
   selector: 'app-form-renderer',
-  imports: [RendererGrid, Button],
+  imports: [RendererGrid, Button, Progress],
   providers: [AnswersStore, FormState],
   templateUrl: './form-renderer.html',
   host: { class: 'block', '(focusout)': 'onFocusOut($event)' },
@@ -136,12 +137,21 @@ export class FormRenderer {
       })
       .filter((p) => p.rows.length);
   });
+  private readonly stepCount = computed(
+    () => this.pages().filter((p) => p.type !== 'FINISH').length,
+  );
+  /** Share of the form reached, counting the current step; 100 on the summary. */
+  protected readonly progress = computed(() =>
+    this.isFinish() ? 100 : ((this.index() + 1) / Math.max(1, this.stepCount())) * 100,
+  );
+  protected readonly progressText = computed(() =>
+    this.isFinish() ? 'Podsumowanie' : `Krok ${this.index() + 1} z ${this.stepCount()}`,
+  );
   protected readonly stepTitle = computed(() => {
     const page = this.page();
     if (!page) return '';
     if (page.type === 'FINISH') return 'Podsumowanie';
-    const total = this.pages().filter((p) => p.type !== 'FINISH').length;
-    return `Krok ${this.index() + 1} z ${total}: ${page.title}`;
+    return `Krok ${this.index() + 1} z ${this.stepCount()}: ${page.title}`;
   });
 
   /** null = not evaluated yet. */

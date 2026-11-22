@@ -12,6 +12,12 @@ from tests.unit.test_draft_normalize import DOC, _codes, _field, _fields, _make
     ("label", "expected"),
     [
         ("W miejscowości", "Miejscowość"),
+        ("Suma opłat (poz. 12 + 13)", "Suma opłat"),
+        ("Razem z poz. 5 i 6", "Razem"),
+        ("Łączna kwota opłat poz. 34\u201336", "Łączna kwota opłat"),
+        ("Kwota (pozycja 7)", "Kwota"),
+        ("Kwota zwrotu z poz. 5 rachunku", "Kwota zwrotu z poz. 5 rachunku"),
+        ("Poz. 12", "Poz. 12"),
         ("Przy ulicy", "Ulica"),
         ("W obrębie", "Obręb"),
         ("w kwocie", "Kwota"),

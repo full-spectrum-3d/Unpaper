@@ -23,6 +23,8 @@ export interface QueueItem {
   startedAt: number | null;
   durationMs: number | null;
   passwordState?: PasswordState | null;
+  /** result was changed by hand after conversion; report still describes the original conversion. */
+  edited?: boolean;
 }
 
 export type ImportQueueState = EntityState<QueueItem>;
@@ -43,7 +45,7 @@ export const importQueueReducer = createReducer(
   on(ImportQueueActions.convertSucceeded, (state, { id, result, report, durationMs }) =>
     state.entities[id]?.status !== 'processing'
       ? state
-      : adapter.updateOne({ id, changes: { status: 'done', result, report, durationMs, error: null } }, state),
+      : adapter.updateOne({ id, changes: { status: 'done', result, report, durationMs, error: null, edited: false } }, state),
   ),
   on(ImportQueueActions.convertFailed, (state, { id, error, passwordState }) =>
     state.entities[id]?.status !== 'processing'
@@ -63,6 +65,11 @@ export const importQueueReducer = createReducer(
     if (item?.status !== 'error' || !item.retryable) return state;
     return adapter.updateOne({ id, changes: { status: 'pending', error: null, passwordState: null } }, state);
   }),
+  on(ImportQueueActions.resultEdited, (state, { id, result }) =>
+    state.entities[id]?.status !== 'done'
+      ? state
+      : adapter.updateOne({ id, changes: { result, edited: true } }, state),
+  ),
   on(ImportQueueActions.removed, (state, { id }) =>
     state.entities[id]?.status === 'processing' ? state : adapter.removeOne(id, state),
   ),

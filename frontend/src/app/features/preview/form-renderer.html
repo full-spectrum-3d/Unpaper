@@ -6,6 +6,12 @@
     <h3 #stepHeading tabindex="-1" class="m-0 mb-2 text-label text-fg-muted font-normal">
       {{ stepTitle() }}
     </h3>
+    <app-progress
+      class="mb-4"
+      label="Postęp wypełniania formularza"
+      [value]="progress()"
+      [valueText]="progressText()"
+    />
     @if (pageHasRequired()) {
       <p class="m-0 mb-4 text-fg-muted">
         Pola oznaczone <span class="text-danger" aria-hidden="true">*</span

@@ -50,7 +50,9 @@ _KIND_TYPES: dict[FieldKind, FieldType] = {
 }
 
 _AMOUNT_LABEL = re.compile(
-    r"^\s*(kwot[aęy]|wysokość|należnoś\w*|wartość)\b|\b(zł|pln)\b", re.IGNORECASE
+    r"^\s*(kwot[aęy]|wysokość|należnoś\w*|wartość|sum[ay]|razem|łączn\w*|ogółem)\b"
+    r"|\b(zł|pln)\b",
+    re.IGNORECASE,
 )
 _NOT_AMOUNT = re.compile(r"słownie|rachunk|numer|nazwa|tytuł", re.IGNORECASE)
 """Kwota słownie, numer rachunku, tytuł płatności: tekst, mimo słowa „kwota” lub „zł”."""

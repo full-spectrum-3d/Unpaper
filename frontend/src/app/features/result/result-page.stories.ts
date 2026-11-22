@@ -68,13 +68,13 @@ export const Done: Story = {
 
     const tablist = c.getByRole('tablist', { name: 'Widok wyniku' });
     const tabs = within(tablist).getAllByRole('tab');
-    expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Podgląd formularza', 'JSON', 'Raport']);
+    expect(tabs.map((t) => t.textContent?.trim())).toEqual(['Podgląd formularza', 'JSON', 'Raport', 'Edycja']);
     for (const t of tabs) {
       const panel = canvasElement.querySelector(`#${t.getAttribute('aria-controls')}`)!;
       expect(panel).toHaveAttribute('role', 'tabpanel');
       expect(panel).toHaveAttribute('aria-labelledby', t.id);
     }
-    const [preview, json, report] = tabs;
+    const [preview, json, report, edit] = tabs;
     expect(preview).toHaveAttribute('aria-selected', 'true');
     expect(preview).toHaveAttribute('tabindex', '0');
     expect(json).toHaveAttribute('aria-selected', 'false');
@@ -95,17 +95,20 @@ export const Done: Story = {
     expect(jsonRegion(c).tagName).toBe('PRE');
     expect(jsonRegion(c).textContent).toBe(JSON.stringify(nadplata, null, 2));
     expect(c.getByRole('heading', { level: 2, name: nadplata.title, hidden: true })).not.toBeVisible();
-    await userEvent.keyboard('{End}');
+    await userEvent.keyboard('{ArrowRight}');
     expect(report).toHaveAttribute('aria-selected', 'true');
     expect(report).toHaveFocus();
     expect(c.getByText('Raport niedostępny dla tego wyniku.')).toBeVisible();
+    await userEvent.keyboard('{End}');
+    expect(edit).toHaveAttribute('aria-selected', 'true');
+    expect(edit).toHaveFocus();
     await userEvent.keyboard('{Home}');
     expect(preview).toHaveAttribute('aria-selected', 'true');
     expect(preview).toHaveFocus();
     expect(input.value).toBe('Jan');
     await userEvent.keyboard('{ArrowLeft}');
-    expect(report).toHaveAttribute('aria-selected', 'true');
-    expect(report).toHaveFocus();
+    expect(edit).toHaveAttribute('aria-selected', 'true');
+    expect(edit).toHaveFocus();
     await userEvent.click(preview);
     expect(c.getByRole('heading', { level: 2, name: nadplata.title })).toBeVisible();
     expect(input).toBeVisible();
@@ -183,5 +186,17 @@ export const Unavailable: Story = {
     ).toBeVisible();
     expect(c.queryByRole('button', { name: 'Pobierz .json' })).toBeNull();
     expect(backPath(c, '← Wróć do importu')).toBe('/import');
+  },
+};
+
+/** Field editor tab; the MockStore ignores edits, so this shows the controls (and runs the a11y scan on them). */
+export const Edycja: Story = {
+  args: { id: 'd1' },
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await userEvent.click(tab(c, 'Edycja'));
+    expect(c.getByRole('heading', { level: 2, name: `Strona 1: ${nadplata.tabs[0].title}` })).toBeVisible();
+    await userEvent.click(c.getByRole('button', { name: 'Dodaj pole w sekcji Dane podmiotu' }));
+    expect(c.getByRole('group', { name: 'Nowe pole w sekcji „Dane podmiotu”' })).toBeVisible();
   },
 };
