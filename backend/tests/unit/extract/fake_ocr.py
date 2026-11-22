@@ -13,12 +13,17 @@ class FakeOcr:
         self.fail = fail
         self.rotate = rotate
         self.sizes: list[tuple[int, int]] = []
+        self.images: list[Image.Image] = []
+        self.orient_calls = 0
+        self.workers = 1
 
     def orient(self, image: Image.Image) -> Image.Image:
+        self.orient_calls += 1
         return image.rotate(self.rotate, expand=True) if self.rotate else image
 
     def recognize(self, image: Image.Image) -> list[OcrWord]:
         self.sizes.append(image.size)
+        self.images.append(image)
         if self.fail:
             raise OcrUnavailableError("brak tesseracta")
         return self.pages.pop(0) if self.pages else []

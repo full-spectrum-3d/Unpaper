@@ -8,18 +8,27 @@ glify Wingdings w tekście. Siatka z tekstem w kilku komórkach to tabela.
 import io
 import math
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from typing import IO, Any
 
 import pdfplumber
 import pypdfium2 as pdfium
+import pypdfium2.raw as pdfium_raw
 from pdfplumber.page import Page as PlumberPage
 from PIL import Image
 
 from app.models.document import BBox, DocumentModel
 from app.pipeline.extract.builder import DocumentBuilder
 from app.pipeline.extract.grid import cells_from_segments
-from app.pipeline.extract.image import OcrEngine, OcrStats, preprocess, run_ocr
+from app.pipeline.extract.image import (
+    OcrEngine,
+    OcrStats,
+    PageRead,
+    place_page,
+    preprocess,
+    read_ahead,
+    read_job,
+)
 from app.pipeline.extract.layout import Frame, Span, TableGrid, layout_page
 from app.pipeline.pdfium_lock import PDFIUM_LOCK
 
@@ -50,35 +59,72 @@ def extract_pdf(
     data = file.read()
     builder = DocumentBuilder("pdf_text")
     stats = OcrStats()
-    scanned: pdfium.PdfDocument | None = None  # otwierany raz, przy pierwszym skanie
-    try:
-        with pdfplumber.open(io.BytesIO(data)) as pdf:
-            for number, page in enumerate(pdf.pages, start=1):
+    with pdfplumber.open(io.BytesIO(data)) as pdf:
+        pages = pdf.pages
+        scans: list[int] = []
+        for index, page in enumerate(pages):
+            check()
+            if _text_chars(page) < MIN_TEXT_CHARS:
+                scans.append(index)
+        # Skany czytamy z wyprzedzeniem, kilka naraz; strony tekstowe powstają na miejscu.
+        jobs = _scan_jobs(data, scans, engine, dpi, max_pixels)
+        reads = read_ahead(jobs, engine.workers)
+        try:
+            for index, page in enumerate(pages):
                 check()
                 builder.new_page((float(page.width), float(page.height)))
-                if _text_chars(page) >= MIN_TEXT_CHARS:
+                if index in scans:
+                    place_page(builder, next(reads), index + 1, stats)
+                else:
                     _text_page(builder, page)
-                    continue
-                if scanned is None:
-                    with PDFIUM_LOCK:
-                        scanned = pdfium.PdfDocument(data)
-                image, scale = _render(scanned, number - 1, dpi, max_pixels)
-                run_ocr(builder, preprocess(image), engine, scale * 72, number, stats)
-    finally:
-        if scanned is not None:
-            with PDFIUM_LOCK:
-                scanned.close()
-    if scanned is not None:
+        finally:
+            reads.close()
+            jobs.close()  # zamyka dokument pdfium także po przerwaniu w połowie
+    if scans:
         builder.method = "ocr"
     return builder.build(), stats
 
 
-def render_scale(width_pt: float, height_pt: float, dpi: int, max_pixels: int) -> float:
-    """Skala rasteryzacji: `dpi`/72, obniżona tak, by obraz miał ≤ `max_pixels` pikseli."""
+def _scan_jobs(
+    data: bytes, scans: list[int], engine: OcrEngine, dpi: int, max_pixels: int
+) -> Generator[Callable[[], PageRead | None]]:
+    """Zadania OCR kolejnych skanów; stronę renderujemy dopiero, gdy przychodzi jej kolej."""
+    if not scans:
+        return
+    with PDFIUM_LOCK:
+        document = pdfium.PdfDocument(data)
+    try:
+        for index in scans:
+            image, scale = _render(document, index, dpi, max_pixels)
+            yield read_job(preprocess(image), engine, scale * 72)
+    finally:
+        with PDFIUM_LOCK:
+            document.close()
+
+
+A4_AREA_PT = 595.276 * 841.89
+
+
+def render_scale(
+    width_pt: float,
+    height_pt: float,
+    dpi: int,
+    max_pixels: int,
+    native_scale: float = math.inf,
+) -> float:
+    """Skala rasteryzacji: `dpi`/72, ale bez dorabiania pikseli, których w skanie nie ma.
+
+    Strona większa niż A4 to zwykle skan A4 z zaniżonym DPI w metadanych. Dostaje tyle
+    pikseli, ile A4 w `dpi`, chyba że sam skan ma ich więcej (`native_scale`: piksele
+    osadzonego obrazu na punkt strony). Na końcu limit `max_pixels`.
+    """
     scale = dpi / 72
     area = width_pt * height_pt
-    if area > 0 and area * scale * scale > max_pixels:
-        scale = math.sqrt(max_pixels / area)
+    if area > 0:
+        a4_budget = scale * math.sqrt(A4_AREA_PT / area)
+        scale = min(scale, max(a4_budget, native_scale))
+        if area * scale * scale > max_pixels:
+            scale = math.sqrt(max_pixels / area)
     return scale
 
 
@@ -187,7 +233,7 @@ def _render(
         page = document[index]
         try:
             width, height = page.get_size()
-            scale = render_scale(width, height, dpi, max_pixels)
+            scale = render_scale(width, height, dpi, max_pixels, _native_scale(page, width))
             bitmap = page.render(scale=scale, grayscale=True)
             try:
                 image: Image.Image = bitmap.to_pil()
@@ -197,6 +243,20 @@ def _render(
         finally:
             page.close()
     return image, scale
+
+
+def _native_scale(page: pdfium.PdfPage, width_pt: float) -> float:
+    """Piksele najszerszego osadzonego obrazu na punkt szerokości strony; 0 bez obrazów.
+
+    Obraz węższy niż strona zaniża wynik - wtedy stronie zostaje budżet pikseli A4.
+    """
+    widest = 0
+    for obj in page.get_objects(filter=[pdfium_raw.FPDF_PAGEOBJ_IMAGE]):
+        try:
+            widest = max(widest, obj.get_px_size()[0])
+        except pdfium.PdfiumError:
+            continue
+    return widest / width_pt if width_pt > 0 else 0.0
 
 
 def _text_in(words: list[dict[str, Any]], cell: BBox) -> str:
