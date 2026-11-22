@@ -3,35 +3,74 @@
   <p class="text-fg-muted">Raport niedostępny dla tego wyniku.</p>
 } @else {
   <div class="flex flex-col gap-section">
-    @for (section of [{ title: 'Ostrzeżenia', items: v.warnings }, { title: 'Poprawki autonaprawy', items: v.fixes }]; track section.title) {
-      <section>
+    @for (section of [{ title: 'Ostrzeżenia', items: v.warnings, badge: 'bg-warning-subtle text-warning', acceptable: true }, { title: 'Poprawki autonaprawy', items: v.fixes, badge: 'bg-success-subtle text-success', acceptable: false }]; track section.title) {
+      <section class="rounded-field border border-border bg-surface p-section">
         <h2 class="text-section-title font-semibold">{{ section.title }} ({{ section.items.length }})</h2>
         @if (section.items.length) {
-          <ul class="mt-2 flex flex-col gap-2">
+          <ul class="mt-2 flex flex-col divide-y divide-border">
             @for (row of section.items; track $index) {
-              <li>
-                <span class="font-mono">{{ row.issue.code }}</span>
-                {{ row.issue.message }}
-                @switch (row.target) {
-                  @case ('link') {
+              <li class="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 py-2 first:pt-0 last:pb-0">
+                <div class="min-w-0 flex-1">
+                  @if (!section.acceptable) {
+                    <span
+                      class="inline-block rounded-field px-[6px] py-px font-mono text-[12px] font-semibold {{
+                        section.badge
+                      }}"
+                      >{{ row.issue.code }}</span
+                    >
+                  }
+                  <div class="[overflow-wrap:anywhere]" [class.mt-1]="!section.acceptable">{{ row.issue.message }}</div>
+                  @if (section.acceptable) {
                     <button
                       appButton
                       type="button"
-                      class="ml-2"
-                      [attr.aria-label]="'Pokaż w JSON: ' + row.issue.code"
-                      (click)="showInJson.emit(row.issue.path!)"
+                      class="mt-2"
+                      [attr.aria-label]="'Zaakceptuj ostrzeżenie: ' + row.issue.code"
+                      (click)="acceptWarning.emit(row.key)"
                     >
-                      Pokaż w JSON
+                      Zaakceptuj
                     </button>
                   }
-                  @case ('draft') {
-                    <span class="text-fg-muted font-mono">{{ row.issue.path }}</span>
-                    <span class="text-fg-muted"> (miejsce w szkicu, nie w wyniku)</span>
+                  @if (!section.acceptable) {
+                    @switch (row.target) {
+                      @case ('draft') {
+                        <div class="mt-1 text-fg-muted [overflow-wrap:anywhere]">
+                          <span class="font-mono">{{ row.issue.path }}</span>
+                          <span> (miejsce w szkicu, nie w wyniku)</span>
+                        </div>
+                      }
+                      @case ('missing') {
+                        <div class="mt-1 text-fg-muted [overflow-wrap:anywhere]">
+                          <span class="font-mono">{{ row.issue.path }}</span>
+                          <span> (element nie występuje w wyniku)</span>
+                        </div>
+                      }
+                    }
                   }
-                  @case ('missing') {
-                    <span class="text-fg-muted font-mono">{{ row.issue.path }}</span>
-                    <span class="text-fg-muted"> (element nie występuje w wyniku)</span>
-                  }
+                </div>
+                @if (!section.acceptable && (row.target === 'link' || row.editId)) {
+                  <span class="flex shrink-0 flex-wrap gap-2">
+                    @if (row.target === 'link') {
+                      <button
+                        appButton
+                        type="button"
+                        [attr.aria-label]="'Pokaż w JSON: ' + row.issue.code"
+                        (click)="showInJson.emit(row.issue.path!)"
+                      >
+                        Pokaż w JSON
+                      </button>
+                    }
+                    @if (row.editId; as editId) {
+                      <button
+                        appButton
+                        type="button"
+                        [attr.aria-label]="'Pokaż w edycji: ' + row.issue.code"
+                        (click)="showInEditor.emit(editId)"
+                      >
+                        Pokaż w edycji
+                      </button>
+                    }
+                  </span>
                 }
               </li>
             }
@@ -39,18 +78,30 @@
         } @else {
           <p class="text-fg-muted">Brak</p>
         }
+        @if (section.acceptable && v.hiddenWarnings) {
+          <p class="mt-2 text-fg-muted">
+            Zaakceptowane i ukryte: {{ v.hiddenWarnings }}
+            <button appButton type="button" class="ml-2" (click)="restoreWarnings.emit()">
+              Przywróć
+            </button>
+          </p>
+        }
       </section>
     }
 
-    <section>
+    <section class="rounded-field border border-border bg-surface p-section">
       <h2 class="text-section-title font-semibold">Propozycje słowników ({{ v.dictionaries.length }})</h2>
       @if (v.dictionaries.length) {
-        <ul class="mt-2 flex flex-col gap-2">
+        <ul class="mt-2 flex flex-col divide-y divide-border">
           @for (d of v.dictionaries; track $index) {
-            <li>
-              <span class="font-mono">{{ d.name }}</span>
-              @if (d.title) { {{ d.title }} }
-              · {{ d.count }} {{ pluralPl(d.count, 'pozycja', 'pozycje', 'pozycji') }}
+            <li class="py-2 first:pt-0 last:pb-0">
+              <div class="flex flex-wrap items-baseline gap-x-2">
+                <span class="font-mono font-semibold">{{ d.name }}</span>
+                @if (d.title) {
+                  <span>{{ d.title }}</span>
+                }
+                <span class="text-fg-muted">· {{ d.count }} {{ pluralPl(d.count, 'pozycja', 'pozycje', 'pozycji') }}</span>
+              </div>
               @if (d.description) {
                 <div class="text-fg-muted">{{ d.description }}</div>
               }
@@ -65,13 +116,15 @@
       }
     </section>
 
-    <section>
+    <section class="rounded-field border border-border bg-surface p-section">
       <h2 class="text-section-title font-semibold">Statystyki</h2>
       @if (v.stats.length) {
-        <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-4">
+        <dl class="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
           @for (s of v.stats; track s[0]) {
-            <dt class="text-fg-muted">{{ s[0] }}</dt>
-            <dd>{{ s[1] }}</dd>
+            <div class="rounded-field bg-surface-readonly px-3 py-2">
+              <dt class="text-fg-muted">{{ s[0] }}</dt>
+              <dd class="text-title font-semibold">{{ s[1] }}</dd>
+            </div>
           }
         </dl>
       } @else {
@@ -79,13 +132,13 @@
       }
     </section>
 
-    <section>
+    <section class="rounded-field border border-border bg-surface p-section">
       <h2 class="text-section-title font-semibold">Przetwarzanie</h2>
       @if (v.rows.length) {
-        <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-4">
+        <dl class="mt-2 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2">
           @for (row of v.rows; track row[0]) {
             <dt class="text-fg-muted">{{ row[0] }}</dt>
-            <dd>{{ row[1] }}</dd>
+            <dd class="[overflow-wrap:anywhere]">{{ row[1] }}</dd>
           }
         </dl>
       } @else {

@@ -2,7 +2,7 @@ import { Component, computed, input, output } from '@angular/core';
 import { Button } from '../../shared/ui/button/button';
 import { pluralPl } from '../import/format';
 import type { LineRange } from './json-lines';
-import { ConversionReport, formatSeconds, pathTarget, ReportIssue } from './report';
+import { ConversionReport, formatSeconds, pathTarget, ReportIssue, warningKey } from './report';
 import { isObject, num, str } from '../../shared/utils/guards';
 
 const METHODS: Record<string, string> = { pdf_text: 'tekst z PDF', ocr: 'OCR', docx: 'DOCX', xlsx: 'XLSX' };
@@ -23,7 +23,17 @@ const STAGES: Record<string, string> = {
 export class ReportView {
   readonly report = input.required<ConversionReport | null>();
   readonly ranges = input.required<ReadonlyMap<string, LineRange>>();
+  /** `warningKey`s the user has accepted; those warnings are not listed. */
+  readonly accepted = input<readonly string[]>([]);
+  /** JSON path of each field by `techName` (see `fieldPaths`). */
+  readonly paths = input<ReadonlyMap<string, string>>(new Map());
+  /** Editor row id of each field by `techName`. */
+  readonly editIds = input<ReadonlyMap<string, string>>(new Map());
   readonly showInJson = output<string>();
+  /** Emits the id of the field to reveal in the editor. */
+  readonly showInEditor = output<string>();
+  readonly acceptWarning = output<string>();
+  readonly restoreWarnings = output<void>();
 
   protected readonly pluralPl = pluralPl;
   protected readonly formatSeconds = formatSeconds;
@@ -34,12 +44,30 @@ export class ReportView {
     const ranges = this.ranges();
     const obj = (v: unknown): Record<string, unknown> => (isObject(v) ? v : {});
     const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
-    const issues = (v: unknown) =>
+    const accepted = new Set(this.accepted());
+    const editIds = this.editIds();
+    const editIdByPath = new Map<string, string>();
+    for (const [techName, path] of this.paths()) {
+      const id = editIds.get(techName);
+      if (id !== undefined) editIdByPath.set(path, id);
+    }
+    let hidden = 0;
+    const issues = (v: unknown, canAccept = false) =>
       list(v)
         .filter(isObject)
         .map((o) => {
           const issue: ReportIssue = { code: str(o['code']) ?? '', message: str(o['message']) ?? '', path: str(o['path']) };
-          return { issue, target: pathTarget(issue, ranges).kind };
+          return {
+            issue,
+            key: warningKey(issue),
+            target: pathTarget(issue, ranges).kind,
+            editId: issue.path === undefined ? undefined : editIdByPath.get(issue.path),
+          };
+        })
+        .filter((row) => {
+          const skip = canAccept && accepted.has(row.key);
+          if (skip) hidden++;
+          return !skip;
         });
     const stats = obj(r.stats);
     const timings = obj(r.timings);
@@ -70,8 +98,10 @@ export class ReportView {
       return ms === undefined ? [] : [`${STAGES[k] ?? k.replace(/Ms$/, '')} ${formatSeconds(ms)}`];
     });
     add('Czas', [...(total === undefined ? [] : [`${formatSeconds(total)} łącznie`]), ...stages].join(' · '));
+    const warnings = issues(r.warnings, true);
     return {
-      warnings: issues(r.warnings),
+      warnings,
+      hiddenWarnings: hidden,
       fixes: issues(r.fixes),
       dictionaries: list(r.dictionaryProposals)
         .filter(isObject)

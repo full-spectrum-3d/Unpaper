@@ -11,7 +11,7 @@ const ranges = formatJson(nadplata).ranges;
 const meta: Meta<ReportView> = {
   title: 'Wynik/Raport',
   component: ReportView,
-  args: { ranges, showInJson: fn() },
+  args: { ranges, showInJson: fn(), acceptWarning: fn() },
 };
 export default meta;
 type Story = StoryObj<ReportView>;
@@ -21,9 +21,10 @@ export const ZRaportem: Story = {
   play: async ({ canvasElement, args }) => {
     const c = within(canvasElement);
     expect(c.getAllByRole('heading', { level: 2 })).toHaveLength(5);
-    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W07_CHOICE_OPTIONS' }));
-    expect(args.showInJson).toHaveBeenCalledWith('tabs[0].questions[1].field.repeatingSectionGrid[0]');
-    expect(c.getByText(/miejsce w szkicu, nie w wyniku/)).toBeVisible();
+    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: R12_DUPLICATE_TECH_NAME' }));
+    expect(args.showInJson).toHaveBeenCalledWith('tabs[1].questions[0].field.repeatingSectionGrid[1]');
+    await userEvent.click(c.getByRole('button', { name: 'Zaakceptuj ostrzeżenie: W03_UNPLACED_FIELD' }));
+    expect(args.acceptWarning).toHaveBeenCalledWith(expect.stringContaining('W03_UNPLACED_FIELD'));
     expect(c.getByText('tekst z PDF')).toBeVisible();
   },
 };

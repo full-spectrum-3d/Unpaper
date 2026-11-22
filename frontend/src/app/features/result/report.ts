@@ -78,6 +78,9 @@ export function asReport(value: unknown): ConversionReport | null {
   return (Object.keys(fixed).length ? { ...value, ...fixed } : value) as ConversionReport;
 }
 
+/** Identity of a warning, so one the user accepted stays hidden. */
+export const warningKey = (i: ReportIssue): string => `${i.code}|${i.path ?? ''}|${i.message}`;
+
 export type PathTarget = { kind: 'link' } | { kind: 'draft' } | { kind: 'missing' } | { kind: 'none' };
 
 // First path segment of the draft (FormDraft), as opposed to the result form.

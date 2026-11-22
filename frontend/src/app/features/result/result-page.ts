@@ -20,7 +20,7 @@ import { Card } from '../../shared/ui/card/card';
 import { selectQueueItem } from '../../store/import-queue/import-queue.selectors';
 import { downloadJson } from '../import/download';
 import { resultFileName } from '../import/zip-results';
-import { FormDefinition, isFormDefinition } from '../preview/form-definition';
+import { FormDefinition, Question, isFormDefinition } from '../preview/form-definition';
 import { FormRenderer } from '../preview/form-renderer';
 import { FormEditor } from './form-editor';
 import { formatJson } from './json-lines';
@@ -75,6 +75,18 @@ export class ResultPage {
   readonly highlightPath = signal<string | null>(null);
   protected readonly report = computed(() => asReport(this.item()?.report));
   protected readonly json = computed(() => formatJson(this.item()?.result));
+  /** Editor row id by `techName`, for the "Pokaż w edycji" buttons of the report. */
+  protected readonly editIds = computed(() => {
+    const ids = new Map<string, string>();
+    const walk = (questions: Question[]): void => {
+      for (const { field } of questions) {
+        if (field.techName && !ids.has(field.techName)) ids.set(field.techName, field.id);
+        walk(field.repeatingSectionGrid ?? []);
+      }
+    };
+    for (const tab of this.form()?.tabs ?? []) walk(tab.questions);
+    return ids;
+  });
   protected readonly fieldPaths = computed(() => fieldPaths(this.item()?.result));
   /** One-line confidence summary above the tabs; null when the report has no confidence. */
   protected readonly summary = computed(() => {
@@ -114,6 +126,27 @@ export class ResultPage {
     this.activeTab.set('json');
     // The JSON view exists only once the tab has rendered.
     afterNextRender(() => this.jsonView()?.reveal(), { injector: this.injector });
+  }
+
+  protected onShowInEditor(fieldId: string): void {
+    this.selectTab('edit');
+    // The editor is rendered only while its tab is shown.
+    afterNextRender(
+      () => {
+        const row = document.getElementById(`edit-field-${fieldId}`);
+        row?.scrollIntoView({ block: 'center' });
+        row?.querySelector<HTMLElement>('input')?.focus();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  protected onAcceptWarning(id: string, key: string): void {
+    this.store.dispatch(ImportQueueActions.warningAccepted({ id, key }));
+  }
+
+  protected onRestoreWarnings(id: string): void {
+    this.store.dispatch(ImportQueueActions.warningsRestored({ id }));
   }
 
   protected onEdited(result: FormDefinition): void {

@@ -25,6 +25,8 @@ export interface QueueItem {
   passwordState?: PasswordState | null;
   /** result was changed by hand after conversion; report still describes the original conversion. */
   edited?: boolean;
+  /** Keys (`warningKey`) of report warnings the user accepted. */
+  acceptedWarnings?: string[];
 }
 
 export type ImportQueueState = EntityState<QueueItem>;
@@ -77,6 +79,16 @@ export const importQueueReducer = createReducer(
     state.entities[id]?.status !== 'done'
       ? state
       : adapter.updateOne({ id, changes: { result, edited: true } }, state),
+  ),
+  on(ImportQueueActions.warningAccepted, (state, { id, key }) => {
+    const item = state.entities[id];
+    if (item?.status !== 'done' || item.acceptedWarnings?.includes(key)) return state;
+    return adapter.updateOne({ id, changes: { acceptedWarnings: [...(item.acceptedWarnings ?? []), key] } }, state);
+  }),
+  on(ImportQueueActions.warningsRestored, (state, { id }) =>
+    state.entities[id]?.acceptedWarnings?.length
+      ? adapter.updateOne({ id, changes: { acceptedWarnings: [] } }, state)
+      : state,
   ),
   on(ImportQueueActions.removed, (state, { id }) =>
     state.entities[id]?.status === 'processing' ? state : adapter.removeOne(id, state),

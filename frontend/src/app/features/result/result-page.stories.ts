@@ -139,17 +139,17 @@ export const ZRaportem: Story = {
     const scroll = spyOn(Element.prototype, 'scrollIntoView');
     try {
       await userEvent.click(tab(c, 'Raport'));
-      await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W07_CHOICE_OPTIONS' }));
+      await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: R12_DUPLICATE_TECH_NAME' }));
       expect(tab(c, 'JSON')).toHaveAttribute('aria-selected', 'true');
-      await waitFor(() => expectHighlighted('tabs[0].questions[1].field.repeatingSectionGrid[0]'));
+      await waitFor(() => expectHighlighted('tabs[1].questions[0].field.repeatingSectionGrid[1]'));
       // The first line of the range is centred, not the whole block.
-      const first = c.getByLabelText('Fragment JSON: tabs[0].questions[1].field.repeatingSectionGrid[0]').querySelector('[data-line]');
+      const first = c.getByLabelText('Fragment JSON: tabs[1].questions[0].field.repeatingSectionGrid[1]').querySelector('[data-line]');
       expect(scroll).toHaveBeenCalledWith({ block: 'center' });
       expect(scroll.mock.contexts.at(-1)).toBe(first);
     } finally {
       scroll.mockRestore();
     }
-    expect(c.getByRole('group', { name: 'Fragment JSON: tabs[0].questions[1].field.repeatingSectionGrid[0]' })).toHaveFocus();
+    expect(c.getByRole('group', { name: 'Fragment JSON: tabs[1].questions[0].field.repeatingSectionGrid[1]' })).toHaveFocus();
 
     // Leaving the JSON tab clears the highlight.
     await userEvent.click(tab(c, 'Podgląd formularza'));
@@ -157,7 +157,7 @@ export const ZRaportem: Story = {
     expect((await c.findByRole('region', { name: 'Wynik konwersji w formacie JSON' })).querySelector('.bg-warning-subtle')).toBeNull();
 
     await userEvent.click(tab(c, 'Raport'));
-    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: W02_LABEL_TOO_LONG' }));
+    await userEvent.click(c.getByRole('button', { name: 'Pokaż w JSON: R12_DUPLICATE_TECH_NAME' }));
     // Ends with the highlight on screen so the a11y scan checks the fragment too.
     await waitFor(() => expectHighlighted('tabs[1].questions[0].field.repeatingSectionGrid[1]'));
   },

@@ -97,13 +97,13 @@ describe('ResultPage', () => {
     tab('Raport').click();
     await fixture.whenStable();
     const link = el.querySelector<HTMLButtonElement>(
-      '[aria-label="Pokaż w JSON: W07_CHOICE_OPTIONS"]',
+      '[aria-label="Pokaż w JSON: R12_DUPLICATE_TECH_NAME"]',
     )!;
     link.click();
     await fixture.whenStable();
     expect(tab('JSON').getAttribute('aria-selected')).toBe('true');
     const fragment = el.querySelector(
-      '[aria-label="Fragment JSON: tabs[0].questions[1].field.repeatingSectionGrid[0]"]',
+      '[aria-label="Fragment JSON: tabs[1].questions[0].field.repeatingSectionGrid[1]"]',
     );
     expect(fragment).not.toBeNull();
     expect(document.activeElement).toBe(fragment);

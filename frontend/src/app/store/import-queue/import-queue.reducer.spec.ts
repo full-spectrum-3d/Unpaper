@@ -57,6 +57,18 @@ describe('importQueueReducer', () => {
     expect(importQueueReducer(done, ImportQueueActions.cancelled({ id: 'a' }))).toBe(done);
   });
 
+  it('warningAccepted records each key once on a done item; warningsRestored clears them', () => {
+    const { warningAccepted, warningsRestored } = ImportQueueActions;
+    let state = withItems(item('a', { status: 'done' }));
+    state = importQueueReducer(state, warningAccepted({ id: 'a', key: 'k1' }));
+    state = importQueueReducer(state, warningAccepted({ id: 'a', key: 'k2' }));
+    expect(importQueueReducer(state, warningAccepted({ id: 'a', key: 'k1' }))).toBe(state);
+    expect(state.entities['a']?.acceptedWarnings).toEqual(['k1', 'k2']);
+    expect(importQueueReducer(state, warningsRestored({ id: 'a' })).entities['a']?.acceptedWarnings).toEqual([]);
+    const pending = withItems(item('b'));
+    expect(importQueueReducer(pending, warningAccepted({ id: 'b', key: 'k' }))).toBe(pending);
+  });
+
   it('convertFailed sets error, message, retryable true', () => {
     const before = withItems(item('a', { status: 'processing' }));
     const state = importQueueReducer(before, ImportQueueActions.convertFailed({ id: 'a', error: 'boom' }));

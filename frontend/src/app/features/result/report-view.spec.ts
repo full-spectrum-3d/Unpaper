@@ -28,26 +28,75 @@ describe('ReportView', () => {
     ]);
   });
 
+  it('emits the key of an accepted warning, hides it and lets the user restore it', () => {
+    const { fixture, el } = render(mockReport(nadplata));
+    const keys: string[] = [];
+    let restored = 0;
+    fixture.componentInstance.acceptWarning.subscribe((k) => keys.push(k));
+    fixture.componentInstance.restoreWarnings.subscribe(() => restored++);
+    const btn = el.querySelector<HTMLButtonElement>('button[aria-label="Zaakceptuj ostrzeżenie: W07_CHOICE_OPTIONS"]')!;
+    btn.click();
+    expect(keys).toHaveLength(1);
+    expect(keys[0]).toContain('W07_CHOICE_OPTIONS');
+    expect(el.querySelector('button[aria-label^="Zaakceptuj ostrzeżenie: W07"]')).not.toBeNull();
+    expect(el.querySelectorAll('button[aria-label^="Zaakceptuj ostrzeżenie"]')).toHaveLength(3);
+    expect(el.querySelector('button[aria-label^="Zaakceptuj"][aria-label*="fix"]')).toBeNull();
+
+    fixture.componentRef.setInput('accepted', keys);
+    fixture.detectChanges();
+    expect(el.querySelector('button[aria-label="Zaakceptuj ostrzeżenie: W07_CHOICE_OPTIONS"]')).toBeNull();
+    expect(el.querySelector('h2')!.textContent!.trim()).toBe('Ostrzeżenia (2)');
+    expect(el.textContent).toContain('Zaakceptowane i ukryte: 1');
+    [...el.querySelectorAll<HTMLButtonElement>('button')].find((b) => b.textContent!.trim() === 'Przywróć')!.click();
+    expect(restored).toBe(1);
+  });
+
   it('emits the path from the show-in-JSON button of a linkable issue', () => {
     const { fixture, el } = render(mockReport(nadplata));
     const paths: string[] = [];
     fixture.componentInstance.showInJson.subscribe((p) => paths.push(p));
-    const btn = el.querySelector<HTMLButtonElement>('button[aria-label="Pokaż w JSON: W07_CHOICE_OPTIONS"]')!;
+    const btn = el.querySelector<HTMLButtonElement>('button[aria-label="Pokaż w JSON: R12_DUPLICATE_TECH_NAME"]')!;
     expect(btn.textContent!.trim()).toBe('Pokaż w JSON');
     btn.click();
-    expect(paths).toEqual(['tabs[0].questions[1].field.repeatingSectionGrid[0]']);
+    expect(paths).toEqual(['tabs[1].questions[0].field.repeatingSectionGrid[1]']);
   });
 
-  it('marks draft paths without a button', () => {
+  it('puts the accept button right under the warning, with no jump-to buttons on warnings', () => {
+    const { el } = render(mockReport(nadplata));
+    const warning = el.querySelector('section')!;
+    expect(warning.querySelector('button[aria-label^="Pokaż w JSON"]')).toBeNull();
+    expect(warning.querySelector('button[aria-label^="Pokaż w edycji"]')).toBeNull();
+    const row = warning.querySelector('li')!;
+    const message = row.querySelector('div > div')!;
+    const accept = row.querySelector('button[aria-label^="Zaakceptuj"]')!;
+    expect(message.nextElementSibling).toBe(accept);
+  });
+
+  it('shows warnings as message only, without code or draft path', () => {
     const { el, text } = render(mockReport(nadplata));
-    expect(text()).toContain('subject_pages[0].sections[0].fields[0] (miejsce w szkicu, nie w wyniku)');
+    expect(text()).not.toContain('W03_UNPLACED_FIELD');
+    expect(text()).not.toContain('miejsce w szkicu');
     expect(el.querySelector('button[aria-label="Pokaż w JSON: W03_UNPLACED_FIELD"]')).toBeNull();
   });
 
-  it('marks tabs paths missing from the result', () => {
+  it('does not show paths missing from the result, nor a JSON button for them', () => {
     const { el, text } = render({ warnings: [{ code: 'R03_EMPTY_PAGE', message: 'm', path: 'tabs[0]' }] });
-    expect(text()).toContain('tabs[0] (element nie występuje w wyniku)');
-    expect(el.querySelector('button')).toBeNull();
+    expect(text()).not.toContain('element nie występuje');
+    expect(el.querySelector('button[aria-label^="Pokaż w JSON"]')).toBeNull();
+  });
+
+  it('emits the editor id from the show-in-editor button of a warning', () => {
+    const path = 'tabs[1].questions[0].field.repeatingSectionGrid[1]';
+    const fixture = TestBed.createComponent(ReportView);
+    fixture.componentRef.setInput('report', asReport({ fixes: [{ code: 'W1', message: 'm', path }] }));
+    fixture.componentRef.setInput('ranges', ranges);
+    fixture.componentRef.setInput('paths', new Map([['pole', path]]));
+    fixture.componentRef.setInput('editIds', new Map([['pole', 'row-7']]));
+    fixture.detectChanges();
+    const ids: string[] = [];
+    fixture.componentInstance.showInEditor.subscribe((id) => ids.push(id));
+    fixture.nativeElement.querySelector('button[aria-label="Pokaż w edycji: W1"]').click();
+    expect(ids).toEqual(['row-7']);
   });
 
   it('shows dictionary proposals', () => {

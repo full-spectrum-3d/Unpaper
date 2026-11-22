@@ -32,51 +32,65 @@
             Sprawdź w walidatorze
           </a>
         </span>
-        @if (i.edited) {
-          <p class="text-warning font-semibold">Formularz zmieniony ręcznie — sprawdź go w walidatorze.</p>
-        }
-        @if (summary(); as s) {
-          <p class="flex flex-wrap items-center gap-2">
-            <span>Pewność konwersji: <strong>{{ s.score }}</strong>.</span>
-            @if (s.toReview) {
-              <button type="button" class="text-primary underline focus-ring rounded-field" (click)="selectTab('report')">
-                Do sprawdzenia: {{ s.toReview }}
-              </button>
-            } @else {
-              <span class="text-fg-muted">Nic do sprawdzenia.</span>
-            }
-          </p>
-        }
-        @if (!form()) {
-          <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
-        }
-        <div id="result-panel-json" role="tabpanel" aria-labelledby="result-tab-json" [hidden]="activeTab() !== 'json'">
-          <!-- Rendered only when shown: one span per line is a lot of DOM for a large form. -->
-          @if (activeTab() === 'json') {
-            <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
-          }
-        </div>
-        <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
+        <div class="flex flex-col gap-section p-section">
           @if (i.edited) {
-            <p class="text-fg-muted mb-section">Raport dotyczy pierwotnej konwersji — nie uwzględnia ręcznych zmian.</p>
+            <p class="text-warning font-semibold">Formularz zmieniony ręcznie — sprawdź go w walidatorze.</p>
           }
-          <app-review-panel
-            class="mb-section"
-            [report]="report()"
-            [ranges]="json().ranges"
-            [paths]="fieldPaths()"
-            (showInJson)="onShowInJson($event)"
-          />
-          <app-report-view [report]="report()" [ranges]="json().ranges" (showInJson)="onShowInJson($event)" />
-        </div>
-        @if (form(); as f) {
-          <div id="result-panel-edit" role="tabpanel" aria-labelledby="result-tab-edit" [hidden]="activeTab() !== 'edit'">
-            <!-- Rendered only when shown: a full set of controls per field. -->
-            @if (activeTab() === 'edit') {
-              <app-form-editor [definition]="f" (edited)="onEdited($event)" />
+          @if (summary(); as s) {
+            <p class="flex flex-wrap items-center gap-2">
+              <span>Pewność konwersji: <strong>{{ s.score }}</strong>.</span>
+              @if (s.toReview) {
+                <button type="button" class="text-primary underline focus-ring rounded-field" (click)="selectTab('report')">
+                  Do sprawdzenia: {{ s.toReview }}
+                </button>
+              } @else {
+                <span class="text-fg-muted">Nic do sprawdzenia.</span>
+              }
+            </p>
+          }
+          @if (!form()) {
+            <p class="text-fg-muted">Nie można wyświetlić podglądu: wynik nie ma struktury formularza.</p>
+          }
+          <div id="result-panel-json" role="tabpanel" aria-labelledby="result-tab-json" [hidden]="activeTab() !== 'json'">
+            <!-- Rendered only when shown: one span per line is a lot of DOM for a large form. -->
+            @if (activeTab() === 'json') {
+              <app-json-view [lines]="json()" [highlight]="highlightPath()" label="Wynik konwersji w formacie JSON" />
             }
           </div>
-        }
+          <div id="result-panel-report" role="tabpanel" aria-labelledby="result-tab-report" [hidden]="activeTab() !== 'report'">
+            @if (i.edited) {
+              <p class="text-fg-muted mb-section">Raport dotyczy pierwotnej konwersji — nie uwzględnia ręcznych zmian.</p>
+            }
+            <app-review-panel
+              class="mb-section"
+              [report]="report()"
+              [ranges]="json().ranges"
+              [paths]="fieldPaths()"
+              [editIds]="editIds()"
+              (showInJson)="onShowInJson($event)"
+              (showInEditor)="onShowInEditor($event)"
+            />
+            <app-report-view
+            [report]="report()"
+            [ranges]="json().ranges"
+            [accepted]="i.acceptedWarnings ?? []"
+            [paths]="fieldPaths()"
+            [editIds]="editIds()"
+            (showInJson)="onShowInJson($event)"
+            (showInEditor)="onShowInEditor($event)"
+            (acceptWarning)="onAcceptWarning(i.id, $event)"
+            (restoreWarnings)="onRestoreWarnings(i.id)"
+          />
+          </div>
+          @if (form(); as f) {
+            <div id="result-panel-edit" role="tabpanel" aria-labelledby="result-tab-edit" [hidden]="activeTab() !== 'edit'">
+              <!-- Rendered only when shown: a full set of controls per field. -->
+              @if (activeTab() === 'edit') {
+                <app-form-editor [definition]="f" (edited)="onEdited($event)" />
+              }
+            </div>
+          }
+        </div>
       </app-card>
     } @else {
       <h1 tabindex="-1" class="text-title font-semibold">Wynik</h1>
@@ -90,7 +104,7 @@
       role="tabpanel"
       aria-labelledby="result-tab-preview"
       data-theme="preview"
-      class="bg-bg p-section"
+      class="bg-bg p-section w-full max-w-[960px] mx-auto"
       [hidden]="activeTab() !== 'preview'"
     >
       <app-form-renderer [definition]="f" />
