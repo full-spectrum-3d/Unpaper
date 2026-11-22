@@ -1,138 +1,32 @@
-# Cyfryzacja formularzy – automatyczna konwersja blankietów na formularze e-usług
+# Unpaper – konwersja blankietów na formularze e-usług
 
-HackNation 2026, wyzwanie Centralnego Ośrodka Informatyki „Cyfryzacja formularzy”.
+HackNation 2026, wyzwanie COI „Cyfryzacja formularzy”. Usługa REST przyjmuje blankiet
+(PDF, DOC, DOCX, ODS, XLSX, JPG, JPEG, PNG) i zwraca JSON z konfiguracją formularza
+gotową do importu w Generatorze Formularzy COI. Do usługi dołączona jest aplikacja
+webowa (import wielu plików, podgląd formularza, raport, pobranie JSON).
 
-## Opis projektu
-
-Urzędy publikują formularze jako PDF, dokumenty Word i arkusze albo skany. Przeniesienie
-każdego z nich do e-usługi wymaga ręcznej analizy: trzeba rozpoznać pola, pogrupować je
-w strony tematyczne, dobrać typy i walidacje, słowniki oraz zależności między polami.
-
-Ta aplikacja robi to automatycznie. Urzędnik wgrywa blankiet (PDF, DOC, DOCX, ODS, XLSX,
-JPG, JPEG, PNG), a usługa REST zwraca JSON z konfiguracją formularza gotową do importu
-w Generatorze Formularzy COI. Wynik:
-
-- ma strukturę zgodną z plikami wzorcowymi (`konfiguracja_form_*.json`) i schematem importu,
-- spełnia standardy projektowania formularzy: strony tematyczne, sekcje predefiniowane
-  (dane wnioskodawcy, adres, kontakt, załączniki, zgody), strona końcowa,
-- łączy pola ze słownikami (TERYT, Kraje…) i danymi inicjalnymi (PESEL, MLPZ),
-- zawiera zależności dynamiczne (JSONata w `states`) i walidatory (PESEL, NIP, REGON, kod pocztowy, e-mail…),
-- przechodzi weryfikację strukturalną z autonaprawą, zanim trafi do użytkownika.
-
-Zasada działania: **AI rozumie, kod buduje**. Lokalny model językowy (Qwen3 8B, Apache-2.0,
-uruchamiany przez Ollama) tylko odczytuje z dokumentu, jakie dane są potrzebne. Gotowy
-JSON składa deterministyczny kod według reguł z materiałów COI, więc wynik jest zawsze
-poprawny strukturalnie, także gdy model jest niedostępny (wtedy szkic powstaje z reguł).
-Rozwiązanie nie korzysta z żadnych zewnętrznych API, a pliki istnieją tylko w pamięci
-i katalogu tymczasowym na czas żądania.
-
-Do usługi dołączona jest aplikacja webowa: import wielu plików naraz, podgląd
-wygenerowanego formularza tak, jak zobaczy go obywatel (z walidacją pól i zależnościami
-między nimi), podgląd i pobranie JSON-a.
-
-## Spis treści
-
-1. [Zgodność z wymaganiami](#zgodność-z-wymaganiami)
-2. [Architektura](#architektura)
-3. [Wymagania sprzętowe i programowe](#wymagania-sprzętowe-i-programowe)
-4. [Budowanie obrazów Docker](#budowanie-obrazów-docker)
-5. [Uruchomienie aplikacji](#uruchomienie-aplikacji)
-6. [Konfiguracja](#konfiguracja)
-7. [REST API](#rest-api)
-8. [Bezpieczeństwo kontenerów](#bezpieczeństwo-kontenerów)
-9. [Testy](#testy)
-10. [Licencje](#licencje)
-11. [Rozwiązywanie problemów](#rozwiązywanie-problemów)
-12. [Struktura repozytorium](#struktura-repozytorium)
-
-## Zgodność z wymaganiami
-
-### Zakres obowiązkowy (pkt 3.2 i 5 zadania)
-
-| Wymaganie | Realizacja |
-|---|---|
-| REST API przyjmujące pojedynczy plik formularza | `POST /api/v1/forms/convert`, dokładnie jedno pole `file` ([REST API](#rest-api)) |
-| Formaty PDF, DOC, DOCX, ODS, XLSX, JPG, JPEG, PNG | ekstrakcja tekstu i układu: pdfplumber (PDF), python-docx, openpyxl; DOC i ODS przez LibreOffice; skany przez Tesseract OCR |
-| JSON zgodny ze strukturą oczekiwaną przez aplikację | budowa według wzorców i schematu, weryfikacja JSON Schema + reguły R01–R15 przed odpowiedzią |
-| JSON zgodny ze standardami projektowania | strony tematyczne, sekcje predefiniowane, strona `FINISH`, obligatoryjność pól, limit sekcji na stronę |
-| Walidacja typu pliku z weryfikacją MIME | rozszerzenie + MIME z zawartości (libmagic) + struktura archiwów; 415 przy niezgodności |
-| Nazwa pliku ≤ 250 znaków, bez `; : > < / \ \| ' * % $` | 400 `FILENAME_TOO_LONG` / `FILENAME_FORBIDDEN_CHARS` |
-| Konfigurowalny maksymalny rozmiar pliku | `MAX_FILE_SIZE_MB`, liczony strumieniowo (413) |
-| Tylko tymczasowe przetwarzanie plików | upload w RAM do `SPOOL_MAX_MB`, potem `tmpfs`; katalog per żądanie usuwany po odpowiedzi; brak bazy i wolumenów na dane |
-| Kompletna konfiguracja Docker, izolowane środowisko | `docker-compose.yml` z trzema usługami ([Bezpieczeństwo kontenerów](#bezpieczeństwo-kontenerów)) |
-| Wymagania dla obrazów Docker | oficjalne obrazy, Alpine, wersje z digestem, bez `latest`, użytkownicy bez roota, tylko potrzebne porty, sekrety w runtime |
-| Konfiguracja: rozmiar pliku, JWT, parametry integracyjne | zmienne środowiskowe ([Konfiguracja](#konfiguracja)) |
-| Open source bez copyleftu, bez licencji komercyjnych, bez zewnętrznych API i SaaS | [Licencje](#licencje): biblioteki aplikacji na licencjach permisywnych, obraz `llm` bez bibliotek NVIDIA; model lokalny w sieci `internal` bez internetu, funkcje chmurowe Ollamy wyłączone (`OLLAMA_NO_CLOUD`) |
-| Python 3.14 | backend: Python 3.14, FastAPI |
-| Dokumentacja architektury | [Architektura](#architektura), `docs/specyfikacja-techniczna.md`, `docs/architecture/` |
-| README: budowanie, uruchomienie, konfiguracja, REST API | ten plik |
-
-### Rozszerzenia opcjonalne (pkt 3.3 zadania)
-
-| Rozszerzenie | Realizacja |
-|---|---|
-| I. Słowniki i dane inicjalne | pola adresu, kraju, numerów kierunkowych dostają `dictionaryName` z bazy słowników; dane wnioskodawcy `defaultValueType: EXTERNAL_SYSTEM` z PESEL / MLPZ (`GET /dictionaries`, `GET /initial-data-sources`) |
-| II. Propozycje nowych słowników | listy zamknięte bez słownika w bazie (np. rodzaj podatku) trafiają jako propozycja do raportu konwersji (`report.dictionaryProposals`) |
-| III. Zależności pól, sekcji i stron | warunki „pokaż, gdy…” jako zapytania JSONata w `states` (`SHOW`, `READ_ONLY`), przepływ stron w `flow.links` |
-| IV. Frontend do ładowania plików i przeglądania JSON | aplikacja Angular na :8080: logowanie, przeciąganie wielu plików, kolejka ze statusami, pytanie o hasło dokumentu chronionego hasłem, podgląd i pobranie JSON |
-| V. Wizualizacja formularza e-usługi | podgląd formularza z JSON-a w aplikacji webowej: strony, sekcje, pola z podpowiedziami, słowniki z kaskadą TERYT, stany `SHOW` i `READ_ONLY` liczone z warunków JSONata, oznaczenie pól z rejestru |
-| VI. Walidacja danych i UX | w JSON-ie walidatory dobrane do pól (`PESEL`, `NIP`, `REGON`, `ZIP_CODE`, `EMAIL`, `EPUAP`, `ADE`, `SERIAL_NUMBER_ID_CARD`) i obligatoryjność (`REQUIRED`); podgląd sprawdza te walidatory, pokazuje błędy przy polach i blokuje „Dalej” na stronie z błędami; import wsadowy (batch) z pobraniem wszystkich wyników jako ZIP; `POST /forms/validate` |
-
-## Architektura
+Zasada działania: **AI rozumie, kod buduje**. Model językowy (Qwen3 8B przez Ollama)
+tylko odczytuje z dokumentu, jakie dane są potrzebne; JSON składa deterministyczny kod,
+więc wynik jest poprawny strukturalnie także bez modelu (wtedy szkic powstaje z reguł).
 
 ```
-┌──────────────────────┐      ┌─────────────────────────────┐      ┌───────────────────────┐
-│ frontend (nginx)     │      │ api (FastAPI, Python 3.14)  │      │ llm (Ollama)          │
-│ Angular SPA          │─────▶│ [1] walidacja pliku         │─────▶│ Qwen3 8B (Apache-2.0) │
-│ :8080                │ /api │ [2] normalizacja (LibreOff.)│ HTTP │ :11434 tylko w sieci  │
-└──────────────────────┘      │ [3] ekstrakcja (tekst, OCR) │      │ wewnętrznej           │
-                              │ [4] analiza AI → szkic      │      └───────────────────────┘
-                              │ [5] budowa formularza       │
-                              │ [6] weryfikacja, autonaprawa│
-                              │ :8000, tmpfs /tmp           │
-                              └─────────────────────────────┘
+frontend (nginx :8080) ──/api──▶ api (FastAPI, Python 3.14 :8000) ──▶ llm (Ollama :11434)
 ```
 
-| Etap | Co robi |
-|---|---|
-| [1] walidacja | nazwa, rozmiar (strumieniowo), rozszerzenie, MIME z zawartości, struktura i rozmiar archiwów, liczba stron i pikseli |
-| [2] normalizacja | DOC → DOCX i ODS → XLSX przez LibreOffice (osobny proces z timeoutem), odszyfrowanie plików z hasłem |
-| [3] ekstrakcja | wspólny model dokumentu (`DocumentModel`): bloki tekstu, tabele, ramki, wykropkowania; OCR Tesseract dla skanów |
-| [4] analiza AI | model dostaje tekst dokumentu jako dane i zwraca szkic (`FormDraft`) w schemacie structured output; poprawki i reguły w kodzie; przy błędzie lub braku modelu szkic z reguł |
-| [5] budowa | deterministyczny kod: sekcje predefiniowane, typy pól, walidatory, słowniki, dane inicjalne, `states`, układ, `flow` |
-| [6] weryfikacja | JSON Schema i reguły R01–R15 z autonaprawą; gdy błędy zostają, formularz zastępczy |
-
-API działa samodzielnie i spełnia cały zakres obowiązkowy; frontend jest dodatkiem.
-Brak bazy danych: słowniki, katalog danych inicjalnych i szablony sekcji są plikami
-zasobów w obrazie API.
-
-Dokumentacja szczegółowa:
-
-- `docs/specyfikacja-techniczna.md` – specyfikacja: pipeline, API, format JSON, reguły budowy, bezpieczeństwo, decyzje wobec rozbieżności w materiałach (§7.4),
-- `docs/architecture/` – architektura, wdrożenie z Węzłem Krajowym (`wezel-krajowy.md`),
-- `docs/superpowers/specs/` – projekty modułów (ekstrakcja, LLM, uwierzytelnianie, frontend),
-- `docs/openapi.json` – opis REST API (OpenAPI 3.1).
-
-## Wymagania sprzętowe i programowe
-
-- Docker Engine 24+ z Docker Compose v2.20+ (`docker compose version`).
-- RAM: 16 GB (kontener `llm` z załadowanym qwen3:8b zajmuje ok. 6,5 GB).
-- Dysk: ok. 7 GB (obrazy 1,5 GB, model 5,2 GB); przy budowie obrazu `llm` Docker pobiera
-  dodatkowo obraz producenta Ollamy (5,1 GB, tylko etap budowania – można go potem usunąć).
-- CPU x86_64 (zalecane AVX2). Na samym CPU konwersja trwa zwykle 1,5–5 min.
-  GPU NVIDIA jest opcjonalne (`docker-compose.gpu.yml`).
-- Internet tylko przy budowie obrazów i jednorazowym pobraniu modelu. Z lokalnym modelem
-  uruchomiona aplikacja nie łączy się z internetem.
-- Do generowania `.env` skryptem: powłoka POSIX (`sh`). `make` jest opcjonalny.
+Pipeline API: walidacja pliku → normalizacja (LibreOffice) → ekstrakcja (tekst, OCR)
+→ analiza AI → budowa formularza → weryfikacja z autonaprawą.
+Szczegóły: `docs/specyfikacja-techniczna.md`, `docs/architecture/`.
 
 ## Budowanie obrazów Docker
 
+Wymagany Docker Engine 24+ z Compose v2.20+.
+
 ```bash
-docker compose build              # wszystkie obrazy aktywnych usług
-docker compose build api          # tylko API
+docker compose build            # wszystkie obrazy
+docker compose build api        # tylko API
 ```
 
-Albo bez compose, pojedynczo:
+Albo pojedynczo:
 
 ```bash
 docker build -t coi-cf-api:0.1.0 backend
@@ -140,472 +34,158 @@ docker build -t coi-cf-frontend:0.1.0 frontend
 docker build -t coi-cf-llm:0.40.16 llm
 ```
 
-| Obraz | Dockerfile | Obraz bazowy (oficjalny, tag + digest) | Użytkownik | Port |
-|---|---|---|---|---|
-| `coi-cf-api:0.1.0` | `backend/Dockerfile` | `python:3.14-alpine3.22`, multi-stage: builder z `uv`, runtime z Tesseract, LibreOffice, libmagic | `app` (10001) | 8000 |
-| `coi-cf-frontend:0.1.0` | `frontend/Dockerfile` | build `node:24-alpine3.22`, runtime `nginx:1.28-alpine3.23` | `nginx` (101) | 8080 |
-| `coi-cf-llm:0.40.16` | `llm/Dockerfile` (target `cpu`) | `ubuntu:24.04` + binarka i biblioteki CPU z `ollama/ollama:0.40.16`, bez bibliotek NVIDIA (161 MB) | `ollama` (10002) | 11434 (tylko sieć wewnętrzna) |
-| `coi-cf-llm:0.40.16-gpu` | `llm/Dockerfile` (target `gpu`) | `ollama/ollama:0.40.16` z CUDA; tylko z `docker-compose.gpu.yml` | `ollama` (10002) | jw. |
+| Obraz | Dockerfile | Baza | Port |
+|---|---|---|---|
+| `coi-cf-api` | `backend/Dockerfile` | `python:3.14-alpine` | 8000 |
+| `coi-cf-frontend` | `frontend/Dockerfile` | `node:24-alpine` → `nginx:alpine` | 8080 |
+| `coi-cf-llm` | `llm/Dockerfile` | Ollama (CPU; GPU: target `gpu`) | 11434 (tylko sieć wewnętrzna) |
 
-Obrazy nie zawierają sekretów ani modelu. Model trafia do wolumenu `ollama-models`
-przy instalacji ([Uruchomienie](#uruchomienie-aplikacji), krok 3).
+Obrazy nie zawierają sekretów ani modelu. Wszystkie działają jako użytkownik bez roota.
 
 ## Uruchomienie aplikacji
 
-### Szybki start
-
 ```bash
-make setup     # .env z sekretami + obrazy + pobranie modelu (można powtórzyć, .env zostaje)
+make setup     # .env z sekretami + obrazy + pobranie modelu (można powtórzyć)
 make up        # start w tle
 ```
 
-### Krok po kroku (bez make)
+Bez `make`:
 
 ```bash
-docker compose build                                  # 1. obrazy
-scripts/init-env.sh                                   # 2. .env: losowy JWT_SECRET, konto admin, hasło
-docker compose --profile setup run --rm llm-pull      # 3. model qwen3:8b do wolumenu (jednorazowo)
-docker compose up -d                                  # 4. start
+docker compose build
+scripts/init-env.sh                                # tworzy .env i wypisuje hasło konta admin
+docker compose --profile setup run --rm llm-pull   # model qwen3:8b do wolumenu (jednorazowo)
+docker compose up -d
 ```
 
-`scripts/init-env.sh` wypisuje wygenerowane hasło konta `admin` jeden raz. Własny login
-i hasło: `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`. Ręcznie: skopiuj
-`.env.example` do `.env` i uzupełnij `JWT_SECRET`, `API_USER`, `API_PASSWORD_HASH`
-(hash: `make password-hash`).
-
-### Po starcie
+Własny login i hasło: `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`.
 
 | Adres | Co |
 |---|---|
-| http://localhost:8080 | aplikacja webowa (logowanie kontem z `.env`) |
-| http://localhost:8000/docs | Swagger UI z opisem API (tylko `APP_ENV=development`; w produkcji wyłączone) |
+| http://localhost:8080 | aplikacja webowa (logowanie lub rejestracja) |
+| http://localhost:8000/docs | Swagger UI (tylko `APP_ENV=development`) |
 | http://localhost:8000/api/v1/health/ready | gotowość: 200 = model dostępny |
 
 ```bash
-docker compose ps                 # stan usług (healthy)
-docker compose logs -f api        # logi API (JSON, bez treści dokumentów)
-make down                         # zatrzymanie (docker compose down)
+docker compose ps            # stan usług
+docker compose logs -f api   # logi API
+make down                    # zatrzymanie
 ```
 
-### Konwersja wsadowa (pliki wynikowe)
+Warianty:
 
-```bash
-make convert-all       # materials/* -> out/<plik>.json + out/<plik>.report.json
-```
+- **Zewnętrzny serwer modelu:** w `.env` `COMPOSE_PROFILES=` (pusto) i `LLM_BASE_URL=https://…`;
+  compose uruchomi tylko `api` i `frontend`.
+- **GPU NVIDIA:** `docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d`
+  (wymaga NVIDIA Container Toolkit).
+- **Konwersja wsadowa:** `make convert-all` (`materials/*` → `out/*.json`).
 
-Wymaga działającego API (`make up`). Login bierze z `API_USER` (środowisko albo `.env`),
-hasło z `API_PASSWORD` albo pyta w terminalu. Adres API: `--url` / `API_URL`
-(domyślnie `http://localhost:8000`). Błąd jednego pliku nie przerywa przebiegu; na końcu
-lista błędów i kod wyjścia 1. Pokrycie wzorca:
-`uv run --project backend python scripts/compare.py out/plik.json wymagania/wzorzec.json`.
-
-Pierwsza konwersja po starcie może trwać dłużej o kilkadziesiąt sekund: model ładuje się
-do pamięci. API rozgrzewa go przy starcie, a `OLLAMA_KEEP_ALIVE=24h` trzyma go potem w RAM.
-
-### Lokalny model albo zewnętrzny serwer modelu
-
-Kontener `llm` (Ollama) i pobieranie modelu są opcjonalne. Steruje nimi profil Compose
-`ollama`, włączony w `.env` zmienną `COMPOSE_PROFILES=ollama` (domyślnie).
-
-| Tryb | `.env` | Co robi compose |
-|---|---|---|
-| lokalny model (domyślnie) | `COMPOSE_PROFILES=ollama`, `LLM_BASE_URL=http://llm:11434` | buduje i uruchamia `llm`, `make model` pobiera model |
-| zewnętrzny serwer | `COMPOSE_PROFILES=` (pusto), `LLM_BASE_URL=https://…` | uruchamia tylko `api` i `frontend`; `make model` nic nie pobiera |
-
-Serwer modelu na tym samym hoście: `LLM_BASE_URL=http://host.docker.internal:<port>`
-(serwer musi nasłuchiwać na interfejsie dostępnym z Dockera, nie tylko na 127.0.0.1).
-Gdy serwer jest niedostępny, `/health/ready` zwraca 503, a konwersja i tak zwraca
-formularz zbudowany regułami (ostrzeżenie `W01_LLM_FALLBACK`).
-
-### Model offline
-
-Na maszynie z internetem `make model`, potem eksport wolumenu:
-
-```bash
-docker run --rm --user 0 -v ollama-models:/m -v "$PWD":/out --entrypoint tar \
-  coi-cf-llm:0.40.16 -czf /out/ollama-models.tgz -C /m .
-```
-
-Na maszynie docelowej:
-
-```bash
-docker volume create ollama-models
-docker run --rm --user 0 -v ollama-models:/m -v "$PWD":/out --entrypoint sh coi-cf-llm:0.40.16 \
-  -c 'tar -xzf /out/ollama-models.tgz -C /m && chown -R 10002:10002 /m'
-```
-
-### GPU NVIDIA
-
-Domyślny obraz `llm` działa tylko na CPU i nie zawiera bibliotek NVIDIA. Nakładka GPU
-buduje target `gpu`: obraz producenta Ollamy z CUDA i cuDNN. Te biblioteki są bezpłatne,
-ale na licencji własnościowej NVIDIA, a nie open source (patrz [Licencje](#licencje)).
-Wymaga NVIDIA Container Toolkit na hoście:
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
-```
-
-### Samo API bez compose
-
-```bash
-docker run --rm -p 8000:8000 --env-file .env \
-  -e LLM_BASE_URL=http://host.docker.internal:11434 --add-host host.docker.internal:host-gateway \
-  --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges:true \
-  coi-cf-api:0.1.0
-```
-
-`docker run --env-file` nie usuwa cudzysłowów, więc w pliku dla `docker run` hash
-`API_PASSWORD_HASH` wpisz bez nich (compose cudzysłowy usuwa i ich wymaga przy znakach `$`).
+Na samym CPU konwersja trwa zwykle 1,5–5 min; na GPU kilkanaście sekund.
 
 ## Konfiguracja
 
-Wszystkie parametry to zmienne środowiskowe (pydantic-settings). Compose przekazuje
-je do API z pliku `.env` (`env_file`); wzór z komentarzami: `.env.example`. Zmienna
-ustawiona w środowisku ma pierwszeństwo przed plikiem. Sekrety można też podać jako
-Docker secrets: plik `/run/secrets/<nazwa_zmiennej_małymi_literami>`, np.
-`/run/secrets/jwt_private_key`.
-
-API sprawdza konfigurację przy starcie. W trybie produkcyjnym nie uruchomi się bez
-sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
-
-### Plik i limity przetwarzania
+Zmienne środowiskowe, wczytywane z `.env` (wzór z komentarzami: `.env.example`).
+Zmienna ustawiona w środowisku ma pierwszeństwo przed plikiem. W produkcji API nie
+wystartuje bez sekretów JWT i konta technicznego.
 
 | Zmienna | Domyślnie | Opis |
 |---|---|---|
-| `MAX_FILE_SIZE_MB` | `20` | **maksymalny rozmiar pliku**; większy → 413 `FILE_TOO_LARGE` |
-| `MAX_UNCOMPRESSED_MB` | `100` | limit rozmiaru po dekompresji DOCX / XLSX / ODS (ochrona przed bombami ZIP) |
+| `APP_ENV` | `production` | `production` / `development` |
+| `LOG_LEVEL` | `INFO` | logi JSON na stdout, bez treści dokumentów |
+| `CORS_ORIGINS` | `http://localhost:8080` | dozwolone originy, po przecinku |
+| `MAX_FILE_SIZE_MB` | `20` | maksymalny rozmiar pliku (413 `FILE_TOO_LARGE`) |
+| `MAX_UNCOMPRESSED_MB` | `100` | limit rozmiaru po dekompresji DOCX / XLSX / ODS |
 | `MAX_PDF_PAGES` | `30` | maksymalna liczba stron PDF |
-| `MAX_IMAGE_PIXELS` | `100000000` | maksymalna liczba pikseli obrazu (długie skany wielostronicowe) |
-| `SPOOL_MAX_MB` | `10` | do tego rozmiaru upload jest w RAM, powyżej w `tmpfs` |
-| `MAX_CONCURRENT_JOBS` | `2` | równoległe konwersje; kolejne żądania czekają |
-| `REQUEST_TIMEOUT_S` | `540` | całkowity czas żądania łącznie z czekaniem w kolejce; po nim 504 |
-
-### Uwierzytelnianie JWT
-
-| Zmienna | Domyślnie | Opis |
-|---|---|---|
-| `AUTH_ENABLED` | `true` | `false` dozwolone tylko z `APP_ENV=development` |
-| `JWT_ALGORITHM` | `HS256` | `HS256` (wspólny sekret) albo `RS256` (para kluczy) |
-| `JWT_SECRET` | — | sekret HS256, min. 32 bajty; wymagany dla HS256 |
-| `JWT_PUBLIC_KEY` | — | klucz publiczny PEM dla RS256 (w jednej linii z `\n` albo jako Docker secret) |
-| `JWT_PRIVATE_KEY` | — | klucz prywatny RS256; bez niego API tylko weryfikuje tokeny wydane przez inny system, a `/auth/token` jest wyłączony |
-| `JWT_ISSUER` | `coi-cf` | wymagany `iss` |
-| `JWT_AUDIENCE` | `coi-cf-api` | wymagany `aud` |
-| `JWT_EXPIRES_MIN` | `60` | ważność tokenu (1–1440 min) |
-| `JWT_LEEWAY_S` | `30` | tolerancja różnicy zegarów przy `exp` / `nbf` / `iat` |
-| `JWT_SUBJECT_CLAIM` | `sub` | claim z identyfikatorem użytkownika (np. `preferred_username`) |
-| `JWT_ROLES_CLAIM` | `roles` | claim z rolami; kropka = zagnieżdżenie (np. `realm_access.roles` w Keycloak) |
-| `JWT_REQUIRED_ROLE` | — | rola wymagana do użycia API; pusta = bez wymogu, brak roli → 403. W produkcji z RS256 bez wydawania tokenów (sam klucz publiczny) jest obowiązkowa: bez niej API nie wystartuje |
-| `API_USER` | — | login konta technicznego dla `/auth/token` |
-| `API_PASSWORD_HASH` | — | hash argon2id hasła (`make password-hash`); w `.env` w pojedynczych cudzysłowach |
-
-### Integracja z modelem AI
-
-| Zmienna | Domyślnie | Opis |
-|---|---|---|
-| `COMPOSE_PROFILES` | `ollama` | `ollama` = lokalny kontener z modelem; pusto = zewnętrzny serwer pod `LLM_BASE_URL` (zmienna Compose, nie API) |
+| `MAX_IMAGE_PIXELS` | `100000000` | maksymalna liczba pikseli obrazu |
+| `MAX_CONCURRENT_JOBS` | `2` | równoległe konwersje; kolejne czekają |
+| `REQUEST_TIMEOUT_S` | `540` | całkowity czas żądania; po nim 504 |
+| `AUTH_ENABLED` | `true` | `false` tylko z `APP_ENV=development` |
+| `JWT_ALGORITHM` | `HS256` | `HS256` albo `RS256` |
+| `JWT_SECRET` | — | sekret HS256, min. 32 bajty |
+| `JWT_PUBLIC_KEY` / `JWT_PRIVATE_KEY` | — | klucze PEM dla RS256; bez prywatnego API tylko weryfikuje tokeny |
+| `JWT_ISSUER` / `JWT_AUDIENCE` | `coi-cf` / `coi-cf-api` | wymagane `iss` / `aud` |
+| `JWT_EXPIRES_MIN` | `60` | ważność tokenu |
+| `JWT_SUBJECT_CLAIM` / `JWT_ROLES_CLAIM` / `JWT_REQUIRED_ROLE` | `sub` / `roles` / — | mapowanie claimów brokera tożsamości; brak wymaganej roli → 403 |
+| `API_USER` / `API_PASSWORD_HASH` | — | konto techniczne; hash: `make password-hash`, w `.env` w pojedynczych cudzysłowach |
+| `REGISTRATION_ENABLED` | `true` | samodzielna rejestracja kont (SQLite na wolumenie `api-data`) |
+| `COMPOSE_PROFILES` | `ollama` | pusto = zewnętrzny serwer modelu |
 | `LLM_BASE_URL` | `http://llm:11434` | adres serwera modelu (API Ollama) |
-| `LLM_MODEL` | `qwen3:8b` | nazwa modelu; po zmianie `make model` |
+| `LLM_AUTH_KEY` / `LLM_AUTH_SECRET` | — | dane proxy auth serwera modelu (np. Modal) |
+| `LLM_MODEL` | `qwen3:8b` | model; `LLM_MODELS` – dodatkowe do wyboru przez `?model=` |
 | `LLM_TIMEOUT_S` | `240` | limit jednego wywołania modelu; po nim szkic z reguł |
-| `LLM_TEMPERATURE` | `0` | temperatura (0 = powtarzalne wyniki) |
-| `LLM_SEED` | `42` | ziarno losowania |
-| `LLM_NUM_CTX` | `8192` | okno kontekstu modelu w tokenach |
+| `LLM_NUM_CTX` / `LLM_NUM_PREDICT` | `8192` / `2048` | okno kontekstu / limit tokenów odpowiedzi |
+| `LLM_MAX_CHUNK_CHARS` | `4500` | rozmiar fragmentu dokumentu wysyłanego do modelu |
+| `LLM_TEMPERATURE` / `LLM_SEED` | `0` / `42` | powtarzalność wyników |
+| `OCR_LANG` / `OCR_DPI` | `pol` / `300` | Tesseract |
+| `CONVERTER_TIMEOUT_S` | `60` | limit konwersji LibreOffice |
+| `INITIAL_DATA_IDENTITY_SOURCE` | `MLPZ` | źródło danych „Twoje dane”: `MLPZ` / `PESEL` |
+| `FINISH_PAGE_STYLE` | `info_section` | układ strony końcowej (`sample` – jak we wzorcach) |
+| `MAX_SECTIONS_PER_PAGE` | `8` | limit sekcji na stronę |
+| `RODO_CLAUSE_URL` | — | adres `https://` klauzuli RODO linkowanej w zgodzie |
+| `API_PORT` / `FRONTEND_PORT` | `8000` / `8080` | porty na hoście (zmienne Compose) |
+| `API_MEM_LIMIT` / `LLM_MEM_LIMIT` | `2g` / `10g` | limity pamięci kontenerów (zmienne Compose) |
 
-### Ekstrakcja i budowa formularza
-
-| Zmienna | Domyślnie | Opis |
-|---|---|---|
-| `OCR_LANG` | `pol` | język Tesseract |
-| `OCR_DPI` | `300` | rozdzielczość renderowania skanów PDF do OCR |
-| `CONVERTER_TIMEOUT_S` | `60` | limit konwersji LibreOffice (DOC, ODS) |
-| `INITIAL_DATA_IDENTITY_SOURCE` | `MLPZ` | źródło danych „Twoje dane”: `MLPZ` albo `PESEL` |
-| `FINISH_PAGE_STYLE` | `info_section` | strona końcowa wyłącznie z `INFO_SECTION` (wymaganie); `sample` – jak we wzorcach (`TEXT_BLOCK`, ostrzeżenie `W29`) |
-| `MAX_SECTIONS_PER_PAGE` | `8` | powyżej tej liczby sekcji przedmiot wniosku dzielony jest na kolejne strony |
-| `RODO_CLAUSE_URL` | — | adres `https://` klauzuli informacyjnej RODO (np. w BIP) linkowanej w sekcji zgód; bez niego zgoda jest zwykłym tekstem bez linku, a raport konwersji ma ostrzeżenie `W28_RODO_CLAUSE_URL_MISSING` |
-
-### Aplikacja i HTTP
-
-| Zmienna | Domyślnie | Opis |
-|---|---|---|
-| `APP_ENV` | `production` | `production` albo `development` |
-| `LOG_LEVEL` | `INFO` | `DEBUG` / `INFO` / `WARNING` / `ERROR`; logi JSON na stdout, bez treści dokumentów |
-| `CORS_ORIGINS` | `http://localhost:8080` | dozwolone originy, rozdzielone przecinkami |
-| `API_PORT` / `FRONTEND_PORT` | `8000` / `8080` | porty na hoście (zmienne Compose); API nasłuchuje tylko na `127.0.0.1` |
-| `API_MEM_LIMIT` / `LLM_MEM_LIMIT` | `2g` / `10g` | limit pamięci kontenerów (zmienne Compose); większy `LLM_MODEL` albo `MAX_CONCURRENT_JOBS` wymaga podniesienia |
-
-Zmiana hasła: `make password-hash`, wklej hash do `.env` i wykonaj `docker compose up -d api`.
+Sekrety można podać też jako Docker secrets: `/run/secrets/<nazwa_małymi_literami>`.
 
 ## REST API
 
-- Prefiks: `/api/v1`.
-- Opis OpenAPI: http://localhost:8000/docs (Swagger UI) i `/openapi.json` w trybie `development`, zawsze kopia w `docs/openapi.json`.
-- Uwierzytelnianie: nagłówek `Authorization: Bearer <JWT>` na wszystkich endpointach poza `/auth/token` i `/health/*`.
-- Każda odpowiedź ma nagłówek `X-Request-ID` (można go też podać w żądaniu); ten sam identyfikator jest w logach.
-
-### Endpointy
+Prefiks `/api/v1`. Pełny opis OpenAPI: `docs/openapi.json` (oraz `/docs` w trybie
+`development`). Wszystkie endpointy poza `/auth/*` i `/health/*` wymagają nagłówka
+`Authorization: Bearer <JWT>`. Każda odpowiedź ma `X-Request-ID`.
 
 | Metoda | Ścieżka | Wejście | Odpowiedź |
 |---|---|---|---|
-| POST | `/auth/token` | `application/x-www-form-urlencoded`: `username`, `password` | `200 {access_token, token_type: "bearer", expires_in}`; 401 przy złych danych |
-| POST | `/forms/convert` | `multipart/form-data`: `file` (dokładnie jeden plik), opcjonalnie `password` dla dokumentu z hasłem | `200` JSON w formacie importu; nagłówek `X-Conversion-Warnings: <liczba>` |
+| POST | `/auth/token` | form: `username`, `password` | `200 {access_token, token_type, expires_in}`; 401 |
+| POST | `/auth/register` | JSON: `username`, `password` | `201` jak wyżej; 403 (wyłączona), 409 (login zajęty) |
+| GET | `/auth/options` | — | `{registration_enabled}` |
+| POST | `/forms/convert` | multipart: `file` (jeden plik), opcjonalnie `password` | `200` JSON formularza; nagłówek `X-Conversion-Warnings` |
 | POST | `/forms/convert?report=true` | jak wyżej | `200 {form, report}` |
-| POST | `/forms/convert?identitySource=PESEL` | jak wyżej; opcjonalny parametr query `identitySource` (`PESEL` albo `MLPZ`) wybiera źródło imienia, nazwiska i PESEL w sekcji „Twoje dane”; brak = `INITIAL_DATA_IDENTITY_SOURCE`; inna wartość: 422 `VALIDATION_ERROR` | jak wyżej |
-| POST | `/forms/validate` | `application/json`: JSON formularza | `200 {valid, errors[], warnings[]}` (bez autonaprawy) |
-| GET | `/dictionaries` | — | słowniki: predefiniowane (`PREDEFINED`) i proponowane (`PROPOSED`) |
-| GET | `/initial-data-sources` | — | źródła danych inicjalnych (`PESEL`, `PESEL_ADDRESS`, `MLPZ`) z atrybutami i referencją do `defaultValue` |
-| GET | `/health/live` | — | `200 {status: "ok"}`, proces działa |
-| GET | `/health/ready` | — | `200 {status: "ok"}` gotowe; 503 `LLM_UNAVAILABLE`, gdy model nieosiągalny |
+| POST | `/forms/validate` | JSON formularza | `200 {valid, errors[], warnings[]}` |
+| GET | `/dictionaries` | — | słowniki predefiniowane i proponowane |
+| GET | `/initial-data-sources` | — | źródła danych inicjalnych (PESEL, MLPZ) |
+| GET | `/health/live` | — | `200`, proces działa |
+| GET | `/health/ready` | — | `200` gotowe; 503, gdy model niedostępny |
 
-### Przykład
+Parametry `/forms/convert`: `report` (bool), `identitySource` (`PESEL` / `MLPZ`),
+`model` (z `LLM_MODEL` / `LLM_MODELS`).
 
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/token \
   -d "username=admin&password=$API_PASSWORD" | jq -r .access_token)
 
-# konwersja: wynik gotowy do importu
-curl -s -X POST http://localhost:8000/api/v1/forms/convert \
-  -H "Authorization: Bearer $TOKEN" \
-  -F "file=@Wniosek o zwrot opłaty skarbowej.pdf" > wynik.json
-
-# konwersja z raportem
 curl -s -X POST "http://localhost:8000/api/v1/forms/convert?report=true" \
-  -H "Authorization: Bearer $TOKEN" -F "file=@wniosek.docx" | jq .report.warnings
-
-# walidacja JSON-a (np. poprawionego ręcznie)
-curl -s -X POST http://localhost:8000/api/v1/forms/validate \
-  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d @wynik.json
+  -H "Authorization: Bearer $TOKEN" -F "file=@wniosek.docx" > wynik.json
 ```
 
-Konwersja na CPU trwa zwykle 1,5–5 minut; klient HTTP nie powinien przerywać żądania
-wcześniej niż po `REQUEST_TIMEOUT_S`.
+**Raport** (`report=true`) zawiera m.in.: `sourceFile`, `extraction`, `llm`, `stats`,
+`dictionaryProposals`, `warnings`, `fixes`, `confidence`, `review` (pola do sprawdzenia),
+`timings`.
 
-### Wynik konwersji
+**Walidacja pliku** (pierwsze naruszenie kończy żądanie): jedno pole `file`; nazwa ≤ 250
+znaków i bez `; : > < / \ | ' * % $`; rozmiar ≤ `MAX_FILE_SIZE_MB`; rozszerzenie z listy;
+MIME z zawartości zgodny z rozszerzeniem; limity archiwów, stron i pikseli.
 
-Domyślnie odpowiedź to sam JSON formularza, bez opakowania, gotowy do importu
-(struktura z `OpisImportowanegoPlikuJSON` i wzorców `konfiguracja_form_*.json`):
-
-```
-{
-  "title": "Wniosek o …",
-  "tabs": [                                   strony; ostatnia ma type "FINISH"
-    { "id": "<uuid>", "title": "…", "type": "MAIN",
-      "questions": [                          na poziomie strony tylko SECTION / REPEATING_SECTION
-        { "x": 0, "y": 0, "rows": 4, "cols": 3,
-          "field": { "id": "<uuid>", "type": "SECTION", "techName": "…", "title": "…",
-                     "repeatingSectionGrid": [ … pola sekcji … ],
-                     "validation": [], "states": [], "options": [], … } } ] } ],
-  "flow": { "links": [ { "id": "<uuid>", "source": "<tab id>", "target": "<tab id>" } ] }
-}
-```
-
-Pole w sekcji ma m.in. `type` (`TEXT_FIELD`, `SELECT`, `RADIO`, `CHECKBOX`, `DATEPICKER`,
-`NUMBER`, `TEXTAREA`, `FILE_UPLOADER`…), `validation` (`REQUIRED`, `PESEL`, `NIP`, `ZIP_CODE`…),
-`dictionaryName`, `defaultValue` + `defaultValueType: "EXTERNAL_SYSTEM"` dla danych
-inicjalnych oraz `states` z zapytaniami JSONata (`SHOW`, `READ_ONLY`).
-
-Raport (`report=true`):
-
-| Klucz | Zawartość |
-|---|---|
-| `sourceFile` | nazwa, MIME, rozmiar, liczba stron, czy plik był odszyfrowany |
-| `extraction` | metoda (`pdf_text`, `ocr`, `docx`, `xlsx`), konwersja LibreOffice, średnia pewność OCR, liczba bloków |
-| `llm` | model, czas, ponowienia, czy użyto szkicu z reguł i dlaczego, liczba tokenów |
-| `stats` | liczba stron, sekcji, pól i warunków `states` |
-| `dictionaryProposals` | propozycje nowych słowników z pozycjami i polami, które ich używają |
-| `warnings` | ostrzeżenia `{code, message, path?}`: miejsca do sprawdzenia przez urzędnika |
-| `fixes` | poprawki wprowadzone przez autonaprawę |
-| `confidence` | ocena całej konwersji: `score` (0–1), `level` (`high`, `medium`, `low`), liczba pól z dokumentu i liczba pozycji do sprawdzenia |
-| `fields` | pochodzenie każdego pola: `origin` (`document` albo `template`), a dla pól z dokumentu `source` (strona, tekst bloku, położenie jako ułamki strony) oraz `confidence`, `level` i `reasons` |
-| `review` | lista „do sprawdzenia”: pola o obniżonej pewności i ostrzeżenia dotyczące całego formularza, najważniejsze na początku |
-| `timings`, `durationMs` | czasy etapów i całości w ms |
-
-Pewność pola to jawna heurystyka, nie prawdopodobieństwo. Obniżają ją: etykieta, której nie ma
-w treści dokumentu (`LABEL_NOT_IN_DOCUMENT`), słabo odczytany fragment skanu
-(`LOW_OCR_CONFIDENCE`), opcje wyboru nieobecne w dokumencie (`OPTIONS_NOT_IN_DOCUMENT`)
-i ostrzeżenia budowy dotyczące pola. Pola sekcji predefiniowanych pochodzą ze standardu
-i nie są oceniane. Położenie (`source.box`) jest dostępne dla PDF i obrazów; dokumenty DOCX
-i XLSX nie mają stałych stron, więc mają tylko numer strony i tekst. We frontendzie zakładka
-„Raport” pokazuje te dane jako listę „Do sprawdzenia” z cytatem źródła i miniaturą strony.
-
-Najczęstsze ostrzeżenia: `W01_LLM_FALLBACK` i `W24_RULE_BASED_DRAFT` (szkic z reguł,
-bez modelu), `W12_LOW_OCR_CONFIDENCE` (słaba jakość skanu), `W13_FIELD_NOT_IN_DOCUMENT`
-(pole, którego etykiety nie ma w dokumencie), `W27_FORM_REBUILT` (formularz zastępczy),
-`W28_RODO_CLAUSE_URL_MISSING` (zgoda RODO bez linku: ustaw `RODO_CLAUSE_URL`),
-`W29_FINISH_NOT_INFO` (strona końcowa w układzie wzorców zamiast `INFO_SECTION`),
-`W30_ID_FORMAT` (`id` spoza formatu UUID), `W31_TITLE_LEGAL_REFERENCE` (z tytułu usunięto
-odwołanie do przepisu), `W32_LABEL_NORMALIZED` (etykieta poprawiona, np. „W miejscowości”
-na „Miejscowość”), `W33_COMPUTED_FIELD_REMOVED` (usunięte pole na wartość wyliczaną z innych
-pól albo stawkę z cennika).
-
-### Walidacja pliku
-
-Sprawdzenia w tej kolejności; pierwsze naruszenie kończy żądanie:
-
-| # | Sprawdzenie | Odpowiedź |
-|---|---|---|
-| 1 | dokładnie jedno pole `file` | 400 `FILE_MISSING` / `TOO_MANY_FILES` |
-| 2 | nazwa ≤ 250 znaków | 400 `FILENAME_TOO_LONG` |
-| 3 | nazwa bez `; : > < / \ \| ' * % $` | 400 `FILENAME_FORBIDDEN_CHARS` |
-| 4 | rozmiar ≤ `MAX_FILE_SIZE_MB` (liczony strumieniowo), plik niepusty | 413 `FILE_TOO_LARGE` / 400 `FILE_EMPTY` |
-| 5 | rozszerzenie: pdf, doc, docx, ods, xlsx, jpg, jpeg, png (bez względu na wielkość liter) | 415 `UNSUPPORTED_EXTENSION` |
-| 6 | MIME z zawartości pliku (libmagic) zgodny z rozszerzeniem; nagłówek `Content-Type` klienta jest ignorowany | 415 `MIME_MISMATCH` |
-| 7 | archiwa DOCX / XLSX / ODS: oczekiwane wpisy, rozmiar po dekompresji ≤ `MAX_UNCOMPRESSED_MB` | 415 `MIME_MISMATCH` / 422 `ARCHIVE_TOO_LARGE` |
-| 8 | obraz ≤ `MAX_IMAGE_PIXELS`, PDF ≤ `MAX_PDF_PAGES` stron | 422 `DOCUMENT_TOO_COMPLEX` |
-| 9 | plik da się otworzyć | 422 `DOCUMENT_UNREADABLE` / `DOCUMENT_PASSWORD_REQUIRED` / `DOCUMENT_PASSWORD_INVALID` |
-
-### Błędy
-
-Format RFC 9457 (`application/problem+json`), pole `code` do obsługi w kliencie:
+**Błędy** mają format RFC 9457 (`application/problem+json`) z polem `code`:
 
 ```json
-{ "type": "https://coi-cf/errors/FILENAME_FORBIDDEN_CHARS", "title": "Niedozwolone znaki w nazwie pliku",
-  "status": 400, "detail": "Nazwa pliku zawiera znak ':'", "code": "FILENAME_FORBIDDEN_CHARS",
-  "instance": "/api/v1/forms/convert", "request_id": "…" }
+{ "type": "https://coi-cf/errors/FILE_TOO_LARGE", "title": "Plik jest za duży",
+  "status": 413, "code": "FILE_TOO_LARGE", "instance": "/api/v1/forms/convert", "request_id": "…" }
 ```
 
 | Status | Kody |
 |---|---|
 | 400 | `MALFORMED_REQUEST`, `FILE_MISSING`, `TOO_MANY_FILES`, `FILENAME_TOO_LONG`, `FILENAME_FORBIDDEN_CHARS`, `FILE_EMPTY` |
-| 401 | `NOT_AUTHENTICATED`, `INVALID_TOKEN`, `INVALID_CREDENTIALS` |
-| 403 | `FORBIDDEN` (brak roli `JWT_REQUIRED_ROLE`) |
+| 401 / 403 | `NOT_AUTHENTICATED`, `INVALID_TOKEN`, `INVALID_CREDENTIALS` / `FORBIDDEN`, `REGISTRATION_DISABLED` |
+| 409 | `USERNAME_TAKEN` |
 | 413 | `FILE_TOO_LARGE` |
 | 415 | `UNSUPPORTED_EXTENSION`, `MIME_MISMATCH` |
 | 422 | `ARCHIVE_TOO_LARGE`, `DOCUMENT_TOO_COMPLEX`, `DOCUMENT_UNREADABLE`, `DOCUMENT_PASSWORD_REQUIRED`, `DOCUMENT_PASSWORD_INVALID`, `VALIDATION_ERROR` |
-| 503 | `SERVER_BUSY` (wszystkie miejsca na konwersję/walidację zajęte; nagłówek `Retry-After`), `LLM_UNAVAILABLE` i `SERVICE_UNAVAILABLE` (tylko `/health/ready`: brak modelu albo libmagic/tesseract; konwersja bez modelu przechodzi na szkic z reguł) |
-| 429 | `TOO_MANY_REQUESTS` (nginx: limit prób logowania, `Retry-After: 60`) |
-| 504 | `PROCESSING_TIMEOUT` (przekroczony `REQUEST_TIMEOUT_S`) |
-| 500 | `INTERNAL_ERROR` (bez szczegółów w treści; pełny log z `request_id` po stronie serwera) |
-
-## Bezpieczeństwo kontenerów
-
-| Wymaganie (pkt 5 zadania) | Realizacja |
-|---|---|
-| oficjalne obrazy bazowe | `python`, `node`, `nginx`, `ubuntu` (Docker Official Images); z oficjalnego obrazu `ollama/ollama` kopiujemy tylko binarkę i biblioteki CPU |
-| lekkie dystrybucje | Alpine dla API i frontendu; `llm` na `ubuntu:24.04` (161 MB), bo binarka Ollamy wymaga glibc |
-| jawne wersjonowanie, bez `latest` | każdy `FROM` z tagiem i `@sha256`; własne obrazy z wersją (`:0.1.0`), wersja `uv` też przypięta |
-| dedykowany użytkownik z ograniczonymi uprawnieniami | `USER app` / `nginx` / `ollama`; żaden kontener nie działa jako root |
-| tylko wymagane porty | na hoście 8080 (frontend) i 8000 (API, tylko `127.0.0.1`); `llm` bez portu na hoście |
-| sekrety tylko w runtime | `.env` (`env_file`) albo Docker secrets; żadnych `ARG`/`ENV` z sekretami; `.env` w `.gitignore` i `.dockerignore` |
-| izolowane środowisko | `read_only: true`, `tmpfs /tmp`, `cap_drop: ALL`, `no-new-privileges`, `pids_limit`; `llm` w sieci `internal: true` bez internetu i z `OLLAMA_NO_CLOUD=1`; model pobiera osobny jednorazowy kontener (`llm-pull`) |
-
-Dodatkowo: nagłówki bezpieczeństwa w nginx (CSP z `frame-ancestors 'none'`,
-`base-uri 'self'`, `form-action 'self'`; `X-Content-Type-Options`, `Referrer-Policy`,
-`Permissions-Policy`), rate limit logowania w nginx (`/api/v1/auth/token`: 10 prób/min
-na IP, do 5 naraz, potem 429), limity pamięci kontenerów (`mem_limit`), `init: true` w API (sprzątanie procesów
-LibreOffice), XML z dokumentów parsowany przez `defusedxml`, treść dokumentu trafia
-do modelu tylko jako dane, a wynik modelu jest ograniczony schematem i weryfikowany.
-
-Docker secrets zamiast `.env`, np. dla RS256:
-
-```yaml
-services:
-  api:
-    secrets: [jwt_public_key]
-secrets:
-  jwt_public_key: { file: ./secrets/jwt_public.pem }
-```
-
-API nasłuchuje tylko na `127.0.0.1:8000` (Swagger, healthchecki z hosta); z sieci
-aplikacja jest dostępna wyłącznie przez nginx na 8080.
-
-**TLS.** Kontenery mówią tylko HTTP. W sieci innej niż localhost TLS trzeba zakończyć
-przed frontendem (reverse proxy, load balancer) i tam włączyć HSTS – przykład nagłówka
-jest zakomentowany w `frontend/nginx.conf`. Wysłany po samym HTTP byłby ignorowany.
+| 429 / 503 / 504 | `TOO_MANY_REQUESTS` / `SERVER_BUSY`, `LLM_UNAVAILABLE`, `SERVICE_UNAVAILABLE` / `PROCESSING_TIMEOUT` |
+| 500 | `INTERNAL_ERROR` |
 
 ## Testy
 
 ```bash
-cd backend && uv sync && uv run pytest            # testy jednostkowe, API, golden
-cd backend && uv run ruff check . && uv run mypy app
-cd frontend && npm ci && npm test                 # Node ≥ 24.15 (.nvmrc: nvm use)
-make test-frontend                                # to samo bez trybu watch
-```
-
-CI (`.github/workflows/ci.yml`) uruchamia ruff, mypy i pytest backendu oraz `tsc`,
-`ng test`, `ng build` i `npm run api:check` (zgodność `docs/openapi.json` i klienta
-z backendem) frontendu.
-
-Testy na materiałach konkursowych: `COI_MATERIALS_DIR=/ścieżka/do/Wnioski uv run pytest tests/extraction`.
-Ocena jakości analizy AI na zestawie wzorcowym: `backend/llm_eval/`.
-
-Praca nad API bez Dockera: uruchom Ollamę z portem na hoście
-(`docker run -d -p 127.0.0.1:11434:11434 -v ollama-models:/home/ollama/.ollama coi-cf-llm:0.40.16`),
-ustaw w `.env` `APP_ENV=development`, `LLM_BASE_URL=http://localhost:11434` i uruchom
-`cd backend && uv run uvicorn app.main:create_app --factory --reload`.
-Frontend z hot reload: `cd frontend && npm start` (http://localhost:4200); `ng serve`
-przekazuje `/api` do `http://localhost:8000` (`frontend/proxy.conf.json`), więc `CORS_ORIGINS`
-nie wymaga zmian.
-
-## Licencje
-
-Domyślna konfiguracja (CPU) składa się wyłącznie z oprogramowania open source, bez
-licencji komercyjnych. Biblioteki i frameworki, z którymi łączy się kod aplikacji, mają
-licencje permisywne; żadna nie wymaga ujawnienia kodu aplikacji. Licencje sprawdzone
-w metadanych pakietów zainstalowanych w obrazach.
-
-Biblioteki i frameworki aplikacji:
-
-| Komponent | Licencja |
-|---|---|
-| Backend: FastAPI, Starlette, pydantic, uvicorn, httpx, PyJWT, argon2-cffi, cryptography, jsonschema, jsonata-python, defusedxml (52 pakiety w obrazie) | MIT, BSD, Apache-2.0, PSF – lista: `cd backend && uv run pip-licenses` |
-| Ekstrakcja: pdfplumber, pdfminer.six, pypdfium2 (PDFium), python-docx, openpyxl, lxml, Pillow, pytesseract, python-magic, msoffcrypto-tool, olefile | MIT, BSD-3-Clause, Apache-2.0, MIT-CMU |
-| Biblioteki natywne dołączone do pakietów (libjpeg, libpng, libtiff, openjpeg, harfbuzz, ICU…) | permisywne; freetype na wybranej licencji FTL; libgcc/libstdc++ z wyjątkiem GCC Runtime Library Exception |
-| Frontend w przeglądarce: Angular, NgRx, RxJS, fflate, jsonata, tslib | MIT, Apache-2.0, 0BSD |
-| Fonty Open Sans, JetBrains Mono (`@fontsource`) | SIL OFL-1.1 (licencja fontu, nie obejmuje kodu aplikacji) |
-
-Programy uruchamiane jako osobne procesy lub usługi:
-
-| Komponent | Licencja |
-|---|---|
-| Ollama, llama.cpp / ggml | MIT |
-| Model Qwen3 8B | Apache-2.0 |
-| Tesseract OCR + dane `pol`, `osd`; Leptonica | Apache-2.0; BSD-2-Clause |
-| libmagic (`file`) | BSD-2-Clause |
-| nginx | BSD-2-Clause |
-| LibreOffice | MPL-2.0 |
-
-Uwagi:
-
-- **LibreOffice** (konwersja DOC i ODS) to niezmodyfikowany program wywoływany z wiersza
-  poleceń w osobnym procesie. Słaby copyleft MPL-2.0 dotyczy tylko jego własnych plików.
-  Pakiet `libreoffice-common` w Alpine wymaga też bibliotek systemowych na LGPL/GPL
-  (m.in. Qt6, GTK, GStreamer). Nie są one linkowane z kodem aplikacji, więc ich licencje
-  go nie obejmują. Format DOC wymaga konwertera, a nie ma alternatywy o licencji
-  permisywnej, która by go obsługiwała.
-- **certifi** (MPL-2.0, zależność `httpx`) to niezmodyfikowany zbiór certyfikatów CA.
-- **Pakiety systemowe** obrazów bazowych (busybox i apk-tools w Alpine, coreutils
-  w Ubuntu) mają licencje GPL, jak w każdym obrazie tych dystrybucji. Są to osobne
-  programy systemu, nie biblioteki aplikacji.
-- **Narzędzia budowania frontendu** (lightningcss i axe-core na MPL-2.0, dane caniuse-lite
-  na CC-BY-4.0) działają tylko przy budowie i nie trafiają do obrazu.
-- **Opcjonalny obraz GPU** (`docker-compose.gpu.yml`) zawiera biblioteki NVIDIA CUDA
-  i cuDNN: bezpłatne, ale na licencji własnościowej NVIDIA. Domyślny obraz `llm` ich nie
-  ma – Ollama działa w nim wyłącznie na CPU.
-
-## Rozwiązywanie problemów
-
-| Objaw | Rozwiązanie |
-|---|---|
-| `toomanyrequests` przy budowie | limit pobrań z Docker Hub bez logowania: `docker login` albo odczekaj |
-| `/health/ready` zwraca 503 | model nie jest pobrany (`make model`) albo jeszcze się ładuje; sprawdź `docker compose logs llm` |
-| API nie startuje, błąd konfiguracji w logu | brak `JWT_SECRET` / `API_USER` / `API_PASSWORD_HASH` w `.env` – `scripts/init-env.sh` |
-| hash hasła w `.env` „ucięty” | hash musi być w pojedynczych cudzysłowach (znaki `$`) |
-| wolumen modeli z wcześniejszej instalacji (właściciel root) | `docker run --rm --user 0 -v ollama-models:/m --entrypoint chown coi-cf-llm:0.40.16 -R 10002:10002 /m` |
-| 504 `PROCESSING_TIMEOUT` | długi dokument na wolnym CPU: zwiększ `REQUEST_TIMEOUT_S` i `LLM_TIMEOUT_S` (oraz `proxy_read_timeout` w `frontend/nginx.conf`) albo użyj GPU |
-| wynik z ostrzeżeniem `W01_LLM_FALLBACK` | model nie odpowiedział w `LLM_TIMEOUT_S`; formularz zbudowany regułami – zwiększ limit albo użyj GPU |
-
-## Struktura repozytorium
-
-```
-backend/              API (FastAPI): app/api, app/pipeline (etapy 1–6), app/resources, testy, llm_eval
-frontend/             aplikacja Angular + nginx.conf
-llm/                  obraz Ollama z użytkownikiem bez roota, skrypt pobrania modelu
-docs/                 specyfikacja, architektura, openapi.json, projekty modułów
-scripts/              init-env.sh (.env z sekretami), convert_all.py (pliki wynikowe), compare.py (pokrycie wzorca)
-.github/workflows/    CI
-wymagania/            materiały konkursowe COI
-docker-compose.yml    usługi api, frontend, llm (+ llm-pull)
-docker-compose.gpu.yml  nakładka GPU
-.env.example          wzór konfiguracji
-Makefile              setup, env, build, model, up, down, logs, test, test-frontend, convert-all, password-hash
+make test             # backend (pytest)
+make test-frontend    # frontend
 ```
