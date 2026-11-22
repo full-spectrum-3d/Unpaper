@@ -57,16 +57,16 @@ describe('importQueueReducer', () => {
     expect(importQueueReducer(done, ImportQueueActions.cancelled({ id: 'a' }))).toBe(done);
   });
 
-  it('warningAccepted records each key once on a done item; warningsRestored clears them', () => {
-    const { warningAccepted, warningsRestored } = ImportQueueActions;
+  it('reviewAccepted records each key once on a done item; reviewRestored clears them', () => {
+    const { reviewAccepted, reviewRestored } = ImportQueueActions;
     let state = withItems(item('a', { status: 'done' }));
-    state = importQueueReducer(state, warningAccepted({ id: 'a', key: 'k1' }));
-    state = importQueueReducer(state, warningAccepted({ id: 'a', key: 'k2' }));
-    expect(importQueueReducer(state, warningAccepted({ id: 'a', key: 'k1' }))).toBe(state);
-    expect(state.entities['a']?.acceptedWarnings).toEqual(['k1', 'k2']);
-    expect(importQueueReducer(state, warningsRestored({ id: 'a' })).entities['a']?.acceptedWarnings).toEqual([]);
+    state = importQueueReducer(state, reviewAccepted({ id: 'a', key: 'k1' }));
+    state = importQueueReducer(state, reviewAccepted({ id: 'a', key: 'k2' }));
+    expect(importQueueReducer(state, reviewAccepted({ id: 'a', key: 'k1' }))).toBe(state);
+    expect(state.entities['a']?.acceptedReview).toEqual(['k1', 'k2']);
+    expect(importQueueReducer(state, reviewRestored({ id: 'a' })).entities['a']?.acceptedReview).toEqual([]);
     const pending = withItems(item('b'));
-    expect(importQueueReducer(pending, warningAccepted({ id: 'b', key: 'k' }))).toBe(pending);
+    expect(importQueueReducer(pending, reviewAccepted({ id: 'b', key: 'k' }))).toBe(pending);
   });
 
   it('convertFailed sets error, message, retryable true', () => {

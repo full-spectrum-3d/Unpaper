@@ -10,6 +10,7 @@ import {
   formatPercent,
   ReportField,
   ReviewItem,
+  reviewKey,
 } from './report';
 import { isObject, num, str as optionalStr } from '../../shared/utils/guards';
 
@@ -77,7 +78,11 @@ export class ReviewPanel {
   readonly paths = input.required<ReadonlyMap<string, string>>();
   /** Editor row id of each field by `techName`; fields absent here have no row to show. */
   readonly editIds = input<ReadonlyMap<string, string>>(new Map());
+  /** `reviewKey`s the user has accepted; those items are not listed. */
+  readonly accepted = input<readonly string[]>([]);
   readonly showInJson = output<string>();
+  readonly acceptItem = output<string>();
+  readonly restoreItems = output<void>();
   /** Emits the id of the field to reveal in the editor. */
   readonly showInEditor = output<string>();
 
@@ -112,13 +117,21 @@ export class ReviewPanel {
         };
       });
     const byName = new Map(fields.map((f) => [f.techName, f]));
+    const accepted = new Set(this.accepted());
+    let hidden = 0;
     const review = (Array.isArray(report.review) ? report.review : [])
       .filter(isObject)
+      .filter((raw) => {
+        const skip = accepted.has(reviewKey(raw as unknown as ReviewItem));
+        if (skip) hidden++;
+        return !skip;
+      })
       .map((raw) => {
         const item = raw as unknown as ReviewItem;
         const techName = str(item.techName);
         const field = item.kind === 'field' ? byName.get(techName) : undefined;
         return {
+          key: reviewKey(item),
           isField: item.kind === 'field',
           level: level(item.level),
           title: str(item.title),
@@ -142,6 +155,7 @@ export class ReviewPanel {
       fromDocument,
       templates: fields.length - fromDocument.length,
       review,
+      hiddenReview: hidden,
     };
   });
 }

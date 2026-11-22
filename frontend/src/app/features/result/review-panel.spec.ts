@@ -126,6 +126,33 @@ describe('ReviewPanel', () => {
     expect(ids).toEqual([expect.stringMatching(/^id-/)]);
   });
 
+  it('accepting an item emits its key; accepted items are hidden and can be restored', () => {
+    const report = mockReport(nadplata);
+    const fixture = TestBed.createComponent(ReviewPanel);
+    fixture.componentRef.setInput('report', asReport(report));
+    fixture.componentRef.setInput('ranges', ranges);
+    fixture.componentRef.setInput('paths', fieldPaths(nadplata));
+    fixture.detectChanges();
+    const el: HTMLElement = fixture.nativeElement;
+    const keys: string[] = [];
+    let restored = 0;
+    fixture.componentInstance.acceptItem.subscribe((k) => keys.push(k));
+    fixture.componentInstance.restoreItems.subscribe(() => restored++);
+    const buttons = () => el.querySelectorAll<HTMLButtonElement>('button[aria-label^="Zaakceptuj"]');
+    expect(buttons()).toHaveLength(2);
+    expect(el.textContent).toContain('Do sprawdzenia (2)');
+    buttons()[0].click();
+    expect(keys).toHaveLength(1);
+
+    fixture.componentRef.setInput('accepted', keys);
+    fixture.detectChanges();
+    expect(buttons()).toHaveLength(1);
+    expect(el.textContent!.replace(/\s+/g, ' ')).toContain('Do sprawdzenia (1)');
+    expect(el.textContent).toContain('Zaakceptowane i ukryte: 1');
+    [...el.querySelectorAll<HTMLButtonElement>('button')].find((b) => b.textContent!.trim() === 'Przywróć')!.click();
+    expect(restored).toBe(1);
+  });
+
   it('survives malformed entries', () => {
     const { text } = render({
       confidence: { score: 0.5, level: 'weird' },

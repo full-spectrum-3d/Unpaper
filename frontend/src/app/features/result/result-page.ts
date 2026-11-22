@@ -25,7 +25,7 @@ import { FormRenderer } from '../preview/form-renderer';
 import { FormEditor } from './form-editor';
 import { formatJson } from './json-lines';
 import { JsonView } from './json-view';
-import { asReport, fieldPaths, formatPercent } from './report';
+import { asReport, fieldPaths, formatPercent, reviewKey } from './report';
 import { ReportView } from './report-view';
 import { ReviewPanel } from './review-panel';
 
@@ -92,7 +92,9 @@ export class ResultPage {
   protected readonly summary = computed(() => {
     const confidence = this.report()?.confidence;
     if (typeof confidence?.score !== 'number') return null;
-    const toReview = typeof confidence.toReview === 'number' ? confidence.toReview : 0;
+    const accepted = new Set(this.item()?.acceptedReview ?? []);
+    const acceptedCount = (this.report()?.review ?? []).filter((r) => accepted.has(reviewKey(r))).length;
+    const toReview = Math.max(0, (typeof confidence.toReview === 'number' ? confidence.toReview : 0) - acceptedCount);
     return { score: formatPercent(confidence.score), toReview };
   });
   private readonly jsonView = viewChild(JsonView);
@@ -141,12 +143,12 @@ export class ResultPage {
     );
   }
 
-  protected onAcceptWarning(id: string, key: string): void {
-    this.store.dispatch(ImportQueueActions.warningAccepted({ id, key }));
+  protected onAcceptReview(id: string, key: string): void {
+    this.store.dispatch(ImportQueueActions.reviewAccepted({ id, key }));
   }
 
-  protected onRestoreWarnings(id: string): void {
-    this.store.dispatch(ImportQueueActions.warningsRestored({ id }));
+  protected onRestoreReview(id: string): void {
+    this.store.dispatch(ImportQueueActions.reviewRestored({ id }));
   }
 
   protected onEdited(result: FormDefinition): void {

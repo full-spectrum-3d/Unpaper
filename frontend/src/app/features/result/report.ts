@@ -78,8 +78,9 @@ export function asReport(value: unknown): ConversionReport | null {
   return (Object.keys(fixed).length ? { ...value, ...fixed } : value) as ConversionReport;
 }
 
-/** Identity of a warning, so one the user accepted stays hidden. */
-export const warningKey = (i: ReportIssue): string => `${i.code}|${i.path ?? ''}|${i.message}`;
+/** Identity of a to-review item, so one the user accepted stays hidden. */
+export const reviewKey = (i: Pick<ReviewItem, 'kind' | 'techName' | 'title' | 'messages'>): string =>
+  [i.kind, String(i.techName ?? ''), String(i.title), (Array.isArray(i.messages) ? i.messages : []).join(' ')].join('|');
 
 export type PathTarget = { kind: 'link' } | { kind: 'draft' } | { kind: 'missing' } | { kind: 'none' };
 

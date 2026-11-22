@@ -67,19 +67,19 @@
               [ranges]="json().ranges"
               [paths]="fieldPaths()"
               [editIds]="editIds()"
+              [accepted]="i.acceptedReview ?? []"
               (showInJson)="onShowInJson($event)"
               (showInEditor)="onShowInEditor($event)"
+              (acceptItem)="onAcceptReview(i.id, $event)"
+              (restoreItems)="onRestoreReview(i.id)"
             />
             <app-report-view
             [report]="report()"
             [ranges]="json().ranges"
-            [accepted]="i.acceptedWarnings ?? []"
             [paths]="fieldPaths()"
             [editIds]="editIds()"
             (showInJson)="onShowInJson($event)"
             (showInEditor)="onShowInEditor($event)"
-            (acceptWarning)="onAcceptWarning(i.id, $event)"
-            (restoreWarnings)="onRestoreWarnings(i.id)"
           />
           </div>
           @if (form(); as f) {

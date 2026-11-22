@@ -12,9 +12,9 @@ export const ImportQueueActions = createActionGroup({
     passwordSubmitted: props<{ id: string }>(),
     /** The user stopped a conversion in progress; the file stays so it can be retried. */
     cancelled: props<{ id: string }>(),
-    /** The user accepted a report warning: it is hidden from then on. */
-    warningAccepted: props<{ id: string; key: string }>(),
-    warningsRestored: props<{ id: string }>(),
+    /** The user accepted a to-review item: it is hidden from then on. */
+    reviewAccepted: props<{ id: string; key: string }>(),
+    reviewRestored: props<{ id: string }>(),
     retry: props<{ id: string }>(),
     /** The user edited the converted form on the result screen; the report stays the original one. */
     resultEdited: props<{ id: string; result: unknown }>(),

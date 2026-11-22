@@ -3,7 +3,7 @@
   <p class="text-fg-muted">Raport niedostępny dla tego wyniku.</p>
 } @else {
   <div class="flex flex-col gap-section">
-    @for (section of [{ title: 'Ostrzeżenia', items: v.warnings, badge: 'bg-warning-subtle text-warning', acceptable: true }, { title: 'Poprawki autonaprawy', items: v.fixes, badge: 'bg-success-subtle text-success', acceptable: false }]; track section.title) {
+    @for (section of [{ title: 'Ostrzeżenia', items: v.warnings, badge: 'bg-warning-subtle text-warning', plain: true }, { title: 'Poprawki autonaprawy', items: v.fixes, badge: 'bg-success-subtle text-success', plain: false }]; track section.title) {
       <section class="rounded-field border border-border bg-surface p-section">
         <h2 class="text-section-title font-semibold">{{ section.title }} ({{ section.items.length }})</h2>
         @if (section.items.length) {
@@ -11,7 +11,7 @@
             @for (row of section.items; track $index) {
               <li class="flex flex-wrap items-start justify-between gap-x-3 gap-y-1 py-2 first:pt-0 last:pb-0">
                 <div class="min-w-0 flex-1">
-                  @if (!section.acceptable) {
+                  @if (!section.plain) {
                     <span
                       class="inline-block rounded-field px-[6px] py-px font-mono text-[12px] font-semibold {{
                         section.badge
@@ -19,19 +19,8 @@
                       >{{ row.issue.code }}</span
                     >
                   }
-                  <div class="[overflow-wrap:anywhere]" [class.mt-1]="!section.acceptable">{{ row.issue.message }}</div>
-                  @if (section.acceptable) {
-                    <button
-                      appButton
-                      type="button"
-                      class="mt-2"
-                      [attr.aria-label]="'Zaakceptuj ostrzeżenie: ' + row.issue.code"
-                      (click)="acceptWarning.emit(row.key)"
-                    >
-                      Zaakceptuj
-                    </button>
-                  }
-                  @if (!section.acceptable) {
+                  <div class="[overflow-wrap:anywhere]" [class.mt-1]="!section.plain">{{ row.issue.message }}</div>
+                  @if (!section.plain) {
                     @switch (row.target) {
                       @case ('draft') {
                         <div class="mt-1 text-fg-muted [overflow-wrap:anywhere]">
@@ -48,7 +37,7 @@
                     }
                   }
                 </div>
-                @if (!section.acceptable && (row.target === 'link' || row.editId)) {
+                @if (!section.plain && (row.target === 'link' || row.editId)) {
                   <span class="flex shrink-0 flex-wrap gap-2">
                     @if (row.target === 'link') {
                       <button
@@ -77,14 +66,6 @@
           </ul>
         } @else {
           <p class="text-fg-muted">Brak</p>
-        }
-        @if (section.acceptable && v.hiddenWarnings) {
-          <p class="mt-2 text-fg-muted">
-            Zaakceptowane i ukryte: {{ v.hiddenWarnings }}
-            <button appButton type="button" class="ml-2" (click)="restoreWarnings.emit()">
-              Przywróć
-            </button>
-          </p>
         }
       </section>
     }

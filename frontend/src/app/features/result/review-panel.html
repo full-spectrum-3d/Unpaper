@@ -63,34 +63,48 @@
                 } @else if (item.isField) {
                   <div class="text-fg-muted">Źródło: nie znaleziono w dokumencie</div>
                 }
-                @if (item.path; as path) {
+                <div class="mt-1 flex flex-wrap gap-2">
+                  @if (item.path; as path) {
+                    <button
+                      appButton
+                      type="button"
+                        [attr.aria-label]="'Pokaż w JSON: ' + item.title"
+                      (click)="showInJson.emit(path)"
+                    >
+                      Pokaż w JSON
+                    </button>
+                  }
+                  @if (item.editId; as editId) {
+                    <button
+                      appButton
+                      type="button"
+                        [attr.aria-label]="'Pokaż w edycji: ' + item.title"
+                      (click)="showInEditor.emit(editId)"
+                    >
+                      Pokaż w edycji
+                    </button>
+                  }
                   <button
                     appButton
                     type="button"
-                    class="mt-1"
-                    [attr.aria-label]="'Pokaż w JSON: ' + item.title"
-                    (click)="showInJson.emit(path)"
+                    [attr.aria-label]="'Zaakceptuj: ' + item.title"
+                    (click)="acceptItem.emit(item.key)"
                   >
-                    Pokaż w JSON
+                    Zaakceptuj
                   </button>
-                }
-                @if (item.editId; as editId) {
-                  <button
-                    appButton
-                    type="button"
-                    class="mt-1 ml-2"
-                    [attr.aria-label]="'Pokaż w edycji: ' + item.title"
-                    (click)="showInEditor.emit(editId)"
-                  >
-                    Pokaż w edycji
-                  </button>
-                }
+                </div>
               </div>
             </li>
           }
         </ul>
       } @else {
         <p class="text-fg-muted">Brak. Każde pole z dokumentu ma w nim potwierdzenie.</p>
+      }
+      @if (v.hiddenReview) {
+        <p class="mt-2 text-fg-muted">
+          Zaakceptowane i ukryte: {{ v.hiddenReview }}
+          <button appButton type="button" class="ml-2" (click)="restoreItems.emit()">Przywróć</button>
+        </p>
       }
     </section>
 
