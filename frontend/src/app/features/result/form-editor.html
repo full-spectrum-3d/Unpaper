@@ -1,62 +1,130 @@
 <p class="text-fg-muted mb-section">
   Zmiany od razu trafiają do podglądu, widoku JSON i pobieranego pliku. Pola dodasz tylko w sekcjach
-  — tak wymaga format importu. Strzałkami zmienisz kolejność pól w obrębie strony lub sekcji.
+  — tak wymaga format importu.
 </p>
+<p id="form-editor-drag-hint" class="text-fg-muted mb-section">
+  Kolejność zmienisz, przeciągając pole lub sekcję za uchwyt
+  <span aria-hidden="true">⠿</span> w obrębie tej samej strony albo sekcji. Z klawiatury: przejdź na
+  uchwyt i użyj strzałek w górę i w dół.
+</p>
+@if (hasSections()) {
+  <div class="flex flex-wrap justify-end gap-2 mb-section">
+    <button appButton type="button" [disabled]="allFolded()" (click)="foldAll(true)">
+      <span aria-hidden="true">▸</span> Zwiń wszystkie sekcje
+    </button>
+    <button appButton type="button" [disabled]="noneFolded()" (click)="foldAll(false)">
+      <span aria-hidden="true">▾</span> Rozwiń wszystkie sekcje
+    </button>
+  </div>
+}
 <p role="status" class="font-semibold mb-section">{{ status() }}</p>
-<div class="flex flex-col gap-section">
+<div class="flex flex-col gap-6">
   @for (page of pages(); track page.tab.id; let n = $index) {
-    <section class="flex flex-col gap-3" [attr.aria-labelledby]="'edit-page-' + page.tab.id">
-      <h2 [id]="'edit-page-' + page.tab.id" class="text-section-title font-semibold">
-        Strona {{ n + 1 }}: {{ page.tab.title }}
-      </h2>
-      @if (page.tab.type === 'FINISH') {
-        <p class="text-fg-muted">Strona końcowa — nie można na niej dodawać pól.</p>
-      }
-      <!-- shortcut: tracks by field id (made unique by backend verify, rule R12); duplicated ids in raw JSON would edit together. -->
-      <ul class="flex flex-col gap-3">
-        @for (q of page.questions; track q.field.id; let first = $first, last = $last) {
-          <li class="flex flex-col gap-3">
-            <app-field-row
-              [field]="q.field"
-              [removable]="page.questions.length > 1"
-              [first]="first"
-              [last]="last"
-              (patch)="onPatch(q.field, $event)"
-              (move)="onMove(q.field, $event)"
-              (remove)="onRemove(q.field, page.questions, null)"
-            />
-            @if (isSection(q.field)) {
-              @let kids = children(q);
-              @if (kids.length) {
-                <ul
-                  class="flex flex-col gap-3 ml-2 pl-4 border-l-2 border-border"
-                  [attr.aria-label]="'Pola sekcji ' + q.field.title"
-                >
-                  @for (c of kids; track c.field.id; let first = $first, last = $last) {
-                    <li>
-                      <app-field-row
-                        [field]="c.field"
-                        [first]="first"
-                        [last]="last"
-                        (patch)="onPatch(c.field, $event)"
-                        (move)="onMove(c.field, $event)"
-                        (remove)="onRemove(c.field, kids, q.field)"
-                      />
-                    </li>
-                  }
-                </ul>
-              }
-              @if (page.tab.type !== 'FINISH') {
+    <section
+      class="rounded-card border border-topbar/30 bg-bg shadow-sm"
+      [attr.aria-labelledby]="'edit-page-' + page.tab.id"
+    >
+      <header
+        class="flex items-center gap-3 rounded-t-card bg-topbar text-on-topbar px-section py-2.5"
+      >
+        <span
+          aria-hidden="true"
+          class="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-on-topbar text-topbar text-label font-bold"
+          >{{ n + 1 }}</span
+        >
+        <h2 [id]="'edit-page-' + page.tab.id" class="text-section-title font-semibold">
+          <span class="sr-only">Strona {{ n + 1 }}: </span>{{ page.tab.title }}
+        </h2>
+      </header>
+      <div class="flex flex-col gap-3 p-section">
+        @if (page.tab.type === 'FINISH') {
+          <p class="text-fg-muted">
+            Strona końcowa — można na niej umieszczać tylko sekcje informacyjne.
+          </p>
+        }
+        <!-- shortcut: tracks by field id (made unique by backend verify, rule R12); duplicated ids in raw JSON would edit together. -->
+        <ul
+          class="flex flex-col gap-3"
+          (dragover)="onListDragOver($event, page.tab.id)"
+          (drop)="onDrop($event, page.tab.id, page.questions)"
+        >
+          @for (
+            q of page.questions;
+            track q.field.id;
+            let i = $index, first = $first, last = $last
+          ) {
+            <li
+              class="relative"
+              [class]="
+                isSection(q.field)
+                  ? 'flex flex-col gap-3 rounded-card border border-border bg-primary-subtle p-2'
+                  : ''
+              "
+              [class.drop-before]="isDropTarget(q.field, false)"
+              [class.drop-after]="isDropTarget(q.field, true)"
+              (dragstart)="onDragStart($event, q.field, page.tab.id)"
+              (dragover)="onDragOver($event, q.field, page.tab.id)"
+              (dragend)="onDragEnd()"
+            >
+              <app-field-row
+                [field]="q.field"
+                [folded]="folded(q.field)"
+                [removable]="page.questions.length > 1"
+                [first]="first"
+                [last]="last"
+                [dragging]="dragged()?.id === q.field.id"
+                (patch)="onPatch(q.field, $event)"
+                (move)="onMove(q.field, $event)"
+                (remove)="onRemove(q.field, page.questions, null)"
+                [taken]="names()"
+                (rename)="onRename(q.field, $event)"
+                (toggleFold)="toggleFold(q.field)"
+              />
+              @if (isSection(q.field) && !folded(q.field)) {
+                @let kids = children(q);
+                @if (kids.length) {
+                  <ul
+                    class="flex flex-col gap-2 pl-5"
+                    [attr.aria-label]="'Pola sekcji ' + q.field.title"
+                    (dragover)="onListDragOver($event, q.field.id)"
+                    (drop)="onDrop($event, q.field.id, kids)"
+                  >
+                    @for (c of kids; track c.field.id; let first = $first, last = $last) {
+                      <li
+                        class="relative"
+                        [class.drop-before]="isDropTarget(c.field, false)"
+                        [class.drop-after]="isDropTarget(c.field, true)"
+                        (dragstart)="onDragStart($event, c.field, q.field.id)"
+                        (dragover)="onDragOver($event, c.field, q.field.id)"
+                        (dragend)="onDragEnd()"
+                      >
+                        <app-field-row
+                          [field]="c.field"
+                          [allowedTypes]="page.tab.type === 'FINISH' ? finishTypes : null"
+                          [first]="first"
+                          [last]="last"
+                          [dragging]="dragged()?.id === c.field.id"
+                          (patch)="onPatch(c.field, $event)"
+                          (move)="onMove(c.field, $event)"
+                          (remove)="onRemove(c.field, kids, q.field)"
+                          [taken]="names()"
+                          (rename)="onRename(c.field, $event)"
+                        />
+                      </li>
+                    }
+                  </ul>
+                }
                 <app-add-field
-                  class="ml-2 pl-4"
+                  class="pl-5"
                   [sectionTitle]="q.field.title"
+                  [types]="page.tab.type === 'FINISH' ? finishTypes : null"
                   (add)="onAdd(q.field, $event)"
                 />
               }
-            }
-          </li>
-        }
-      </ul>
+            </li>
+          }
+        </ul>
+      </div>
     </section>
   }
 </div>
