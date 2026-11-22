@@ -5,6 +5,7 @@ from typing import Any
 
 from fastapi import APIRouter, Header, Response
 
+from app.api.v1.schemas import DictionaryCatalog, InitialDataSources, TerytTree
 from app.pipeline.build.catalogs import (
     load_dictionary_catalog,
     load_initial_data_catalog,
@@ -15,7 +16,12 @@ from app.pipeline.build.proposals import load_proposal_catalog
 router = APIRouter(tags=["catalog"])
 
 
-@router.get("/dictionaries")
+@router.get(
+    "/dictionaries",
+    summary="Słowniki",
+    response_model=None,
+    responses={200: {"model": DictionaryCatalog, "description": "Lista słowników"}},
+)
 async def list_dictionaries() -> list[dict[str, Any]]:
     """Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami)."""
     predefined = [
@@ -34,7 +40,15 @@ async def list_dictionaries() -> list[dict[str, Any]]:
 
 @router.get(
     "/dictionaries/teryt",
-    responses={200: {"content": {"application/json": {}}, "description": "Pełne drzewo TERYT"}},
+    summary="Drzewo TERYT",
+    responses={
+        200: {
+            "model": TerytTree,
+            "description": "Pełne drzewo TERYT (województwo → powiat → gmina → miejscowość). "
+            "Przy `Accept-Encoding: gzip` wysyłane skompresowane; `Cache-Control: "
+            "private, max-age=86400`.",
+        }
+    },
 )
 async def teryt_tree(accept_encoding: str = Header(default="")) -> Response:
     """Pozycje słowników TERYT: `{asOf, levels, items}` z węzłami `{name, code?, children?}`.
@@ -57,7 +71,12 @@ _SOURCE_NAMES = {
 }
 
 
-@router.get("/initial-data-sources")
+@router.get(
+    "/initial-data-sources",
+    summary="Źródła danych inicjalnych",
+    response_model=None,
+    responses={200: {"model": InitialDataSources, "description": "Źródła z atrybutami"}},
+)
 async def list_initial_data_sources() -> list[dict[str, Any]]:
     """Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`."""
     sources: dict[str, dict[str, Any]] = {}

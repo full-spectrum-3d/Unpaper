@@ -19,6 +19,10 @@ import { registerApiV1AuthRegisterPost } from '../fn/auth/register-api-v-1-auth-
 import { RegisterApiV1AuthRegisterPost$Params } from '../fn/auth/register-api-v-1-auth-register-post';
 import { TokenResponse } from '../models/token-response';
 
+
+/**
+ * Logowanie, rejestracja i wydawanie tokenów JWT. Dostępne tylko, gdy API samo wydaje tokeny.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
@@ -29,9 +33,9 @@ export class AuthService extends BaseService {
   static readonly AuthOptionsApiV1AuthOptionsGetPath = '/api/v1/auth/options';
 
   /**
-   * Auth Options.
+   * Opcje logowania.
    *
-   *
+   * Mówi ekranowi logowania, czy pokazać rejestrację.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `authOptionsApiV1AuthOptionsGet()` instead.
@@ -44,9 +48,9 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Auth Options.
+   * Opcje logowania.
    *
-   *
+   * Mówi ekranowi logowania, czy pokazać rejestrację.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `authOptionsApiV1AuthOptionsGet$Response()` instead.
@@ -64,9 +68,9 @@ export class AuthService extends BaseService {
   static readonly RegisterApiV1AuthRegisterPostPath = '/api/v1/auth/register';
 
   /**
-   * Register.
+   * Rejestracja konta.
    *
-   *
+   * Zakłada konto i od razu zwraca token, jak po zalogowaniu.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `registerApiV1AuthRegisterPost()` instead.
@@ -79,9 +83,9 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Register.
+   * Rejestracja konta.
    *
-   *
+   * Zakłada konto i od razu zwraca token, jak po zalogowaniu.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `registerApiV1AuthRegisterPost$Response()` instead.
@@ -99,9 +103,11 @@ export class AuthService extends BaseService {
   static readonly IssueTokenApiV1AuthTokenPostPath = '/api/v1/auth/token';
 
   /**
-   * Issue Token.
+   * Logowanie (wydanie tokenu).
    *
-   *
+   * OAuth2 password flow: `application/x-www-form-urlencoded` z polami `username`
+   * i `password`. Działa dla konta technicznego (`API_USER`) i kont zarejestrowanych.
+   * Odpowiedź ma `Cache-Control: no-store`.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `issueTokenApiV1AuthTokenPost()` instead.
@@ -114,9 +120,11 @@ export class AuthService extends BaseService {
   }
 
   /**
-   * Issue Token.
+   * Logowanie (wydanie tokenu).
    *
-   *
+   * OAuth2 password flow: `application/x-www-form-urlencoded` z polami `username`
+   * i `password`. Działa dla konta technicznego (`API_USER`) i kont zarejestrowanych.
+   * Odpowiedź ma `Cache-Control: no-store`.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `issueTokenApiV1AuthTokenPost$Response()` instead.

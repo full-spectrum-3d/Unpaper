@@ -10,13 +10,20 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { DictionaryCatalog } from '../models/dictionary-catalog';
+import { InitialDataSources } from '../models/initial-data-sources';
 import { listDictionariesApiV1DictionariesGet } from '../fn/catalog/list-dictionaries-api-v-1-dictionaries-get';
 import { ListDictionariesApiV1DictionariesGet$Params } from '../fn/catalog/list-dictionaries-api-v-1-dictionaries-get';
 import { listInitialDataSourcesApiV1InitialDataSourcesGet } from '../fn/catalog/list-initial-data-sources-api-v-1-initial-data-sources-get';
 import { ListInitialDataSourcesApiV1InitialDataSourcesGet$Params } from '../fn/catalog/list-initial-data-sources-api-v-1-initial-data-sources-get';
+import { TerytTree } from '../models/teryt-tree';
 import { terytTreeApiV1DictionariesTerytGet } from '../fn/catalog/teryt-tree-api-v-1-dictionaries-teryt-get';
 import { TerytTreeApiV1DictionariesTerytGet$Params } from '../fn/catalog/teryt-tree-api-v-1-dictionaries-teryt-get';
 
+
+/**
+ * Katalogi używane przy budowie formularza: słowniki, drzewo TERYT, źródła danych inicjalnych. Wymaga tokenu.
+ */
 @Injectable({ providedIn: 'root' })
 export class CatalogService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
@@ -27,7 +34,7 @@ export class CatalogService extends BaseService {
   static readonly ListDictionariesApiV1DictionariesGetPath = '/api/v1/dictionaries';
 
   /**
-   * List Dictionaries.
+   * Słowniki.
    *
    * Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami).
    *
@@ -36,15 +43,13 @@ export class CatalogService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listDictionariesApiV1DictionariesGet$Response(params?: ListDictionariesApiV1DictionariesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<{
-[key: string]: any;
-}>>> {
+  listDictionariesApiV1DictionariesGet$Response(params?: ListDictionariesApiV1DictionariesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<DictionaryCatalog>> {
     const obs = listDictionariesApiV1DictionariesGet(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
-   * List Dictionaries.
+   * Słowniki.
    *
    * Słowniki predefiniowane (`PREDEFINED`), potem proponowane (`PROPOSED`, z pozycjami).
    *
@@ -53,16 +58,10 @@ export class CatalogService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listDictionariesApiV1DictionariesGet(params?: ListDictionariesApiV1DictionariesGet$Params, context?: HttpContext): Observable<Array<{
-[key: string]: any;
-}>> {
+  listDictionariesApiV1DictionariesGet(params?: ListDictionariesApiV1DictionariesGet$Params, context?: HttpContext): Observable<DictionaryCatalog> {
     const resp = this.listDictionariesApiV1DictionariesGet$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<Array<{
-[key: string]: any;
-}>>): Array<{
-[key: string]: any;
-}> => r.body)
+      map((r: StrictHttpResponse<DictionaryCatalog>): DictionaryCatalog => r.body)
     );
   }
 
@@ -70,7 +69,7 @@ export class CatalogService extends BaseService {
   static readonly TerytTreeApiV1DictionariesTerytGetPath = '/api/v1/dictionaries/teryt';
 
   /**
-   * Teryt Tree.
+   * Drzewo TERYT.
    *
    * Pozycje słowników TERYT: `{asOf, levels, items}` z węzłami `{name, code?, children?}`.
    *
@@ -81,13 +80,13 @@ export class CatalogService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  terytTreeApiV1DictionariesTerytGet$Response(params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+  terytTreeApiV1DictionariesTerytGet$Response(params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<StrictHttpResponse<TerytTree>> {
     const obs = terytTreeApiV1DictionariesTerytGet(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
-   * Teryt Tree.
+   * Drzewo TERYT.
    *
    * Pozycje słowników TERYT: `{asOf, levels, items}` z węzłami `{name, code?, children?}`.
    *
@@ -98,10 +97,10 @@ export class CatalogService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  terytTreeApiV1DictionariesTerytGet(params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<any> {
+  terytTreeApiV1DictionariesTerytGet(params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<TerytTree> {
     const resp = this.terytTreeApiV1DictionariesTerytGet$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<any>): any => r.body)
+      map((r: StrictHttpResponse<TerytTree>): TerytTree => r.body)
     );
   }
 
@@ -109,7 +108,7 @@ export class CatalogService extends BaseService {
   static readonly ListInitialDataSourcesApiV1InitialDataSourcesGetPath = '/api/v1/initial-data-sources';
 
   /**
-   * List Initial Data Sources.
+   * Źródła danych inicjalnych.
    *
    * Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`.
    *
@@ -118,15 +117,13 @@ export class CatalogService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listInitialDataSourcesApiV1InitialDataSourcesGet$Response(params?: ListInitialDataSourcesApiV1InitialDataSourcesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<{
-[key: string]: any;
-}>>> {
+  listInitialDataSourcesApiV1InitialDataSourcesGet$Response(params?: ListInitialDataSourcesApiV1InitialDataSourcesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<InitialDataSources>> {
     const obs = listInitialDataSourcesApiV1InitialDataSourcesGet(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
-   * List Initial Data Sources.
+   * Źródła danych inicjalnych.
    *
    * Źródła danych inicjalnych z atrybutami (spec §8.5). `ref` trafia do `defaultValue`.
    *
@@ -135,16 +132,10 @@ export class CatalogService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  listInitialDataSourcesApiV1InitialDataSourcesGet(params?: ListInitialDataSourcesApiV1InitialDataSourcesGet$Params, context?: HttpContext): Observable<Array<{
-[key: string]: any;
-}>> {
+  listInitialDataSourcesApiV1InitialDataSourcesGet(params?: ListInitialDataSourcesApiV1InitialDataSourcesGet$Params, context?: HttpContext): Observable<InitialDataSources> {
     const resp = this.listInitialDataSourcesApiV1InitialDataSourcesGet$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<Array<{
-[key: string]: any;
-}>>): Array<{
-[key: string]: any;
-}> => r.body)
+      map((r: StrictHttpResponse<InitialDataSources>): InitialDataSources => r.body)
     );
   }
 

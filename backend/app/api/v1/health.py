@@ -9,7 +9,8 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from app.core.config import Settings, get_settings
-from app.core.errors import AppError, ErrorCode, problem_doc
+from app.core.errors import AppError, ErrorCode
+from app.core.openapi import problem_responses
 from app.pipeline.converter import Converter, get_converter
 from app.pipeline.llm_client import LlmClient, LlmError, get_llm_client
 
@@ -51,20 +52,19 @@ def _tag(model: str) -> str:
     return model if ":" in model.rsplit("/", 1)[-1] else f"{model}:latest"
 
 
-@router.get("/live")
+@router.get("/live", summary="Liveness")
 async def live() -> LiveResponse:
+    """Proces odpowiada. Nie sprawdza zależności."""
     return LiveResponse()
 
 
 @router.get(
     "/ready",
     response_model_exclude_none=True,
-    responses={
-        503: problem_doc(
-            "LLM_UNAVAILABLE: serwer modelu nieosiągalny albo brak modelu; "
-            "SERVICE_UNAVAILABLE: brak libmagic albo Tesseracta w obrazie"
-        )
-    },
+    summary="Readiness",
+    responses=problem_responses(
+        ErrorCode.LLM_UNAVAILABLE, ErrorCode.SERVICE_UNAVAILABLE, instance="/api/v1/health/ready"
+    ),
 )
 async def ready(
     settings: Annotated[Settings, Depends(get_settings)],

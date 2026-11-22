@@ -7,13 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { InitialDataSources } from '../../models/initial-data-sources';
 
 export interface ListInitialDataSourcesApiV1InitialDataSourcesGet$Params {
 }
 
-export function listInitialDataSourcesApiV1InitialDataSourcesGet(http: HttpClient, rootUrl: string, params?: ListInitialDataSourcesApiV1InitialDataSourcesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<{
-[key: string]: any;
-}>>> {
+export function listInitialDataSourcesApiV1InitialDataSourcesGet(http: HttpClient, rootUrl: string, params?: ListInitialDataSourcesApiV1InitialDataSourcesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<InitialDataSources>> {
   const rb = new RequestBuilder(rootUrl, listInitialDataSourcesApiV1InitialDataSourcesGet.PATH, 'get');
   if (params) {
   }
@@ -23,9 +22,7 @@ export function listInitialDataSourcesApiV1InitialDataSourcesGet(http: HttpClien
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<{
-      [key: string]: any;
-      }>>;
+      return r as StrictHttpResponse<InitialDataSources>;
     })
   );
 }

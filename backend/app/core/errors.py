@@ -14,7 +14,7 @@ from typing import Any
 from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 logger = logging.getLogger(__name__)
@@ -126,25 +126,54 @@ _ERROR_META: dict[ErrorCode, tuple[HTTPStatus, str]] = {
 }
 
 
+def error_meta(code: ErrorCode) -> tuple[int, str]:
+    """Status HTTP i domyślny tytuł kodu błędu."""
+    status, title = _ERROR_META[code]
+    return int(status), title
+
+
+class ValidationErrorItem(BaseModel):
+    """Jeden błąd walidacji parametrów lub ciała (bez wartości wejściowej)."""
+
+    loc: list[str | int] = Field(
+        description='Ścieżka do błędnej wartości, np. `["query", "identitySource"]` '
+        'albo `["body", "username"]`'
+    )
+    msg: str = Field(description="Komunikat walidatora (po angielsku)")
+    type: str = Field(description="Rodzaj błędu walidatora, np. `missing`, `string_too_short`")
+
+
 class ProblemDetail(BaseModel):
-    """Treść odpowiedzi błędu (RFC 9457) rozszerzona o `code` i `request_id`."""
+    """Odpowiedź błędu (RFC 9457, `application/problem+json`) z polami `code` i `request_id`."""
 
-    type: str
-    title: str
-    status: int
-    code: str
-    detail: str | None = None
-    instance: str | None = None
-    request_id: str | None = None
-    errors: list[dict[str, Any]] | None = None
-
-
-def problem_doc(description: str) -> dict[str, Any]:
-    """Opis odpowiedzi błędu do `responses=` endpointu: problem+json ze schematem ProblemDetail."""
-    return {
-        "description": description,
-        "content": {PROBLEM_MEDIA_TYPE: {"schema": {"$ref": "#/components/schemas/ProblemDetail"}}},
-    }
+    type: str = Field(
+        description=f"URI rodzaju błędu: `{PROBLEM_TYPE_BASE}<code>`",
+        examples=[f"{PROBLEM_TYPE_BASE}FILE_TOO_LARGE"],
+    )
+    title: str = Field(
+        description="Krótki opis rodzaju błędu po polsku; stały dla danego `code`",
+        examples=["Plik jest zbyt duży"],
+    )
+    status: int = Field(description="Kod statusu HTTP (ten sam co w odpowiedzi)", examples=[413])
+    code: ErrorCode = Field(
+        description="Kod błędu do obsługi w kodzie klienta; pełna lista w opisie API"
+    )
+    detail: str | None = Field(
+        default=None,
+        description="Szczegóły tego konkretnego przypadku, jeśli serwer je podaje",
+        examples=["Plik przekracza limit 20 MB"],
+    )
+    instance: str | None = Field(
+        default=None, description="Ścieżka żądania", examples=["/api/v1/forms/convert"]
+    )
+    request_id: str | None = Field(
+        default=None,
+        description="Identyfikator żądania (jak nagłówek `X-Request-ID`) - podaj go, "
+        "zgłaszając problem",
+    )
+    errors: list[ValidationErrorItem] | None = Field(
+        default=None, description="Tylko przy `VALIDATION_ERROR`: lista błędów walidacji"
+    )
 
 
 class AppError(Exception):
@@ -191,14 +220,14 @@ def problem_response(
         detail=detail,
         instance=request.url.path,
         request_id=request_id,
-        errors=errors,
+        errors=[ValidationErrorItem.model_validate(e) for e in errors] if errors else None,
     )
     response_headers = dict(headers or {})
     if request_id:
         response_headers[REQUEST_ID_HEADER] = request_id
     return JSONResponse(
         status_code=problem.status,
-        content=problem.model_dump(exclude_none=True),
+        content=problem.model_dump(mode="json", exclude_none=True),
         media_type=PROBLEM_MEDIA_TYPE,
         headers=response_headers,
     )

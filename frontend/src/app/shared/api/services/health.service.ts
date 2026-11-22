@@ -17,6 +17,10 @@ import { readyApiV1HealthReadyGet } from '../fn/health/ready-api-v-1-health-read
 import { ReadyApiV1HealthReadyGet$Params } from '../fn/health/ready-api-v-1-health-ready-get';
 import { ReadyResponse } from '../models/ready-response';
 
+
+/**
+ * Sondy dla orkiestratora (liveness/readiness). Publiczne.
+ */
 @Injectable({ providedIn: 'root' })
 export class HealthService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
@@ -27,9 +31,9 @@ export class HealthService extends BaseService {
   static readonly LiveApiV1HealthLiveGetPath = '/api/v1/health/live';
 
   /**
-   * Live.
+   * Liveness.
    *
-   *
+   * Proces odpowiada. Nie sprawdza zależności.
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `liveApiV1HealthLiveGet()` instead.
@@ -42,9 +46,9 @@ export class HealthService extends BaseService {
   }
 
   /**
-   * Live.
+   * Liveness.
    *
-   *
+   * Proces odpowiada. Nie sprawdza zależności.
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `liveApiV1HealthLiveGet$Response()` instead.
@@ -62,7 +66,7 @@ export class HealthService extends BaseService {
   static readonly ReadyApiV1HealthReadyGetPath = '/api/v1/health/ready';
 
   /**
-   * Ready.
+   * Readiness.
    *
    * Gotowość: serwer modelu osiągalny i model pobrany.
    *
@@ -80,7 +84,7 @@ export class HealthService extends BaseService {
   }
 
   /**
-   * Ready.
+   * Readiness.
    *
    * Gotowość: serwer modelu osiągalny i model pobrany.
    *

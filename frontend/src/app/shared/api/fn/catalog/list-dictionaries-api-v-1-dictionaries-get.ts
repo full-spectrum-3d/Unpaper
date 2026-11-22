@@ -7,13 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { DictionaryCatalog } from '../../models/dictionary-catalog';
 
 export interface ListDictionariesApiV1DictionariesGet$Params {
 }
 
-export function listDictionariesApiV1DictionariesGet(http: HttpClient, rootUrl: string, params?: ListDictionariesApiV1DictionariesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<{
-[key: string]: any;
-}>>> {
+export function listDictionariesApiV1DictionariesGet(http: HttpClient, rootUrl: string, params?: ListDictionariesApiV1DictionariesGet$Params, context?: HttpContext): Observable<StrictHttpResponse<DictionaryCatalog>> {
   const rb = new RequestBuilder(rootUrl, listDictionariesApiV1DictionariesGet.PATH, 'get');
   if (params) {
   }
@@ -23,9 +22,7 @@ export function listDictionariesApiV1DictionariesGet(http: HttpClient, rootUrl: 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<{
-      [key: string]: any;
-      }>>;
+      return r as StrictHttpResponse<DictionaryCatalog>;
     })
   );
 }

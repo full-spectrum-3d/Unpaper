@@ -12,9 +12,15 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { convertApiV1FormsConvertPost } from '../fn/forms/convert-api-v-1-forms-convert-post';
 import { ConvertApiV1FormsConvertPost$Params } from '../fn/forms/convert-api-v-1-forms-convert-post';
+import { ConvertResponse } from '../models/convert-response';
 import { validateApiV1FormsValidatePost } from '../fn/forms/validate-api-v-1-forms-validate-post';
 import { ValidateApiV1FormsValidatePost$Params } from '../fn/forms/validate-api-v-1-forms-validate-post';
+import { ValidationResult } from '../models/validation-result';
 
+
+/**
+ * Konwersja dokumentu na formularz i weryfikacja JSON-a formularza. Wymaga tokenu.
+ */
 @Injectable({ providedIn: 'root' })
 export class FormsService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
@@ -25,42 +31,58 @@ export class FormsService extends BaseService {
   static readonly ConvertApiV1FormsConvertPostPath = '/api/v1/forms/convert';
 
   /**
-   * Convert.
+   * Konwersja dokumentu na formularz.
    *
-   * Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).
+   * Przyjmuje dokładnie jeden plik (`multipart/form-data`, pole `file`) i zwraca
+   * konfigurację formularza w formacie importu Generatora Formularzy COI.
+   *
+   * Obsługiwane formaty: PDF (warstwa tekstowa albo skan z OCR), DOC, DOCX, ODS, XLSX,
+   * JPG, JPEG, PNG. DOC i ODS wymagają LibreOffice w obrazie (bez niego 415).
+   *
+   * Przebieg: walidacja pliku → odczyt treści → analiza modelem LLM (przy jego awarii
+   * reguły, ostrzeżenie `W01_LLM_FALLBACK`) → budowa formularza → weryfikacja reguł
+   * z autonaprawą. Odpowiedź 200 zawsze zawiera formularz, który przechodzi weryfikację.
+   *
+   * Dokument zaszyfrowany hasłem daje 422 `DOCUMENT_PASSWORD_REQUIRED`; wyślij go
+   * ponownie z polem `password`. Konwersja trwa zwykle od kilku sekund do kilku minut
+   * (limit `REQUEST_TIMEOUT_S`).
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `convertApiV1FormsConvertPost()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  convertApiV1FormsConvertPost$Response(params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
+  convertApiV1FormsConvertPost$Response(params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<ConvertResponse>> {
     const obs = convertApiV1FormsConvertPost(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
-   * Convert.
+   * Konwersja dokumentu na formularz.
    *
-   * Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).
+   * Przyjmuje dokładnie jeden plik (`multipart/form-data`, pole `file`) i zwraca
+   * konfigurację formularza w formacie importu Generatora Formularzy COI.
+   *
+   * Obsługiwane formaty: PDF (warstwa tekstowa albo skan z OCR), DOC, DOCX, ODS, XLSX,
+   * JPG, JPEG, PNG. DOC i ODS wymagają LibreOffice w obrazie (bez niego 415).
+   *
+   * Przebieg: walidacja pliku → odczyt treści → analiza modelem LLM (przy jego awarii
+   * reguły, ostrzeżenie `W01_LLM_FALLBACK`) → budowa formularza → weryfikacja reguł
+   * z autonaprawą. Odpowiedź 200 zawsze zawiera formularz, który przechodzi weryfikację.
+   *
+   * Dokument zaszyfrowany hasłem daje 422 `DOCUMENT_PASSWORD_REQUIRED`; wyślij go
+   * ponownie z polem `password`. Konwersja trwa zwykle od kilku sekund do kilku minut
+   * (limit `REQUEST_TIMEOUT_S`).
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `convertApiV1FormsConvertPost$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  convertApiV1FormsConvertPost(params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<{
-[key: string]: any;
-}> {
+  convertApiV1FormsConvertPost(params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<ConvertResponse> {
     const resp = this.convertApiV1FormsConvertPost$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<{
-[key: string]: any;
-}>): {
-[key: string]: any;
-} => r.body)
+      map((r: StrictHttpResponse<ConvertResponse>): ConvertResponse => r.body)
     );
   }
 
@@ -68,42 +90,40 @@ export class FormsService extends BaseService {
   static readonly ValidateApiV1FormsValidatePostPath = '/api/v1/forms/validate';
 
   /**
-   * Validate.
+   * Weryfikacja JSON-a formularza.
    *
-   * Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`.
+   * Sprawdza dowolny JSON formularza tymi samymi regułami co konwersja, ale niczego
+   * nie poprawia. Przydatne po ręcznej edycji formularza, przed importem do Generatora.
+   *
+   * Ciało musi być obiektem JSON (inaczej 422 `VALIDATION_ERROR`).
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `validateApiV1FormsValidatePost()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  validateApiV1FormsValidatePost$Response(params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
+  validateApiV1FormsValidatePost$Response(params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<ValidationResult>> {
     const obs = validateApiV1FormsValidatePost(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
-   * Validate.
+   * Weryfikacja JSON-a formularza.
    *
-   * Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`.
+   * Sprawdza dowolny JSON formularza tymi samymi regułami co konwersja, ale niczego
+   * nie poprawia. Przydatne po ręcznej edycji formularza, przed importem do Generatora.
+   *
+   * Ciało musi być obiektem JSON (inaczej 422 `VALIDATION_ERROR`).
    *
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `validateApiV1FormsValidatePost$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  validateApiV1FormsValidatePost(params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<{
-[key: string]: any;
-}> {
+  validateApiV1FormsValidatePost(params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<ValidationResult> {
     const resp = this.validateApiV1FormsValidatePost$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<{
-[key: string]: any;
-}>): {
-[key: string]: any;
-} => r.body)
+      map((r: StrictHttpResponse<ValidationResult>): ValidationResult => r.body)
     );
   }
 

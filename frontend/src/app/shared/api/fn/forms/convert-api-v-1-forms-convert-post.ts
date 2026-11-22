@@ -7,6 +7,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { ConvertResponse } from '../../models/convert-response';
 
 export interface ConvertApiV1FormsConvertPost$Params {
 
@@ -38,9 +39,7 @@ export interface ConvertApiV1FormsConvertPost$Params {
 }
 }
 
-export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
+export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, params: ConvertApiV1FormsConvertPost$Params, context?: HttpContext): Observable<StrictHttpResponse<ConvertResponse>> {
   const rb = new RequestBuilder(rootUrl, convertApiV1FormsConvertPost.PATH, 'post');
   if (params) {
     rb.query('report', params.report, {});
@@ -54,9 +53,7 @@ export function convertApiV1FormsConvertPost(http: HttpClient, rootUrl: string, 
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      [key: string]: any;
-      }>;
+      return r as StrictHttpResponse<ConvertResponse>;
     })
   );
 }

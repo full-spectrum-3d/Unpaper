@@ -4,6 +4,7 @@
       "AuthOptions": {
         "properties": {
           "registration_enabled": {
+            "description": "Czy działa `POST /auth/register` (inaczej 403 `REGISTRATION_DISABLED`)",
             "title": "Registration Enabled",
             "type": "boolean"
           }
@@ -73,17 +74,649 @@
         "title": "Body_issue_token_api_v1_auth_token_post",
         "type": "object"
       },
-      "HTTPValidationError": {
+      "Confidence": {
         "properties": {
-          "detail": {
+          "fieldsFromDocument": {
+            "title": "Fieldsfromdocument",
+            "type": "integer"
+          },
+          "fieldsTotal": {
+            "title": "Fieldstotal",
+            "type": "integer"
+          },
+          "level": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "score": {
+            "description": "Ogólna pewność konwersji 0-1",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "number"
+          },
+          "toReview": {
+            "description": "Liczba pozycji w `review`",
+            "title": "Toreview",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "score",
+          "level",
+          "fieldsTotal",
+          "fieldsFromDocument",
+          "toReview"
+        ],
+        "title": "Confidence",
+        "type": "object"
+      },
+      "ConversionReport": {
+        "properties": {
+          "confidence": {
+            "$ref": "#/components/schemas/Confidence"
+          },
+          "dictionaryProposals": {
             "items": {
-              "$ref": "#/components/schemas/ValidationError"
+              "$ref": "#/components/schemas/DictionaryProposal"
             },
-            "title": "Detail",
+            "title": "Dictionaryproposals",
+            "type": "array"
+          },
+          "durationMs": {
+            "title": "Durationms",
+            "type": "integer"
+          },
+          "extraction": {
+            "$ref": "#/components/schemas/ExtractionReport"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/FieldReview"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "fixes": {
+            "description": "Poprawki wykonane automatycznie przez weryfikację",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            },
+            "title": "Fixes",
+            "type": "array"
+          },
+          "llm": {
+            "$ref": "#/components/schemas/LlmReport"
+          },
+          "review": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewItem"
+            },
+            "title": "Review",
+            "type": "array"
+          },
+          "sourceFile": {
+            "$ref": "#/components/schemas/SourceFileReport"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/FormStats"
+          },
+          "timings": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Czas etapów w ms, np. `extractMs`, `llmMs`",
+            "title": "Timings",
+            "type": "object"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/ConversionWarning"
+            },
+            "title": "Warnings",
             "type": "array"
           }
         },
-        "title": "HTTPValidationError",
+        "required": [
+          "sourceFile",
+          "extraction",
+          "llm",
+          "stats",
+          "dictionaryProposals",
+          "warnings",
+          "fixes",
+          "timings",
+          "confidence",
+          "fields",
+          "review",
+          "durationMs"
+        ],
+        "title": "ConversionReport",
+        "type": "object"
+      },
+      "ConversionWarning": {
+        "description": "Ostrzeżenie z kodem `Wnn_NAZWA` i opcjonalną ścieżką do miejsca, którego dotyczy.",
+        "properties": {
+          "code": {
+            "pattern": "^W\\d{2}_[A-Z0-9_]+$",
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ConversionWarning",
+        "type": "object"
+      },
+      "ConvertResponse": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ConvertWithReport"
+          },
+          {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        ],
+        "description": "Sam formularz (domyślnie) albo `{form, report}` przy `report=true`.",
+        "title": "ConvertResponse"
+      },
+      "ConvertWithReport": {
+        "description": "Odpowiedź `POST /forms/convert?report=true`.",
+        "properties": {
+          "form": {
+            "additionalProperties": true,
+            "description": "Konfiguracja formularza w formacie importu (spec §7)",
+            "title": "Form",
+            "type": "object"
+          },
+          "report": {
+            "$ref": "#/components/schemas/ConversionReport"
+          }
+        },
+        "required": [
+          "form",
+          "report"
+        ],
+        "title": "ConvertWithReport",
+        "type": "object"
+      },
+      "DictionaryCatalog": {
+        "description": "Słowniki predefiniowane, potem proponowane.",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/PredefinedDictionary"
+            },
+            {
+              "$ref": "#/components/schemas/ProposedDictionary"
+            }
+          ]
+        },
+        "title": "DictionaryCatalog",
+        "type": "array"
+      },
+      "DictionaryItem": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "techName": {
+            "title": "Techname",
+            "type": "string"
+          },
+          "validFrom": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validfrom"
+          },
+          "validTo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Validto"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "techName"
+        ],
+        "title": "DictionaryItem",
+        "type": "object"
+      },
+      "DictionaryProposal": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "itemStructure": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Itemstructure",
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DictionaryItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "usedBy": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Usedby",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "title",
+          "description",
+          "itemStructure",
+          "items",
+          "usedBy"
+        ],
+        "title": "DictionaryProposal",
+        "type": "object"
+      },
+      "ErrorCode": {
+        "enum": [
+          "NOT_AUTHENTICATED",
+          "INVALID_TOKEN",
+          "INVALID_CREDENTIALS",
+          "FORBIDDEN",
+          "USERNAME_TAKEN",
+          "REGISTRATION_DISABLED",
+          "MALFORMED_REQUEST",
+          "FILE_MISSING",
+          "TOO_MANY_FILES",
+          "FILENAME_TOO_LONG",
+          "FILENAME_FORBIDDEN_CHARS",
+          "FILE_TOO_LARGE",
+          "FILE_EMPTY",
+          "UNSUPPORTED_EXTENSION",
+          "MIME_MISMATCH",
+          "ARCHIVE_TOO_LARGE",
+          "DOCUMENT_TOO_COMPLEX",
+          "DOCUMENT_UNREADABLE",
+          "DOCUMENT_PASSWORD_REQUIRED",
+          "DOCUMENT_PASSWORD_INVALID",
+          "LLM_UNAVAILABLE",
+          "PROCESSING_TIMEOUT",
+          "SERVER_BUSY",
+          "SERVICE_UNAVAILABLE",
+          "VALIDATION_ERROR",
+          "NOT_FOUND",
+          "METHOD_NOT_ALLOWED",
+          "HTTP_ERROR",
+          "INTERNAL_ERROR"
+        ],
+        "title": "ErrorCode",
+        "type": "string"
+      },
+      "ExtractionReport": {
+        "properties": {
+          "blocks": {
+            "description": "Liczba bloków tekstu znalezionych w dokumencie",
+            "title": "Blocks",
+            "type": "integer"
+          },
+          "convertedToOpenXml": {
+            "description": "DOC/ODS przekonwertowane przez LibreOffice",
+            "title": "Convertedtoopenxml",
+            "type": "boolean"
+          },
+          "method": {
+            "description": "Sposób odczytu tekstu (warstwa tekstowa, OCR, OOXML…)",
+            "title": "Method",
+            "type": "string"
+          },
+          "ocrMeanConfidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ocrmeanconfidence"
+          }
+        },
+        "required": [
+          "method",
+          "convertedToOpenXml",
+          "ocrMeanConfidence",
+          "blocks"
+        ],
+        "title": "ExtractionReport",
+        "type": "object"
+      },
+      "FieldReview": {
+        "additionalProperties": true,
+        "properties": {
+          "confidence": {
+            "title": "Confidence",
+            "type": "number"
+          },
+          "level": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "origin": {
+            "description": "`template` - sekcja predefiniowana, niezależna od dokumentu",
+            "enum": [
+              "document",
+              "template"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "section": {
+            "title": "Section",
+            "type": "string"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FieldSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tab": {
+            "title": "Tab",
+            "type": "string"
+          },
+          "techName": {
+            "title": "Techname",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "techName",
+          "title",
+          "tab",
+          "section",
+          "origin",
+          "confidence",
+          "level",
+          "reasons"
+        ],
+        "title": "FieldReview",
+        "type": "object"
+      },
+      "FieldSource": {
+        "additionalProperties": true,
+        "description": "Miejsce w dokumencie, z którego pochodzi etykieta pola (współrzędne jako ułamki strony).",
+        "properties": {
+          "blockId": {
+            "title": "Blockid",
+            "type": "string"
+          },
+          "box": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceBox"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageAspect": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pageaspect"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "page",
+          "blockId",
+          "text"
+        ],
+        "title": "FieldSource",
+        "type": "object"
+      },
+      "FormStats": {
+        "properties": {
+          "fields": {
+            "title": "Fields",
+            "type": "integer"
+          },
+          "sections": {
+            "title": "Sections",
+            "type": "integer"
+          },
+          "states": {
+            "description": "Liczba warunków widoczności (JSONata)",
+            "title": "States",
+            "type": "integer"
+          },
+          "tabs": {
+            "title": "Tabs",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tabs",
+          "sections",
+          "fields",
+          "states"
+        ],
+        "title": "FormStats",
+        "type": "object"
+      },
+      "InitialDataAttribute": {
+        "properties": {
+          "attribute": {
+            "description": "Nazwa atrybutu w źródle",
+            "examples": [
+              "firstName"
+            ],
+            "title": "Attribute",
+            "type": "string"
+          },
+          "editable": {
+            "description": "Czy użytkownik może zmienić wartość z rejestru",
+            "title": "Editable",
+            "type": "boolean"
+          },
+          "fieldType": {
+            "description": "Typ pola formularza",
+            "examples": [
+              "TEXT_FIELD"
+            ],
+            "title": "Fieldtype",
+            "type": "string"
+          },
+          "label": {
+            "description": "Etykieta pola po polsku",
+            "examples": [
+              "Imię"
+            ],
+            "title": "Label",
+            "type": "string"
+          },
+          "ref": {
+            "description": "Wartość do `defaultValue` pola",
+            "examples": [
+              "PESEL.firstName"
+            ],
+            "title": "Ref",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attribute",
+          "ref",
+          "label",
+          "fieldType",
+          "editable"
+        ],
+        "title": "InitialDataAttribute",
+        "type": "object"
+      },
+      "InitialDataSource": {
+        "properties": {
+          "attributes": {
+            "items": {
+              "$ref": "#/components/schemas/InitialDataAttribute"
+            },
+            "title": "Attributes",
+            "type": "array"
+          },
+          "name": {
+            "examples": [
+              "Rejestr PESEL"
+            ],
+            "title": "Name",
+            "type": "string"
+          },
+          "source": {
+            "examples": [
+              "PESEL"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "name",
+          "attributes"
+        ],
+        "title": "InitialDataSource",
+        "type": "object"
+      },
+      "InitialDataSources": {
+        "description": "Źródła danych inicjalnych (spec §8.5).",
+        "items": {
+          "$ref": "#/components/schemas/InitialDataSource"
+        },
+        "title": "InitialDataSources",
+        "type": "array"
+      },
+      "Issue": {
+        "description": "Błąd reguły albo wykonana poprawka.",
+        "properties": {
+          "code": {
+            "description": "Kod reguły, np. `R04_TECHNAME_UNIQUE`",
+            "examples": [
+              "R09_OPTIONS"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "description": "Opis problemu po polsku",
+            "title": "Message",
+            "type": "string"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Ścieżka JSON do miejsca, którego dotyczy, np. `tabs[0].questions[2].field.options`",
+            "title": "Path"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Issue",
         "type": "object"
       },
       "LiveResponse": {
@@ -98,12 +731,136 @@
         "title": "LiveResponse",
         "type": "object"
       },
+      "LlmReport": {
+        "properties": {
+          "durationMs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Durationms"
+          },
+          "fallback": {
+            "description": "Model nie dał poprawnej odpowiedzi; użyto reguł",
+            "title": "Fallback",
+            "type": "boolean"
+          },
+          "fallbackReason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallbackreason"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "outputTokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outputtokens"
+          },
+          "promptTokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompttokens"
+          },
+          "retries": {
+            "title": "Retries",
+            "type": "integer"
+          },
+          "ruleBasedDraft": {
+            "title": "Rulebaseddraft",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "model",
+          "durationMs",
+          "retries",
+          "fallback",
+          "fallbackReason",
+          "ruleBasedDraft",
+          "promptTokens",
+          "outputTokens"
+        ],
+        "title": "LlmReport",
+        "type": "object"
+      },
+      "PredefinedDictionary": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "fieldTypes": {
+            "description": "Typy pól, które mogą używać słownika",
+            "items": {
+              "type": "string"
+            },
+            "title": "Fieldtypes",
+            "type": "array"
+          },
+          "multiLevelTree": {
+            "description": "Słownik wielopoziomowy (np. TERYT)",
+            "title": "Multileveltree",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "Nazwa słownika do pola `dictionaryName`",
+            "title": "Name",
+            "type": "string"
+          },
+          "status": {
+            "const": "PREDEFINED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "status",
+          "fieldTypes",
+          "multiLevelTree"
+        ],
+        "title": "PredefinedDictionary",
+        "type": "object"
+      },
       "ProblemDetail": {
-        "description": "Treść odpowiedzi błędu (RFC 9457) rozszerzona o `code` i `request_id`.",
+        "description": "Odpowiedź błędu (RFC 9457, `application/problem+json`) z polami `code` i `request_id`.",
         "properties": {
           "code": {
-            "title": "Code",
-            "type": "string"
+            "$ref": "#/components/schemas/ErrorCode",
+            "description": "Kod błędu do obsługi w kodzie klienta; pełna lista w opisie API"
           },
           "detail": {
             "anyOf": [
@@ -114,14 +871,18 @@
                 "type": "null"
               }
             ],
+            "default": null,
+            "description": "Szczegóły tego konkretnego przypadku, jeśli serwer je podaje",
+            "examples": [
+              "Plik przekracza limit 20 MB"
+            ],
             "title": "Detail"
           },
           "errors": {
             "anyOf": [
               {
                 "items": {
-                  "additionalProperties": true,
-                  "type": "object"
+                  "$ref": "#/components/schemas/ValidationErrorItem"
                 },
                 "type": "array"
               },
@@ -129,6 +890,8 @@
                 "type": "null"
               }
             ],
+            "default": null,
+            "description": "Tylko przy `VALIDATION_ERROR`: lista błędów walidacji",
             "title": "Errors"
           },
           "instance": {
@@ -139,6 +902,11 @@
               {
                 "type": "null"
               }
+            ],
+            "default": null,
+            "description": "Ścieżka żądania",
+            "examples": [
+              "/api/v1/forms/convert"
             ],
             "title": "Instance"
           },
@@ -151,17 +919,31 @@
                 "type": "null"
               }
             ],
+            "default": null,
+            "description": "Identyfikator żądania (jak nagłówek `X-Request-ID`) - podaj go, zgłaszając problem",
             "title": "Request Id"
           },
           "status": {
+            "description": "Kod statusu HTTP (ten sam co w odpowiedzi)",
+            "examples": [
+              413
+            ],
             "title": "Status",
             "type": "integer"
           },
           "title": {
+            "description": "Krótki opis rodzaju błędu po polsku; stały dla danego `code`",
+            "examples": [
+              "Plik jest zbyt duży"
+            ],
             "title": "Title",
             "type": "string"
           },
           "type": {
+            "description": "URI rodzaju błędu: `https://coi-cf/errors/<code>`",
+            "examples": [
+              "https://coi-cf/errors/FILE_TOO_LARGE"
+            ],
             "title": "Type",
             "type": "string"
           }
@@ -173,6 +955,61 @@
           "code"
         ],
         "title": "ProblemDetail",
+        "type": "object"
+      },
+      "ProposedDictionary": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "fieldTypes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Fieldtypes",
+            "type": "array"
+          },
+          "itemStructure": {
+            "description": "Kolumny pozycji słownika",
+            "items": {
+              "type": "string"
+            },
+            "title": "Itemstructure",
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DictionaryItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "status": {
+            "const": "PROPOSED",
+            "description": "Słownik jeszcze nie istnieje w Generatorze; pole zachowuje opcje inline",
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "title",
+          "description",
+          "status",
+          "fieldTypes",
+          "itemStructure",
+          "items"
+        ],
+        "title": "ProposedDictionary",
         "type": "object"
       },
       "ReadyResponse": {
@@ -206,12 +1043,17 @@
       "RegisterRequest": {
         "properties": {
           "password": {
+            "description": "Hasło: 8-128 znaków",
             "maxLength": 128,
             "minLength": 8,
             "title": "Password",
             "type": "string"
           },
           "username": {
+            "description": "Login: 3-50 znaków, litery łacińskie, cyfry, `.`, `_`, `-`; wielkość liter nie ma znaczenia",
+            "examples": [
+              "jan.kowalski"
+            ],
             "maxLength": 50,
             "minLength": 3,
             "pattern": "^[A-Za-z0-9._-]+$",
@@ -226,13 +1068,232 @@
         "title": "RegisterRequest",
         "type": "object"
       },
+      "ReviewItem": {
+        "additionalProperties": true,
+        "description": "Pozycja do przejrzenia: pole o niskiej pewności albo problem całego formularza.",
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "kind": {
+            "enum": [
+              "field",
+              "form"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "level": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "messages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Messages",
+            "type": "array"
+          },
+          "tab": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tab"
+          },
+          "techName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techname"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "level",
+          "title",
+          "messages"
+        ],
+        "title": "ReviewItem",
+        "type": "object"
+      },
+      "SourceBox": {
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height"
+        ],
+        "title": "SourceBox",
+        "type": "object"
+      },
+      "SourceFileReport": {
+        "properties": {
+          "decrypted": {
+            "description": "Plik był zaszyfrowany i otwarto go podanym hasłem",
+            "title": "Decrypted",
+            "type": "boolean"
+          },
+          "mime": {
+            "title": "Mime",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pages"
+          },
+          "sizeBytes": {
+            "title": "Sizebytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "mime",
+          "sizeBytes",
+          "pages",
+          "decrypted"
+        ],
+        "title": "SourceFileReport",
+        "type": "object"
+      },
+      "TerytNode": {
+        "properties": {
+          "children": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/TerytNode"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Children"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "TerytNode",
+        "type": "object"
+      },
+      "TerytTree": {
+        "properties": {
+          "asOf": {
+            "description": "Data stanu rejestru TERYT",
+            "title": "Asof",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TerytNode"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "levels": {
+            "description": "Nazwy poziomów drzewa, od najwyższego",
+            "items": {
+              "type": "string"
+            },
+            "title": "Levels",
+            "type": "array"
+          }
+        },
+        "required": [
+          "asOf",
+          "levels",
+          "items"
+        ],
+        "title": "TerytTree",
+        "type": "object"
+      },
       "TokenResponse": {
+        "description": "Token dostępu do nagłówka `Authorization: Bearer <access_token>`.",
         "properties": {
           "access_token": {
+            "description": "Token JWT",
             "title": "Access Token",
             "type": "string"
           },
           "expires_in": {
+            "description": "Ważność tokenu w sekundach",
+            "examples": [
+              3600
+            ],
             "title": "Expires In",
             "type": "integer"
           },
@@ -250,16 +1311,11 @@
         "title": "TokenResponse",
         "type": "object"
       },
-      "ValidationError": {
+      "ValidationErrorItem": {
+        "description": "Jeden błąd walidacji parametrów lub ciała (bez wartości wejściowej).",
         "properties": {
-          "ctx": {
-            "title": "Context",
-            "type": "object"
-          },
-          "input": {
-            "title": "Input"
-          },
           "loc": {
+            "description": "Ścieżka do błędnej wartości, np. `[\"query\", \"identitySource\"]` albo `[\"body\", \"username\"]`",
             "items": {
               "anyOf": [
                 {
@@ -270,15 +1326,17 @@
                 }
               ]
             },
-            "title": "Location",
+            "title": "Loc",
             "type": "array"
           },
           "msg": {
-            "title": "Message",
+            "description": "Komunikat walidatora (po angielsku)",
+            "title": "Msg",
             "type": "string"
           },
           "type": {
-            "title": "Error Type",
+            "description": "Rodzaj błędu walidatora, np. `missing`, `string_too_short`",
+            "title": "Type",
             "type": "string"
           }
         },
@@ -287,7 +1345,40 @@
           "msg",
           "type"
         ],
-        "title": "ValidationError",
+        "title": "ValidationErrorItem",
+        "type": "object"
+      },
+      "ValidationResult": {
+        "description": "Wynik `POST /forms/validate`.",
+        "properties": {
+          "errors": {
+            "description": "Naruszenia JSON Schema i reguł R01-R16; formularz z błędami nie zaimportuje się do Generatora",
+            "items": {
+              "$ref": "#/components/schemas/Issue"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "valid": {
+            "description": "`true`, gdy nie ma żadnego błędu (ostrzeżenia nie blokują)",
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "warnings": {
+            "description": "Ostrzeżenia `Wnn_*`: formularz jest poprawny, ale warto go przejrzeć",
+            "items": {
+              "$ref": "#/components/schemas/ConversionWarning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "valid",
+          "errors",
+          "warnings"
+        ],
+        "title": "ValidationResult",
         "type": "object"
       }
     },
@@ -304,6 +1395,8 @@
     }
   },
   "info": {
+    "description": "\nKonwersja formularzy papierowych (PDF, DOC, DOCX, ODS, XLSX, JPG, PNG) na konfigurację\nformularza w formacie importu Generatora Formularzy COI.\n\n## Typowy przebieg\n\n1. `POST /api/v1/auth/token` - login i hasło → token JWT (przycisk **Authorize** powyżej\n   robi to samo).\n2. `POST /api/v1/forms/convert?report=true` - jeden plik → `{form, report}`.\n3. Opcjonalnie popraw formularz i sprawdź go przez `POST /api/v1/forms/validate`.\n\n## Uwierzytelnianie\n\nEndpointy z tagów `forms` i `catalog` wymagają nagłówka `Authorization: Bearer <token>`.\nToken wydaje `POST /api/v1/auth/token` (OAuth2 password flow) albo zewnętrzny dostawca\ntożsamości (RS256) - wtedy endpointów `/auth` nie ma. `health` i `auth` są publiczne.\n\n## Identyfikator żądania\n\nKażda odpowiedź ma nagłówek `X-Request-ID` z identyfikatorem nadanym przez serwer;\nw błędach ta sama wartość jest w polu `request_id`. Klient może wysłać własny UUID w tym\nnagłówku - serwer zapisze go w logach obok swojego, ale go nie przejmie.\n\n## Limity\n\n- Rozmiar pliku i ciała żądania: `MAX_FILE_SIZE_MB` (413 `FILE_TOO_LARGE`).\n- Czas żądania: `REQUEST_TIMEOUT_S` (504 `PROCESSING_TIMEOUT`).\n- Równoległe konwersje: `MAX_CONCURRENT_JOBS`; po przekroczeniu czasu oczekiwania\n  503 `SERVER_BUSY` z nagłówkiem `Retry-After`.\n\n## Błędy\n\nWszystkie błędy mają typ `application/problem+json` (RFC 9457) i schemat `ProblemDetail`.\nO rodzaju błędu decyduje pole `code` (stałe, do obsługi w kodzie klienta); `title` to\nkrótki opis po polsku, a `detail` - opcjonalne szczegóły konkretnego przypadku. `type`\nto `https://coi-cf/errors/<code>`. Błędy walidacji (`VALIDATION_ERROR`) mają dodatkowo\nlistę `errors[]` z polami `loc`, `msg`, `type`.\n\nPrzykład:\n\n```json\n{\n  \"type\": \"https://coi-cf/errors/FILE_TOO_LARGE\",\n  \"title\": \"Plik jest zbyt duży\",\n  \"status\": 413,\n  \"code\": \"FILE_TOO_LARGE\",\n  \"detail\": \"Maksymalny rozmiar pliku to 20 MB\",\n  \"instance\": \"/api/v1/forms/convert\",\n  \"request_id\": \"0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10\"\n}\n```\n\n### Wszystkie kody błędów\n\n| Kod (`code`) | HTTP | Tytuł (`title`) | Kiedy występuje |\n|---|---|---|---|\n| `NOT_AUTHENTICATED` | 401 | Wymagane uwierzytelnienie | Brak nagłówka `Authorization: Bearer <token>`. |\n| `INVALID_TOKEN` | 401 | Nieprawidłowy lub wygasły token | Token jest uszkodzony, wygasł, ma zły podpis, wydawcę albo odbiorcę, albo brakuje w nim wymaganych claimów. |\n| `INVALID_CREDENTIALS` | 401 | Nieprawidłowy login lub hasło | Login lub hasło nie pasują do konta technicznego ani do żadnego zarejestrowanego konta. |\n| `FORBIDDEN` | 403 | Brak uprawnień | Token jest poprawny, ale nie ma roli wymaganej przez konfigurację (`JWT_REQUIRED_ROLE`). |\n| `USERNAME_TAKEN` | 409 | Ten login jest już zajęty | Konto o tym loginie (bez rozróżniania wielkości liter) już istnieje albo login jest zarezerwowany dla konta technicznego. |\n| `REGISTRATION_DISABLED` | 403 | Rejestracja jest wyłączona | Rejestracja kont jest wyłączona w konfiguracji serwera. |\n| `MALFORMED_REQUEST` | 400 | Niepoprawne żądanie multipart | Ciało nie jest poprawnym `multipart/form-data`: brak lub zły `Content-Type`, brak granicy, uszkodzone nagłówki albo struktura części. |\n| `FILE_MISSING` | 400 | Brak pliku w żądaniu | W żądaniu nie ma pliku: brak części `file`, plik wysłany w polu o innej nazwie albo pusta nazwa pliku. |\n| `TOO_MANY_FILES` | 400 | Przesłano więcej niż jeden plik | Przesłano więcej niż jeden plik; endpoint przyjmuje dokładnie jeden. |\n| `FILENAME_TOO_LONG` | 400 | Zbyt długa nazwa pliku | Nazwa pliku przekracza dopuszczalną długość. |\n| `FILENAME_FORBIDDEN_CHARS` | 400 | Niedozwolone znaki w nazwie pliku | Nazwa pliku zawiera ścieżkę, znaki sterujące albo inne niedozwolone znaki. |\n| `FILE_TOO_LARGE` | 413 | Plik jest zbyt duży | Plik (albo całe ciało żądania) przekracza `MAX_FILE_SIZE_MB`. |\n| `FILE_EMPTY` | 400 | Plik jest pusty | Przesłany plik ma 0 bajtów. |\n| `UNSUPPORTED_EXTENSION` | 415 | Nieobsługiwany format pliku | Rozszerzenie spoza listy pdf, doc, docx, ods, xlsx, jpg, jpeg, png; także DOC/ODS, gdy w obrazie nie ma LibreOffice. |\n| `MIME_MISMATCH` | 415 | Zawartość pliku nie odpowiada rozszerzeniu | Rzeczywista zawartość pliku (sygnatura) nie odpowiada rozszerzeniu, np. plik .pdf, który jest obrazem PNG. |\n| `ARCHIVE_TOO_LARGE` | 422 | Plik po rozpakowaniu jest zbyt duży | Dokument OOXML/ODF po rozpakowaniu przekracza limit (ochrona przed zip bombą). |\n| `DOCUMENT_TOO_COMPLEX` | 422 | Dokument jest zbyt złożony | Za dużo stron, arkuszy, komórek albo pikseli obrazu jak na limity przetwarzania. |\n| `DOCUMENT_UNREADABLE` | 422 | Nie można odczytać dokumentu | Pliku nie da się otworzyć ani odczytać: uszkodzony, obcięty albo w nieobsługiwanym wariancie formatu. |\n| `DOCUMENT_PASSWORD_REQUIRED` | 422 | Dokument jest zabezpieczony hasłem | Dokument jest zaszyfrowany hasłem. Wyślij go ponownie z polem `password`. |\n| `DOCUMENT_PASSWORD_INVALID` | 422 | Niepoprawne hasło do dokumentu | Podane `password` nie otwiera dokumentu. |\n| `LLM_UNAVAILABLE` | 503 | Model AI jest niedostępny | Serwer modelu (Ollama) nie odpowiada albo nie ma pobranego modelu `LLM_MODEL`. Konwersja wtedy działa dalej regułami (ostrzeżenie W01), więc ten kod zwraca tylko `/health/ready`. |\n| `PROCESSING_TIMEOUT` | 504 | Przekroczono czas przetwarzania | Odbiór, walidacja i konwersja pliku nie zmieściły się w `REQUEST_TIMEOUT_S`. |\n| `SERVER_BUSY` | 503 | Serwer jest zajęty, spróbuj ponownie za chwilę | Wszystkie miejsca w kolejce (`MAX_CONCURRENT_JOBS`) są zajęte dłużej niż limit czasu żądania. Ponów po czasie z nagłówka `Retry-After`. |\n| `SERVICE_UNAVAILABLE` | 503 | Brak wymaganych komponentów serwera | W obrazie brakuje libmagic albo Tesseracta; bez nich żadna konwersja się nie uda. |\n| `VALIDATION_ERROR` | 422 | Niepoprawne dane żądania | Parametry lub ciało żądania nie spełniają schematu; szczegóły w `errors[]` (`loc`, `msg`, `type`). Także nieznany parametr `model`. |\n| `NOT_FOUND` | 404 | Nie znaleziono zasobu | Nie ma takiej ścieżki. |\n| `METHOD_NOT_ALLOWED` | 405 | Metoda niedozwolona | Ścieżka istnieje, ale nie obsługuje tej metody HTTP. |\n| `HTTP_ERROR` | 400 | Błąd żądania | Inny błąd protokołu HTTP zgłoszony przez serwer; `title` to standardowa fraza statusu. |\n| `INTERNAL_ERROR` | 500 | Wewnętrzny błąd serwera | Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach. |\n\nKażdy endpoint może dodatkowo zwrócić `404 NOT_FOUND`, `405 METHOD_NOT_ALLOWED`\ni `500 INTERNAL_ERROR`.\n",
+    "summary": "Konwersja dokumentów na formularze Generatora Formularzy COI",
     "title": "COI - Cyfryzacja formularzy",
     "version": "0.1.0"
   },
@@ -311,6 +1404,7 @@
   "paths": {
     "/api/v1/auth/options": {
       "get": {
+        "description": "Mówi ekranowi logowania, czy pokazać rejestrację.",
         "operationId": "auth_options_api_v1_auth_options_get",
         "responses": {
           "200": {
@@ -322,9 +1416,41 @@
               }
             },
             "description": "Successful Response"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "Auth Options",
+        "summary": "Opcje logowania",
         "tags": [
           "auth"
         ]
@@ -332,6 +1458,7 @@
     },
     "/api/v1/auth/register": {
       "post": {
+        "description": "Zakłada konto i od razu zwraca token, jak po zalogowaniu.",
         "operationId": "register_api_v1_auth_register_post",
         "requestBody": {
           "content": {
@@ -356,36 +1483,144 @@
           },
           "403": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "REGISTRATION_DISABLED": {
+                    "summary": "Rejestracja jest wyłączona",
+                    "value": {
+                      "code": "REGISTRATION_DISABLED",
+                      "instance": "/api/v1/auth/register",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 403,
+                      "title": "Rejestracja jest wyłączona",
+                      "type": "https://coi-cf/errors/REGISTRATION_DISABLED"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Rejestracja jest wyłączona"
+            "description": "- `REGISTRATION_DISABLED` - Rejestracja kont jest wyłączona w konfiguracji serwera.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "409": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "USERNAME_TAKEN": {
+                    "summary": "Ten login jest już zajęty",
+                    "value": {
+                      "code": "USERNAME_TAKEN",
+                      "instance": "/api/v1/auth/register",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 409,
+                      "title": "Ten login jest już zajęty",
+                      "type": "https://coi-cf/errors/USERNAME_TAKEN"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Login jest już zajęty"
+            "description": "- `USERNAME_TAKEN` - Konto o tym loginie (bez rozróżniania wielkości liter) już istnieje albo login jest zarezerwowany dla konta technicznego.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "VALIDATION_ERROR": {
+                    "summary": "Niepoprawne dane żądania",
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "errors": [
+                        {
+                          "loc": [
+                            "query",
+                            "identitySource"
+                          ],
+                          "msg": "Input should be 'PESEL' or 'MLPZ'",
+                          "type": "literal_error"
+                        }
+                      ],
+                      "instance": "/api/v1/auth/register",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Niepoprawne dane żądania",
+                      "type": "https://coi-cf/errors/VALIDATION_ERROR"
+                    }
+                  }
+                },
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Validation Error"
+            "description": "- `VALIDATION_ERROR` - Parametry lub ciało żądania nie spełniają schematu; szczegóły w `errors[]` (`loc`, `msg`, `type`). Także nieznany parametr `model`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "Register",
+        "summary": "Rejestracja konta",
         "tags": [
           "auth"
         ]
@@ -393,6 +1628,7 @@
     },
     "/api/v1/auth/token": {
       "post": {
+        "description": "OAuth2 password flow: `application/x-www-form-urlencoded` z polami `username`\ni `password`. Działa dla konta technicznego (`API_USER`) i kont zarejestrowanych.\nOdpowiedź ma `Cache-Control: no-store`.",
         "operationId": "issue_token_api_v1_auth_token_post",
         "requestBody": {
           "content": {
@@ -417,26 +1653,112 @@
           },
           "401": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_CREDENTIALS": {
+                    "summary": "Nieprawidłowy login lub hasło",
+                    "value": {
+                      "code": "INVALID_CREDENTIALS",
+                      "instance": "/api/v1/auth/token",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Nieprawidłowy login lub hasło",
+                      "type": "https://coi-cf/errors/INVALID_CREDENTIALS"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Nieprawidłowy login lub hasło"
+            "description": "- `INVALID_CREDENTIALS` - Login lub hasło nie pasują do konta technicznego ani do żadnego zarejestrowanego konta.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "VALIDATION_ERROR": {
+                    "summary": "Niepoprawne dane żądania",
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "errors": [
+                        {
+                          "loc": [
+                            "query",
+                            "identitySource"
+                          ],
+                          "msg": "Input should be 'PESEL' or 'MLPZ'",
+                          "type": "literal_error"
+                        }
+                      ],
+                      "instance": "/api/v1/auth/token",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Niepoprawne dane żądania",
+                      "type": "https://coi-cf/errors/VALIDATION_ERROR"
+                    }
+                  }
+                },
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Validation Error"
+            "description": "- `VALIDATION_ERROR` - Parametry lub ciało żądania nie spełniają schematu; szczegóły w `errors[]` (`loc`, `msg`, `type`). Także nieznany parametr `model`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "Issue Token",
+        "summary": "Logowanie (wydanie tokenu)",
         "tags": [
           "auth"
         ]
@@ -451,36 +1773,124 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "additionalProperties": true,
-                    "type": "object"
-                  },
-                  "title": "Response List Dictionaries Api V1 Dictionaries Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/DictionaryCatalog"
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Lista słowników"
           },
           "401": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_TOKEN": {
+                    "summary": "Nieprawidłowy lub wygasły token",
+                    "value": {
+                      "code": "INVALID_TOKEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Nieprawidłowy lub wygasły token",
+                      "type": "https://coi-cf/errors/INVALID_TOKEN"
+                    }
+                  },
+                  "NOT_AUTHENTICATED": {
+                    "summary": "Wymagane uwierzytelnienie",
+                    "value": {
+                      "code": "NOT_AUTHENTICATED",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Wymagane uwierzytelnienie",
+                      "type": "https://coi-cf/errors/NOT_AUTHENTICATED"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak lub nieprawidłowy token"
+            "description": "- `NOT_AUTHENTICATED` - Brak nagłówka `Authorization: Bearer <token>`.\n- `INVALID_TOKEN` - Token jest uszkodzony, wygasł, ma zły podpis, wydawcę albo odbiorcę, albo brakuje w nim wymaganych claimów.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "`Bearer error=\"invalid_token\"`",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "403": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "FORBIDDEN": {
+                    "summary": "Brak uprawnień",
+                    "value": {
+                      "code": "FORBIDDEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 403,
+                      "title": "Brak uprawnień",
+                      "type": "https://coi-cf/errors/FORBIDDEN"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Token bez wymaganej roli"
+            "description": "- `FORBIDDEN` - Token jest poprawny, ale nie ma roli wymaganej przez konfigurację (`JWT_REQUIRED_ROLE`).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -488,7 +1898,7 @@
             "OAuth2PasswordBearer": []
           }
         ],
-        "summary": "List Dictionaries",
+        "summary": "Słowniki",
         "tags": [
           "catalog"
         ]
@@ -514,40 +1924,167 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/TerytTree"
+                }
               }
             },
-            "description": "Pełne drzewo TERYT"
+            "description": "Pełne drzewo TERYT (województwo → powiat → gmina → miejscowość). Przy `Accept-Encoding: gzip` wysyłane skompresowane; `Cache-Control: private, max-age=86400`."
           },
           "401": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_TOKEN": {
+                    "summary": "Nieprawidłowy lub wygasły token",
+                    "value": {
+                      "code": "INVALID_TOKEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Nieprawidłowy lub wygasły token",
+                      "type": "https://coi-cf/errors/INVALID_TOKEN"
+                    }
+                  },
+                  "NOT_AUTHENTICATED": {
+                    "summary": "Wymagane uwierzytelnienie",
+                    "value": {
+                      "code": "NOT_AUTHENTICATED",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Wymagane uwierzytelnienie",
+                      "type": "https://coi-cf/errors/NOT_AUTHENTICATED"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak lub nieprawidłowy token"
+            "description": "- `NOT_AUTHENTICATED` - Brak nagłówka `Authorization: Bearer <token>`.\n- `INVALID_TOKEN` - Token jest uszkodzony, wygasł, ma zły podpis, wydawcę albo odbiorcę, albo brakuje w nim wymaganych claimów.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "`Bearer error=\"invalid_token\"`",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "403": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "FORBIDDEN": {
+                    "summary": "Brak uprawnień",
+                    "value": {
+                      "code": "FORBIDDEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 403,
+                      "title": "Brak uprawnień",
+                      "type": "https://coi-cf/errors/FORBIDDEN"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Token bez wymaganej roli"
+            "description": "- `FORBIDDEN` - Token jest poprawny, ale nie ma roli wymaganej przez konfigurację (`JWT_REQUIRED_ROLE`).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "VALIDATION_ERROR": {
+                    "summary": "Niepoprawne dane żądania",
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "errors": [
+                        {
+                          "loc": [
+                            "query",
+                            "identitySource"
+                          ],
+                          "msg": "Input should be 'PESEL' or 'MLPZ'",
+                          "type": "literal_error"
+                        }
+                      ],
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Niepoprawne dane żądania",
+                      "type": "https://coi-cf/errors/VALIDATION_ERROR"
+                    }
+                  }
+                },
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Validation Error"
+            "description": "- `VALIDATION_ERROR` - Parametry lub ciało żądania nie spełniają schematu; szczegóły w `errors[]` (`loc`, `msg`, `type`). Także nieznany parametr `model`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -555,7 +2092,7 @@
             "OAuth2PasswordBearer": []
           }
         ],
-        "summary": "Teryt Tree",
+        "summary": "Drzewo TERYT",
         "tags": [
           "catalog"
         ]
@@ -563,7 +2100,7 @@
     },
     "/api/v1/forms/convert": {
       "post": {
-        "description": "Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).",
+        "description": "Przyjmuje dokładnie jeden plik (`multipart/form-data`, pole `file`) i zwraca\nkonfigurację formularza w formacie importu Generatora Formularzy COI.\n\nObsługiwane formaty: PDF (warstwa tekstowa albo skan z OCR), DOC, DOCX, ODS, XLSX,\nJPG, JPEG, PNG. DOC i ODS wymagają LibreOffice w obrazie (bez niego 415).\n\nPrzebieg: walidacja pliku → odczyt treści → analiza modelem LLM (przy jego awarii\nreguły, ostrzeżenie `W01_LLM_FALLBACK`) → budowa formularza → weryfikacja reguł\nz autonaprawą. Odpowiedź 200 zawsze zawiera formularz, który przechodzi weryfikację.\n\nDokument zaszyfrowany hasłem daje 422 `DOCUMENT_PASSWORD_REQUIRED`; wyślij go\nponownie z polem `password`. Konwersja trwa zwykle od kilku sekund do kilku minut\n(limit `REQUEST_TIMEOUT_S`).",
         "operationId": "convert_api_v1_forms_convert_post",
         "parameters": [
           {
@@ -648,15 +2185,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "type": "object"
+                  "$ref": "#/components/schemas/ConvertResponse"
                 }
               }
             },
-            "description": "Konfiguracja formularza w formacie importu (spec §7) albo, przy `report=true`, obiekt `{form, report}`. Nagłówek `X-Conversion-Warnings` podaje liczbę ostrzeżeń.",
+            "description": "Domyślnie sama konfiguracja formularza w formacie importu (spec §7); przy `report=true` obiekt `{form, report}` (`ConvertWithReport`).",
             "headers": {
               "X-Conversion-Warnings": {
-                "description": "Liczba ostrzeżeń",
+                "description": "Liczba ostrzeżeń konwersji (jak `report.warnings`)",
                 "schema": {
                   "type": "integer"
                 }
@@ -666,82 +2202,451 @@
           "400": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "FILENAME_FORBIDDEN_CHARS": {
+                    "summary": "Niedozwolone znaki w nazwie pliku",
+                    "value": {
+                      "code": "FILENAME_FORBIDDEN_CHARS",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 400,
+                      "title": "Niedozwolone znaki w nazwie pliku",
+                      "type": "https://coi-cf/errors/FILENAME_FORBIDDEN_CHARS"
+                    }
+                  },
+                  "FILENAME_TOO_LONG": {
+                    "summary": "Zbyt długa nazwa pliku",
+                    "value": {
+                      "code": "FILENAME_TOO_LONG",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 400,
+                      "title": "Zbyt długa nazwa pliku",
+                      "type": "https://coi-cf/errors/FILENAME_TOO_LONG"
+                    }
+                  },
+                  "FILE_EMPTY": {
+                    "summary": "Plik jest pusty",
+                    "value": {
+                      "code": "FILE_EMPTY",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 400,
+                      "title": "Plik jest pusty",
+                      "type": "https://coi-cf/errors/FILE_EMPTY"
+                    }
+                  },
+                  "FILE_MISSING": {
+                    "summary": "Brak pliku w żądaniu",
+                    "value": {
+                      "code": "FILE_MISSING",
+                      "detail": "Plik musi być przesłany w polu 'file', otrzymano 'files'",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 400,
+                      "title": "Brak pliku w żądaniu",
+                      "type": "https://coi-cf/errors/FILE_MISSING"
+                    }
+                  },
+                  "MALFORMED_REQUEST": {
+                    "summary": "Niepoprawne żądanie multipart",
+                    "value": {
+                      "code": "MALFORMED_REQUEST",
+                      "detail": "Brak nagłówka Content-Type",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 400,
+                      "title": "Niepoprawne żądanie multipart",
+                      "type": "https://coi-cf/errors/MALFORMED_REQUEST"
+                    }
+                  },
+                  "TOO_MANY_FILES": {
+                    "summary": "Przesłano więcej niż jeden plik",
+                    "value": {
+                      "code": "TOO_MANY_FILES",
+                      "detail": "Żądanie zawiera więcej niż jeden plik",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 400,
+                      "title": "Przesłano więcej niż jeden plik",
+                      "type": "https://coi-cf/errors/TOO_MANY_FILES"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak pliku, kilka plików albo niedozwolona nazwa pliku"
+            "description": "- `MALFORMED_REQUEST` - Ciało nie jest poprawnym `multipart/form-data`: brak lub zły `Content-Type`, brak granicy, uszkodzone nagłówki albo struktura części.\n- `FILE_MISSING` - W żądaniu nie ma pliku: brak części `file`, plik wysłany w polu o innej nazwie albo pusta nazwa pliku.\n- `TOO_MANY_FILES` - Przesłano więcej niż jeden plik; endpoint przyjmuje dokładnie jeden.\n- `FILENAME_TOO_LONG` - Nazwa pliku przekracza dopuszczalną długość.\n- `FILENAME_FORBIDDEN_CHARS` - Nazwa pliku zawiera ścieżkę, znaki sterujące albo inne niedozwolone znaki.\n- `FILE_EMPTY` - Przesłany plik ma 0 bajtów.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "401": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_TOKEN": {
+                    "summary": "Nieprawidłowy lub wygasły token",
+                    "value": {
+                      "code": "INVALID_TOKEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Nieprawidłowy lub wygasły token",
+                      "type": "https://coi-cf/errors/INVALID_TOKEN"
+                    }
+                  },
+                  "NOT_AUTHENTICATED": {
+                    "summary": "Wymagane uwierzytelnienie",
+                    "value": {
+                      "code": "NOT_AUTHENTICATED",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Wymagane uwierzytelnienie",
+                      "type": "https://coi-cf/errors/NOT_AUTHENTICATED"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak lub nieprawidłowy token"
+            "description": "- `NOT_AUTHENTICATED` - Brak nagłówka `Authorization: Bearer <token>`.\n- `INVALID_TOKEN` - Token jest uszkodzony, wygasł, ma zły podpis, wydawcę albo odbiorcę, albo brakuje w nim wymaganych claimów.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "`Bearer error=\"invalid_token\"`",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "403": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "FORBIDDEN": {
+                    "summary": "Brak uprawnień",
+                    "value": {
+                      "code": "FORBIDDEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 403,
+                      "title": "Brak uprawnień",
+                      "type": "https://coi-cf/errors/FORBIDDEN"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Token bez wymaganej roli"
+            "description": "- `FORBIDDEN` - Token jest poprawny, ale nie ma roli wymaganej przez konfigurację (`JWT_REQUIRED_ROLE`).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "413": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "FILE_TOO_LARGE": {
+                    "summary": "Plik jest zbyt duży",
+                    "value": {
+                      "code": "FILE_TOO_LARGE",
+                      "detail": "Plik przekracza limit 20 MB",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 413,
+                      "title": "Plik jest zbyt duży",
+                      "type": "https://coi-cf/errors/FILE_TOO_LARGE"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Plik większy niż MAX_FILE_SIZE_MB"
+            "description": "- `FILE_TOO_LARGE` - Plik (albo całe ciało żądania) przekracza `MAX_FILE_SIZE_MB`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "415": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "MIME_MISMATCH": {
+                    "summary": "Zawartość pliku nie odpowiada rozszerzeniu",
+                    "value": {
+                      "code": "MIME_MISMATCH",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 415,
+                      "title": "Zawartość pliku nie odpowiada rozszerzeniu",
+                      "type": "https://coi-cf/errors/MIME_MISMATCH"
+                    }
+                  },
+                  "UNSUPPORTED_EXTENSION": {
+                    "summary": "Nieobsługiwany format pliku",
+                    "value": {
+                      "code": "UNSUPPORTED_EXTENSION",
+                      "detail": "Rozszerzenie .txt nie jest obsługiwane. Dozwolone: .pdf, .doc, .docx, .ods, .xlsx, .jpg, .jpeg, .png",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 415,
+                      "title": "Nieobsługiwany format pliku",
+                      "type": "https://coi-cf/errors/UNSUPPORTED_EXTENSION"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Nieobsługiwany format albo zawartość niezgodna z rozszerzeniem"
+            "description": "- `UNSUPPORTED_EXTENSION` - Rozszerzenie spoza listy pdf, doc, docx, ods, xlsx, jpg, jpeg, png; także DOC/ODS, gdy w obrazie nie ma LibreOffice.\n- `MIME_MISMATCH` - Rzeczywista zawartość pliku (sygnatura) nie odpowiada rozszerzeniu, np. plik .pdf, który jest obrazem PNG.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "ARCHIVE_TOO_LARGE": {
+                    "summary": "Plik po rozpakowaniu jest zbyt duży",
+                    "value": {
+                      "code": "ARCHIVE_TOO_LARGE",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Plik po rozpakowaniu jest zbyt duży",
+                      "type": "https://coi-cf/errors/ARCHIVE_TOO_LARGE"
+                    }
+                  },
+                  "DOCUMENT_PASSWORD_INVALID": {
+                    "summary": "Niepoprawne hasło do dokumentu",
+                    "value": {
+                      "code": "DOCUMENT_PASSWORD_INVALID",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Niepoprawne hasło do dokumentu",
+                      "type": "https://coi-cf/errors/DOCUMENT_PASSWORD_INVALID"
+                    }
+                  },
+                  "DOCUMENT_PASSWORD_REQUIRED": {
+                    "summary": "Dokument jest zabezpieczony hasłem",
+                    "value": {
+                      "code": "DOCUMENT_PASSWORD_REQUIRED",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Dokument jest zabezpieczony hasłem",
+                      "type": "https://coi-cf/errors/DOCUMENT_PASSWORD_REQUIRED"
+                    }
+                  },
+                  "DOCUMENT_TOO_COMPLEX": {
+                    "summary": "Dokument jest zbyt złożony",
+                    "value": {
+                      "code": "DOCUMENT_TOO_COMPLEX",
+                      "detail": "Liczba stron: 120, dopuszczalna: 50",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Dokument jest zbyt złożony",
+                      "type": "https://coi-cf/errors/DOCUMENT_TOO_COMPLEX"
+                    }
+                  },
+                  "DOCUMENT_UNREADABLE": {
+                    "summary": "Nie można odczytać dokumentu",
+                    "value": {
+                      "code": "DOCUMENT_UNREADABLE",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Nie można odczytać dokumentu",
+                      "type": "https://coi-cf/errors/DOCUMENT_UNREADABLE"
+                    }
+                  },
+                  "VALIDATION_ERROR": {
+                    "summary": "Niepoprawne dane żądania",
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "errors": [
+                        {
+                          "loc": [
+                            "query",
+                            "identitySource"
+                          ],
+                          "msg": "Input should be 'PESEL' or 'MLPZ'",
+                          "type": "literal_error"
+                        }
+                      ],
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Niepoprawne dane żądania",
+                      "type": "https://coi-cf/errors/VALIDATION_ERROR"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Dokument uszkodzony, zbyt złożony albo zabezpieczony hasłem; niepoprawne `identitySource`; model spoza LLM_MODELS"
+            "description": "- `ARCHIVE_TOO_LARGE` - Dokument OOXML/ODF po rozpakowaniu przekracza limit (ochrona przed zip bombą).\n- `DOCUMENT_TOO_COMPLEX` - Za dużo stron, arkuszy, komórek albo pikseli obrazu jak na limity przetwarzania.\n- `DOCUMENT_UNREADABLE` - Pliku nie da się otworzyć ani odczytać: uszkodzony, obcięty albo w nieobsługiwanym wariancie formatu.\n- `DOCUMENT_PASSWORD_REQUIRED` - Dokument jest zaszyfrowany hasłem. Wyślij go ponownie z polem `password`.\n- `DOCUMENT_PASSWORD_INVALID` - Podane `password` nie otwiera dokumentu.\n- `VALIDATION_ERROR` - Parametry lub ciało żądania nie spełniają schematu; szczegóły w `errors[]` (`loc`, `msg`, `type`). Także nieznany parametr `model`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "503": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "SERVER_BUSY": {
+                    "summary": "Serwer jest zajęty, spróbuj ponownie za chwilę",
+                    "value": {
+                      "code": "SERVER_BUSY",
+                      "detail": "Serwer przetwarza inne pliki - spróbuj ponownie",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 503,
+                      "title": "Serwer jest zajęty, spróbuj ponownie za chwilę",
+                      "type": "https://coi-cf/errors/SERVER_BUSY"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "SERVER_BUSY: serwer przetwarza inne pliki (nagłówek Retry-After)"
+            "description": "- `SERVER_BUSY` - Wszystkie miejsca w kolejce (`MAX_CONCURRENT_JOBS`) są zajęte dłużej niż limit czasu żądania. Ponów po czasie z nagłówka `Retry-After`.",
+            "headers": {
+              "Retry-After": {
+                "description": "Po ilu sekundach ponowić",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "504": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "PROCESSING_TIMEOUT": {
+                    "summary": "Przekroczono czas przetwarzania",
+                    "value": {
+                      "code": "PROCESSING_TIMEOUT",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 504,
+                      "title": "Przekroczono czas przetwarzania",
+                      "type": "https://coi-cf/errors/PROCESSING_TIMEOUT"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Przekroczono REQUEST_TIMEOUT_S"
+            "description": "- `PROCESSING_TIMEOUT` - Odbiór, walidacja i konwersja pliku nie zmieściły się w `REQUEST_TIMEOUT_S`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -749,7 +2654,7 @@
             "OAuth2PasswordBearer": []
           }
         ],
-        "summary": "Convert",
+        "summary": "Konwersja dokumentu na formularz",
         "tags": [
           "forms"
         ]
@@ -757,7 +2662,7 @@
     },
     "/api/v1/forms/validate": {
       "post": {
-        "description": "Walidacja dowolnego JSON-a formularza → `{valid, errors[], warnings[]}`.",
+        "description": "Sprawdza dowolny JSON formularza tymi samymi regułami co konwersja, ale niczego\nnie poprawia. Przydatne po ręcznej edycji formularza, przed importem do Generatora.\n\nCiało musi być obiektem JSON (inaczej 422 `VALIDATION_ERROR`).",
         "operationId": "validate_api_v1_forms_validate_post",
         "requestBody": {
           "content": {
@@ -777,53 +2682,238 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
-                  "title": "Response Validate Api V1 Forms Validate Post",
-                  "type": "object"
+                  "$ref": "#/components/schemas/ValidationResult"
                 }
               }
             },
-            "description": "Wynik weryfikacji: JSON Schema i reguły R01-R15, bez autonaprawy"
+            "description": "Wynik weryfikacji: JSON Schema i reguły R01-R16, bez autonaprawy. Formularz z błędami też daje 200 - o poprawności mówi pole `valid`."
           },
           "401": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_TOKEN": {
+                    "summary": "Nieprawidłowy lub wygasły token",
+                    "value": {
+                      "code": "INVALID_TOKEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Nieprawidłowy lub wygasły token",
+                      "type": "https://coi-cf/errors/INVALID_TOKEN"
+                    }
+                  },
+                  "NOT_AUTHENTICATED": {
+                    "summary": "Wymagane uwierzytelnienie",
+                    "value": {
+                      "code": "NOT_AUTHENTICATED",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Wymagane uwierzytelnienie",
+                      "type": "https://coi-cf/errors/NOT_AUTHENTICATED"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak lub nieprawidłowy token"
+            "description": "- `NOT_AUTHENTICATED` - Brak nagłówka `Authorization: Bearer <token>`.\n- `INVALID_TOKEN` - Token jest uszkodzony, wygasł, ma zły podpis, wydawcę albo odbiorcę, albo brakuje w nim wymaganych claimów.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "`Bearer error=\"invalid_token\"`",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "403": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "FORBIDDEN": {
+                    "summary": "Brak uprawnień",
+                    "value": {
+                      "code": "FORBIDDEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 403,
+                      "title": "Brak uprawnień",
+                      "type": "https://coi-cf/errors/FORBIDDEN"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Token bez wymaganej roli"
+            "description": "- `FORBIDDEN` - Token jest poprawny, ale nie ma roli wymaganej przez konfigurację (`JWT_REQUIRED_ROLE`).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "413": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "FILE_TOO_LARGE": {
+                    "summary": "Plik jest zbyt duży",
+                    "value": {
+                      "code": "FILE_TOO_LARGE",
+                      "detail": "Plik przekracza limit 20 MB",
+                      "instance": "/api/v1/forms/validate",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 413,
+                      "title": "Plik jest zbyt duży",
+                      "type": "https://coi-cf/errors/FILE_TOO_LARGE"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `FILE_TOO_LARGE` - Plik (albo całe ciało żądania) przekracza `MAX_FILE_SIZE_MB`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "VALIDATION_ERROR": {
+                    "summary": "Niepoprawne dane żądania",
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "errors": [
+                        {
+                          "loc": [
+                            "query",
+                            "identitySource"
+                          ],
+                          "msg": "Input should be 'PESEL' or 'MLPZ'",
+                          "type": "literal_error"
+                        }
+                      ],
+                      "instance": "/api/v1/forms/validate",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 422,
+                      "title": "Niepoprawne dane żądania",
+                      "type": "https://coi-cf/errors/VALIDATION_ERROR"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Ciało nie jest obiektem JSON"
+            "description": "- `VALIDATION_ERROR` - Parametry lub ciało żądania nie spełniają schematu; szczegóły w `errors[]` (`loc`, `msg`, `type`). Także nieznany parametr `model`.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "503": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "SERVER_BUSY": {
+                    "summary": "Serwer jest zajęty, spróbuj ponownie za chwilę",
+                    "value": {
+                      "code": "SERVER_BUSY",
+                      "detail": "Serwer przetwarza inne pliki - spróbuj ponownie",
+                      "instance": "/api/v1/forms/validate",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 503,
+                      "title": "Serwer jest zajęty, spróbuj ponownie za chwilę",
+                      "type": "https://coi-cf/errors/SERVER_BUSY"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "SERVER_BUSY: serwer przetwarza inne żądania (nagłówek Retry-After)"
+            "description": "- `SERVER_BUSY` - Wszystkie miejsca w kolejce (`MAX_CONCURRENT_JOBS`) są zajęte dłużej niż limit czasu żądania. Ponów po czasie z nagłówka `Retry-After`.",
+            "headers": {
+              "Retry-After": {
+                "description": "Po ilu sekundach ponowić",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -831,7 +2921,7 @@
             "OAuth2PasswordBearer": []
           }
         ],
-        "summary": "Validate",
+        "summary": "Weryfikacja JSON-a formularza",
         "tags": [
           "forms"
         ]
@@ -839,6 +2929,7 @@
     },
     "/api/v1/health/live": {
       "get": {
+        "description": "Proces odpowiada. Nie sprawdza zależności.",
         "operationId": "live_api_v1_health_live_get",
         "responses": {
           "200": {
@@ -850,9 +2941,41 @@
               }
             },
             "description": "Successful Response"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "Live",
+        "summary": "Liveness",
         "tags": [
           "health"
         ]
@@ -873,18 +2996,84 @@
             },
             "description": "Successful Response"
           },
-          "503": {
+          "500": {
             "content": {
               "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "LLM_UNAVAILABLE: serwer modelu nieosiągalny albo brak modelu; SERVICE_UNAVAILABLE: brak libmagic albo Tesseracta w obrazie"
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "LLM_UNAVAILABLE": {
+                    "summary": "Model AI jest niedostępny",
+                    "value": {
+                      "code": "LLM_UNAVAILABLE",
+                      "detail": "brak modelu qwen3:8b",
+                      "instance": "/api/v1/health/ready",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 503,
+                      "title": "Model AI jest niedostępny",
+                      "type": "https://coi-cf/errors/LLM_UNAVAILABLE"
+                    }
+                  },
+                  "SERVICE_UNAVAILABLE": {
+                    "summary": "Brak wymaganych komponentów serwera",
+                    "value": {
+                      "code": "SERVICE_UNAVAILABLE",
+                      "instance": "/api/v1/health/ready",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 503,
+                      "title": "Brak wymaganych komponentów serwera",
+                      "type": "https://coi-cf/errors/SERVICE_UNAVAILABLE"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `LLM_UNAVAILABLE` - Serwer modelu (Ollama) nie odpowiada albo nie ma pobranego modelu `LLM_MODEL`. Konwersja wtedy działa dalej regułami (ostrzeżenie W01), więc ten kod zwraca tylko `/health/ready`.\n- `SERVICE_UNAVAILABLE` - W obrazie brakuje libmagic albo Tesseracta; bez nich żadna konwersja się nie uda.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "Ready",
+        "summary": "Readiness",
         "tags": [
           "health"
         ]
@@ -899,36 +3088,124 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "additionalProperties": true,
-                    "type": "object"
-                  },
-                  "title": "Response List Initial Data Sources Api V1 Initial Data Sources Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/InitialDataSources"
                 }
               }
             },
-            "description": "Successful Response"
+            "description": "Źródła z atrybutami"
           },
           "401": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "INVALID_TOKEN": {
+                    "summary": "Nieprawidłowy lub wygasły token",
+                    "value": {
+                      "code": "INVALID_TOKEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Nieprawidłowy lub wygasły token",
+                      "type": "https://coi-cf/errors/INVALID_TOKEN"
+                    }
+                  },
+                  "NOT_AUTHENTICATED": {
+                    "summary": "Wymagane uwierzytelnienie",
+                    "value": {
+                      "code": "NOT_AUTHENTICATED",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 401,
+                      "title": "Wymagane uwierzytelnienie",
+                      "type": "https://coi-cf/errors/NOT_AUTHENTICATED"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Brak lub nieprawidłowy token"
+            "description": "- `NOT_AUTHENTICATED` - Brak nagłówka `Authorization: Bearer <token>`.\n- `INVALID_TOKEN` - Token jest uszkodzony, wygasł, ma zły podpis, wydawcę albo odbiorcę, albo brakuje w nim wymaganych claimów.",
+            "headers": {
+              "WWW-Authenticate": {
+                "description": "`Bearer error=\"invalid_token\"`",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           },
           "403": {
             "content": {
-              "application/json": {
+              "application/problem+json": {
+                "examples": {
+                  "FORBIDDEN": {
+                    "summary": "Brak uprawnień",
+                    "value": {
+                      "code": "FORBIDDEN",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 403,
+                      "title": "Brak uprawnień",
+                      "type": "https://coi-cf/errors/FORBIDDEN"
+                    }
+                  }
+                },
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetail"
                 }
               }
             },
-            "description": "Token bez wymaganej roli"
+            "description": "- `FORBIDDEN` - Token jest poprawny, ale nie ma roli wymaganej przez konfigurację (`JWT_REQUIRED_ROLE`).",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Wewnętrzny błąd serwera",
+                    "value": {
+                      "code": "INTERNAL_ERROR",
+                      "instance": "/api/v1/forms/convert",
+                      "request_id": "0b7c5f1e-3a43-4c8e-9f57-2d6a1c9e8b10",
+                      "status": 500,
+                      "title": "Wewnętrzny błąd serwera",
+                      "type": "https://coi-cf/errors/INTERNAL_ERROR"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "- `INTERNAL_ERROR` - Nieoczekiwany błąd serwera. Zgłaszając go, podaj `request_id` - pozwala znaleźć wpis w logach.",
+            "headers": {
+              "X-Request-ID": {
+                "description": "Identyfikator żądania nadany przez serwer (ten sam co `request_id`)",
+                "schema": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -936,11 +3213,29 @@
             "OAuth2PasswordBearer": []
           }
         ],
-        "summary": "List Initial Data Sources",
+        "summary": "Źródła danych inicjalnych",
         "tags": [
           "catalog"
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "description": "Konwersja dokumentu na formularz i weryfikacja JSON-a formularza. Wymaga tokenu.",
+      "name": "forms"
+    },
+    {
+      "description": "Katalogi używane przy budowie formularza: słowniki, drzewo TERYT, źródła danych inicjalnych. Wymaga tokenu.",
+      "name": "catalog"
+    },
+    {
+      "description": "Logowanie, rejestracja i wydawanie tokenów JWT. Dostępne tylko, gdy API samo wydaje tokeny.",
+      "name": "auth"
+    },
+    {
+      "description": "Sondy dla orkiestratora (liveness/readiness). Publiczne.",
+      "name": "health"
+    }
+  ]
 }

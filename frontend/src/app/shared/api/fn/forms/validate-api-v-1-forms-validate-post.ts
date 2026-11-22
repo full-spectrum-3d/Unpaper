@@ -7,6 +7,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { ValidationResult } from '../../models/validation-result';
 
 export interface ValidateApiV1FormsValidatePost$Params {
       body: {
@@ -14,9 +15,7 @@ export interface ValidateApiV1FormsValidatePost$Params {
 }
 }
 
-export function validateApiV1FormsValidatePost(http: HttpClient, rootUrl: string, params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
+export function validateApiV1FormsValidatePost(http: HttpClient, rootUrl: string, params: ValidateApiV1FormsValidatePost$Params, context?: HttpContext): Observable<StrictHttpResponse<ValidationResult>> {
   const rb = new RequestBuilder(rootUrl, validateApiV1FormsValidatePost.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -27,9 +26,7 @@ export function validateApiV1FormsValidatePost(http: HttpClient, rootUrl: string
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      [key: string]: any;
-      }>;
+      return r as StrictHttpResponse<ValidationResult>;
     })
   );
 }

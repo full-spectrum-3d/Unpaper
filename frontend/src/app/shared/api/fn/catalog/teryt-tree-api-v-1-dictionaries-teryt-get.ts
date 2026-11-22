@@ -7,12 +7,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { TerytTree } from '../../models/teryt-tree';
 
 export interface TerytTreeApiV1DictionariesTerytGet$Params {
   'accept-encoding'?: string;
 }
 
-export function terytTreeApiV1DictionariesTerytGet(http: HttpClient, rootUrl: string, params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+export function terytTreeApiV1DictionariesTerytGet(http: HttpClient, rootUrl: string, params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<StrictHttpResponse<TerytTree>> {
   const rb = new RequestBuilder(rootUrl, terytTreeApiV1DictionariesTerytGet.PATH, 'get');
   if (params) {
     rb.header('accept-encoding', params['accept-encoding'], {});
@@ -23,7 +24,7 @@ export function terytTreeApiV1DictionariesTerytGet(http: HttpClient, rootUrl: st
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<any>;
+      return r as StrictHttpResponse<TerytTree>;
     })
   );
 }

@@ -16,11 +16,18 @@ from app.api.v1 import auth, catalog, forms, health
 from app.core.config import Settings, load_settings
 from app.core.errors import (
     REQUEST_ID_HEADER,
-    ProblemDetail,
+    ErrorCode,
     install_error_handlers,
     request_id_middleware,
 )
 from app.core.logging import configure_logging
+from app.core.openapi import (
+    API_DESCRIPTION,
+    OPENAPI_TAGS,
+    SWAGGER_UI_PARAMETERS,
+    install_openapi,
+    problem_responses,
+)
 from app.core.security import require_auth
 from app.core.users import UserStore
 from app.pipeline.analyze import prompt_messages
@@ -72,6 +79,12 @@ def create_app(
     app = FastAPI(
         title="COI - Cyfryzacja formularzy",
         version="0.1.0",
+        summary="Konwersja dokumentów na formularze Generatora Formularzy COI",
+        description=API_DESCRIPTION,
+        openapi_tags=OPENAPI_TAGS,
+        swagger_ui_parameters=SWAGGER_UI_PARAMETERS,
+        # Każdy endpoint może skończyć się nieoczekiwanym błędem 500 w formacie problem+json.
+        responses=problem_responses(ErrorCode.INTERNAL_ERROR, instance="/api/v1/forms/convert"),
         lifespan=_lifespan,
         docs_url="/docs" if docs else None,
         redoc_url="/redoc" if docs else None,
@@ -94,6 +107,7 @@ def create_app(
     )
 
     install_error_handlers(app)
+    install_openapi(app)
     # Wewnątrz CORS: request_id i konwersja wyjątków na 500 problem+json z nagłówkami CORS.
     app.middleware("http")(request_id_middleware)
     app.add_middleware(
@@ -112,10 +126,9 @@ def create_app(
 
     for router in public_routers:
         app.include_router(router, prefix=API_PREFIX)
-    auth_responses: dict[int | str, dict[str, Any]] = {
-        401: {"model": ProblemDetail, "description": "Brak lub nieprawidłowy token"},
-        403: {"model": ProblemDetail, "description": "Token bez wymaganej roli"},
-    }
+    auth_responses: dict[int | str, dict[str, Any]] = problem_responses(
+        ErrorCode.NOT_AUTHENTICATED, ErrorCode.INVALID_TOKEN, ErrorCode.FORBIDDEN
+    )
     for router in protected_routers:
         app.include_router(
             router,
