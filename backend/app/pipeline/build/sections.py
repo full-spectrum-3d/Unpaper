@@ -53,7 +53,7 @@ def _new_uuid() -> str:
 @dataclass(frozen=True)
 class BuildOptions:
     identity_source: Literal["MLPZ", "PESEL"] = "MLPZ"
-    finish_page_style: Literal["sample", "info_section"] = "sample"
+    finish_page_style: Literal["sample", "info_section"] = "info_section"
     max_sections_per_page: int = 8
     rodo_clause_url: str | None = None
     signed: bool = True

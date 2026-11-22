@@ -319,7 +319,7 @@ sekretów JWT i konta technicznego ani z `AUTH_ENABLED=false`.
 | `OCR_DPI` | `300` | rozdzielczość renderowania skanów PDF do OCR |
 | `CONVERTER_TIMEOUT_S` | `60` | limit konwersji LibreOffice (DOC, ODS) |
 | `INITIAL_DATA_IDENTITY_SOURCE` | `MLPZ` | źródło danych „Twoje dane”: `MLPZ` albo `PESEL` |
-| `FINISH_PAGE_STYLE` | `sample` | strona końcowa jak we wzorcach (`sample`) albo `info_section` |
+| `FINISH_PAGE_STYLE` | `info_section` | strona końcowa wyłącznie z `INFO_SECTION` (wymaganie); `sample` – jak we wzorcach (`TEXT_BLOCK`, ostrzeżenie `W29`) |
 | `MAX_SECTIONS_PER_PAGE` | `8` | powyżej tej liczby sekcji przedmiot wniosku dzielony jest na kolejne strony |
 | `RODO_CLAUSE_URL` | — | adres `https://` klauzuli informacyjnej RODO (np. w BIP) linkowanej w sekcji zgód; bez niego zgoda jest zwykłym tekstem bez linku, a raport konwersji ma ostrzeżenie `W28_RODO_CLAUSE_URL_MISSING` |
 

@@ -275,7 +275,7 @@ def test_finish_preview_text(signed: bool) -> None:
 
 
 def test_finish_page_has_only_preview_and_info_section_style() -> None:
-    sample = finish_page_sections(make_draft(), BuildOptions())
+    sample = finish_page_sections(make_draft(), BuildOptions(finish_page_style="sample"))
     assert [s.tech_name for s in sample] == ["podglad_uzupelnionego_wniosku"]
     assert sample[0].fields[0].type is FieldType.TEXT_BLOCK
     options = BuildOptions(finish_page_style="info_section")

@@ -101,7 +101,7 @@ class Settings(BaseSettings):
 
     # --- Budowa formularza ---
     initial_data_identity_source: Literal["MLPZ", "PESEL"] = "MLPZ"
-    finish_page_style: Literal["sample", "info_section"] = "sample"
+    finish_page_style: Literal["sample", "info_section"] = "info_section"
     max_sections_per_page: PositiveInt = 8
     rodo_clause_url: str | None = None
 

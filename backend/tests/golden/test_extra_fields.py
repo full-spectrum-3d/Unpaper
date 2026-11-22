@@ -1,7 +1,7 @@
 """Golden: pola nadmiarowe w wyniku buildera względem wzorców (w obie strony).
 
 `test_reference_forms.py` sprawdza tylko, że pola wzorca są w wyniku. Tu porównujemy zbiory
-par (techName sekcji, techName pola; nazwy wzorca mapowane przez RENAMES), a TEXT_BLOCK
+par (techName sekcji, techName pola; nazwy wzorca mapowane przez RENAMES), a TEXT_BLOCK i INFO_SECTION
 pomijamy (teksty informacyjne bez danych).
 Pole wyniku spoza wzorca musi być na liście ALLOWED_EXTRAS z uzasadnieniem.
 """
@@ -50,7 +50,7 @@ def _pairs(form: dict[str, Any], sample: str | None = None) -> set[Pair]:
         for section in _sections(tab):
             sec = section["techName"]
             for field in _fields(section):
-                if field["type"] == "TEXT_BLOCK":
+                if field["type"] in {"TEXT_BLOCK", "INFO_SECTION"}:
                     continue
                 name = field["techName"]
                 if sample is not None:

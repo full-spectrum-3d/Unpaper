@@ -186,7 +186,14 @@ def test_field_coverage(sample: str) -> None:
     assert len(items) >= MIN_COUNTS[sample]["nodes"]
     for item in items:
         assert item.ours is not None, f"{sample} {item.key}: brak odpowiednika"
-        assert item.ours["type"] == item.ref["type"], (sample, item.key)
+        # znane odstępstwo: na stronie końcowej wymagane jest wyłącznie INFO_SECTION,
+        # a wzorce mają tam TEXT_BLOCK
+        expected = (
+            "INFO_SECTION"
+            if item.key == ("podglad_uzupelnionego_wniosku", "podglad_1")
+            else item.ref["type"]
+        )
+        assert item.ours["type"] == expected, (sample, item.key)
         if (sample, *item.key) in DICTIONARY_DEVIATIONS:
             continue
         assert not _dict_diffs(item.ours, item.ref), (sample, item.key)
