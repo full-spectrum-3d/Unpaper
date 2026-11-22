@@ -1,4 +1,6 @@
-// Hand-written from wymagania/importowanyPlikJsonSchemat.json; replace with OpenAPI types once the backend exposes them.
+// Hand-written from wymagania/OpisImportowanegoPlikuJSON.md and wymagania/importowanyPlikJsonSchemat.json
+// (their `repetingSectionGrid` is a typo; we use `repeatingSectionGrid`); replace with OpenAPI types once the
+// backend exposes them.
 
 export const KNOWN_FIELD_TYPES = [
   'SECTION',
@@ -28,7 +30,11 @@ export interface FieldState {
 }
 
 export interface ConsentSectionConfig {
-  consents: { description: string; required?: boolean }[];
+  consents: { description: string }[];
+  /** Requiredness of the consents, set once for the whole section. */
+  required?: boolean;
+  /** File names offered for download with the consents. */
+  files?: string[];
 }
 
 export interface FormField {
@@ -41,11 +47,9 @@ export interface FormField {
   options?: FieldOption[];
   validation?: string[];
   dictionaryName?: string;
-  searchEnabled?: boolean | null;
-  multiLevelTree?: boolean;
   readOnly?: boolean;
   repeatingSectionGrid?: Question[];
-  defaultValue?: string | string[];
+  defaultValue?: string;
   defaultValueType?: string;
   consentSectionConfig?: ConsentSectionConfig;
   states?: FieldState[];

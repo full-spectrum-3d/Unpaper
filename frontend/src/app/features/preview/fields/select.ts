@@ -36,7 +36,7 @@ import { FieldBase } from './field-base';
 })
 export class SelectField extends FieldBase {
   protected readonly options = computed(() => selectOptions(this.field()));
-  protected readonly searchable = computed(() => isSearchable(this.field(), this.options().length));
+  protected readonly searchable = computed(() => isSearchable(this.options().length));
   protected readonly emptyText = computed(() =>
     !this.options().length && this.field().dictionaryName
       ? `Brak pozycji w słowniku ${this.field().dictionaryName}`

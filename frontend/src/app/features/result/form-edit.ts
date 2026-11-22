@@ -160,12 +160,7 @@ export interface FieldPatch {
   options?: readonly string[];
 }
 
-const CHOICE_ONLY_KEYS = [
-  'dictionaryName',
-  'searchEnabled',
-  'multiLevelTree',
-  'selectAllEnabled',
-] as const;
+const CHOICE_ONLY_KEYS = ['dictionaryName'] as const;
 
 /** Changes label, type, requiredness or options; validators and options follow what the type allows. */
 export function updateField(def: FormDefinition, id: string, patch: FieldPatch): FormDefinition {

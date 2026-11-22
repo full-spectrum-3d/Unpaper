@@ -99,7 +99,8 @@ export function isEmptyAnswer(field: FormField, answer: unknown): boolean {
   if (field.type === 'CONSENT_SECTION') {
     const consents = field.consentSectionConfig?.consents ?? [];
     const given = Array.isArray(answer) ? answer : [];
-    return consents.some((c, i) => c.required && !given[i]);
+    const required = field.consentSectionConfig?.required === true;
+    return required && consents.some((_, i) => !given[i]);
   }
   if (field.type === 'SELECT' && isCascade(field)) return !cascadeComplete(field, answer);
   if (Array.isArray(answer)) return answer.length === 0;

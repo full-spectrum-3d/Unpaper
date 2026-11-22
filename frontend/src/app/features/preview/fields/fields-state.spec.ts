@@ -115,10 +115,8 @@ const cases: Case[] = [
       type: 'CONSENT_SECTION',
       title: undefined,
       consentSectionConfig: {
-        consents: [
-          { description: 'Zgoda 1', required: true },
-          { description: 'Zgoda 2', required: false },
-        ],
+        consents: [{ description: 'Zgoda 1' }, { description: 'Zgoda 2' }],
+        required: true,
       },
     },
     describer: (el) => q(el, 'fieldset'),

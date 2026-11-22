@@ -13,5 +13,5 @@ export const selectOptions = (field: FormField): string[] =>
     ? field.options!.map((o) => o.name)
     : (findDictionary(field.dictionaryName)?.items.map((i) => i.name) ?? []);
 
-export const isSearchable = (field: FormField, optionCount: number): boolean =>
-  field.searchEnabled === true || optionCount > 20;
+/** The import format has no search flag, so long lists get a search box. */
+export const isSearchable = (optionCount: number): boolean => optionCount > 20;

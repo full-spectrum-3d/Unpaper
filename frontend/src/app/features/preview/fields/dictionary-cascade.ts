@@ -84,7 +84,7 @@ export class DictionaryCascadeField extends FieldBase<string[]> {
   );
 
   protected searchable(count: number): boolean {
-    return isSearchable(this.field(), count);
+    return isSearchable(count);
   }
 
   /** An empty value (the clear button) truncates the path from this level down. */

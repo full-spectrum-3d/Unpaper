@@ -26,7 +26,6 @@
                                 "y": 0,
                                 "rows": 1,
                                 "cols": 3,
-                                
                                 "field": {
                                     "id": "8be2b552-660b-48d8-b157-ffc4bad0648f",
                                     "type": "TEXT_FIELD",
@@ -53,7 +52,7 @@
                     "x": 0,
                     "y": 2,
                     "rows": 3,
-                    "cols": 3, 
+                    "cols": 3,
                     "field": {
                         "id": "44d80aba-5b97-4ff3-832c-eb11eaa61fb3",
                         "type": "SECTION",
@@ -86,7 +85,9 @@
                                             "name": "Reprezentant"
                                         }
                                     ],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -103,7 +104,7 @@
                                 "x": 0,
                                 "y": 0,
                                 "rows": 1,
-                                "cols": 3,    
+                                "cols": 3,
                                 "field": {
                                     "id": "b6178265-e86c-4967-a520-8db9801c721f",
                                     "type": "RADIO",
@@ -127,7 +128,9 @@
                                             "techName": "osoby_prawnej_lub_jednostki_organizacyjnej"
                                         }
                                     ],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -145,7 +148,7 @@
                     "x": 0,
                     "y": 5,
                     "rows": 4,
-                    "cols": 3,    
+                    "cols": 3,
                     "field": {
                         "id": "1515724d-e864-44d2-accc-f612d508065a",
                         "type": "SECTION",
@@ -168,7 +171,9 @@
                                     "title": "Nazwisko",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": true,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "PESEL.surname",
@@ -190,7 +195,9 @@
                                     "title": "Imię",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": true,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "PESEL.name",
@@ -212,7 +219,10 @@
                                     "title": "Numer PESEL",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED", "PESEL"],
+                                    "validation": [
+                                        "REQUIRED",
+                                        "PESEL"
+                                    ],
                                     "readOnly": true,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "PESEL.pesel",
@@ -255,7 +265,10 @@
                                     "title": "Kod pocztowy",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED", "ZIP_CODE"],
+                                    "validation": [
+                                        "REQUIRED",
+                                        "ZIP_CODE"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "MLPZ.postCode",
@@ -282,7 +295,9 @@
                                     "title": "Ulica",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "MLPZ.street",
@@ -310,12 +325,11 @@
                                     "description": "",
                                     "dictionaryName": "TERYT_4G_DOWODOWY",
                                     "options": [],
-                                    "multiLevelTree": true,
-                                    "validation": ["REQUIRED"],
-                                    "searchEnabled": true,
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
-                                    "defaultValue": [],
                                     "states": [
                                         {
                                             "type": "SHOW",
@@ -338,7 +352,9 @@
                                     "title": "Numer budynku",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "MLPZ.building",
@@ -360,7 +376,9 @@
                                     "title": "Ulica",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -385,7 +403,9 @@
                                     "title": "Miejscowość",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -402,7 +422,7 @@
                                 "x": 0,
                                 "y": 0,
                                 "rows": 1,
-                                "cols": 3, 
+                                "cols": 3,
                                 "field": {
                                     "id": "d5136840-c719-4e32-9cc6-53e26b9e75f2",
                                     "type": "SELECT",
@@ -411,14 +431,12 @@
                                     "description": "",
                                     "dictionaryName": "Kraje",
                                     "options": [],
-                                    "multiLevelTree": false,
-                                    "validation": ["REQUIRED"],
-                                    "searchEnabled": true,
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
-                                    "defaultValue": [
-                                        "Polska"
-                                    ],
+                                    "defaultValue": "Polska",
                                     "states": [],
                                     "questionOrder": 0,
                                     "tooltipMessage": ""
@@ -436,7 +454,9 @@
                                     "title": "Kod pocztowy",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -481,7 +501,7 @@
                     "x": 0,
                     "y": 18,
                     "rows": 3,
-                    "cols": 3, 
+                    "cols": 3,
                     "field": {
                         "id": "40786cd1-d37b-4065-985b-7e9295257cf3",
                         "type": "SECTION",
@@ -504,7 +524,9 @@
                                     "title": "Nazwa",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -524,7 +546,10 @@
                                     "title": "NIP",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED", "NIP"],
+                                    "validation": [
+                                        "REQUIRED",
+                                        "NIP"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -570,7 +595,9 @@
                                     "title": "Miejscowość",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -595,7 +622,9 @@
                                     "title": "Kod pocztowy",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -620,7 +649,9 @@
                                     "title": "Ulica",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -646,12 +677,11 @@
                                     "description": "",
                                     "dictionaryName": "TERYT_4G_DOWODOWY",
                                     "options": [],
-                                    "multiLevelTree": true,
-                                    "validation": ["REQUIRED"],
-                                    "searchEnabled": true,
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
-                                    "defaultValue": [],
                                     "states": [
                                         {
                                             "type": "SHOW",
@@ -674,7 +704,10 @@
                                     "title": "Kod pocztowy",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED", "ZIP_CODE"],
+                                    "validation": [
+                                        "REQUIRED",
+                                        "ZIP_CODE"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -699,7 +732,9 @@
                                     "title": "Ulica",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "",
@@ -725,7 +760,9 @@
                                     "title": "Numer budynku",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -766,14 +803,12 @@
                                     "description": "",
                                     "dictionaryName": "Kraje",
                                     "options": [],
-                                    "multiLevelTree": false,
-                                    "validation": ["REQUIRED"],
-                                    "searchEnabled": true,
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
-                                    "defaultValue": [
-                                        "Polska"
-                                    ],
+                                    "defaultValue": "Polska",
                                     "states": [],
                                     "questionOrder": 0,
                                     "tooltipMessage": ""
@@ -817,7 +852,9 @@
                                     "title": "Plik z odpisem danych",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -863,7 +900,9 @@
                                     "title": "Nazwisko",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -883,7 +922,9 @@
                                     "title": "Imię",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -929,7 +970,9 @@
                                     "title": "Numer budynku",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -949,7 +992,9 @@
                                     "title": "Ulica",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -994,7 +1039,9 @@
                                     "title": "Kod pocztowy",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1020,14 +1067,12 @@
                                     "description": "",
                                     "dictionaryName": "Kraje",
                                     "options": [],
-                                    "multiLevelTree": false,
-                                    "validation": ["REQUIRED"],
-                                    "searchEnabled": true,
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
-                                    "defaultValue": [
-                                        "Polska"
-                                    ],
+                                    "defaultValue": "Polska",
                                     "states": [],
                                     "questionOrder": 0,
                                     "tooltipMessage": ""
@@ -1046,10 +1091,11 @@
                                     "description": "",
                                     "dictionaryName": "TERYT_DOWODOWY",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
-                                    "defaultValue": [],
                                     "states": [
                                         {
                                             "type": "SHOW",
@@ -1072,7 +1118,10 @@
                                     "title": "Kod pocztowy",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED", "ZIP_CODE"],
+                                    "validation": [
+                                        "REQUIRED",
+                                        "ZIP_CODE"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1097,7 +1146,9 @@
                                     "title": "Miejscowość",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1122,7 +1173,9 @@
                                     "title": "Ulica",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1173,7 +1226,9 @@
                                     "title": "Plik dokumentu z pełnomocnictwem",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1230,7 +1285,9 @@
                                             "techName": "nie"
                                         }
                                     ],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1275,7 +1332,9 @@
                                     "title": "Plik z potwierdzeniem przelewu",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1346,7 +1405,9 @@
                                     "title": "Plik z potwierdzeniem przelewu",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1376,7 +1437,7 @@
                     "x": 0,
                     "y": 0,
                     "rows": 4,
-                    "cols": 3,  
+                    "cols": 3,
                     "field": {
                         "id": "2552797e-ac31-4e4b-8fb8-1c13d98694fe",
                         "type": "SECTION",
@@ -1399,7 +1460,9 @@
                                     "title": "Podatek, którego dotyczy nadpłata",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1419,7 +1482,9 @@
                                     "title": "Kwota",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1439,7 +1504,9 @@
                                     "title": "Uzasadnienie",
                                     "description": "<html><head></head><body><p>Uzasadnij dlaczego Twoim zdaniem powstała nadpłata i z czego wynika jej wysokość.</p></body></html>",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1491,7 +1558,9 @@
                                             "techName": "zwrocic_przelewem_na_rachunek_bankowy"
                                         }
                                     ],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1511,7 +1580,9 @@
                                     "title": "Nazwa podatku",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1536,7 +1607,9 @@
                                     "title": "Numer rachunku",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [
@@ -1582,7 +1655,9 @@
                                     "title": "Plik deklaracji podatkowej",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["REQUIRED"],
+                                    "validation": [
+                                        "REQUIRED"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "states": [],
@@ -1652,7 +1727,9 @@
                                     "title": "Adres e-mail",
                                     "description": "",
                                     "options": [],
-                                    "validation": ["EMAIL"],
+                                    "validation": [
+                                        "EMAIL"
+                                    ],
                                     "readOnly": false,
                                     "repeatingSectionGrid": [],
                                     "defaultValue": "MLPZ.email",
@@ -1701,11 +1778,11 @@
                                     "consentSectionConfig": {
                                         "consents": [
                                             {
-                                                "description": "<html><head></head><body><p><span style=\"background-color: rgb(255, 255, 255); color: rgb(52, 56, 63);\">Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z </span><a href=\"klauzulą informacyjną \" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: rgb(255, 255, 255); color: rgb(0, 82, 165);\" title=\"klauzulą informacyjną\" aria-label=\"Link otwiera się w nowej karcie\">klauzulą informacyjną</a><a href=\"klauzulą informacyjną \" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: rgb(255, 255, 255); color: rgb(52, 56, 63);\" title=\" \" aria-label=\"Link otwiera się w nowej karcie\"> </a><a href=\"klauzulą informacyjną \" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: rgb(255, 255, 255); color: rgb(0, 82, 165);\" title=\"\" aria-label=\"Link otwiera się w nowej karcie\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAMAAAD+iNU2AAAAYFBMVEUAAAAAVaoATaYAT6cAUagAVaQAUKUAUqQAU6cAUqQAU6YAU6UAUaUAU6YAU6YAUqUAUqQAUqUAUaYAUqUAUqUAU6UAUqUAUqUAUqYAU6UAUqUAUqUAUqUAUqUAUqX///9oA8deAAAAHnRSTlMAAxQdKSozNTc4WWZ0e35/mJudn6Wq4OLk7u/29/nu1D+OAAAAAWJLR0QfBQ0QvQAAAFtJREFUCNedzEcSgCAQRNE2iznroHD/Y0pU3Pp3r6ZrAF9DRIIQxnaBcl5NY6TIOI6uNlWa4JB+nG8MgfVVPfW2jOBsWQ3OmSHqxTlO8bHrj6/kdT8B7Smf9gI3hccHElQhuGIAAAAASUVORK5CYII=\"></a></p></body></html>",
-                                                "required": true
+                                                "description": "<html><head></head><body><p><span style=\"background-color: rgb(255, 255, 255); color: rgb(52, 56, 63);\">Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z </span><a href=\"klauzulą informacyjną \" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: rgb(255, 255, 255); color: rgb(0, 82, 165);\" title=\"klauzulą informacyjną\" aria-label=\"Link otwiera się w nowej karcie\">klauzulą informacyjną</a><a href=\"klauzulą informacyjną \" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: rgb(255, 255, 255); color: rgb(52, 56, 63);\" title=\" \" aria-label=\"Link otwiera się w nowej karcie\"> </a><a href=\"klauzulą informacyjną \" rel=\"noopener noreferrer\" target=\"_blank\" style=\"background-color: rgb(255, 255, 255); color: rgb(0, 82, 165);\" title=\"\" aria-label=\"Link otwiera się w nowej karcie\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAMAAAD+iNU2AAAAYFBMVEUAAAAAVaoATaYAT6cAUagAVaQAUKUAUqQAU6cAUqQAU6YAU6UAUaUAU6YAU6YAUqUAUqQAUqUAUaYAUqUAUqUAU6UAUqUAUqUAUqYAU6UAUqUAUqUAUqUAUqUAUqX///9oA8deAAAAHnRSTlMAAxQdKSozNTc4WWZ0e35/mJudn6Wq4OLk7u/29/nu1D+OAAAAAWJLR0QfBQ0QvQAAAFtJREFUCNedzEcSgCAQRNE2iznroHD/Y0pU3Pp3r6ZrAF9DRIIQxnaBcl5NY6TIOI6uNlWa4JB+nG8MgfVVPfW2jOBsWQ3OmSHqxTlO8bHrj6/kdT8B7Smf9gI3hccHElQhuGIAAAAASUVORK5CYII=\"></a></p></body></html>"
                                             }
                                         ],
-                                        "files": []
+                                        "files": [],
+                                        "required": true
                                     },
                                     "states": [],
                                     "questionOrder": 0,

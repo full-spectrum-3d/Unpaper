@@ -100,17 +100,16 @@ describe('validateField', () => {
     expect(req('DATEPICKER', '')).toBe('Uzupełnij to pole');
   });
 
-  it('CONSENT_SECTION requires every required consent, even without REQUIRED', () => {
-    const field = f('CONSENT_SECTION', [], {
-      consentSectionConfig: {
-        consents: [
-          { description: 'a', required: true },
-          { description: 'b', required: false },
-        ],
-      },
-    });
+  it('CONSENT_SECTION with required: true needs every consent, even without REQUIRED', () => {
+    const consents = [{ description: 'a' }, { description: 'b' }];
+    const field = f('CONSENT_SECTION', [], { consentSectionConfig: { consents, required: true } });
     expect(validateField(field, [false, true])).toBe('Zaznacz wymaganą zgodę');
-    expect(validateField(field, [true, false])).toBeNull();
+    expect(validateField(field, [true, false])).toBe('Zaznacz wymaganą zgodę');
+    expect(validateField(field, [true, true])).toBeNull();
+    const optional = f('CONSENT_SECTION', [], {
+      consentSectionConfig: { consents, required: false },
+    });
+    expect(validateField(optional, [false, false])).toBeNull();
   });
 
   it('cascade is empty until the path reaches a leaf', () => {

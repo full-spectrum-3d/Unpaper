@@ -67,14 +67,11 @@ const allTypes: Question[] = [
   f('dict', 'SELECT', {
     title: 'Kraj',
     dictionaryName: 'Kraje',
-    defaultValue: ['Polska'],
-    searchEnabled: true,
+    defaultValue: 'Polska',
   }),
   f('teryt', 'SELECT', {
     title: 'TERYT_4G_DOWODOWY',
     dictionaryName: 'TERYT_4G_DOWODOWY',
-    searchEnabled: true,
-    defaultValue: [],
   }),
   f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
   f('data', 'DATEPICKER', { title: 'Data' }),
@@ -83,7 +80,8 @@ const allTypes: Question[] = [
   f('zgody', 'CONSENT_SECTION', {
     title: 'Zgody',
     consentSectionConfig: {
-      consents: [{ description: '<b>Zgoda</b> na kontakt', required: true }],
+      consents: [{ description: '<b>Zgoda</b> na kontakt' }],
+      required: true,
     },
   }),
   f('foo', 'FOO', { title: 'Dziwne' }),
@@ -221,14 +219,14 @@ const stateTypes: Question[] = [
   f('teryt', 'SELECT', {
     title: 'Adres',
     dictionaryName: 'TERYT_4G_DOWODOWY',
-    defaultValue: ['mazowieckie'],
+    defaultValue: 'mazowieckie',
   }),
   f('radio', 'RADIO', { title: 'W czyim imieniu', options: opts }),
   f('chk', 'CHECKBOX', { title: 'Zgoda ogólna' }),
   f('plik', 'FILE_UPLOADER', { title: 'Załącznik' }),
   f('zgody', 'CONSENT_SECTION', {
     title: undefined,
-    consentSectionConfig: { consents: [{ description: 'Zgoda na kontakt', required: true }] },
+    consentSectionConfig: { consents: [{ description: 'Zgoda na kontakt' }], required: true },
   }),
 ].map((field, i) => q(field, i));
 

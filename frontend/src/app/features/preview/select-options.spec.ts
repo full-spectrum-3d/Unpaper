@@ -24,9 +24,9 @@ describe('selectOptions', () => {
 });
 
 describe('isCascade', () => {
-  it('is true for TERYT dictionaries regardless of multiLevelTree', () => {
+  it('is true for TERYT dictionaries', () => {
     expect(isCascade(f({ dictionaryName: 'TERYT_4G_DOWODOWY' }))).toBe(true);
-    expect(isCascade(f({ dictionaryName: 'TERYT_DOWODOWY', multiLevelTree: false }))).toBe(true);
+    expect(isCascade(f({ dictionaryName: 'TERYT_DOWODOWY' }))).toBe(true);
   });
   it('is false for single-level dictionaries and fields with options', () => {
     expect(isCascade(f({ dictionaryName: 'Kraje' }))).toBe(false);
@@ -37,9 +37,8 @@ describe('isCascade', () => {
 });
 
 describe('isSearchable', () => {
-  it('follows searchEnabled or more than 20 options', () => {
-    expect(isSearchable(f({ searchEnabled: true }), 3)).toBe(true);
-    expect(isSearchable(f({ searchEnabled: null }), 21)).toBe(true);
-    expect(isSearchable(f({}), 20)).toBe(false);
+  it('is true for more than 20 options', () => {
+    expect(isSearchable(21)).toBe(true);
+    expect(isSearchable(20)).toBe(false);
   });
 });

@@ -107,7 +107,6 @@ describe('updateField', () => {
       Record<string, unknown>;
     expect(text.options).toEqual([]);
     expect(text.dictionaryName).toBeUndefined();
-    expect(text['searchEnabled']).toBeUndefined();
     expect(text.defaultValue).toBeUndefined();
   });
 
