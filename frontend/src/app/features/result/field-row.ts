@@ -25,7 +25,7 @@ import {
   typeLabel,
 } from './form-edit';
 
-/** Edit controls of one field: label, type, requiredness, options and removal with confirmation. */
+/** Edit controls of one field: label, type, requiredness, options, reordering and removal with confirmation. */
 @Component({
   selector: 'app-field-row',
   imports: [Button, TextField],
@@ -107,6 +107,30 @@ import {
         <p class="text-fg-muted">Element statyczny — można go tylko usunąć.</p>
       }
       <div class="flex flex-wrap items-center gap-2">
+        <button
+          appButton
+          type="button"
+          variant="ghost"
+          class="move-up"
+          [disabled]="first()"
+          (click)="move.emit(-1)"
+        >
+          <span aria-hidden="true">↑</span> W górę<span class="sr-only">
+            {{ f.title || typeName() }}</span
+          >
+        </button>
+        <button
+          appButton
+          type="button"
+          variant="ghost"
+          class="move-down"
+          [disabled]="last()"
+          (click)="move.emit(1)"
+        >
+          <span aria-hidden="true">↓</span> W dół<span class="sr-only">
+            {{ f.title || typeName() }}</span
+          >
+        </button>
         @if (!removable()) {
           <p class="text-fg-muted">Jedynego elementu strony nie można usunąć.</p>
         } @else if (confirming()) {
@@ -139,7 +163,11 @@ export class FieldRow {
 
   readonly field = input.required<FormField>();
   readonly removable = input(true);
+  /** First / last among its siblings: the matching move button is disabled. */
+  readonly first = input(false);
+  readonly last = input(false);
   readonly patch = output<FieldPatch>();
+  readonly move = output<-1 | 1>();
   readonly remove = output<void>();
 
   private static nextId = 0;

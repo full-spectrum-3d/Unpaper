@@ -1,4 +1,5 @@
 import { FieldOption, FormDefinition, FormField, Question } from '../preview/form-definition';
+import { sortQuestions } from '../preview/page-order';
 
 /** Types the editor can create or switch to, with their labels in the UI. */
 export const EDITABLE_TYPES = {
@@ -223,6 +224,44 @@ export function removeField(
     return { ...q, field: { ...q.field, states: kept } };
   });
   return { definition, droppedStatesOf };
+}
+
+/**
+ * Swaps a field with its neighbour (in on-screen order) among its siblings: the fields trade grid slots and
+ * questionOrder, so the layout geometry stays valid. Moving past either end is a no-op.
+ */
+export function moveField(def: FormDefinition, id: string, offset: -1 | 1): FormDefinition {
+  const moveIn = (qs: Question[]): Question[] => {
+    const sorted = sortQuestions(qs);
+    const i = sorted.findIndex((q) => q.field.id === id);
+    if (i >= 0) {
+      const a = sorted[i];
+      const b = sorted[i + offset];
+      if (!b) return qs;
+      const put = (slot: Question, f: FormField): Question => ({
+        ...slot,
+        field: { ...f, questionOrder: slot.field.questionOrder },
+      });
+      return qs.map((q) => (q === a ? put(a, b.field) : q === b ? put(b, a.field) : q));
+    }
+    let changed = false;
+    const out = qs.map((q) => {
+      const grid = q.field.repeatingSectionGrid;
+      const moved = grid?.length ? moveIn(grid) : grid;
+      if (moved === grid) return q;
+      changed = true;
+      return { ...q, field: { ...q.field, repeatingSectionGrid: moved } };
+    });
+    return changed ? out : qs;
+  };
+  let changed = false;
+  const tabs = def.tabs.map((t) => {
+    const questions = moveIn(t.questions);
+    if (questions === t.questions) return t;
+    changed = true;
+    return { ...t, questions };
+  });
+  return changed ? { ...def, tabs } : def;
 }
 
 /** One option per line; blank lines and repeats are dropped. */
