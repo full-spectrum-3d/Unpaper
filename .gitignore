@@ -8,7 +8,8 @@
 .DS_Store
 
 # sekrety
-
+.env
+.env.*
 !.env.example
 
 # Python

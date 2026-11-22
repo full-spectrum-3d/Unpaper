@@ -36,18 +36,18 @@ repozytorium).
 
 ## Uruchomienie aplikacji
 
-Wymagany jest tylko Docker z pluginem Compose. Plik `.env` jest w repozytorium i jest
-skonfigurowany na **zewnętrzny serwer modelu** (API Ollama na Modal), więc nic nie trzeba
-konfigurować ani pobierać.
+Wymagany jest Docker z pluginem Compose. Plik `.env` nie jest w repozytorium (sekrety) –
+tworzy go `make setup`: losowy `JWT_SECRET`, konto `admin` i jednorazowo wypisane hasło,
+potem buduje obrazy i pobiera lokalny model (profil `ollama`, ok. 7 GB).
 
 ```bash
 git clone https://github.com/full-spectrum-3d/def.git Unpaper && cd Unpaper
-docker compose up --build -d
+make setup
+docker compose up -d
 ```
 
-Compose buduje i uruchamia `api` oraz `frontend` (kontener `llm` jest pominięty, bo
-`COMPOSE_PROFILES` w `.env` jest puste). Logowanie: użytkownik `API_USER` z `.env`
-(`admin`) i jego hasło; w `.env` jest tylko hash hasła.
+Logowanie: użytkownik `API_USER` z `.env` (`admin`) i hasło wypisane przez `make setup`;
+w `.env` jest tylko hash hasła. Zewnętrzny serwer modelu (np. Modal): sposób 3 niżej.
 
 | Adres | Co |
 |---|---|
@@ -55,10 +55,8 @@ Compose buduje i uruchamia `api` oraz `frontend` (kontener `llm` jest pominięty
 | http://localhost:8000/docs | Swagger UI (tylko `APP_ENV=development`) |
 | http://localhost:8000/api/v1/health/ready | gotowość: 200 = model dostępny |
 
-Serwer modelu na Modal po dłuższej bezczynności startuje „na zimno”: zaraz po uruchomieniu
-`health/ready` może zwrócić 503 (`LLM_UNAVAILABLE`). Odczekaj chwilę i ponów; kolejne
-żądania działają normalnie. Zewnętrzny serwer musi być osiągalny z hosta (api ma wyjście
-do internetu).
+Przy zewnętrznym serwerze na Modal pierwsze żądanie po bezczynności trafia na zimny start:
+`health/ready` może chwilę zwracać 503 (`LLM_UNAVAILABLE`) – odczekaj i ponów.
 
 ```bash
 docker compose ps            # stan usług
@@ -83,8 +81,8 @@ docker compose --profile setup run --rm llm-pull   # model do wolumenu (jednoraz
 docker compose up --build -d
 ```
 
-Model ustawia `LLM_MODEL` (domyślnie `qwen3:8b`). Skrót: `make setup` (tworzy `.env`,
-buduje obrazy i pobiera model) – uwaga, `make env` nie nadpisuje istniejącego `.env`.
+Model ustawia `LLM_MODEL` (domyślnie `qwen3:8b`). `make setup` robi to samo i nie
+nadpisuje istniejącego `.env`.
 
 **2. Lokalny model z GPU NVIDIA** (wymaga NVIDIA Container Toolkit): jak wyżej, ale
 
@@ -97,8 +95,7 @@ w `.env` zostaw `COMPOSE_PROFILES=` puste i ustaw `LLM_BASE_URL` (np.
 `http://host.docker.internal:11434` dla serwera na tym samym hoście). `LLM_AUTH_KEY` i
 `LLM_AUTH_SECRET` podaj tylko wtedy, gdy serwer wymaga autoryzacji (nagłówki proxy Modal).
 
-**4. Nowy `.env` z własnymi sekretami** (np. na produkcję): usuń `.env` i uruchom
-`docker compose build && scripts/init-env.sh` – skrypt tworzy `.env` z losowym
+**4. Własny login i hasło:** `scripts/init-env.sh` tworzy `.env` z losowym
 `JWT_SECRET`, kontem `admin` i wypisanym raz hasłem. Własny login i hasło:
 `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`. Hash samego hasła: `make password-hash`.
 
