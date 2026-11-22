@@ -23,7 +23,7 @@ from tests.golden.test_reference_forms import (
 type Pair = tuple[str, str]
 
 # (wzorzec) -> {(techName sekcji, techName pola): uzasadnienie}.
-# Uzasadnienia: decyzja D13 w docs/specyfikacja-techniczna.md (sekcje predefiniowane wg standardu).
+# Uzasadnienie: sekcje predefiniowane budujemy wg standardu COI, który bywa pełniejszy niż wzorce.
 _STANDARD_PHONE = (
     "standard sekcji kontaktowej ma osobne pole numeru kierunkowego, którego wzorce nie mają"
 )

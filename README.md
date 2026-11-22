@@ -15,7 +15,7 @@ frontend (nginx :8080) ──/api──▶ api (FastAPI, Python 3.14 :8000) ─�
 
 Pipeline API: walidacja pliku → normalizacja (LibreOffice) → ekstrakcja (tekst, OCR)
 → analiza AI → budowa formularza → weryfikacja z autonaprawą.
-Szczegóły: `docs/specyfikacja-techniczna.md`, `docs/architecture/`.
+Szczegóły: [`docs/architecture/`](docs/architecture/README.md).
 
 ## Wideo demonstracyjne
 https://youtu.be/ot5qAPIEubU

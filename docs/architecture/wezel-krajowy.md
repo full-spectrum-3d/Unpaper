@@ -5,7 +5,7 @@
 | Status | plan wdrożenia, **nie jest częścią rozwiązania ocenianego na hackathonie** |
 | Data | 2026-11-21 |
 | Dotyczy | uwierzytelniania urzędników korzystających z API i frontendu |
-| Powiązane | spec §10.1, §14 (Q10, Q11); `docs/superpowers/specs/2026-11-21-auth-core-design.md` |
+| Powiązane | [01-system.md – Uwierzytelnianie](01-system.md#uwierzytelnianie); `backend/app/core/security.py` |
 
 ## 1. Kontekst
 
@@ -55,11 +55,11 @@ urzędnik ──▶│ frontend SPA │─────────────�
 **Nasz kod nie zawiera nic z SAML ani Węzła.** Cała integracja z login.gov.pl żyje w brokerze,
 który jest standardowym, wymienialnym komponentem. Broker może być wspólny dla wielu
 systemów COI – jeśli Generator Formularzy ma już własne logowanie, podpinamy się pod nie
-tą samą konfiguracją (§14, Q11).
+tą samą konfiguracją.
 
 ## 4. Konfiguracja API
 
-Bez zmian w kodzie – tylko zmienne środowiskowe (spec §12):
+Bez zmian w kodzie – tylko zmienne środowiskowe (pełna lista: `README.md`, sekcja „Konfiguracja”):
 
 | Zmienna | Wartość dla Keycloak (przykład) | Znaczenie |
 |---|---|---|
