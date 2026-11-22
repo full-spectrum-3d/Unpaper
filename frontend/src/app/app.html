@@ -4,6 +4,12 @@
     [userName]="username() ?? 'konto techniczne'"
     (logout)="logout()"
   >
+    <a
+      brand
+      routerLink="/"
+      class="font-bold text-on-topbar focus-ring focus-visible:outline-on-topbar"
+      >Cyfryzacja formularzy</a
+    >
     <a routerLink="/import" routerLinkActive ariaCurrentWhenActive="page">Import</a>
     <a routerLink="/validator" routerLinkActive ariaCurrentWhenActive="page">Walidator</a>
   </app-topbar>

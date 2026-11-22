@@ -6,7 +6,9 @@ import { Component, input, output } from '@angular/core';
     <header
       class="bg-topbar text-on-topbar min-h-[44px] flex flex-wrap items-center gap-x-[20px] gap-y-[4px] px-[16px] py-[4px]"
     >
-      <span class="font-bold">{{ appName() }}</span>
+      <ng-content select="[brand]">
+        <span class="font-bold">{{ appName() }}</span>
+      </ng-content>
       <nav
         aria-label="Główna"
         class="flex gap-[16px] [&_a]:text-on-topbar [&_a]:opacity-75 [&_a:hover]:opacity-100 [&_a]:focus-ring [&_a:focus-visible]:outline-on-topbar [&_a[aria-current=page]]:opacity-100 [&_a[aria-current=page]]:border-b-2 [&_a[aria-current=page]]:border-on-topbar"
