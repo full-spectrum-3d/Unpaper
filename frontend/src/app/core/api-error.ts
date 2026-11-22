@@ -7,6 +7,8 @@ const MESSAGES: Record<string, string> = {
   NOT_AUTHENTICATED: 'Sesja wygasła, zaloguj się ponownie',
   INVALID_TOKEN: 'Sesja wygasła, zaloguj się ponownie',
   FORBIDDEN: 'Brak uprawnień',
+  USERNAME_TAKEN: 'Ten login jest już zajęty',
+  REGISTRATION_DISABLED: 'Rejestracja nowych kont jest wyłączona',
   VALIDATION_ERROR: 'Uzupełnij login i hasło',
   LLM_UNAVAILABLE: 'Usługa analizy formularzy jest chwilowo niedostępna. Spróbuj ponownie.',
   PROCESSING_TIMEOUT: 'Przetwarzanie trwało zbyt długo. Spróbuj ponownie.',

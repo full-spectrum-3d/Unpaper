@@ -1,12 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { of } from 'rxjs';
+import { AuthService } from '../../shared/api/services/auth.service';
 import { AuthActions } from '../../store/auth/auth.actions';
 import { AuthState, authFeatureKey, initialAuthState } from '../../store/auth/auth.reducer';
 import { LoginPage } from './login-page';
 
-async function setup(auth: Partial<AuthState> = {}) {
+async function setup(auth: Partial<AuthState> = {}, registrationEnabled = true) {
   TestBed.configureTestingModule({
     providers: [
+      {
+        provide: AuthService,
+        useValue: {
+          authOptionsApiV1AuthOptionsGet: () => of({ registration_enabled: registrationEnabled }),
+        },
+      },
       provideMockStore({ initialState: { [authFeatureKey]: { ...initialAuthState, ...auth } } }),
     ],
   });
@@ -21,11 +29,15 @@ async function setup(auth: Partial<AuthState> = {}) {
     input.value = value;
     input.dispatchEvent(new Event('input'));
   };
+  const tab = (name: string) =>
+    [...el.querySelectorAll<HTMLButtonElement>('[role="tab"]')].find(
+      (t) => t.textContent!.trim() === name,
+    );
   const submit = async () => {
     el.querySelector('form')!.dispatchEvent(new Event('submit', { cancelable: true }));
     await fixture.whenStable();
   };
-  return { fixture, el, store, dispatch, inputs, type, submit };
+  return { fixture, el, store, dispatch, inputs, type, submit, tab };
 }
 
 describe('LoginPage', () => {
@@ -72,5 +84,44 @@ describe('LoginPage', () => {
   it('keeps an empty status region otherwise', async () => {
     const { el } = await setup();
     expect(el.querySelector('[role="status"]')!.textContent!.trim()).toBe('');
+  });
+
+  it('hides the register tab when the API does not allow registration', async () => {
+    const { tab } = await setup({}, false);
+    expect(tab('Rejestracja')).toBeUndefined();
+  });
+
+  it('dispatches register after the account form passes validation', async () => {
+    const { fixture, el, dispatch, inputs, type, submit, tab } = await setup();
+    tab('Rejestracja')!.click();
+    await fixture.whenStable();
+    expect(inputs()).toHaveLength(3);
+
+    type(inputs()[0], 'anna kowalska');
+    type(inputs()[1], 'krotkie');
+    type(inputs()[2], 'inne');
+    await submit();
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(el.textContent).toContain('Login może zawierać tylko');
+    expect(el.textContent).toContain('Hasło musi mieć co najmniej 8 znaków');
+    expect(el.textContent).toContain('Hasła nie są takie same');
+
+    type(inputs()[0], 'anna.kowalska');
+    type(inputs()[1], 'dlugie-haslo');
+    type(inputs()[2], 'dlugie-haslo');
+    await submit();
+    expect(dispatch).toHaveBeenCalledWith(
+      AuthActions.register({ username: 'anna.kowalska', password: 'dlugie-haslo' }),
+    );
+  });
+
+  it('shows the password when asked', async () => {
+    const { fixture, el, inputs } = await setup();
+    const toggle = el.querySelector<HTMLButtonElement>('button[aria-label="Pokaż hasło"]')!;
+    expect(inputs()[1].type).toBe('password');
+    toggle.click();
+    await fixture.whenStable();
+    expect(inputs()[1].type).toBe('text');
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
   });
 });

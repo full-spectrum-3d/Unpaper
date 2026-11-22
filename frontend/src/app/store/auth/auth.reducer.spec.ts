@@ -13,6 +13,17 @@ describe('authReducer', () => {
     expect(JSON.stringify(state)).not.toContain('s3cret-pw');
   });
 
+  it('register sets pending and clears error without keeping the password', () => {
+    const before = { ...initialAuthState, status: 'error' as const, error: 'x' };
+    const state = authReducer(
+      before,
+      AuthActions.register({ username: 'u', password: 's3cret-pw' }),
+    );
+    expect(state.status).toBe('pending');
+    expect(state.error).toBeNull();
+    expect(JSON.stringify(state)).not.toContain('s3cret-pw');
+  });
+
   it('loginSuccess stores token, expiresAt, username and idles', () => {
     const state = authReducer(
       { ...initialAuthState, status: 'pending', sessionExpired: true },

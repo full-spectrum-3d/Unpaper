@@ -3,6 +3,11 @@ import { ImportQueueActions } from '../import-queue/import-queue.actions';
 import { authActionSanitizer, authStateSanitizer } from './auth-devtools';
 
 describe('authActionSanitizer', () => {
+  it('masks the password of a new account', () => {
+    const out = authActionSanitizer(AuthActions.register({ username: 'dev', password: 'x' }), 0);
+    expect(out).toEqual({ ...AuthActions.register({ username: 'dev', password: '***' }) });
+  });
+
   it('masks password', () => {
     const out = authActionSanitizer(AuthActions.login({ username: 'dev', password: 'x' }), 0);
     expect(out).toEqual({ ...AuthActions.login({ username: 'dev', password: '***' }) });

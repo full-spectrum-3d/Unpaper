@@ -1,30 +1,126 @@
-<main class="w-full max-w-sm">
-  <app-card>
-    <h1 cardTitle tabindex="-1">Cyfryzacja formularzy</h1>
-    <form class="flex flex-col gap-[12px] p-[16px]" novalidate (submit)="submit($event)">
-      <!-- Always in the DOM and filled after render: a live region inserted with its text is often not read. -->
-      <p role="status" class="text-fg-muted" [class.sr-only]="!statusText()">{{ statusText() }}</p>
-      @if (status() === 'error' && error(); as text) {
-        <p #loginError role="alert" tabindex="-1" class="text-danger">
-          <span aria-hidden="true">✕</span> {{ text }}
+<main class="w-full max-w-[400px]">
+  <div class="mb-[24px] flex flex-col items-center gap-[8px] text-center">
+    <span
+      class="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-primary text-on-primary"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="26"
+        height="26"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+        <path d="M14 3v5h5" />
+        <path d="M9 13l2 2 4-4" />
+      </svg>
+    </span>
+    <h1 tabindex="-1" class="text-title font-bold text-fg">Cyfryzacja formularzy</h1>
+    <p class="text-fg-muted">Zamieniaj papierowe blankiety na formularze e-usług.</p>
+  </div>
+
+  <section class="overflow-hidden rounded-card border border-border bg-surface shadow-sm">
+    @if (registrationEnabled()) {
+      <div role="tablist" aria-label="Rodzaj konta" class="grid grid-cols-2 border-b border-border">
+        @for (tab of tabs; track tab.mode) {
+          <button
+            type="button"
+            role="tab"
+            [id]="'tab-' + tab.mode"
+            aria-controls="auth-panel"
+            [attr.aria-selected]="mode() === tab.mode"
+            [attr.tabindex]="mode() === tab.mode ? 0 : -1"
+            class="border-b-2 px-[12px] py-[10px] font-semibold focus-ring"
+            [class]="
+              mode() === tab.mode
+                ? 'border-primary text-primary'
+                : 'border-transparent text-fg-muted hover:text-fg'
+            "
+            (click)="setMode(tab.mode)"
+            (keydown.arrowLeft)="switchTab()"
+            (keydown.arrowRight)="switchTab()"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </div>
+    }
+
+    <div
+      id="auth-panel"
+      [attr.role]="registrationEnabled() ? 'tabpanel' : null"
+      [attr.aria-labelledby]="registrationEnabled() ? 'tab-' + mode() : null"
+    >
+      <form class="flex flex-col gap-[16px] p-[20px]" novalidate (submit)="submit($event)">
+        <!-- Always in the DOM and filled after render: a live region inserted with its text is often not read. -->
+        <p
+          role="status"
+          class="rounded-field bg-warning-subtle px-[12px] py-[8px] text-fg"
+          [class.sr-only]="!statusText()"
+        >
+          {{ statusText() }}
         </p>
-      }
-      <app-text-field
-        label="Login"
-        autocomplete="username"
-        [formField]="f.username"
-        [error]="message(f.username)"
-      />
-      <app-text-field
-        label="Hasło"
-        type="password"
-        autocomplete="current-password"
-        [formField]="f.password"
-        [error]="message(f.password)"
-      />
-      <button appButton type="submit" variant="primary" [disabled]="status() === 'pending'">
-        {{ status() === 'pending' ? 'Logowanie…' : 'Zaloguj' }}
-      </button>
-    </form>
-  </app-card>
+        @if (visibleError(); as text) {
+          <p
+            #loginError
+            role="alert"
+            tabindex="-1"
+            class="rounded-field bg-danger-subtle px-[12px] py-[8px] text-danger"
+          >
+            <span aria-hidden="true">✕</span> {{ text }}
+          </p>
+        }
+        <app-text-field
+          label="Login"
+          autocomplete="username"
+          [description]="isRegister() ? 'Od 3 do 50 znaków: litery, cyfry oraz . _ -' : undefined"
+          [formField]="f.username"
+          [error]="message(f.username)"
+        />
+        <app-text-field
+          label="Hasło"
+          type="password"
+          [revealable]="true"
+          [autocomplete]="isRegister() ? 'new-password' : 'current-password'"
+          [description]="isRegister() ? 'Co najmniej 8 znaków' : undefined"
+          [formField]="f.password"
+          [error]="message(f.password)"
+        />
+        @if (isRegister()) {
+          <app-text-field
+            label="Powtórz hasło"
+            type="password"
+            autocomplete="new-password"
+            [formField]="f.confirm"
+            [error]="message(f.confirm)"
+          />
+        }
+        <button
+          appButton
+          type="submit"
+          variant="primary"
+          class="w-full"
+          [disabled]="status() === 'pending'"
+        >
+          {{ submitLabel() }}
+        </button>
+        @if (registrationEnabled()) {
+          <p class="text-center text-fg-muted">
+            {{ isRegister() ? 'Masz już konto?' : 'Nie masz konta?' }}
+            <button
+              type="button"
+              class="font-semibold text-primary underline-offset-2 hover:underline focus-ring"
+              (click)="switchTab()"
+            >
+              {{ isRegister() ? 'Zaloguj się' : 'Załóż je' }}
+            </button>
+          </p>
+        }
+      </form>
+    </div>
+  </section>
 </main>

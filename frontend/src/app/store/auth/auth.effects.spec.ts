@@ -13,9 +13,17 @@ import { authFeatureKey } from './auth.reducer';
 
 const NOW = 1_000_000;
 
-function setup(opts: { url?: string; auth?: object; login?: Observable<unknown> } = {}) {
+function setup(
+  opts: {
+    url?: string;
+    auth?: object;
+    login?: Observable<unknown>;
+    register?: Observable<unknown>;
+  } = {},
+) {
   const actions$ = new Subject<Action>();
   const issueToken = vi.fn(() => opts.login ?? of({ access_token: 'tok', expires_in: 60 }));
+  const register = vi.fn(() => opts.register ?? of({ access_token: 'new', expires_in: 60 }));
   TestBed.configureTestingModule({
     providers: [
       AuthEffects,
@@ -24,7 +32,13 @@ function setup(opts: { url?: string; auth?: object; login?: Observable<unknown> 
       provideMockStore({
         initialState: { [authFeatureKey]: opts.auth ?? { token: null, expiresAt: null } },
       }),
-      { provide: AuthService, useValue: { issueTokenApiV1AuthTokenPost: issueToken } },
+      {
+        provide: AuthService,
+        useValue: {
+          issueTokenApiV1AuthTokenPost: issueToken,
+          registerApiV1AuthRegisterPost: register,
+        },
+      },
     ],
   });
   const router = TestBed.inject(Router);
@@ -33,10 +47,11 @@ function setup(opts: { url?: string; auth?: object; login?: Observable<unknown> 
   const effects = TestBed.inject(AuthEffects);
   const out: Action[] = [];
   effects.login$.subscribe((a) => out.push(a));
+  effects.register$.subscribe((a) => out.push(a));
   effects.expiryTimer$.subscribe((a) => out.push(a));
   effects.loginSuccess$.subscribe();
   effects.logout$.subscribe();
-  return { actions$, out, navigate, issueToken, store: TestBed.inject(MockStore) };
+  return { actions$, out, navigate, issueToken, register, store: TestBed.inject(MockStore) };
 }
 
 describe('AuthEffects', () => {
@@ -50,14 +65,37 @@ describe('AuthEffects', () => {
     const { actions$, out, issueToken } = setup();
     actions$.next(AuthActions.login({ username: 'u', password: 'p' }));
     expect(issueToken).toHaveBeenCalledWith({ body: { username: 'u', password: 'p' } });
-    expect(out).toContainEqual(AuthActions.loginSuccess({ token: 'tok', expiresAt: NOW + 60000, username: 'u' }));
+    expect(out).toContainEqual(
+      AuthActions.loginSuccess({ token: 'tok', expiresAt: NOW + 60000, username: 'u' }),
+    );
   });
 
   it('login failure maps to loginFailure with user message', () => {
-    const err = new HttpErrorResponse({ status: 401, error: { code: 'INVALID_CREDENTIALS', detail: 'x' } });
+    const err = new HttpErrorResponse({
+      status: 401,
+      error: { code: 'INVALID_CREDENTIALS', detail: 'x' },
+    });
     const { actions$, out } = setup({ login: throwError(() => err) });
     actions$.next(AuthActions.login({ username: 'u', password: 'p' }));
-    expect(out).toContainEqual(AuthActions.loginFailure({ error: 'Nieprawidłowy login lub hasło' }));
+    expect(out).toContainEqual(
+      AuthActions.loginFailure({ error: 'Nieprawidłowy login lub hasło' }),
+    );
+  });
+
+  it('register success logs the new user in', () => {
+    const { actions$, out, register } = setup();
+    actions$.next(AuthActions.register({ username: 'anna', password: 'dlugie-haslo' }));
+    expect(register).toHaveBeenCalledWith({ body: { username: 'anna', password: 'dlugie-haslo' } });
+    expect(out).toContainEqual(
+      AuthActions.loginSuccess({ token: 'new', expiresAt: NOW + 60000, username: 'anna' }),
+    );
+  });
+
+  it('register with a taken username maps to loginFailure', () => {
+    const err = new HttpErrorResponse({ status: 409, error: { code: 'USERNAME_TAKEN' } });
+    const { actions$, out } = setup({ register: throwError(() => err) });
+    actions$.next(AuthActions.register({ username: 'anna', password: 'dlugie-haslo' }));
+    expect(out).toContainEqual(AuthActions.loginFailure({ error: 'Ten login jest już zajęty' }));
   });
 
   it('navigates to returnUrl after login', () => {
