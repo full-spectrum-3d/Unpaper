@@ -1,6 +1,6 @@
 <main class="w-full max-w-sm">
   <app-card>
-    <h1 cardTitle tabindex="-1">Cyfryzacja formularzy</h1>
+    <h1 cardTitle tabindex="-1">Unpaper</h1>
     <form class="flex flex-col gap-[12px] p-[16px]" novalidate (submit)="submit($event)">
       <!-- Always in the DOM and filled after render: a live region inserted with its text is often not read. -->
       <p role="status" class="text-fg-muted" [class.sr-only]="!statusText()">{{ statusText() }}</p>
