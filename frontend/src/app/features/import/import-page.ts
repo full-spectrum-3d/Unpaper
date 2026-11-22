@@ -111,6 +111,11 @@ export class ImportPage {
     this.focusAfterRender([`remove-${id}`]);
   }
 
+  protected cancel(id: string): void {
+    this.store.dispatch(ImportQueueActions.cancelled({ id }));
+    this.focusAfterRender([`remove-${id}`]);
+  }
+
   protected submitPassword(event: Event, item: QueueItem, input: HTMLInputElement): void {
     event.preventDefault();
     const problem = !input.value

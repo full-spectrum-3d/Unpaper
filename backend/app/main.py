@@ -22,6 +22,7 @@ from app.core.errors import (
 )
 from app.core.logging import configure_logging
 from app.core.security import require_auth
+from app.core.users import UserStore
 from app.pipeline.analyze import prompt_messages
 from app.pipeline.converter import Converter, find_converter
 from app.pipeline.llm_client import LlmClient, LlmError, OllamaClient
@@ -86,6 +87,11 @@ def create_app(
     app.state.job_semaphore = asyncio.Semaphore(settings.max_concurrent_jobs)
     # Osobny, większy limit na walidację CPU (upload, /forms/validate): nie czeka za LLM.
     app.state.validation_semaphore = asyncio.Semaphore(settings.max_concurrent_jobs * 2)
+    app.state.user_store = (
+        UserStore(settings.users_db_path)
+        if settings.registration_available and settings.users_db_path is not None
+        else None
+    )
 
     install_error_handlers(app)
     # Wewnątrz CORS: request_id i konwersja wyjątków na 500 problem+json z nagłówkami CORS.

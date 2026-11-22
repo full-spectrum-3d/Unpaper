@@ -10,6 +10,7 @@ const MASK = '***';
 export function authActionSanitizer(action: Action, _id: number): Action {
   switch (action.type) {
     case AuthActions.login.type:
+    case AuthActions.register.type:
       return { ...action, password: MASK } as Action;
     case AuthActions.loginSuccess.type:
       return { ...action, token: MASK } as Action;

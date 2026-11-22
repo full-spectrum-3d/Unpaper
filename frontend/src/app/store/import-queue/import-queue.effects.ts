@@ -9,6 +9,7 @@ import {
   filter,
   from,
   map,
+  merge,
   mergeMap,
   observeOn,
   of,
@@ -50,6 +51,7 @@ export class ImportQueueEffects {
         A.filesAdded,
         A.convertSucceeded,
         A.convertFailed,
+        A.cancelled,
         A.retry,
         A.passwordSubmitted,
         A.removed,
@@ -141,7 +143,12 @@ export class ImportQueueEffects {
               }),
             );
           }),
-          takeUntil(this.queueDropped$),
+          takeUntil(
+            merge(
+              this.queueDropped$,
+              this.actions$.pipe(ofType(A.cancelled), filter((c) => c.id === id)),
+            ),
+          ),
         );
       }),
     ),

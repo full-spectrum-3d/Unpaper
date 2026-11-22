@@ -49,6 +49,14 @@ describe('importQueueReducer', () => {
     expect(state.entities['a']).toMatchObject({ status: 'done', result: { k: 1 }, report: { w: 1 }, durationMs: 9, error: null });
   });
 
+  it('cancelled turns a processing item into a retryable error and ignores other statuses', () => {
+    const processing = withItems(item('a', { status: 'processing' }));
+    const state = importQueueReducer(processing, ImportQueueActions.cancelled({ id: 'a' }));
+    expect(state.entities['a']).toMatchObject({ status: 'error', error: 'Analiza anulowana', retryable: true });
+    const done = withItems(item('a', { status: 'done' }));
+    expect(importQueueReducer(done, ImportQueueActions.cancelled({ id: 'a' }))).toBe(done);
+  });
+
   it('convertFailed sets error, message, retryable true', () => {
     const before = withItems(item('a', { status: 'processing' }));
     const state = importQueueReducer(before, ImportQueueActions.convertFailed({ id: 'a', error: 'boom' }));

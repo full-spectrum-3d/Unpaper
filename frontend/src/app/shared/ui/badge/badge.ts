@@ -4,14 +4,19 @@ export type FileStatus = 'pending' | 'processing' | 'done' | 'error';
 
 const statuses: Record<FileStatus, { label: string; icon: string; classes: string }> = {
   pending: { label: 'Oczekuje', icon: '…', classes: 'bg-warning-subtle text-warning' },
-  processing: { label: 'Przetwarzanie', icon: '⟳', classes: 'bg-primary-subtle text-primary' },
+  processing: { label: 'Przetwarzanie', icon: '', classes: 'bg-primary-subtle text-primary' },
   done: { label: 'Gotowe', icon: '✓', classes: 'bg-success-subtle text-success' },
   error: { label: 'Błąd', icon: '✕', classes: 'bg-danger-subtle text-danger' },
 };
 
 @Component({
   selector: 'app-badge',
-  template: '<span aria-hidden="true">{{ view().icon }}</span>{{ view().label }}',
+  template: `
+    @if (view().icon) {
+      <span aria-hidden="true">{{ view().icon }}</span>
+    }
+    {{ view().label }}
+  `,
   host: { '[class]': 'classes()' },
 })
 export class Badge {

@@ -32,7 +32,11 @@ services:
     build: ./backend
     image: coi-cf-api:0.1.0
     env_file: .env
+    environment:
+      # Baza zarejestrowanych kont: jedyny trwały zapis API, na osobnym wolumenie.
+      USERS_DB_PATH: /data/users.db
     tmpfs: ["/tmp:size=512m,mode=1777"]
+    volumes: ["api-data:/data"]
     # tini jako PID 1: zbiera procesy potomne LibreOffice po timeoucie konwersji.
     init: true
     pids_limit: 512
@@ -122,5 +126,6 @@ networks:
   egress: {}
 
 volumes:
+  api-data:
   ollama-models:
     name: ollama-models

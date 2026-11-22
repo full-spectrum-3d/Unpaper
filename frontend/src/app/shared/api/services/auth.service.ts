@@ -10,14 +10,89 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AuthOptions } from '../models/auth-options';
+import { authOptionsApiV1AuthOptionsGet } from '../fn/auth/auth-options-api-v-1-auth-options-get';
+import { AuthOptionsApiV1AuthOptionsGet$Params } from '../fn/auth/auth-options-api-v-1-auth-options-get';
 import { issueTokenApiV1AuthTokenPost } from '../fn/auth/issue-token-api-v-1-auth-token-post';
 import { IssueTokenApiV1AuthTokenPost$Params } from '../fn/auth/issue-token-api-v-1-auth-token-post';
+import { registerApiV1AuthRegisterPost } from '../fn/auth/register-api-v-1-auth-register-post';
+import { RegisterApiV1AuthRegisterPost$Params } from '../fn/auth/register-api-v-1-auth-register-post';
 import { TokenResponse } from '../models/token-response';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `authOptionsApiV1AuthOptionsGet()` */
+  static readonly AuthOptionsApiV1AuthOptionsGetPath = '/api/v1/auth/options';
+
+  /**
+   * Auth Options.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `authOptionsApiV1AuthOptionsGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  authOptionsApiV1AuthOptionsGet$Response(params?: AuthOptionsApiV1AuthOptionsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthOptions>> {
+    const obs = authOptionsApiV1AuthOptionsGet(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * Auth Options.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `authOptionsApiV1AuthOptionsGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  authOptionsApiV1AuthOptionsGet(params?: AuthOptionsApiV1AuthOptionsGet$Params, context?: HttpContext): Observable<AuthOptions> {
+    const resp = this.authOptionsApiV1AuthOptionsGet$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<AuthOptions>): AuthOptions => r.body)
+    );
+  }
+
+  /** Path part for operation `registerApiV1AuthRegisterPost()` */
+  static readonly RegisterApiV1AuthRegisterPostPath = '/api/v1/auth/register';
+
+  /**
+   * Register.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registerApiV1AuthRegisterPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registerApiV1AuthRegisterPost$Response(params: RegisterApiV1AuthRegisterPost$Params, context?: HttpContext): Observable<StrictHttpResponse<TokenResponse>> {
+    const obs = registerApiV1AuthRegisterPost(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * Register.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `registerApiV1AuthRegisterPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registerApiV1AuthRegisterPost(params: RegisterApiV1AuthRegisterPost$Params, context?: HttpContext): Observable<TokenResponse> {
+    const resp = this.registerApiV1AuthRegisterPost$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<TokenResponse>): TokenResponse => r.body)
+    );
   }
 
   /** Path part for operation `issueTokenApiV1AuthTokenPost()` */

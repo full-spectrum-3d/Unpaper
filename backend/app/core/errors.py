@@ -30,6 +30,8 @@ class ErrorCode(StrEnum):
     INVALID_TOKEN = "INVALID_TOKEN"  # noqa: S105 - kod błędu, nie sekret
     INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
     FORBIDDEN = "FORBIDDEN"
+    USERNAME_TAKEN = "USERNAME_TAKEN"
+    REGISTRATION_DISABLED = "REGISTRATION_DISABLED"
     # Walidacja pliku (spec §6.3); te same wartości co `UploadErrorCode`
     MALFORMED_REQUEST = "MALFORMED_REQUEST"
     FILE_MISSING = "FILE_MISSING"
@@ -63,6 +65,8 @@ _ERROR_META: dict[ErrorCode, tuple[HTTPStatus, str]] = {
     ErrorCode.INVALID_TOKEN: (HTTPStatus.UNAUTHORIZED, "Nieprawidłowy lub wygasły token"),
     ErrorCode.INVALID_CREDENTIALS: (HTTPStatus.UNAUTHORIZED, "Nieprawidłowy login lub hasło"),
     ErrorCode.FORBIDDEN: (HTTPStatus.FORBIDDEN, "Brak uprawnień"),
+    ErrorCode.USERNAME_TAKEN: (HTTPStatus.CONFLICT, "Ten login jest już zajęty"),
+    ErrorCode.REGISTRATION_DISABLED: (HTTPStatus.FORBIDDEN, "Rejestracja jest wyłączona"),
     ErrorCode.MALFORMED_REQUEST: (HTTPStatus.BAD_REQUEST, "Niepoprawne żądanie multipart"),
     ErrorCode.FILE_MISSING: (HTTPStatus.BAD_REQUEST, "Brak pliku w żądaniu"),
     ErrorCode.TOO_MANY_FILES: (HTTPStatus.BAD_REQUEST, "Przesłano więcej niż jeden plik"),

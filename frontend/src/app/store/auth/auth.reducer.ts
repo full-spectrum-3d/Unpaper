@@ -23,7 +23,7 @@ export const initialAuthState: AuthState = {
 
 export const authReducer = createReducer(
   initialAuthState,
-  on(AuthActions.login, (state): AuthState => ({
+  on(AuthActions.login, AuthActions.register, (state): AuthState => ({
     ...state,
     status: 'pending',
     error: null,

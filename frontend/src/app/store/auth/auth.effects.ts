@@ -6,6 +6,7 @@ import { Observable, catchError, defer, filter, map, merge, of, switchMap, tap, 
 import { Router } from '@angular/router';
 import { toUserMessage } from '../../core/api-error';
 import { safeReturnUrl } from '../../core/auth.guard';
+import { TokenResponse } from '../../shared/api/models/token-response';
 import { AuthService } from '../../shared/api/services/auth.service';
 import { AuthActions } from './auth.actions';
 import { selectExpiresAt, selectToken } from './auth.selectors';
@@ -17,7 +18,9 @@ const MAX_TIMER_MS = 2 ** 31 - 1;
 export function timerUntil(at: number): Observable<unknown> {
   return defer(() => {
     const delay = at - Date.now();
-    return delay > MAX_TIMER_MS ? timer(MAX_TIMER_MS).pipe(switchMap(() => timerUntil(at))) : timer(Math.max(0, delay));
+    return delay > MAX_TIMER_MS
+      ? timer(MAX_TIMER_MS).pipe(switchMap(() => timerUntil(at)))
+      : timer(Math.max(0, delay));
   });
 }
 
@@ -32,21 +35,22 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.login),
       switchMap(({ username, password }) =>
-        this.api.issueTokenApiV1AuthTokenPost({ body: { username, password } }).pipe(
-          map((r) =>
-            AuthActions.loginSuccess({
-              token: r.access_token,
-              expiresAt: Date.now() + r.expires_in * 1000,
-              username,
-            }),
-          ),
-          catchError((e: unknown) =>
-            of(
-              AuthActions.loginFailure({
-                error: e instanceof HttpErrorResponse ? toUserMessage(e) : 'Wystąpił nieoczekiwany błąd',
-              }),
-            ),
-          ),
+        this.signIn(
+          username,
+          this.api.issueTokenApiV1AuthTokenPost({ body: { username, password } }),
+        ),
+      ),
+    ),
+  );
+
+  /** A new account is signed in straight away: the API answers registration with a token. */
+  register$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.register),
+      switchMap(({ username, password }) =>
+        this.signIn(
+          username,
+          this.api.registerApiV1AuthRegisterPost({ body: { username, password } }),
         ),
       ),
     ),
@@ -95,10 +99,33 @@ export class AuthEffects {
         ofType(AuthActions.logout),
         filter(() => !this.router.url.startsWith('/login')),
         tap(({ reason }) => {
-          const url = reason === 'manual' ? '/login' : '/login?returnUrl=' + encodeURIComponent(this.router.url);
+          const url =
+            reason === 'manual'
+              ? '/login'
+              : '/login?returnUrl=' + encodeURIComponent(this.router.url);
           void this.router.navigateByUrl(url);
         }),
       ),
     { dispatch: false },
   );
+
+  private signIn(username: string, request: Observable<TokenResponse>) {
+    return request.pipe(
+      map((r) =>
+        AuthActions.loginSuccess({
+          token: r.access_token,
+          expiresAt: Date.now() + r.expires_in * 1000,
+          username,
+        }),
+      ),
+      catchError((e: unknown) =>
+        of(
+          AuthActions.loginFailure({
+            error:
+              e instanceof HttpErrorResponse ? toUserMessage(e) : 'Wystąpił nieoczekiwany błąd',
+          }),
+        ),
+      ),
+    );
+  }
 }
