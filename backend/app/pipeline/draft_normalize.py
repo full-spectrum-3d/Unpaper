@@ -193,16 +193,17 @@ def _remove_computed_fields(data: dict[str, Any], warnings: list[ConversionWarni
 
 
 @cache
-def _example_labels() -> frozenset[str]:
-    """Etykiety pól z przykładu few-shot w prompcie (`example_reply.json`)."""
+def _example() -> tuple[frozenset[str], frozenset[str]]:
+    """Etykiety pól i tytuły stron z przykładu few-shot w prompcie (`example_reply.json`)."""
     path = files("app") / "resources" / "prompts" / "example_reply.json"
     example = json.loads(path.read_text(encoding="utf-8"))
-    return frozenset(
+    labels = frozenset(
         _normalize(field["label"])
         for page in example["subject_pages"]
         for section in page["sections"]
         for field in section["fields"]
     )
+    return labels, frozenset(_normalize(page["title"]) for page in example["subject_pages"])
 
 
 def _remove_example_fields(
@@ -213,8 +214,13 @@ def _remove_example_fields(
     Przy fragmencie z niewielką treścią (np. druga strona oświadczenia) model potrafi
     oddać pola przykładu („Gatunek”, „Obwód pnia…”). Pole o takiej etykiecie zostaje,
     gdy etykieta lub któraś z opcji występuje w dokumencie.
+
+    Model oddaje też przykład w całości, jako stronę o tytule z przykładu. Wtedy krótkie
+    etykiety („Obręb”) przechodzą luźne dopasowanie do dowolnego tekstu, a „Numer działki”
+    bywa w dokumencie naprawdę - mimo to są echem. Jeśli na takiej stronie co najmniej połowy
+    pól przykładu nie ma w dokumencie, usuwamy z niej wszystkie pola przykładu.
     """
-    examples = _example_labels()
+    examples, example_pages = _example()
 
     def leaked(field: dict[str, Any]) -> bool:
         if _normalize(field["label"]) not in examples:
@@ -227,8 +233,22 @@ def _remove_example_fields(
             matches_text(o, doc_text, LABEL_MATCH_THRESHOLD) for o in options
         )
 
+    removed: set[int] = set()
+    for page in data["subject_pages"]:
+        copied = [
+            f
+            for section in page["sections"]
+            for f in section["fields"]
+            if _normalize(f["label"]) in examples
+        ]
+        missing = [f for f in copied if leaked(f)]
+        echoed_page = (
+            _normalize(page["title"]) in example_pages and len(missing) * 2 >= len(copied) > 0
+        )
+        removed.update(id(f) for f in (copied if echoed_page else missing))
+
     for path, field in iter_field_dicts(data):
-        if leaked(field):
+        if id(field) in removed:
             warnings.append(
                 ConversionWarning(
                     code="W28_EXAMPLE_FIELD_REMOVED",
@@ -239,7 +259,7 @@ def _remove_example_fields(
             )
     for page in data["subject_pages"]:
         for section in page["sections"]:
-            section["fields"] = [f for f in section["fields"] if not leaked(f)]
+            section["fields"] = [f for f in section["fields"] if id(f) not in removed]
 
 
 def _remove_duplicate_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:

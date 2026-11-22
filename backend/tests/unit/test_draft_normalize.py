@@ -353,6 +353,87 @@ def test_fields_copied_from_prompt_example_removed() -> None:
     assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4"]
 
 
+def _example_page() -> dict[str, Any]:
+    """Strona, którą model oddaje, gdy przepisuje przykład z promptu zamiast czytać dokument."""
+
+    def field(fid: str, label: str, kind: str = "short_text", **extra: Any) -> dict[str, Any]:
+        return {"id": fid, "label": label, "kind": kind, "required": True, **extra}
+
+    return {
+        "title": "Informacje o drzewach",
+        "sections": [
+            {
+                "title": "Drzewa lub krzewy do usunięcia",
+                "repeating": False,
+                "fields": [
+                    field("e1", "Rodzaj", "single_choice", options=["Drzewa", "Krzewy"]),
+                    field("e2", "Gatunek"),
+                    field("e3", "Obwód pnia na wysokości 130 cm (cm)", "number"),
+                ],
+            },
+            {
+                "title": "Lokalizacja",
+                "repeating": False,
+                "fields": [field("e4", "Numer działki"), field("e5", "Obręb")],
+            },
+            {
+                "title": "Usunięcie i nasadzenia",
+                "repeating": False,
+                "fields": [
+                    field("e6", "Przyczyna usunięcia", "long_text"),
+                    field("e7", "Planowany termin usunięcia", "date"),
+                ],
+            },
+        ],
+    }
+
+
+def test_echoed_example_page_removed_even_when_short_labels_resemble_document() -> None:
+    # „Obręb” ma 5 znaków: wystarczy „obr” z „dobrowolną”, żeby przeszło luźne dopasowanie.
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki."),
+        ("paragraph", "Podając numer telefonu wnioskujący wyraża dobrowolną zgodę na kontakt."),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        _fields(d).pop()  # f4 „Obręb” nie występuje w tym dokumencie
+        d["subject_pages"].append(_example_page())
+
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3"]
+    assert [p.title for p in out.subject_pages] == ["Informacje o budynku"]
+    assert _codes(warnings).count("W28_EXAMPLE_FIELD_REMOVED") == 7
+
+
+def test_echoed_example_page_removed_when_document_has_similar_fields_elsewhere() -> None:
+    # Wniosek o grunt leśny: „numer działki” i „obręb” są w dokumencie, a strona to echo przykładu.
+    doc = _doc_blocks(
+        ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
+        ("paragraph", "Wyłączenie z produkcji gruntów leśnych, drzewostan, numer działki."),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        d["subject_pages"].append(_example_page())
+
+    out, _ = normalize_draft(_make(mutate), doc)
+    assert [f.id for _, f in out.iter_fields()] == ["f1", "f2", "f3", "f4"]
+
+
+def test_page_titled_like_example_kept_when_document_is_about_trees() -> None:
+    doc = _doc_blocks(
+        ("paragraph", "Wniosek o usunięcie drzew lub krzewów. Rodzaj, gatunek: … Obwód pnia"),
+        ("paragraph", "na wysokości 130 cm: … Nr działki: … obręb: … Przyczyna usunięcia: …"),
+        ("paragraph", "Planowany termin usunięcia: …"),
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        d["subject_pages"] = [_example_page()]
+
+    out, warnings = normalize_draft(_make(mutate), doc)
+    assert "W28_EXAMPLE_FIELD_REMOVED" not in _codes(warnings)
+    assert [f.id for _, f in out.iter_fields()] == ["e1", "e2", "e3", "e4", "e5", "e6", "e7"]
+
+
 def test_number_inside_statement_kept() -> None:
     doc = _doc_blocks(
         ("paragraph", "Wójt Gminy Elbląg. Miejscowość Ulica Numer ewidencyjny działki Obręb."),
