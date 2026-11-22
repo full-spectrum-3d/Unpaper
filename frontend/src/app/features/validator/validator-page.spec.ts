@@ -67,7 +67,20 @@ describe('ValidatorPage', () => {
     const role = (r: string) => el.querySelector<HTMLElement>(`[role="${r}"]`);
     const summary = () => el.querySelector<HTMLElement>('#validator-summary');
     const disabled = () => checkButton().getAttribute('aria-disabled') === 'true';
-    return { fixture, el, http, field, button, checkButton, type, check, text, role, summary, disabled };
+    return {
+      fixture,
+      el,
+      http,
+      field,
+      button,
+      checkButton,
+      type,
+      check,
+      text,
+      role,
+      summary,
+      disabled,
+    };
   };
 
   it('disables Sprawdź for empty text, keeping it focusable', () => {
@@ -101,7 +114,7 @@ describe('ValidatorPage', () => {
       const id = field().getAttribute('aria-describedby');
       seen = {
         invalid: field().getAttribute('aria-invalid'),
-        text: id ? el.querySelector(`#${id}`)?.textContent ?? undefined : undefined,
+        text: id ? (el.querySelector(`#${id}`)?.textContent ?? undefined) : undefined,
       };
     });
     type('{"a":');
@@ -262,11 +275,22 @@ describe('ValidatorPage', () => {
   });
 
   it('explains a missing queue item without a request', () => {
-    const { fixture, http, text } = setup();
+    const { fixture, el, http, text } = setup();
     fixture.componentRef.setInput('item', 'nope');
     fixture.detectChanges();
     expect(text()).toContain('Nie znaleziono wyniku do sprawdzenia. Wklej JSON ręcznie.');
+    expect(el.querySelector('a[href^="/result"]')).toBeNull();
     http.expectNone(URL);
+  });
+
+  it('links back to the form it was opened from', () => {
+    const { fixture, el, http } = setup();
+    fixture.componentRef.setInput('item', 'd1');
+    fixture.detectChanges();
+    http.expectOne(URL);
+    const back = el.querySelector<HTMLAnchorElement>('a[href^="/result"]')!;
+    expect(back.textContent!.trim()).toBe('← Wróć do formularza');
+    expect(back.getAttribute('href')).toBe('/result/d1');
   });
 
   it('resets the screen when item changes to an unknown id', () => {
@@ -361,7 +385,8 @@ describe('ValidatorPage', () => {
     let releaseSlow!: () => void;
     const slow = new File(['{"slow": 1}'], 'slow.json');
     const slowText = slow.text.bind(slow);
-    slow.text = () => new Promise<string>((done) => (releaseSlow = () => void slowText().then(done)));
+    slow.text = () =>
+      new Promise<string>((done) => (releaseSlow = () => void slowText().then(done)));
     upload(slow);
     upload(new File(['{"fast": 1}'], 'fast.json'));
     await vi.waitFor(() => {

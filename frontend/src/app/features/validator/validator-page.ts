@@ -13,6 +13,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { toUserMessage } from '../../core/api-error';
@@ -59,7 +60,7 @@ function normalize(body: unknown, lines: JsonLines): CheckResult {
 
 @Component({
   selector: 'app-validator-page',
-  imports: [Button, JsonView],
+  imports: [Button, JsonView, RouterLink],
   templateUrl: './validator-page.html',
   host: { class: 'block p-section' },
 })
@@ -79,6 +80,8 @@ export class ValidatorPage {
   protected readonly httpError = signal<string | null>(null);
   protected readonly highlight = signal<string | null>(null);
   protected readonly missingItem = signal(false);
+  /** Converted form this check was opened from (?item of a finished queue row): target of the back link. */
+  protected readonly sourceItem = signal<string | null>(null);
   /** Persistent live region text, e.g. "Wczytano plik X". */
   protected readonly fileStatus = signal('');
 
@@ -117,6 +120,7 @@ export class ValidatorPage {
         this.fileRead++;
         this.checking.set(false);
         this.missingItem.set(id !== undefined && !found);
+        this.sourceItem.set(found && id !== undefined ? id : null);
         this.text.set(found ? (JSON.stringify(row.result, null, 2) ?? '') : '');
         this.result.set(null);
         this.checkedText.set(null);

@@ -1,4 +1,9 @@
 <main class="flex flex-col gap-section w-full max-w-[960px] mx-auto">
+  @if (sourceItem(); as id) {
+    <a [routerLink]="['/result', id]" class="self-start text-primary focus-ring rounded-field"
+      >← Wróć do formularza</a
+    >
+  }
   <div>
     <h1 tabindex="-1" class="text-title font-semibold">Walidator JSON</h1>
     <p class="text-fg-muted">Sprawdź, czy JSON formularza spełnia reguły COI.</p>
