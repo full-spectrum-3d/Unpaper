@@ -135,6 +135,27 @@ describe('FormEditor', () => {
     expect(status()).toContain('Usunięto warunek widoczności: „Dane podmiotu”');
   });
 
+  it('moves a field down and keeps focus on its arrow until it reaches the end', async () => {
+    const { fixture, el, row, button, status, last } = await setup();
+    const imie = byName(nadplata as FormDefinition, 'imie');
+    expect(button(row('imie'), '↑').disabled).toBe(true);
+    button(row('imie'), '↓').click();
+    await fixture.whenStable();
+    const kids = el.querySelectorAll(`#edit-field-${byName(last(), 'twoje_dane').id} + ul > li`);
+    expect([...kids].map((li) => li.querySelector('legend')!.textContent)).toEqual([
+      expect.stringContaining('Nazwisko'),
+      expect.stringContaining('Imię'),
+      expect.stringContaining('PESEL'),
+    ]);
+    expect(status()).toBe('Przesunięto pole „Imię” w dół.');
+    expect(document.activeElement).toBe(
+      el.querySelector(`#edit-field-${imie.id} button.move-down`),
+    );
+    button(row('imie'), '↓').click();
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(el.querySelector(`#edit-field-${imie.id} button.move-up`));
+  });
+
   it('shows registry fields without edit controls', async () => {
     const { row } = await setup();
     expect(row('imie').textContent).toContain('Dane z rejestru');

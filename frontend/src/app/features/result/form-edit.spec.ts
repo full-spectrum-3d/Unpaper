@@ -1,6 +1,7 @@
 import { FormDefinition, FormField, isFormDefinition } from '../preview/form-definition';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
-import { addField, allQuestions, removeField, slugify, updateField } from './form-edit';
+import { sortQuestions } from '../preview/page-order';
+import { addField, allQuestions, moveField, removeField, slugify, updateField } from './form-edit';
 
 const def = nadplata as unknown as FormDefinition;
 const fields = (d: FormDefinition): FormField[] =>
@@ -149,5 +150,35 @@ describe('removeField', () => {
     }
     // Conditions on other fields stay.
     expect(byName(definition, 'ulica').states).toEqual(byName(def, 'ulica').states);
+  });
+});
+
+describe('moveField', () => {
+  const order = (d: FormDefinition, techName: string) =>
+    sortQuestions(byName(d, techName).repeatingSectionGrid!).map((q) => q.field.techName);
+
+  it('swaps a field with its on-screen neighbour, keeping slots and questionOrder in place', () => {
+    const moved = moveField(def, byName(def, 'imie').id, 1);
+    expect(order(moved, 'twoje_dane')).toEqual(['nazwisko', 'imie', 'numer_pesel']);
+    const grid = sortQuestions(byName(moved, 'twoje_dane').repeatingSectionGrid!);
+    expect(grid.map((q) => [q.y, q.field.questionOrder])).toEqual([
+      [0, 0],
+      [1, 1],
+      [2, 2],
+    ]);
+    expect(isFormDefinition(moved)).toBe(true);
+    expect(moved.tabs[1]).toBe(def.tabs[1]);
+  });
+
+  it('moves top-level sections with their children', () => {
+    const moved = moveField(def, byName(def, 'podmiot_wniosku').id, -1);
+    const top = sortQuestions(moved.tabs[0].questions).map((q) => q.field.techName);
+    expect(top.slice(0, 2)).toEqual(['podmiot_wniosku', 'urzad_do_ktorego_jest_skladany_wniosek']);
+    expect(order(moved, 'podmiot_wniosku')).toEqual(order(def, 'podmiot_wniosku'));
+  });
+
+  it('does nothing past either end', () => {
+    expect(moveField(def, byName(def, 'imie').id, -1)).toBe(def);
+    expect(moveField(def, byName(def, 'numer_pesel').id, 1)).toBe(def);
   });
 });

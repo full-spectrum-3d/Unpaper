@@ -18,6 +18,7 @@ import {
   NewField,
   addField,
   isSection,
+  moveField,
   removeField,
   typeLabel,
   updateField,
@@ -64,6 +65,26 @@ export class FormEditor {
     this.edited.emit(definition);
     this.status.set(`Dodano pole ${name(field)}.`);
     this.focusLater(`#edit-field-${field.id} input`);
+  }
+
+  /** Focus stays on the moved field: same arrow, or the other one once it reached an end. */
+  protected onMove(field: FormField, offset: -1 | 1): void {
+    const definition = moveField(this.definition(), field.id, offset);
+    if (definition === this.definition()) return;
+    this.edited.emit(definition);
+    this.status.set(`Przesunięto pole ${name(field)} ${offset < 0 ? 'w górę' : 'w dół'}.`);
+    const row = `#edit-field-${field.id}`;
+    afterNextRender(
+      () => {
+        const q = (s: string) => this.host.nativeElement.querySelector<HTMLButtonElement>(s);
+        const same = q(`${row} button.move-${offset < 0 ? 'up' : 'down'}`);
+        (same && !same.disabled
+          ? same
+          : q(`${row} button.move-${offset < 0 ? 'down' : 'up'}`)
+        )?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
   /** `siblings` in on-screen order; focus goes to the next row, else the previous one, else the parent. */

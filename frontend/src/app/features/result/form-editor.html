@@ -1,6 +1,6 @@
 <p class="text-fg-muted mb-section">
   Zmiany od razu trafiają do podglądu, widoku JSON i pobieranego pliku. Pola dodasz tylko w sekcjach
-  — tak wymaga format importu.
+  — tak wymaga format importu. Strzałkami zmienisz kolejność pól w obrębie strony lub sekcji.
 </p>
 <p role="status" class="font-semibold mb-section">{{ status() }}</p>
 <div class="flex flex-col gap-section">
@@ -14,12 +14,15 @@
       }
       <!-- shortcut: tracks by field id (made unique by backend verify, rule R12); duplicated ids in raw JSON would edit together. -->
       <ul class="flex flex-col gap-3">
-        @for (q of page.questions; track q.field.id) {
+        @for (q of page.questions; track q.field.id; let first = $first, last = $last) {
           <li class="flex flex-col gap-3">
             <app-field-row
               [field]="q.field"
               [removable]="page.questions.length > 1"
+              [first]="first"
+              [last]="last"
               (patch)="onPatch(q.field, $event)"
+              (move)="onMove(q.field, $event)"
               (remove)="onRemove(q.field, page.questions, null)"
             />
             @if (isSection(q.field)) {
@@ -29,11 +32,14 @@
                   class="flex flex-col gap-3 ml-2 pl-4 border-l-2 border-border"
                   [attr.aria-label]="'Pola sekcji ' + q.field.title"
                 >
-                  @for (c of kids; track c.field.id) {
+                  @for (c of kids; track c.field.id; let first = $first, last = $last) {
                     <li>
                       <app-field-row
                         [field]="c.field"
+                        [first]="first"
+                        [last]="last"
                         (patch)="onPatch(c.field, $event)"
+                        (move)="onMove(c.field, $event)"
                         (remove)="onRemove(c.field, kids, q.field)"
                       />
                     </li>
