@@ -1,4 +1,5 @@
-import { DictionaryNode, findDictionary } from './sample-dictionaries';
+import { computed } from '@angular/core';
+import { Dictionary, DictionaryNode, findDictionary, setTerytLoader } from './sample-dictionaries';
 
 const depthOk = (n: DictionaryNode, level: number): boolean =>
   level === 3 ? !n.children : !!n.children?.length && n.children.every((c) => depthOk(c, level + 1));
@@ -52,5 +53,49 @@ describe('findDictionary', () => {
   it('returns undefined for unknown', () => {
     expect(findDictionary('Nieznany')).toBeUndefined();
     expect(findDictionary(undefined)).toBeUndefined();
+  });
+});
+
+describe('findDictionary with a TERYT loader', () => {
+  const full: Dictionary = {
+    levels: ['Województwo', 'Powiat', 'Gmina', 'Miejscowość'],
+    items: [
+      {
+        name: 'dolnośląskie',
+        children: [
+          {
+            name: 'bolesławiecki',
+            children: [{ name: 'Gromadka', code: '0201032', children: [{ name: 'Gromadka' }, { name: 'Wierzbowa' }] }],
+          },
+        ],
+      },
+    ],
+  };
+  afterEach(() => setTerytLoader(undefined));
+
+  it('fetches TERYT once and serves it reactively to all TERYT dictionaries', async () => {
+    const load = vi.fn(() => Promise.resolve(full));
+    setTerytLoader(load);
+    const powiaty = computed(() => findDictionary('Powiat')?.items.map((i) => i.name));
+
+    expect(findDictionary('TERYT_4G_DOWODOWY')).toBeUndefined();
+    expect(powiaty()).toBeUndefined();
+    await Promise.resolve();
+
+    expect(findDictionary('TERYT_DOWODOWY')).toBe(full);
+    expect(powiaty()).toEqual(['bolesławiecki']);
+    expect(findDictionary('Miejscowość')!.items.map((i) => i.name)).toEqual(['Gromadka', 'Wierzbowa']);
+    expect(findDictionary('Kraje')!.items.length).toBeGreaterThan(190);
+    expect(load).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not retry immediately after a failed fetch', async () => {
+    const load = vi.fn(() => Promise.reject(new Error('401')));
+    setTerytLoader(load);
+    findDictionary('Powiat');
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(findDictionary('Powiat')).toBeUndefined();
+    expect(load).toHaveBeenCalledTimes(1);
   });
 });

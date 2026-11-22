@@ -5,6 +5,8 @@ export type { IssueTokenApiV1AuthTokenPost$Params as IssueTokenApiV1AuthTokenPos
 export { issueTokenApiV1AuthTokenPost as issueTokenApiV1AuthTokenPost } from './fn/auth/issue-token-api-v-1-auth-token-post';
 export type { ListDictionariesApiV1DictionariesGet$Params as ListDictionariesApiV1DictionariesGet$Params } from './fn/catalog/list-dictionaries-api-v-1-dictionaries-get';
 export { listDictionariesApiV1DictionariesGet as listDictionariesApiV1DictionariesGet } from './fn/catalog/list-dictionaries-api-v-1-dictionaries-get';
+export type { TerytTreeApiV1DictionariesTerytGet$Params as TerytTreeApiV1DictionariesTerytGet$Params } from './fn/catalog/teryt-tree-api-v-1-dictionaries-teryt-get';
+export { terytTreeApiV1DictionariesTerytGet as terytTreeApiV1DictionariesTerytGet } from './fn/catalog/teryt-tree-api-v-1-dictionaries-teryt-get';
 export type { ListInitialDataSourcesApiV1InitialDataSourcesGet$Params as ListInitialDataSourcesApiV1InitialDataSourcesGet$Params } from './fn/catalog/list-initial-data-sources-api-v-1-initial-data-sources-get';
 export { listInitialDataSourcesApiV1InitialDataSourcesGet as listInitialDataSourcesApiV1InitialDataSourcesGet } from './fn/catalog/list-initial-data-sources-api-v-1-initial-data-sources-get';
 export type { ConvertApiV1FormsConvertPost$Params as ConvertApiV1FormsConvertPost$Params } from './fn/forms/convert-api-v-1-forms-convert-post';

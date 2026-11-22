@@ -1,6 +1,12 @@
-// Dane przykładowe do podglądu: backend nie dostarcza pozycji słowników predefiniowanych.
+import { signal } from '@angular/core';
+
+// Słowniki do podglądu. TERYT (pełny: wszystkie powiaty, gminy i miejscowości) przychodzi
+// z backendu (GET /api/v1/dictionaries/teryt) po zarejestrowaniu loadera; bez niego
+// (testy, Storybook) używana jest poniższa próbka. Kraje i numery kierunkowe są lokalne.
 export interface DictionaryNode {
   name: string;
+  /** Identyfikator TERYT (gminy z backendu). */
+  code?: string;
   children?: DictionaryNode[];
 }
 export interface Dictionary {
@@ -48,7 +54,7 @@ const COUNTRIES = [
   'Wyspy Świętego Tomasza i Książęca', 'Zambia', 'Zimbabwe', 'Zjednoczone Emiraty Arabskie',
 ];
 
-const TERYT: Dictionary = {
+const SAMPLE_TERYT: Dictionary = {
   levels: ['Województwo', 'Powiat', 'Gmina', 'Miejscowość'],
   items: [
     node('dolnośląskie', city('Wrocław'), place('wrocławski', 'Kobierzyce', 'Kobierzyce')),
@@ -81,25 +87,25 @@ const TERYT: Dictionary = {
 };
 
 /** Unique names at one TERYT depth (0 = województwo), for single-level dictionaries. */
-const tierNames = (depth: number): string[] => {
-  let nodes = TERYT.items;
+const tier = (teryt: Dictionary, depth: number): Dictionary => {
+  let nodes = teryt.items;
   for (let d = 0; d < depth; d++) nodes = nodes.flatMap((n) => n.children ?? []);
-  return [...new Set(nodes.map((n) => n.name))];
+  return { levels: [teryt.levels[depth]], items: flat([...new Set(nodes.map((n) => n.name))]) };
 };
-const tier = (depth: number): Dictionary => ({
-  levels: [TERYT.levels[depth]],
-  items: flat(tierNames(depth)),
+
+/** All dictionaries backed by the TERYT tree, by name. */
+const terytDictionaries = (teryt: Dictionary): Record<string, Dictionary> => ({
+  TERYT_4G_DOWODOWY: teryt,
+  TERYT_DOWODOWY: teryt,
+  // Single-level TERYT dictionaries the backend binds to bare "Województwo:" / "Powiat:" labels.
+  Województwo: tier(teryt, 0),
+  Powiat: tier(teryt, 1),
+  Gmina: tier(teryt, 2),
+  Miejscowość: tier(teryt, 3),
 });
 
-export const SAMPLE_DICTIONARIES: Readonly<Record<string, Dictionary>> = {
+const LOCAL_DICTIONARIES: Readonly<Record<string, Dictionary>> = {
   Kraje: { levels: ['Kraj'], items: flat(COUNTRIES) },
-  TERYT_4G_DOWODOWY: TERYT,
-  TERYT_DOWODOWY: TERYT,
-  // Single-level TERYT dictionaries the backend binds to bare "Województwo:" / "Powiat:" labels.
-  Województwo: tier(0),
-  Powiat: tier(1),
-  Gmina: tier(2),
-  Miejscowość: tier(3),
   NUMERY_KIERUNKOWE: {
     levels: ['Numer kierunkowy'],
     items: [
@@ -109,6 +115,52 @@ export const SAMPLE_DICTIONARIES: Readonly<Record<string, Dictionary>> = {
   },
 };
 
+export const SAMPLE_DICTIONARIES: Readonly<Record<string, Dictionary>> = {
+  ...LOCAL_DICTIONARIES,
+  ...terytDictionaries(SAMPLE_TERYT),
+};
+const TERYT_NAMES = new Set(Object.keys(terytDictionaries(SAMPLE_TERYT)));
+
+export type TerytLoader = () => Promise<Dictionary>;
+const RETRY_MS = 10_000;
+let loader: TerytLoader | undefined;
+let pending = false;
+let failedAt = -Infinity;
+const remoteTeryt = signal<Record<string, Dictionary> | undefined>(undefined);
+
+/** Switches TERYT dictionaries to the full backend data, fetched on first use. */
+export function setTerytLoader(load: TerytLoader | undefined): void {
+  loader = load;
+  pending = false;
+  failedAt = -Infinity;
+  remoteTeryt.set(undefined);
+}
+
+function requestTeryt(load: TerytLoader): void {
+  if (pending || Date.now() - failedAt < RETRY_MS) return;
+  pending = true;
+  load().then(
+    (teryt) => {
+      if (loader !== load) return;
+      pending = false;
+      remoteTeryt.set(terytDictionaries(teryt));
+    },
+    () => {
+      if (loader !== load) return;
+      pending = false;
+      failedAt = Date.now();
+    },
+  );
+}
+
+/**
+ * Synchronous lookup, reactive inside computed()/templates: with a loader registered,
+ * TERYT dictionaries are undefined until the backend data arrives, then update in place.
+ */
 export function findDictionary(name: string | undefined): Dictionary | undefined {
-  return name === undefined ? undefined : SAMPLE_DICTIONARIES[name];
+  if (name === undefined) return undefined;
+  if (!TERYT_NAMES.has(name) || !loader) return SAMPLE_DICTIONARIES[name];
+  const remote = remoteTeryt();
+  if (!remote) requestTeryt(loader);
+  return remote?.[name];
 }

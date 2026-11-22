@@ -338,3 +338,37 @@ describe('Combobox states', () => {
     expect(fixture.nativeElement.querySelector('label button')).toBeNull();
   });
 });
+
+@Component({
+  imports: [Combobox],
+  template: `<app-combobox label="Miejscowość" [options]="options" [searchable]="true" />`,
+})
+class ManyHost {
+  readonly options = Array.from({ length: 5000 }, (_, i) => `Miejscowość ${i}`);
+}
+
+describe('Combobox with many options', () => {
+  it('renders at most 200 options with a hint to narrow the list', async () => {
+    TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+    const fixture = TestBed.createComponent(ManyHost);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const input = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const query = async (text: string) => {
+      input.focus();
+      input.value = text;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      fixture.detectChanges();
+      await fixture.whenStable();
+    };
+    const list = fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+
+    await query('Miej');
+    expect(list.querySelectorAll('[role="option"]').length).toBe(200);
+    expect(list.textContent).toContain('Wpisz więcej liter');
+
+    await query('Miejscowość 4999');
+    expect(list.querySelectorAll('[role="option"]').length).toBe(1);
+    expect(list.textContent).not.toContain('Wpisz więcej liter');
+  });
+});

@@ -376,6 +376,73 @@
         ]
       }
     },
+    "/api/v1/dictionaries/teryt": {
+      "get": {
+        "description": "Pozycje słowników TERYT: `{asOf, levels, items}` z węzłami `{name, code?, children?}`.\n\nPlik leży w gzip (ok. 0,3 MB zamiast 1,5 MB) i tak jest wysyłany, gdy klient to akceptuje.",
+        "operationId": "teryt_tree_api_v1_dictionaries_teryt_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "accept-encoding",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Accept-Encoding",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Pełne drzewo TERYT"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Brak lub nieprawidłowy token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            },
+            "description": "Token bez wymaganej roli"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Teryt Tree",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/api/v1/forms/convert": {
       "post": {
         "description": "Główny endpoint: 1 plik → JSON w formacie importu (lub `{form, report}`).",

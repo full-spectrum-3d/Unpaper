@@ -14,6 +14,8 @@ import { listDictionariesApiV1DictionariesGet } from '../fn/catalog/list-diction
 import { ListDictionariesApiV1DictionariesGet$Params } from '../fn/catalog/list-dictionaries-api-v-1-dictionaries-get';
 import { listInitialDataSourcesApiV1InitialDataSourcesGet } from '../fn/catalog/list-initial-data-sources-api-v-1-initial-data-sources-get';
 import { ListInitialDataSourcesApiV1InitialDataSourcesGet$Params } from '../fn/catalog/list-initial-data-sources-api-v-1-initial-data-sources-get';
+import { terytTreeApiV1DictionariesTerytGet } from '../fn/catalog/teryt-tree-api-v-1-dictionaries-teryt-get';
+import { TerytTreeApiV1DictionariesTerytGet$Params } from '../fn/catalog/teryt-tree-api-v-1-dictionaries-teryt-get';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogService extends BaseService {
@@ -61,6 +63,45 @@ export class CatalogService extends BaseService {
 }>>): Array<{
 [key: string]: any;
 }> => r.body)
+    );
+  }
+
+  /** Path part for operation `terytTreeApiV1DictionariesTerytGet()` */
+  static readonly TerytTreeApiV1DictionariesTerytGetPath = '/api/v1/dictionaries/teryt';
+
+  /**
+   * Teryt Tree.
+   *
+   * Pozycje słowników TERYT: `{asOf, levels, items}` z węzłami `{name, code?, children?}`.
+   *
+   * Plik leży w gzip (ok. 0,3 MB zamiast 1,5 MB) i tak jest wysyłany, gdy klient to akceptuje.
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `terytTreeApiV1DictionariesTerytGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  terytTreeApiV1DictionariesTerytGet$Response(params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<StrictHttpResponse<any>> {
+    const obs = terytTreeApiV1DictionariesTerytGet(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * Teryt Tree.
+   *
+   * Pozycje słowników TERYT: `{asOf, levels, items}` z węzłami `{name, code?, children?}`.
+   *
+   * Plik leży w gzip (ok. 0,3 MB zamiast 1,5 MB) i tak jest wysyłany, gdy klient to akceptuje.
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `terytTreeApiV1DictionariesTerytGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  terytTreeApiV1DictionariesTerytGet(params?: TerytTreeApiV1DictionariesTerytGet$Params, context?: HttpContext): Observable<any> {
+    const resp = this.terytTreeApiV1DictionariesTerytGet$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<any>): any => r.body)
     );
   }
 

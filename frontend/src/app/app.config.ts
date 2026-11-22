@@ -14,6 +14,7 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { authReducer, authFeatureKey } from './store/auth/auth.reducer';
 import { authStorageMetaReducer } from './store/auth/auth.storage';
 import { provideHttpConvertFile } from './features/import/convert-file.http';
+import { provideHttpTeryt } from './features/preview/teryt.http';
 import { ImportQueueEffects } from './store/import-queue/import-queue.effects';
 import { importQueueFeatureKey, importQueueReducer } from './store/import-queue/import-queue.reducer';
 
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideEffects(AuthEffects, ImportQueueEffects),
     provideHttpConvertFile(),
+    provideHttpTeryt(),
     // Never in production: the store holds the JWT and conversion results (PII).
     ...(isDevMode()
       ? [

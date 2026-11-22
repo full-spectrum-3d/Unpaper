@@ -68,6 +68,15 @@ def load_initial_data_catalog() -> dict[str, InitialDataAttribute]:
 
 
 @cache
+def load_teryt_gzip() -> bytes:
+    """Drzewo TERYT (województwo → powiat → gmina → miejscowość) jako gotowy JSON w gzip.
+
+    Generowane skryptem `scripts/build_teryt.py` z urzędowych plików TERC i SIMC (GUS).
+    """
+    return files("app.resources").joinpath("teryt.json.gz").read_bytes()
+
+
+@cache
 def load_form_schema() -> dict[str, Any]:
     schema: dict[str, Any] = _load_json("schema", "importowanyPlikJsonSchemat.json")
     return schema

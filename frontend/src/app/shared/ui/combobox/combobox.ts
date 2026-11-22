@@ -15,6 +15,7 @@ import { FieldTooltip } from '../field-tooltip/field-tooltip';
 import { filterOptions } from './matches';
 
 let nextId = 0;
+const MAX_VISIBLE = 200;
 
 @Component({
   selector: 'app-combobox',
@@ -136,6 +137,11 @@ let nextId = 0;
               {{ option }}
             </li>
           }
+          @if (truncated()) {
+            <li role="presentation" class="px-field-x py-field-y text-body text-fg-muted">
+              Wpisz więcej liter, aby zawęzić listę
+            </li>
+          }
         }
       </ul>
       <!-- Always in the DOM: live regions inserted with text are not reliably announced. -->
@@ -182,9 +188,12 @@ export class Combobox implements FormValueControl<string> {
   protected readonly open = signal(false);
   protected readonly query = signal('');
   protected readonly active = signal(0);
-  protected readonly visible = computed(() =>
+  private readonly matching = computed(() =>
     this.searchable() ? filterOptions(this.options(), this.query()) : this.options(),
   );
+  /** Rendering tens of thousands of options (e.g. all localities) would freeze the page. */
+  protected readonly visible = computed(() => this.matching().slice(0, MAX_VISIBLE));
+  protected readonly truncated = computed(() => this.matching().length > MAX_VISIBLE);
 
   private readonly host = inject(ElementRef<HTMLElement>).nativeElement as HTMLElement;
   private readonly document = inject(DOCUMENT);
