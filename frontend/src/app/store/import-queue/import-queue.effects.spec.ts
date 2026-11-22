@@ -122,6 +122,24 @@ describe('ImportQueueEffects', () => {
     );
   });
 
+  it('cancelled aborts only that conversion and keeps the file for a retry', () => {
+    let unsubscribed = 0;
+    const pendingForever: ConvertFileFn = () =>
+      new Observable((sub) => {
+        void sub;
+        return () => unsubscribed++;
+      });
+    const { actions$, out, registry } = setup([running('1', 5)], pendingForever);
+    registry.add('1', new File(['x'], '1.pdf'));
+    actions$.next(A.convertStarted({ id: '1', startedAt: 5 }));
+    actions$.next(A.cancelled({ id: '2' }));
+    expect(unsubscribed).toBe(0);
+    actions$.next(A.cancelled({ id: '1' }));
+    expect(unsubscribed).toBe(1);
+    expect(registry.get('1')).toBeDefined();
+    expect(out.some((a) => a.type === A.convertFailed.type)).toBe(false);
+  });
+
   it('sends the stored password and forgets it after success', () => {
     const convert = vi.fn<ConvertFileFn>(() => of({ form: { ok: 1 }, report: null }));
     const { actions$, registry } = setup([running('1')], convert);

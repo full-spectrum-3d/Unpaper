@@ -106,6 +106,16 @@
                         Otwórz wynik
                       </a>
                     }
+                    @if (i.status === 'processing') {
+                      <button
+                        appButton
+                        type="button"
+                        [attr.aria-label]="'Anuluj analizę ' + i.name"
+                        (click)="cancel(i.id)"
+                      >
+                        Anuluj
+                      </button>
+                    }
                     @if (i.status === 'error' && i.retryable && !i.passwordState) {
                       <button
                         appButton

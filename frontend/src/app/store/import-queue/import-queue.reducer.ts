@@ -55,6 +55,14 @@ export const importQueueReducer = createReducer(
           state,
         ),
   ),
+  on(ImportQueueActions.cancelled, (state, { id }) =>
+    state.entities[id]?.status !== 'processing'
+      ? state
+      : adapter.updateOne(
+          { id, changes: { status: 'error', error: 'Analiza anulowana', retryable: true, passwordState: null } },
+          state,
+        ),
+  ),
   on(ImportQueueActions.passwordSubmitted, (state, { id }) => {
     const item = state.entities[id];
     if (item?.status !== 'error' || !item.passwordState) return state;

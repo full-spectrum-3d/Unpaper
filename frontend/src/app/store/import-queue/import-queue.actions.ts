@@ -10,6 +10,8 @@ export const ImportQueueActions = createActionGroup({
     convertFailed: props<{ id: string; error: string; passwordState?: PasswordState | null }>(),
     /** The password itself lives in FileRegistry, never in the store. */
     passwordSubmitted: props<{ id: string }>(),
+    /** The user stopped a conversion in progress; the file stays so it can be retried. */
+    cancelled: props<{ id: string }>(),
     retry: props<{ id: string }>(),
     /** The user edited the converted form on the result screen; the report stays the original one. */
     resultEdited: props<{ id: string; result: unknown }>(),
