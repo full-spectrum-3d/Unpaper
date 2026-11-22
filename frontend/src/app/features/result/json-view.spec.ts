@@ -29,6 +29,32 @@ describe('JsonView', () => {
     return { fixture, host: fixture.componentInstance, region, fragments, range };
   };
 
+  it('shows a back-to-top button only after scrolling down, and scrolls up on click', () => {
+    const { fixture } = setup();
+    const el: HTMLElement = fixture.nativeElement;
+    const button = () => el.querySelector<HTMLButtonElement>('button[aria-label="Wróć na górę"]');
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+    const at = (y: number) => {
+      vi.spyOn(window, 'scrollY', 'get').mockReturnValue(y);
+      window.dispatchEvent(new Event('scroll'));
+      fixture.detectChanges();
+    };
+    const shown = () => button()!.getAttribute('data-visible') === 'true';
+    expect(shown()).toBe(false);
+    expect(button()!.getAttribute('aria-hidden')).toBe('true');
+    at(100);
+    expect(shown()).toBe(false);
+    at(900);
+    expect(shown()).toBe(true);
+    expect(button()!.getAttribute('aria-hidden')).toBeNull();
+    button()!.click();
+    expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
+    expect(document.activeElement).toBe(el.querySelector('[role="region"]'));
+    at(0);
+    expect(shown()).toBe(false);
+    vi.restoreAllMocks();
+  });
+
   it('renders the exact stringified JSON in a labelled region, with and without highlight', () => {
     const { fixture, host, region } = setup();
     expect(region().getAttribute('aria-label')).toBe('Test JSON');
