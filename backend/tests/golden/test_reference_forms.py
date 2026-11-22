@@ -68,8 +68,10 @@ SECTION_RENAMES: dict[tuple[str, str], str] = {
 }
 
 # Pola adresu, które zasłania checkbox „Brak …” (standard; wzorce go nie zawierają).
+# Kod pocztowy tylko w adresie zagranicznym: dla Polski standard nie daje checkboxa.
 NO_DATA_GUARDED = re.compile(
-    r"(ulica|kod_pocztowy|numer_lokalu)(_(siedziba|inna_osoba))?(_zagranica)?"
+    r"(ulica|numer_lokalu)(_(siedziba|inna_osoba))?(_zagranica)?"
+    r"|kod_pocztowy(_(siedziba|inna_osoba))?_zagranica"
 )
 
 _DICT_KEYS = ("dictionaryName", "multiLevelTree", "searchEnabled")

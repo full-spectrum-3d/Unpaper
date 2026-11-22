@@ -90,9 +90,18 @@ _LABEL_SEMANTICS: tuple[tuple[re.Pattern[str], Semantic], ...] = tuple(
 )
 
 
+_IDENTIFIERS = frozenset({Semantic.PESEL, Semantic.NIP, Semantic.REGON})
+"""Identyfikatory o własnym walidatorze formatu: wspólne pole („NIP/REGON”) nie może mieć
+żadnego z nich, bo walidator jednego odrzuciłby poprawną wartość drugiego."""
+
+
 def label_semantic(label: str) -> Semantic | None:
-    """Pierwsza semantyka, której wzorzec pasuje do etykiety."""
-    return next((sem for rx, sem in _LABEL_SEMANTICS if rx.search(label)), None)
+    """Pierwsza semantyka, której wzorzec pasuje do etykiety; `None` dla pola na kilka
+    identyfikatorów naraz („NIP/REGON”, „PESEL lub NIP”)."""
+    matched = [sem for rx, sem in _LABEL_SEMANTICS if rx.search(label)]
+    if len(_IDENTIFIERS.intersection(matched)) > 1:
+        return None
+    return matched[0] if matched else None
 
 
 def slugify(text: str, *, max_length: int = 60) -> str:

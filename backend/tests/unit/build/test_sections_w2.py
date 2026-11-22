@@ -59,7 +59,6 @@ _NO_DATA = {
     "brak_kodu_pocztowego_zagranica": ("Brak kodu pocztowego", "kod_pocztowy_zagranica"),
     "brak_nazwy_ulicy": ("Brak nazwy ulicy", "ulica"),
     "brak_numeru_lokalu": ("Brak numeru lokalu", "numer_lokalu"),
-    "brak_kodu_pocztowego": ("Brak kodu pocztowego", "kod_pocztowy"),
 }
 
 
