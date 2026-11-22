@@ -305,6 +305,8 @@ export interface FieldPatch {
   options?: readonly string[];
   /** SELECT: a dictionary, or null to go back to own options. */
   dictionary?: DictionaryRef | null;
+  /** Title of the proposed dictionary `options` were copied from; only for the status message. */
+  optionsFrom?: string;
   /** TEXT_BLOCK, INFO_SECTION: new text. */
   content?: string;
   /** CONSENT_SECTION: the whole list of consents, the section's requiredness, file names. */

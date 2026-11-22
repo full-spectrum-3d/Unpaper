@@ -36,7 +36,7 @@ import {
   titleOptional,
   typeLabel,
 } from './form-edit';
-import { SelectDictionaries, SelectDictionary } from './select-dictionaries';
+import { PROPOSED_PREFIX, SelectDictionaries, SelectDictionary } from './select-dictionaries';
 
 /**
  * Edit card of one field: drag handle (also moved with arrow keys), label, type, requiredness, options and
@@ -188,6 +188,13 @@ import { SelectDictionaries, SelectDictionary } from './select-dictionaries';
                   <option [value]="d.name" [selected]="d.name === f.dictionaryName">
                     Słownik: {{ d.name }}
                   </option>
+                }
+                @if (proposed().length) {
+                  <optgroup label="Proponowane słowniki (wstawia pozycje jako opcje)">
+                    @for (d of proposed(); track d.name) {
+                      <option [value]="PROPOSED + d.name">{{ d.title }}</option>
+                    }
+                  </optgroup>
                 }
               </select>
               @if (dictionary()?.description; as text) {
@@ -368,7 +375,10 @@ export class FieldRow {
       .map(([value, label]) => ({ value: value as EditableType, label }))
       .filter((t) => !allowed || allowed.includes(t.value) || t.value === this.field().type);
   });
-  private readonly dictionaries = inject(SelectDictionaries).list;
+  private readonly catalog = inject(SelectDictionaries);
+  private readonly dictionaries = this.catalog.list;
+  protected readonly proposed = this.catalog.proposed;
+  protected readonly PROPOSED = PROPOSED_PREFIX;
 
   protected readonly section = computed(() => isSection(this.field()));
   protected readonly movable = computed(() => !(this.first() && this.last()));
@@ -450,9 +460,18 @@ export class FieldRow {
   }
 
   protected changeSource(event: Event): void {
-    const name = (event.target as HTMLSelectElement).value;
-    const chosen = this.dictionaryChoices().find((d) => d.name === name);
+    const select = event.target as HTMLSelectElement;
+    const name = select.value;
     this.optionsErr.set(null);
+    if (name.startsWith(PROPOSED_PREFIX)) {
+      const proposal = this.proposed().find((d) => PROPOSED_PREFIX + d.name === name);
+      // The field keeps own options, so the select goes back to "Własne opcje".
+      select.value = '';
+      if (proposal)
+        this.patch.emit({ dictionary: null, options: proposal.items, optionsFrom: proposal.title });
+      return;
+    }
+    const chosen = this.dictionaryChoices().find((d) => d.name === name);
     this.patch.emit({
       dictionary: chosen ? { name: chosen.name } : null,
     });

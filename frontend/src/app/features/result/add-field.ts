@@ -27,7 +27,7 @@ import {
   takesValue,
   titleOptional,
 } from './form-edit';
-import { SelectDictionaries } from './select-dictionaries';
+import { PROPOSED_PREFIX, SelectDictionaries } from './select-dictionaries';
 
 const FIRST_CONSENT: ConsentInput = { text: '' };
 
@@ -105,13 +105,20 @@ const FIRST_CONSENT: ConsentInput = { text: '' };
               <select
                 [id]="id + '-source'"
                 class="block w-full max-w-md text-fg text-body border border-border-input rounded-field px-field-x py-field-y bg-surface focus-ring"
-                (change)="dictionary.set($any($event.target).value)"
+                (change)="changeSource($event)"
               >
                 <option value="" [selected]="!dictionary()">Własne opcje</option>
                 @for (d of dictionaries(); track d.name) {
                   <option [value]="d.name" [selected]="d.name === dictionary()">
                     Słownik: {{ d.name }}
                   </option>
+                }
+                @if (proposed().length) {
+                  <optgroup label="Proponowane słowniki (wstawia pozycje jako opcje)">
+                    @for (d of proposed(); track d.name) {
+                      <option [value]="PROPOSED + d.name">{{ d.title }}</option>
+                    }
+                  </optgroup>
                 }
               </select>
             </div>
@@ -216,7 +223,10 @@ export class AddField {
       .map(([value, label]) => ({ value: value as EditableType, label }))
       .filter((t) => !allowed || allowed.includes(t.value));
   });
-  protected readonly dictionaries = inject(SelectDictionaries).list;
+  private readonly catalog = inject(SelectDictionaries);
+  protected readonly dictionaries = this.catalog.list;
+  protected readonly proposed = this.catalog.proposed;
+  protected readonly PROPOSED = PROPOSED_PREFIX;
 
   protected readonly open = signal(false);
   protected readonly title = signal('');
@@ -256,6 +266,20 @@ export class AddField {
   protected close(): void {
     this.reset();
     this.focusLater('button.add');
+  }
+
+  /** A proposed dictionary fills the options box (still editable) and leaves the source on own options. */
+  protected changeSource(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value = select.value;
+    if (!value.startsWith(PROPOSED_PREFIX)) return this.dictionary.set(value);
+    const proposal = this.proposed().find((d) => PROPOSED_PREFIX + d.name === value);
+    this.dictionary.set('');
+    select.value = '';
+    if (proposal) {
+      this.options.set(proposal.items.join('\n'));
+      this.optionsErr.set(null);
+    }
   }
 
   protected changeType(type: EditableType): void {

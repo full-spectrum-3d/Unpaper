@@ -269,6 +269,7 @@ describe('FormEditor', () => {
           provide: SelectDictionaries,
           useValue: {
             list: signal([{ name: 'Kraje', description: 'Lista państw', multiLevelTree: false }]),
+            proposed: signal([]),
           },
         },
       ],
@@ -290,6 +291,47 @@ describe('FormEditor', () => {
     expect(status()).toBe('Pole „NIP” bierze teraz opcje ze słownika Kraje.');
     expect(row('nip').querySelector('textarea[id$="-options"]')).toBeNull();
     expect(row('nip').textContent).toContain('Lista państw');
+  });
+
+  it('copies a proposed dictionary into own options of a list', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: SelectDictionaries,
+          useValue: {
+            list: signal([]),
+            proposed: signal([
+              {
+                name: 'RODZAJE_PODATKOW_LOKALNYCH',
+                title: 'Rodzaje podatków lokalnych',
+                description: '',
+                items: ['Podatek rolny', 'Podatek leśny'],
+              },
+            ]),
+          },
+        },
+      ],
+    });
+    const { fixture, row, last, status } = await setup();
+    const type = row('nip').querySelector('select')!;
+    type.value = 'SELECT';
+    type.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    const source = row('nip').querySelectorAll('select')[1];
+    expect([...source.options].map((o) => o.textContent!.trim())).toEqual([
+      'Własne opcje',
+      'Rodzaje podatków lokalnych',
+    ]);
+    source.value = 'proposed:RODZAJE_PODATKOW_LOKALNYCH';
+    source.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    const nip = byName(last(), 'nip');
+    expect(nip.dictionaryName).toBeUndefined();
+    expect(nip.options!.map((o) => o.name)).toEqual(['Podatek rolny', 'Podatek leśny']);
+    expect(source.value).toBe('');
+    expect(status()).toBe(
+      'Wstawiono do pola „NIP” opcje ze słownika „Rodzaje podatków lokalnych”.',
+    );
   });
 
   it('edits the consents of a consent section', async () => {

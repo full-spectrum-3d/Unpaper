@@ -214,6 +214,8 @@ export class FormEditor {
           ? `Zmieniono etykietę pola na „${patch.title}”.`
           : `Usunięto tytuł pola ${name(field)}.`,
       );
+    else if (patch.optionsFrom !== undefined)
+      this.status.set(`Wstawiono do pola ${name(field)} opcje ze słownika „${patch.optionsFrom}”.`);
     else if (patch.dictionary !== undefined)
       this.status.set(
         patch.dictionary
