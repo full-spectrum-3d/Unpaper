@@ -19,46 +19,40 @@ Szczegóły: `docs/specyfikacja-techniczna.md`, `docs/architecture/`.
 
 ## Budowanie obrazów Docker
 
-Wymagany Docker Engine 24+ z Compose v2.20+.
-
-```bash
-docker compose build            # wszystkie obrazy
-docker compose build api        # tylko API
-```
-
-Albo pojedynczo:
-
 ```bash
 docker build -t coi-cf-api:0.1.0 backend
 docker build -t coi-cf-frontend:0.1.0 frontend
-docker build -t coi-cf-llm:0.40.16 llm
 ```
 
-| Obraz | Dockerfile | Baza | Port |
-|---|---|---|---|
-| `coi-cf-api` | `backend/Dockerfile` | `python:3.14-alpine` | 8000 |
-| `coi-cf-frontend` | `frontend/Dockerfile` | `node:24-alpine` → `nginx:alpine` | 8080 |
-| `coi-cf-llm` | `llm/Dockerfile` | Ollama (CPU; GPU: target `gpu`) | 11434 (tylko sieć wewnętrzna) |
+Albo wszystkie naraz: `docker compose build`.
 
-Obrazy nie zawierają sekretów ani modelu. Wszystkie działają jako użytkownik bez roota.
+Obrazy nie zawierają sekretów ani modelu.
 
 ## Uruchomienie aplikacji
 
+Domyślnie aplikacja korzysta z zewnętrznego serwera modelu (API Ollama, np. na GPU).
+Uruchomienie z modelem lokalnym: [niżej](#opcjonalnie-lokalny-model).
+
 ```bash
-make setup     # .env z sekretami + obrazy + pobranie modelu (można powtórzyć)
-make up        # start w tle
+docker compose build                 # obrazy api i frontend
+scripts/init-env.sh                  # tworzy .env i wypisuje hasło konta admin
 ```
 
-Bez `make`:
+W `.env` ustaw adres serwera modelu i wyłącz lokalny kontener:
+
+```
+COMPOSE_PROFILES=
+LLM_BASE_URL=https://adres-serwera-modelu
+LLM_AUTH_KEY=...       # tylko gdy serwer wymaga autoryzacji
+LLM_AUTH_SECRET=...
+```
 
 ```bash
-docker compose build
-scripts/init-env.sh                                # tworzy .env i wypisuje hasło konta admin
-docker compose --profile setup run --rm llm-pull   # model qwen3:8b do wolumenu (jednorazowo)
 docker compose up -d
 ```
 
 Własny login i hasło: `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`.
+Serwer modelu na tym samym hoście: `LLM_BASE_URL=http://host.docker.internal:11434`.
 
 | Adres | Co |
 |---|---|
@@ -69,18 +63,25 @@ Własny login i hasło: `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownik
 ```bash
 docker compose ps            # stan usług
 docker compose logs -f api   # logi API
-make down                    # zatrzymanie
+docker compose down          # zatrzymanie
 ```
 
-Warianty:
+Konwersja wsadowa: `make convert-all` (`materials/*` → `out/*.json`).
 
-- **Zewnętrzny serwer modelu:** w `.env` `COMPOSE_PROFILES=` (pusto) i `LLM_BASE_URL=https://…`;
-  compose uruchomi tylko `api` i `frontend`.
-- **GPU NVIDIA:** `docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d`
-  (wymaga NVIDIA Container Toolkit).
-- **Konwersja wsadowa:** `make convert-all` (`materials/*` → `out/*.json`).
+### Opcjonalnie: lokalny model
 
-Na samym CPU konwersja trwa zwykle 1,5–5 min; na GPU kilkanaście sekund.
+Kontener `llm` (Ollama, qwen3:8b) wymaga ok. 16 GB RAM i ok. 7 GB dysku. Na samym CPU
+konwersja trwa 1,5–5 min.
+
+```bash
+# w .env: COMPOSE_PROFILES=ollama  i  LLM_BASE_URL=http://llm:11434
+docker compose build                                # buduje też obraz llm
+docker compose --profile setup run --rm llm-pull    # model do wolumenu (jednorazowo)
+docker compose up -d
+```
+
+GPU NVIDIA (wymaga NVIDIA Container Toolkit):
+`docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d`.
 
 ## Konfiguracja
 
