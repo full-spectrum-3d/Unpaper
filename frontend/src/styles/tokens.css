@@ -81,6 +81,12 @@
 }
 
 @layer base {
+  /* Tailwind's preflight resets buttons to the default cursor; utilities (e.g. disabled:cursor-not-allowed) still win. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  summary {
+    cursor: pointer;
+  }
   body {
     @apply bg-bg text-fg font-sans text-body;
   }
