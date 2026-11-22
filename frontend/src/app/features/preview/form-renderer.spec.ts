@@ -289,6 +289,27 @@ describe('FormRenderer step validation', () => {
     await fixture.whenStable();
   });
 
+  it('keeps answers and the current step when the form is edited', async () => {
+    await create();
+    await type('imie', 'Jan');
+    await choose('Tak');
+    await type('powod', 'Zwrot');
+    await click('Dalej');
+    // An edit in the editor: a new definition object with a renamed label and one option dropped.
+    const edited = structuredClone(def);
+    const grid = edited.tabs[0].questions[0].field.repeatingSectionGrid!;
+    grid[0].field.title = 'Imię';
+    grid[2].field.options = [{ id: 'o2', name: 'Nie' }];
+    fixture.componentRef.setInput('definition', edited);
+    await fixture.whenStable();
+    expect(step()).toBe('Krok 2 z 2: Dalsze');
+    await click('Wstecz');
+    expect(input('imie').value).toBe('Jan');
+    // "Tak" is no longer offered, so the radio starts over.
+    const checked = host('czy')!.querySelector<HTMLInputElement>('input:checked');
+    expect(checked).toBeNull();
+  });
+
   it('does not show errors after going back', async () => {
     await create();
     await type('imie', 'Jan');

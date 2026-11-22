@@ -17,7 +17,7 @@ import {
 import { Button } from '../../shared/ui/button/button';
 import { Progress } from '../../shared/ui/progress/progress';
 import { AnswersStore } from './answers-store';
-import { FormDefinition, Question } from './form-definition';
+import { FormDefinition, FormTab, Question } from './form-definition';
 import { FormState } from './form-state';
 import { orderTabs, sortQuestions } from './page-order';
 import { findDictionary } from './sample-dictionaries';
@@ -101,6 +101,8 @@ export class FormRenderer {
   });
 
   protected readonly pages = computed(() => orderTabs(this.definition()));
+  /** Pages of the definition the store was last initialised with, to find the step again after an edit. */
+  private shownPages: FormTab[] = [];
   protected readonly index = signal(0);
   protected readonly page = computed(() => this.pages()[this.index()]);
   protected readonly isFinish = computed(() => this.page()?.type === 'FINISH');
@@ -192,11 +194,20 @@ export class FormRenderer {
     effect(() => {
       const def = this.definition();
       untracked(() => {
+        // An edited form keeps the answers, the current step and touched fields that still exist.
+        const pageId = this.shownPages[this.index()]?.id;
         this.store.init(def);
-        this.index.set(0);
+        const ids = new Set(this.store.snapshot().keys());
+        this.shownPages = orderTabs(def);
+        this.index.set(
+          Math.max(
+            0,
+            this.shownPages.findIndex((t) => t.id === pageId),
+          ),
+        );
         this.evaluated.set(null);
         this.showErrorsFor.set(null);
-        this.touched.set(new Set());
+        this.touched.update((t) => new Set([...t].filter((id) => ids.has(id))));
       });
     });
 

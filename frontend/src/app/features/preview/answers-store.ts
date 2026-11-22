@@ -38,6 +38,37 @@ export function toIsoDate(text: string): string {
   return date && !isNaN(d.getTime()) && d.toISOString().startsWith(date) ? date : '';
 }
 
+const optionNames = (field: FormField): Set<string> =>
+  new Set((field.options ?? []).map((o) => o.name));
+
+/**
+ * What an answer becomes when the form is edited: `before` and `after` are the same field (same id).
+ * An untouched answer follows the new default; a filled one stays while it still fits the field
+ * (same type and dictionary, option still offered), otherwise the field starts over.
+ */
+export function carryOver(before: FormField, after: FormField, value: unknown): unknown {
+  const initial = initialAnswer(after);
+  if (JSON.stringify(value) === JSON.stringify(initialAnswer(before))) return initial;
+  if (before.type !== after.type || before.dictionaryName !== after.dictionaryName) return initial;
+  switch (after.type) {
+    case 'CONSENT_SECTION':
+      return Array.isArray(value) &&
+        value.length === (after.consentSectionConfig?.consents ?? []).length
+        ? value
+        : initial;
+    case 'CHECKBOX': {
+      const names = optionNames(after);
+      return Array.isArray(value) ? value.filter((n) => names.has(n)) : initial;
+    }
+    case 'SELECT':
+    case 'RADIO':
+      if (after.dictionaryName) return value;
+      return value === '' || optionNames(after).has(value as string) ? value : initial;
+    default:
+      return value;
+  }
+}
+
 /** Component-level provider: one signal per field id, created lazily. */
 @Injectable()
 export class AnswersStore {
@@ -52,12 +83,19 @@ export class AnswersStore {
     return (this.entries.get(field.id) ?? this.create(field)).sig;
   }
 
-  /** Creates entries for every field of every tab, so `snapshot()` is complete; replaces earlier entries. */
+  /**
+   * Creates entries for every field of every tab, so `snapshot()` is complete; replaces earlier
+   * entries. Fields that were already there keep their answers where they still fit (`carryOver`),
+   * so editing the form does not wipe what was filled in the preview.
+   */
   init(def: FormDefinition): void {
+    const previous = new Map(this.entries);
     this.entries.clear();
     const visit = (qs: Question[]) =>
       qs.forEach(({ field }) => {
-        this.create(field);
+        const entry = this.create(field);
+        const old = previous.get(field.id);
+        if (old) entry.rawSet(carryOver(old.field, field, old.sig()));
         visit(field.repeatingSectionGrid ?? []);
       });
     def.tabs.forEach((t) => visit(t.questions));

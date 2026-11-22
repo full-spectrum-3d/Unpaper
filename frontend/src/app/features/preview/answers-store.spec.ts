@@ -2,7 +2,7 @@ import { Component, inject, model, provideZonelessChangeDetection } from '@angul
 import { TestBed } from '@angular/core/testing';
 import nadplata from '../import/mock-forms/nadplata-podatku.json';
 import { FormDefinition, FormField } from './form-definition';
-import { AnswersStore, initialAnswer, toIsoDate } from './answers-store';
+import { AnswersStore, carryOver, initialAnswer, toIsoDate } from './answers-store';
 import { SAMPLE_REGISTRY_DATA } from './sample-registry-data';
 
 const f = (p: Partial<FormField>): FormField => ({
@@ -145,5 +145,31 @@ describe('AnswersStore two-way binding', () => {
     fixture.debugElement.children[0].componentInstance.value.set('x');
     expect(store.version()).toBe(v + 1);
     expect(store.snapshot().get('bound')).toBe('x');
+  });
+});
+
+describe('carryOver', () => {
+  const opts = (...names: string[]) => names.map((name) => ({ id: name, name }));
+
+  it('keeps a filled answer of the same kind of field', () => {
+    expect(carryOver(f({ title: 'A' }), f({ title: 'B' }), 'Jan')).toBe('Jan');
+    const radio = f({ type: 'RADIO', options: opts('Tak', 'Nie') });
+    expect(carryOver(radio, { ...radio, options: opts('Tak', 'Nie', 'Może') }, 'Tak')).toBe('Tak');
+  });
+
+  it('lets an untouched answer follow the new default', () => {
+    expect(carryOver(f({ defaultValue: 'a' }), f({ defaultValue: 'b' }), 'a')).toBe('b');
+  });
+
+  it('starts over when the answer no longer fits', () => {
+    expect(carryOver(f({}), f({ type: 'TEXTAREA' }), 'Jan')).toBe('');
+    const radio = f({ type: 'RADIO', options: opts('Tak', 'Nie') });
+    expect(carryOver(radio, { ...radio, options: opts('Nie') }, 'Tak')).toBe('');
+    const list = f({ type: 'SELECT', dictionaryName: 'Kraje' });
+    expect(
+      carryOver(list, { ...list, dictionaryName: undefined, options: opts('A', 'B') }, 'Polska'),
+    ).toBe('');
+    const box = f({ type: 'CHECKBOX', options: opts('A', 'B') });
+    expect(carryOver(box, { ...box, options: opts('B') }, ['A', 'B'])).toEqual(['B']);
   });
 });
