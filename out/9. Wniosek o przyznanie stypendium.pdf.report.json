@@ -14,146 +14,96 @@
   },
   "llm": {
     "model": "qwen3:8b",
-    "durationMs": 22289,
+    "durationMs": 18879,
     "retries": 0,
     "fallback": false,
     "fallbackReason": null,
     "ruleBasedDraft": false,
     "promptTokens": 9735,
-    "outputTokens": 2215
+    "outputTokens": 1955
   },
   "stats": {
-    "tabs": 6,
-    "sections": 28,
-    "fields": 113,
+    "tabs": 8,
+    "sections": 33,
+    "fields": 100,
     "states": 45
   },
   "dictionaryProposals": [],
   "warnings": [
     {
       "code": "W21_CONDITION_REMOVED",
-      "message": "Usunięto warunek widoczności pola „Skrzynka ePUAP - adres skrzynki”: „Skrzynka ePUAP - adres skrzynki” nie jest opcją pola „Korespondencja z urzędem”.",
-      "path": "subject_pages[0].sections[0].fields[16]"
+      "message": "Usunięto warunek widoczności pola „Adres do korespondencji”: pole „Adres zameldowania” nie jest polem wyboru.",
+      "path": "subject_pages[1].sections[0].fields[4]"
     },
     {
       "code": "W21_CONDITION_REMOVED",
-      "message": "Usunięto warunek widoczności pola „eDoręczenia - adres skrzynki”: „eDoręczenia - adres skrzynki” nie jest opcją pola „Korespondencja z urzędem”.",
-      "path": "subject_pages[0].sections[0].fields[17]"
-    },
-    {
-      "code": "W21_CONDITION_REMOVED",
-      "message": "Usunięto warunek widoczności pola „dyscyplina”: „Inna” nie jest opcją pola „Dyscypliny sportowe”.",
-      "path": "subject_pages[0].sections[1].fields[7]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Wnioskodawca”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[0]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Imię”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[2]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Nazwisko”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[3]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Numer telefonu (opcjonalnie)”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[4]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Imię”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[6]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Nazwisko”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[7]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Numer telefonu (opcjonalnie)”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[9]"
+      "message": "Usunięto warunek widoczności pola „Oświadczenie”: pole „Podpis kandydata” nie jest polem wyboru.",
+      "path": "subject_pages[0].sections[1].fields[6]"
     },
     {
       "code": "W20_APPLICANT_FIELD_REMOVED",
       "message": "Usunięto pole „Telefon kontaktowy (opcjonalnie)”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[12]"
+      "path": "subject_pages[0].sections[2].fields[1]"
     },
     {
       "code": "W20_APPLICANT_FIELD_REMOVED",
       "message": "Usunięto pole „Adres siedziby”: dane wnioskodawcy są w sekcjach predefiniowanych.",
-      "path": "subject_pages[0].sections[0].fields[13]"
+      "path": "subject_pages[0].sections[2].fields[2]"
     },
     {
       "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Data sporządzenia wniosku”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
-      "path": "subject_pages[1].sections[2].fields[1]"
-    },
-    {
-      "code": "W20_APPLICANT_FIELD_REMOVED",
-      "message": "Usunięto pole „Podpis i pieczątka wnioskodawcy”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
-      "path": "subject_pages[1].sections[2].fields[2]"
+      "message": "Usunięto pole „Adres skrzynki ePUAP”: adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych.",
+      "path": "subject_pages[0].sections[3].fields[2]"
     },
     {
       "code": "W20_APPLICANT_FIELD_REMOVED",
       "message": "Usunięto pole „Podpis kandydata”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
-      "path": "subject_pages[2].sections[0].fields[3]"
+      "path": "subject_pages[5].sections[0].fields[3]"
     },
     {
       "code": "W20_APPLICANT_FIELD_REMOVED",
       "message": "Usunięto pole „Podpis kandydata”: miejsce i data złożenia oraz podpis są w sekcjach systemowych.",
-      "path": "subject_pages[2].sections[1].fields[5]"
+      "path": "subject_pages[5].sections[1].fields[5]"
     },
     {
       "code": "W17_STATEMENT_REMOVED",
       "message": "Usunięto pole „Oświadczenie zapoznania się z regulaminem”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
-      "path": "subject_pages[1].sections[1].fields[1]"
+      "path": "subject_pages[2].sections[1].fields[1]"
     },
     {
       "code": "W17_STATEMENT_REMOVED",
       "message": "Usunięto pole „Oświadczenie zapoznania się z regulaminem”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
-      "path": "subject_pages[1].sections[3].fields[3]"
+      "path": "subject_pages[2].sections[2].fields[3]"
     },
     {
       "code": "W17_STATEMENT_REMOVED",
-      "message": "Usunięto pole „2) Oświadczam, że zapoznałem się z regulaminem przyznawania wyróżnień sportowych”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
-      "path": "subject_pages[2].sections[1].fields[5]"
+      "message": "Usunięto pole „Oświadczenie”: to oświadczenie z blankietu, które trafia do sekcji zgód.",
+      "path": "subject_pages[5].sections[1].fields[5]"
     },
     {
-      "code": "W32_LABEL_NORMALIZED",
-      "message": "Etykietę „adres siedziby klubu” poprawiono na „Adres siedziby klubu”.",
-      "path": "subject_pages[0].sections[0].fields[6]"
+      "code": "W36_DATA_CONSENT_MOVED",
+      "message": "Usunięto sekcję „Zgoda na przetwarzanie danych”: zgoda na przetwarzanie danych jest w sekcji zgód, a podpis i data w sekcjach systemowych.",
+      "path": "subject_pages[2].sections[1]"
     },
     {
-      "code": "W32_LABEL_NORMALIZED",
-      "message": "Etykietę „eDoręczenia - adres skrzynki” poprawiono na „EDoręczenia - adres skrzynki”.",
-      "path": "subject_pages[0].sections[0].fields[8]"
+      "code": "W36_DATA_CONSENT_MOVED",
+      "message": "Usunięto sekcję „Zgoda podopiecznego pełnoletniego”: zgoda na przetwarzanie danych jest w sekcji zgód, a podpis i data w sekcjach systemowych.",
+      "path": "subject_pages[5].sections[0]"
     },
     {
-      "code": "W32_LABEL_NORMALIZED",
-      "message": "Etykietę „Dyscypliny sportowe:” poprawiono na „Dyscypliny sportowe”.",
-      "path": "subject_pages[0].sections[1].fields[6]"
+      "code": "W36_DATA_CONSENT_MOVED",
+      "message": "Usunięto sekcję „Zgoda w imieniu podopiecznego nieletniego”: zgoda na przetwarzanie danych jest w sekcji zgód, a podpis i data w sekcjach systemowych.",
+      "path": "subject_pages[5].sections[1]"
     },
     {
-      "code": "W32_LABEL_NORMALIZED",
-      "message": "Etykietę „dyscyplina” poprawiono na „Dyscyplina”.",
-      "path": "subject_pages[0].sections[1].fields[7]"
+      "code": "W13_FIELD_NOT_IN_DOCUMENT",
+      "message": "Pola „Adres skrzynki eDoręczenia” nie znaleziono w treści blankietu - sprawdź je.",
+      "path": "subject_pages[0].sections[3].fields[2]"
     },
     {
-      "code": "W32_LABEL_NORMALIZED",
-      "message": "Etykietę „wyrażam zgodę na przetwarzanie danych osobowych mojego dziecka/podopiecznego zawartych we wniosku w celu przekazania go do dalszego procedowania” poprawiono na „Wyrażam zgodę na przetwarzanie danych osobowych mojego dziecka/podopiecznego zawartych we wniosku w celu przekazania go do dalszego procedowania”.",
-      "path": "subject_pages[2].sections[1].fields[3]"
-    },
-    {
-      "code": "W02_LABEL_TOO_LONG",
-      "message": "Etykieta ma 98 znaków.",
-      "path": "p1.s3.f1"
+      "code": "W18_EMPTY_CONTAINER_REMOVED",
+      "message": "Usunięto pustą stronę „Oświadczenie i zgoda podopiecznego”.",
+      "path": "subject_pages[5]"
     },
     {
       "code": "W28_RODO_CLAUSE_URL_MISSING",
@@ -163,16 +113,16 @@
   "fixes": [],
   "timings": {
     "normalizeMs": 0,
-    "extractMs": 1223,
-    "analyzeMs": 22530,
-    "buildMs": 164
+    "extractMs": 1193,
+    "analyzeMs": 19056,
+    "buildMs": 163
   },
   "confidence": {
-    "score": 0.95,
+    "score": 0.97,
     "level": "high",
-    "fieldsTotal": 101,
-    "fieldsFromDocument": 37,
-    "toReview": 2
+    "fieldsTotal": 96,
+    "fieldsFromDocument": 32,
+    "toReview": 1
   },
   "fields": [
     {
@@ -776,10 +726,120 @@
       "reasons": []
     },
     {
+      "techName": "imie_2",
+      "title": "Imię",
+      "tab": "Dane wnioskodawcy",
+      "section": "Dane reprezentanta klubu sportowego z KRS",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b11",
+        "text": "Imię …",
+        "box": {
+          "x": 0.119,
+          "y": 0.2758,
+          "width": 0.7502,
+          "height": 0.0143
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
+      "techName": "nazwisko_2",
+      "title": "Nazwisko",
+      "tab": "Dane wnioskodawcy",
+      "section": "Dane reprezentanta klubu sportowego z KRS",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b12",
+        "text": "Nazwisko …",
+        "box": {
+          "x": 0.119,
+          "y": 0.3101,
+          "width": 0.749,
+          "height": 0.0143
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
+      "techName": "numer_telefonu_opcjonalnie",
+      "title": "Numer telefonu (opcjonalnie)",
+      "tab": "Dane wnioskodawcy",
+      "section": "Dane reprezentanta klubu sportowego z KRS",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b13",
+        "text": "Numer telefonu (opcjonalnie) …",
+        "box": {
+          "x": 0.119,
+          "y": 0.3443,
+          "width": 0.7528,
+          "height": 0.0143
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
+      "techName": "imie_3",
+      "title": "Imię",
+      "tab": "Dane wnioskodawcy",
+      "section": "Dane pełnomocnika klubu sportowego",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b15",
+        "text": "Imię …",
+        "box": {
+          "x": 0.119,
+          "y": 0.3997,
+          "width": 0.7555,
+          "height": 0.0143
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
+      "techName": "nazwisko_3",
+      "title": "Nazwisko",
+      "tab": "Dane wnioskodawcy",
+      "section": "Dane pełnomocnika klubu sportowego",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b16",
+        "text": "Nazwisko …",
+        "box": {
+          "x": 0.119,
+          "y": 0.4269,
+          "width": 0.7592,
+          "height": 0.0143
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
       "techName": "seria_i_numer_dowodu_osobistego",
       "title": "Seria i numer dowodu osobistego",
       "tab": "Dane wnioskodawcy",
-      "section": "Dane wnioskodawcy",
+      "section": "Dane pełnomocnika klubu sportowego",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -798,10 +858,32 @@
       }
     },
     {
+      "techName": "numer_telefonu_opcjonalnie_2",
+      "title": "Numer telefonu (opcjonalnie)",
+      "tab": "Dane wnioskodawcy",
+      "section": "Dane pełnomocnika klubu sportowego",
+      "origin": "document",
+      "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 2,
+        "blockId": "b18",
+        "text": "Numer telefonu (opcjonalnie) …",
+        "box": {
+          "x": 0.119,
+          "y": 0.4859,
+          "width": 0.7614,
+          "height": 0.0143
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
       "techName": "nazwa_klubu_sportowego",
       "title": "Nazwa klubu sportowego",
       "tab": "Dane wnioskodawcy",
-      "section": "Dane wnioskodawcy",
+      "section": "Dane klubu sportowego",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -820,32 +902,10 @@
       }
     },
     {
-      "techName": "korespondencja_z_urzedem",
-      "title": "Korespondencja z urzędem",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane wnioskodawcy",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 2,
-        "blockId": "b24",
-        "text": "Korespondencja z urzędem ( wybierz preferowany sposób korespondencji z urzędem )  Poczta tradycyjna - na który adres kierować korespondencję",
-        "box": {
-          "x": 0.119,
-          "y": 0.6804,
-          "width": 0.6821,
-          "height": 0.0351
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
       "techName": "adres_siedziby_klubu",
       "title": "Adres siedziby klubu",
       "tab": "Dane wnioskodawcy",
-      "section": "Dane wnioskodawcy",
+      "section": "Sposób korespondencji",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -864,54 +924,69 @@
       }
     },
     {
-      "techName": "skrzynka_epuap_adres_skrzynki",
-      "title": "Skrzynka ePUAP - adres skrzynki",
+      "techName": "inny_adres_korespondencyjny",
+      "title": "Inny adres korespondencyjny",
       "tab": "Dane wnioskodawcy",
-      "section": "Dane wnioskodawcy",
+      "section": "Sposób korespondencji",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
         "page": 2,
-        "blockId": "b28",
-        "text": " Skrzynka ePUAP - adres skrzynki: …",
+        "blockId": "b26",
+        "text": "inny adres korespondencyjny …",
         "box": {
-          "x": 0.119,
-          "y": 0.7816,
-          "width": 0.7555,
-          "height": 0.0147
+          "x": 0.1428,
+          "y": 0.7411,
+          "width": 0.7369,
+          "height": 0.0143
         },
         "pageAspect": 0.7071
       }
     },
     {
-      "techName": "edoreczenia_adres_skrzynki",
-      "title": "EDoręczenia - adres skrzynki",
+      "techName": "adres_skrzynki_edoreczenia",
+      "title": "Adres skrzynki eDoręczenia",
       "tab": "Dane wnioskodawcy",
-      "section": "Dane wnioskodawcy",
+      "section": "Sposób korespondencji",
+      "origin": "document",
+      "confidence": 0.35,
+      "level": "low",
+      "reasons": [
+        {
+          "code": "LABEL_NOT_IN_DOCUMENT",
+          "message": "Etykiety „Adres skrzynki eDoręczenia” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        }
+      ]
+    },
+    {
+      "techName": "odpis_danych_z_krs_lub_innego_wlasciwego_rejestru",
+      "title": "Odpis danych z KRS lub innego właściwego rejestru",
+      "tab": "Dane wnioskodawcy",
+      "section": "Odpis danych z KRS",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
         "page": 2,
-        "blockId": "b29",
-        "text": " eDoręczenia - adres skrzynki: …",
+        "blockId": "b30",
+        "text": "Odpis danych z KRS lub innego właściwego rejestru",
         "box": {
           "x": 0.119,
-          "y": 0.8024,
-          "width": 0.7583,
-          "height": 0.0147
+          "y": 0.8322,
+          "width": 0.4106,
+          "height": 0.0143
         },
         "pageAspect": 0.7071
       }
     },
     {
-      "techName": "imie_2",
+      "techName": "imie_4",
       "title": "Imię",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "tab": "Dane sportowca",
+      "section": "Dane kandydata",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -930,10 +1005,10 @@
       }
     },
     {
-      "techName": "nazwisko_2",
+      "techName": "nazwisko_4",
       "title": "Nazwisko",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "tab": "Dane sportowca",
+      "section": "Dane kandydata",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -954,8 +1029,8 @@
     {
       "techName": "data_urodzenia",
       "title": "Data urodzenia",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "tab": "Dane sportowca",
+      "section": "Dane kandydata",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -976,8 +1051,8 @@
     {
       "techName": "adres_zameldowania",
       "title": "Adres zameldowania",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "tab": "Dane sportowca",
+      "section": "Dane kandydata",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -996,12 +1071,12 @@
       }
     },
     {
-      "techName": "adres_do_korespondencji_jesli_rozni_sie_od_adresu",
-      "title": "Adres do korespondencji (jeśli różni się od adresu zameldowania)",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "techName": "adres_do_korespondencji",
+      "title": "Adres do korespondencji",
+      "tab": "Dane sportowca",
+      "section": "Dane kandydata",
       "origin": "document",
-      "confidence": 0.88,
+      "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
@@ -1018,23 +1093,23 @@
       }
     },
     {
-      "techName": "dyscypliny_sportowe",
-      "title": "Dyscypliny sportowe",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "techName": "rodzaj_dyscyplin_sportowych",
+      "title": "Rodzaj dyscyplin sportowych",
+      "tab": "Dane sportowca",
+      "section": "Dyscypliny sportowe",
       "origin": "document",
-      "confidence": 1.0,
+      "confidence": 0.93,
       "level": "high",
       "reasons": [],
       "source": {
         "page": 3,
-        "blockId": "b41",
-        "text": "Dyscypliny sportowe",
+        "blockId": "b42",
+        "text": "Wskaż rodzaje dyscyplin sportowych, w których bierze udział osoba objęta wnioskiem, a następnie wybierz konkretne dyscypliny z listy:",
         "box": {
           "x": 0.119,
-          "y": 0.3032,
-          "width": 0.1657,
-          "height": 0.0143
+          "y": 0.3219,
+          "width": 0.697,
+          "height": 0.0342
         },
         "pageAspect": 0.7071
       }
@@ -1042,61 +1117,34 @@
     {
       "techName": "dyscypliny_sportowe_2",
       "title": "Dyscypliny sportowe",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
+      "tab": "Dane sportowca",
+      "section": "Dyscypliny sportowe",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
         "page": 3,
-        "blockId": "b41",
-        "text": "Dyscypliny sportowe",
+        "blockId": "b46",
+        "text": "Dyscypliny sportowe:",
         "box": {
           "x": 0.119,
-          "y": 0.3032,
-          "width": 0.1657,
+          "y": 0.4267,
+          "width": 0.1709,
           "height": 0.0143
         },
         "pageAspect": 0.7071
       }
     },
     {
-      "techName": "dyscyplina",
-      "title": "Dyscyplina",
-      "tab": "Dane wnioskodawcy",
-      "section": "Dane sportowca",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 3,
-        "blockId": "b68",
-        "text": "dyscyplina …",
-        "box": {
-          "x": 0.119,
-          "y": 0.8808,
-          "width": 0.7445,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "opisz_najwazniejsze_osiagniecia_sportowe_kandydata_ktore",
-      "title": "Opisz najważniejsze osiągnięcia sportowe kandydata, które będą brane pod uwagę przy ocenie wniosku",
-      "tab": "Dane wnioskodawcy",
+      "techName": "opisz_najwazniejsze_osiagniecia_sportowe_kandydata",
+      "title": "Opisz najważniejsze osiągnięcia sportowe kandydata",
+      "tab": "Dane sportowca",
       "section": "Osiągnięcia sportowe",
       "origin": "document",
-      "confidence": 0.8,
+      "confidence": 1.0,
       "level": "high",
-      "reasons": [
-        {
-          "code": "W02_LABEL_TOO_LONG",
-          "message": "Etykieta ma 98 znaków."
-        }
-      ],
+      "reasons": [],
       "source": {
         "page": 4,
         "blockId": "b70",
@@ -1113,8 +1161,8 @@
     {
       "techName": "opinia_macierzystego_klubu_sportowego",
       "title": "Opinia macierzystego klubu sportowego",
-      "tab": "Dane wnioskodawcy",
-      "section": "Osiągnięcia sportowe",
+      "tab": "Dane sportowca",
+      "section": "Opinia klubu sportowego",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -1133,12 +1181,34 @@
       }
     },
     {
-      "techName": "ewentualne_dodatkowe_informacje_o_kandydatce_kandydacie_do",
-      "title": "Ewentualne dodatkowe informacje o kandydatce/kandydacie do stypendium",
-      "tab": "Dane wnioskodawcy",
-      "section": "Osiągnięcia sportowe",
+      "techName": "zaswiadczenia_wydane_przez_polski_zwiazek_sportowy",
+      "title": "Zaświadczenia wydane przez Polski Związek Sportowy",
+      "tab": "Dane sportowca",
+      "section": "Wymagane zaświadczenia",
       "origin": "document",
       "confidence": 1.0,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 4,
+        "blockId": "b78",
+        "text": "Do wniosku należy załączyć zaświadczenia wydane przez Polski Związek Sportowy odpowiedni dla danej dyscypliny sportowej lub inne oficjalne dokumenty (np. komunikaty z zawodów), które potwierdzają osi…",
+        "box": {
+          "x": 0.119,
+          "y": 0.6299,
+          "width": 0.7601,
+          "height": 0.0543
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
+      "techName": "ewentualne_dodatkowe_informacje_o_kandydacie",
+      "title": "Ewentualne dodatkowe informacje o kandydacie",
+      "tab": "Dane sportowca",
+      "section": "Dodatkowe informacje",
+      "origin": "document",
+      "confidence": 0.98,
       "level": "high",
       "reasons": [],
       "source": {
@@ -1180,29 +1250,7 @@
       "techName": "imie_i_nazwisko_kandydata_2",
       "title": "Imię i nazwisko kandydata",
       "tab": "Dane kandydata",
-      "section": "Dane kandydata do nagrody",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 6,
-        "blockId": "b90",
-        "text": "Imię i nazwisko kandydata …",
-        "box": {
-          "x": 0.119,
-          "y": 0.1428,
-          "width": 0.7461,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "imie_i_nazwisko_kandydata_3",
-      "title": "Imię i nazwisko kandydata",
-      "tab": "Dane kandydata",
-      "section": "Zgoda w imieniu kandydata nieletniego",
+      "section": "Dane kandydata nieletniego",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -1224,7 +1272,7 @@
       "techName": "imie_i_nazwisko_rodzica_opiekuna_prawnego",
       "title": "Imię i nazwisko rodzica/opiekuna prawnego",
       "tab": "Dane kandydata",
-      "section": "Zgoda w imieniu kandydata nieletniego",
+      "section": "Dane kandydata nieletniego",
       "origin": "document",
       "confidence": 0.89,
       "level": "high",
@@ -1243,44 +1291,66 @@
       }
     },
     {
-      "techName": "imie_i_nazwisko_zawodniczki_zawodnika",
-      "title": "Imię i nazwisko zawodniczki/zawodnika",
-      "tab": "Dane kandydata",
-      "section": "Dane trenera",
+      "techName": "osiagniecia_sportowe_3",
+      "title": "Osiągnięcia sportowe",
+      "tab": "Osiągnięcia sportowe",
+      "section": "Osiągnięcia sportowe",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
-        "page": 13,
-        "blockId": "b225",
-        "text": "Imię i nazwisko zawodniczki/zawodnika",
+        "page": 8,
+        "blockId": "b141",
+        "text": "3. Osiągnięcia sportowe",
         "box": {
           "x": 0.119,
-          "y": 0.1933,
-          "width": 0.3206,
+          "y": 0.2701,
+          "width": 0.2085,
+          "height": 0.0154
+        },
+        "pageAspect": 0.7071
+      }
+    },
+    {
+      "techName": "dodatkowe_informacje_o_osiagnieciach_sportowych",
+      "title": "Dodatkowe informacje o osiągnięciach sportowych",
+      "tab": "Osiągnięcia sportowe",
+      "section": "Dodatkowe informacje",
+      "origin": "document",
+      "confidence": 0.89,
+      "level": "high",
+      "reasons": [],
+      "source": {
+        "page": 9,
+        "blockId": "b151",
+        "text": "Dodatkowe informacje o osiągnieciach sportowych",
+        "box": {
+          "x": 0.119,
+          "y": 0.087,
+          "width": 0.4097,
           "height": 0.0143
         },
         "pageAspect": 0.7071
       }
     },
     {
-      "techName": "osiagniecia_sportowe_podopiecznego",
-      "title": "Osiągnięcia sportowe podopiecznego",
-      "tab": "Dane kandydata",
+      "techName": "imie_i_nazwisko_trenera",
+      "title": "Imię i nazwisko trenera",
+      "tab": "Dane trenera",
       "section": "Dane trenera",
       "origin": "document",
-      "confidence": 1.0,
+      "confidence": 0.91,
       "level": "high",
       "reasons": [],
       "source": {
-        "page": 13,
-        "blockId": "b227",
-        "text": "Osiągnięcia sportowe podopiecznego",
+        "page": 10,
+        "blockId": "b162",
+        "text": "Imię i nazwisko kandydata …",
         "box": {
           "x": 0.119,
-          "y": 0.2523,
-          "width": 0.3012,
+          "y": 0.1357,
+          "width": 0.7461,
           "height": 0.0143
         },
         "pageAspect": 0.7071
@@ -1289,19 +1359,19 @@
     {
       "techName": "opinia_macierzystego_klubu_sportowego_2",
       "title": "Opinia macierzystego klubu sportowego",
-      "tab": "Dane kandydata",
-      "section": "Dane trenera",
+      "tab": "Dane trenera",
+      "section": "Opinia klubu sportowego",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
-        "page": 4,
-        "blockId": "b73",
+        "page": 12,
+        "blockId": "b215",
         "text": "Opinia macierzystego klubu sportowego",
         "box": {
           "x": 0.119,
-          "y": 0.41,
+          "y": 0.3436,
           "width": 0.3232,
           "height": 0.0143
         },
@@ -1309,76 +1379,10 @@
       }
     },
     {
-      "techName": "imie_i_nazwisko_zawodniczki_zawodnika_2",
-      "title": "Imię i nazwisko zawodniczki/zawodnika",
-      "tab": "Dane kandydata",
-      "section": "Dane podopiecznych trenera",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 13,
-        "blockId": "b230",
-        "text": "Imię i nazwisko zawodniczki/zawodnika",
-        "box": {
-          "x": 0.119,
-          "y": 0.4242,
-          "width": 0.3206,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "osiagniecia_sportowe_podopiecznego_2",
-      "title": "Osiągnięcia sportowe podopiecznego",
-      "tab": "Dane kandydata",
-      "section": "Dane podopiecznych trenera",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 13,
-        "blockId": "b232",
-        "text": "Osiągnięcia sportowe podopiecznego",
-        "box": {
-          "x": 0.119,
-          "y": 0.4832,
-          "width": 0.3012,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "zaswiadczenia_wydane_przez_polski_zwiazek_sportowy",
-      "title": "Zaświadczenia wydane przez Polski Związek Sportowy",
-      "tab": "Dane kandydata",
-      "section": "Wymagane zaświadczenia",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 14,
-        "blockId": "b247",
-        "text": "Do wniosku należy załączyć zaświadczenia wydane przez Polski Związek Sportowy odpowiedni dla danej dyscypliny sportowej lub inne oficjalne dokumenty (np. komunikaty z zawodów), które potwierdzają osi…",
-        "box": {
-          "x": 0.119,
-          "y": 0.3648,
-          "width": 0.7315,
-          "height": 0.0543
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
       "techName": "imie_i_nazwisko_podopiecznego",
       "title": "Imię i nazwisko podopiecznego",
-      "tab": "Oświadczenie i zgoda podopiecznego",
-      "section": "Zgoda podopiecznego pełnoletniego",
+      "tab": "Dane trenera",
+      "section": "Dane podopiecznych trenera",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
@@ -1397,110 +1401,22 @@
       }
     },
     {
-      "techName": "data",
-      "title": "Data",
-      "tab": "Oświadczenie i zgoda podopiecznego",
-      "section": "Zgoda podopiecznego pełnoletniego",
+      "techName": "osiagniecia_sportowe_podopiecznego",
+      "title": "Osiągnięcia sportowe podopiecznego",
+      "tab": "Dane trenera",
+      "section": "Dane podopiecznych trenera",
       "origin": "document",
       "confidence": 1.0,
       "level": "high",
       "reasons": [],
       "source": {
-        "page": 16,
-        "blockId": "b270",
-        "text": "Data",
-        "box": {
-          "x": 0.2379,
-          "y": 0.3662,
-          "width": 0.0381,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "imie_i_nazwisko_podopiecznego_2",
-      "title": "Imię i nazwisko podopiecznego",
-      "tab": "Oświadczenie i zgoda podopiecznego",
-      "section": "Zgoda w imieniu podopiecznego nieletniego",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 16,
-        "blockId": "b273",
-        "text": "Imię i nazwisko podopiecznego …",
+        "page": 13,
+        "blockId": "b227",
+        "text": "Osiągnięcia sportowe podopiecznego",
         "box": {
           "x": 0.119,
-          "y": 0.4335,
-          "width": 0.7583,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "1_ja_nizej_podpisany",
-      "title": "1) Ja niżej podpisany",
-      "tab": "Oświadczenie i zgoda podopiecznego",
-      "section": "Zgoda w imieniu podopiecznego nieletniego",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 16,
-        "blockId": "b274",
-        "text": "1) Ja niżej podpisany … (rodzic/opiekun prawny)",
-        "box": {
-          "x": 0.119,
-          "y": 0.4606,
-          "width": 0.7484,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "rodzic_opiekun_prawny",
-      "title": "(rodzic/opiekun prawny)",
-      "tab": "Oświadczenie i zgoda podopiecznego",
-      "section": "Zgoda w imieniu podopiecznego nieletniego",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 16,
-        "blockId": "b274",
-        "text": "1) Ja niżej podpisany … (rodzic/opiekun prawny)",
-        "box": {
-          "x": 0.119,
-          "y": 0.4606,
-          "width": 0.7484,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "data_2",
-      "title": "Data",
-      "tab": "Oświadczenie i zgoda podopiecznego",
-      "section": "Zgoda w imieniu podopiecznego nieletniego",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 16,
-        "blockId": "b278",
-        "text": "Data",
-        "box": {
-          "x": 0.2379,
-          "y": 0.6162,
-          "width": 0.0381,
+          "y": 0.2523,
+          "width": 0.3012,
           "height": 0.0143
         },
         "pageAspect": 0.7071
@@ -1537,80 +1453,6 @@
       "reasons": []
     },
     {
-      "techName": "zaswiadczenie_wydane_przez_polski_zwiazek_sportowy",
-      "title": "Zaświadczenie wydane przez Polski Związek Sportowy",
-      "tab": "Kontakt i zgody",
-      "section": "Załączniki",
-      "origin": "document",
-      "confidence": 0.92,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 4,
-        "blockId": "b78",
-        "text": "Do wniosku należy załączyć zaświadczenia wydane przez Polski Związek Sportowy odpowiedni dla danej dyscypliny sportowej lub inne oficjalne dokumenty (np. komunikaty z zawodów), które potwierdzają osi…",
-        "box": {
-          "x": 0.119,
-          "y": 0.6299,
-          "width": 0.7601,
-          "height": 0.0543
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "dokument_z_opinia_klubu",
-      "title": "Dokument z opinią klubu",
-      "tab": "Kontakt i zgody",
-      "section": "Załączniki",
-      "origin": "document",
-      "confidence": 1.0,
-      "level": "high",
-      "reasons": [],
-      "source": {
-        "page": 12,
-        "blockId": "b218",
-        "text": "Do wniosku można dołączyć dokument z opinią klubu",
-        "box": {
-          "x": 0.119,
-          "y": 0.5424,
-          "width": 0.4312,
-          "height": 0.0143
-        },
-        "pageAspect": 0.7071
-      }
-    },
-    {
-      "techName": "rysunek_z_lokalizacja_drzew",
-      "title": "Rysunek z lokalizacją drzew",
-      "tab": "Kontakt i zgody",
-      "section": "Załączniki",
-      "origin": "document",
-      "confidence": 0.35,
-      "level": "low",
-      "reasons": [
-        {
-          "code": "LABEL_NOT_IN_DOCUMENT",
-          "message": "Etykiety „Rysunek z lokalizacją drzew” nie ma w treści dokumentu - pole mogło zostać dopisane."
-        }
-      ]
-    },
-    {
-      "techName": "zgoda_wlasciciela_nieruchomosci",
-      "title": "Zgoda właściciela nieruchomości",
-      "tab": "Kontakt i zgody",
-      "section": "Załączniki",
-      "origin": "document",
-      "confidence": 0.35,
-      "level": "low",
-      "reasons": [
-        {
-          "code": "LABEL_NOT_IN_DOCUMENT",
-          "message": "Etykiety „Zgoda właściciela nieruchomości” nie ma w treści dokumentu - pole mogło zostać dopisane."
-        }
-      ]
-    },
-    {
       "techName": "zgoda",
       "title": "Zgody i oświadczenia",
       "tab": "Kontakt i zgody",
@@ -1625,23 +1467,13 @@
     {
       "kind": "field",
       "level": "low",
-      "techName": "rysunek_z_lokalizacja_drzew",
-      "title": "Rysunek z lokalizacją drzew",
-      "tab": "Kontakt i zgody",
+      "techName": "adres_skrzynki_edoreczenia",
+      "title": "Adres skrzynki eDoręczenia",
+      "tab": "Dane wnioskodawcy",
       "messages": [
-        "Etykiety „Rysunek z lokalizacją drzew” nie ma w treści dokumentu - pole mogło zostać dopisane."
-      ]
-    },
-    {
-      "kind": "field",
-      "level": "low",
-      "techName": "zgoda_wlasciciela_nieruchomosci",
-      "title": "Zgoda właściciela nieruchomości",
-      "tab": "Kontakt i zgody",
-      "messages": [
-        "Etykiety „Zgoda właściciela nieruchomości” nie ma w treści dokumentu - pole mogło zostać dopisane."
+        "Etykiety „Adres skrzynki eDoręczenia” nie ma w treści dokumentu - pole mogło zostać dopisane."
       ]
     }
   ],
-  "durationMs": 23918
+  "durationMs": 20413
 }
