@@ -68,6 +68,10 @@ class Settings(BaseSettings):
     jwt_required_role: str | None = None
     api_user: str | None = None
     api_password_hash: SecretStr | None = None
+    # Samodzielna rejestracja kont (POST /auth/register). Konta trafiają do SQLite pod
+    # USERS_DB_PATH (w Dockerze wolumen /data); bez ścieżki rejestracja jest wyłączona.
+    registration_enabled: bool = True
+    users_db_path: Path | None = None
 
     # --- HTTP ---
     cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:8080"]
@@ -146,6 +150,15 @@ class Settings(BaseSettings):
         if not self.auth_enabled:
             return False
         return self.jwt_algorithm == "HS256" or self.jwt_private_key is not None
+
+    @property
+    def registration_available(self) -> bool:
+        """Rejestracja działa tylko, gdy API samo wydaje tokeny i ma gdzie zapisać konta."""
+        return (
+            self.registration_enabled
+            and self.token_issuing_enabled
+            and self.users_db_path is not None
+        )
 
     @property
     def jwt_signing_key(self) -> str:
