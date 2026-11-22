@@ -20,8 +20,10 @@ from app.pipeline.draft_rules import (
     applicant_field_reason,
     computed_field_reason,
     covered_by,
+    is_data_consent,
     is_statement,
     same_stem,
+    separate_data_consent,
     statements_from_document,
     variant_choices,
 )
@@ -35,6 +37,11 @@ GENERIC_OPTIONS = frozenset({"tak", "nie", "inne"})
 # Pola, które mogą być wartością wyliczaną albo stawką (W33).
 COMPUTED_KINDS = frozenset({"number", "short_text", "info"})
 STATEMENT_LIKE_KINDS = frozenset({"single_choice", "multi_choice", "short_text", "long_text"})
+# Pola, które w sekcji zgody są tylko podpisem: imię i nazwisko, data.
+SIGNATURE_KINDS = frozenset({"short_text", "date"})
+OTHER_DATA_SECTION_TITLE = "Informacje dodatkowe"
+_STATEMENT_TITLE = re.compile(r"(?i)^\W*oświadcz")
+_CONSENT_TITLE = re.compile(r"(?i)\b(zgod|oświadcz)")
 VARIANT_PAGE_TITLE = "Przedmiot wniosku"
 VARIANT_SECTION_TITLE = "Rodzaj sprawy"
 VARIANT_LABEL_WORDS = frozenset({"rodzaj", "lub", "albo", "wybór", "wniosku", "sprawy"})
@@ -86,6 +93,7 @@ def normalize_draft(
     _add_document_attachments(data, doc, warnings)
     data["statements"] = statements_from_document(doc)
     _remove_statement_fields(data, warnings)
+    _move_data_consents(data, warnings)
     _add_variant_choices(data, doc, warnings)
     _add_correction_choice(data, doc_text, warnings)
     repair_conditions(data, warnings)
@@ -354,9 +362,73 @@ def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarn
                     path=path,
                 )
             )
-    for page in data["subject_pages"]:
-        for section in page["sections"]:
-            section["fields"] = [f for f in section["fields"] if id(f) not in removed]
+    for i, page in enumerate(data["subject_pages"]):
+        for j, section in enumerate(page["sections"]):
+            kept = [f for f in section["fields"] if id(f) not in removed]
+            if kept and len(kept) < len(section["fields"]):
+                path = f"subject_pages[{i}].sections[{j}]"
+                _retitle_statement_section(section, kept, path, warnings)
+            section["fields"] = kept
+
+
+def _retitle_statement_section(
+    section: dict[str, Any],
+    kept: list[dict[str, Any]],
+    path: str,
+    warnings: list[ConversionWarning],
+) -> None:
+    """Sekcja „Oświadczenia” bez oświadczeń (trafiły do zgód) dostaje tytuł od swoich pól."""
+    if not _STATEMENT_TITLE.match(section["title"]):
+        return
+    if any(f["kind"] == "info" or is_statement(f["label"]) for f in kept):
+        return
+    title = kept[0]["label"] if len(kept) == 1 else OTHER_DATA_SECTION_TITLE
+    warnings.append(
+        ConversionWarning(
+            code="W37_SECTION_RETITLED",
+            message=f"Zmieniono tytuł sekcji „{section['title']}” na „{title}”: jej "
+            "oświadczenia trafiły do sekcji zgód.",
+            path=path,
+        )
+    )
+    section["title"] = title
+
+
+def _move_data_consents(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Sekcja ze zgodą na przetwarzanie danych i polami podpisu → sekcja zgód.
+
+    Standard: zgody zbiera sekcja zgód na końcu formularza, a nie bloki tekstu
+    z imieniem i datą. Zgodę na własne dane pokrywa standardowa zgoda RODO;
+    zgodę za inną osobę (np. dziecko) dopisujemy do oświadczeń, które trafiają
+    do sekcji zgód. Sekcję z innymi danymi (wybór, liczba, plik) albo bez „zgoda”
+    / „oświadczenie” w tytule (np. „Dane kandydata”) zostawiamy.
+    """
+    for i, page in enumerate(data["subject_pages"]):
+        sections = []
+        for j, section in enumerate(page["sections"]):
+            fields = section["fields"]
+            consents = [f for f in fields if f["kind"] == "info" and is_data_consent(f["label"])]
+            others = [f for f in fields if f["kind"] != "info"]
+            if (
+                not consents
+                or not _CONSENT_TITLE.search(section["title"])
+                or any(f["kind"] not in SIGNATURE_KINDS for f in others)
+            ):
+                sections.append(section)
+                continue
+            for field in consents:
+                text = separate_data_consent(field["label"])
+                if text and text not in data["statements"]:
+                    data["statements"].append(text)
+            warnings.append(
+                ConversionWarning(
+                    code="W36_DATA_CONSENT_MOVED",
+                    message=f"Usunięto sekcję „{section['title']}”: zgoda na przetwarzanie "
+                    "danych jest w sekcji zgód, a podpis i data w sekcjach systemowych.",
+                    path=f"subject_pages[{i}].sections[{j}]",
+                )
+            )
+        page["sections"] = sections
 
 
 def _add_variant_choices(

@@ -552,3 +552,108 @@ def test_mention_of_correction_without_purpose_heading_changes_nothing() -> None
     out, warnings = normalize_draft(_make(mutate), doc)
     assert "W35_CORRECTION_CHOICE" not in _codes(warnings)
     assert "Cel złożenia" not in [f.label for _, f in out.iter_fields()]
+
+
+def _consent_section(d: dict[str, Any], title: str, *fields: tuple[str, str]) -> None:
+    n = sum(len(sec["fields"]) for page in d["subject_pages"] for sec in page["sections"])
+    d["subject_pages"][0]["sections"].append(
+        {
+            "title": title,
+            "repeating": False,
+            "fields": [
+                {"id": f"f{n + i}", "label": label, "kind": kind, "required": kind != "info"}
+                for i, (kind, label) in enumerate(fields, 1)
+            ],
+        }
+    )
+
+
+def test_data_consent_section_moves_to_consent_section() -> None:
+    minor = (
+        "Wyrażam zgodę na przetwarzanie danych osobowych mojego dziecka/podopiecznego "
+        "zawartych we wniosku"
+    )
+
+    def mutate(d: dict[str, Any]) -> None:
+        _consent_section(
+            d,
+            "Zgoda podopiecznego pełnoletniego",
+            ("short_text", "Imię i nazwisko podopiecznego"),
+            (
+                "info",
+                "1) Wyrażam zgodę na przetwarzanie moich danych osobowych zawartych we wniosku",
+            ),
+            ("date", "Data"),
+        )
+        _consent_section(
+            d,
+            "Zgoda w imieniu podopiecznego nieletniego",
+            ("short_text", "Imię i nazwisko podopiecznego"),
+            ("info", minor),
+            ("date", "Data"),
+        )
+        _consent_section(
+            d, "Zgoda na przetwarzanie danych", ("info", "Zgoda na przetwarzanie danych osobowych")
+        )
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    titles = [s.title for p in out.subject_pages for s in p.sections]
+    assert not any(t.startswith("Zgoda") for t in titles)
+    # Zgodę na własne dane pokrywa standardowa zgoda RODO; zgoda za dziecko trafia do zgód.
+    assert out.statements == [minor]
+    assert _codes(warnings).count("W36_DATA_CONSENT_MOVED") == 3
+
+
+def test_data_consent_section_with_other_data_kept() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _consent_section(
+            d,
+            "Zgoda na przetwarzanie danych",
+            ("info", "Wyrażam zgodę na przetwarzanie danych osobowych dziecka"),
+            ("single_choice", "Klasa"),
+        )
+        d["subject_pages"][0]["sections"][-1]["fields"][1]["options"] = ["1", "2"]
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert out.subject_pages[0].sections[-1].title == "Zgoda na przetwarzanie danych"
+    assert "W36_DATA_CONSENT_MOVED" not in _codes(warnings)
+
+
+def test_statement_section_left_with_data_is_retitled() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _consent_section(
+            d,
+            "Oświadczenia",
+            ("number", "Opłata skarbowa"),
+            ("single_choice", "Oświadczam, że psy nie będą wykorzystywane do polowań"),
+        )
+        d["subject_pages"][0]["sections"][-1]["fields"][1]["options"] = ["Tak", "Nie"]
+
+    out, warnings = normalize_draft(_make(mutate), PSY_DOC)
+    section = out.subject_pages[0].sections[-1]
+    assert [f.label for f in section.fields] == ["Opłata skarbowa"]
+    assert section.title == "Opłata skarbowa"
+    assert "W37_SECTION_RETITLED" in _codes(warnings)
+
+
+def test_statement_section_title_kept_when_nothing_was_removed() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _consent_section(d, "Oświadczenia", ("number", "Liczba psów"))
+
+    out, warnings = normalize_draft(_make(mutate), PSY_DOC)
+    assert out.subject_pages[0].sections[-1].title == "Oświadczenia"
+    assert "W37_SECTION_RETITLED" not in _codes(warnings)
+
+
+def test_data_section_with_consent_block_kept() -> None:
+    def mutate(d: dict[str, Any]) -> None:
+        _consent_section(
+            d,
+            "Dane kandydata",
+            ("short_text", "Imię i nazwisko kandydata"),
+            ("info", "Zgoda na przetwarzanie danych osobowych"),
+        )
+
+    out, warnings = normalize_draft(_make(mutate), DOC)
+    assert out.subject_pages[0].sections[-1].title == "Dane kandydata"
+    assert "W36_DATA_CONSENT_MOVED" not in _codes(warnings)

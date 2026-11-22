@@ -221,6 +221,28 @@ def is_statement(text: str) -> bool:
     return bool(_STATEMENT.match(_NUMBERING.sub("", clean_text(text))))
 
 
+_CONSENT_SENTENCE = re.compile(r"(?i)^wyrażam\s+zgodę\b")
+_OWN_DATA = re.compile(r"(?i)\bmoich\s+danych\b")
+
+
+def is_data_consent(text: str) -> bool:
+    """Czy tekst to zgoda na przetwarzanie danych osobowych (także sam nagłówek zgody)."""
+    return bool(_DATA_CONSENT.search(clean_text(text)))
+
+
+def separate_data_consent(text: str) -> str | None:
+    """Treść zgody, której nie pokrywa standardowa zgoda RODO, albo None.
+
+    Standardowa zgoda dotyczy danych wypełniającego („moich danych”). Zgoda za kogoś
+    innego („danych osobowych mojego dziecka”) to osobna zgoda w sekcji zgód.
+    Sam nagłówek („Zgoda na przetwarzanie danych osobowych”) nie jest treścią zgody.
+    """
+    cleaned = _NUMBERING.sub("", clean_text(text))
+    if _CONSENT_SENTENCE.match(cleaned) and not _OWN_DATA.search(cleaned):
+        return cleaned
+    return None
+
+
 def variant_choices(doc: DocumentModel) -> list[list[str]]:
     """Warianty do skreślenia z dokumentu („wynajęcie/użyczenie*”), bez form jednego słowa.
 
