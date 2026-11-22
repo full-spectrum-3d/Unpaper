@@ -20,6 +20,20 @@ Szczegóły: [`docs/architecture/`](docs/architecture/README.md).
 ## Wideo demonstracyjne
 https://youtu.be/ot5qAPIEubU
 
+## Wyniki dla wniosków z zadania
+
+W katalogu [`out/`](out/) są gotowe wyniki konwersji 9 wniosków przekazanych z zadaniem
+(DOCX, PDF, DOC, XLSX, ODS, PNG, JPG, JPEG). Każdy dokument ma dwa pliki:
+
+| Plik | Zawartość |
+|---|---|
+| `<nazwa pliku źródłowego>.json` | konfiguracja formularza w formacie importu Generatora Formularzy COI |
+| `<nazwa pliku źródłowego>.report.json` | raport konwersji: metoda odczytu (tekst, OCR), ostrzeżenia, naprawy, źródło każdego pola |
+
+Wyniki wygenerował model `qwen3:8b`; żaden dokument nie wymagał szkicu zastępczego
+z reguł. Ponowne wygenerowanie: `make convert-all` (pliki źródłowe w `materials/`, poza
+repozytorium).
+
 ## Uruchomienie aplikacji
 
 Wymagany jest tylko Docker z pluginem Compose. Plik `.env` jest w repozytorium i jest
