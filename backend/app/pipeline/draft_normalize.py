@@ -18,10 +18,13 @@ from app.models.warning import ConversionWarning
 from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
 from app.pipeline.draft_rules import (
     applicant_field_reason,
+    clean_text,
     computed_field_reason,
     covered_by,
     is_data_consent,
     is_statement,
+    lone_date_reason,
+    neutral_statement,
     same_stem,
     separate_data_consent,
     statements_from_document,
@@ -54,6 +57,12 @@ _UNNAMED_ATTACHMENT = re.compile(r"(?i)^\s*(załącznik|zał\.?)?\s*(nr\.?\s*)?\
 _WHITESPACE = re.compile(r"\s+")
 _WORD = re.compile(r"\w+")
 _LABEL_EDGES = re.compile(r"^[\s.…_:;,]+|[\s:;,]+$")
+_LETTER = re.compile(r"[^\W\d_]")
+# Pole opcjonalne na blankiecie: „(opcjonalnie)”, „jeśli dotyczy”, „(w przypadku …)”.
+_OPTIONAL_LABEL = re.compile(
+    r"(?i)\bopcjonaln\w*|\bnieobowiązkow\w*|\bewentualn\w*|\b(jeśli|jeżeli|o ile)\s+dotyczy\b"
+    r"|\bdot(\.|yczy)\s+tylko\b|\(\s*w\s+przypadku\b[^)]*\)|\bo ile\s+(posiada|jest)\w*"
+)
 
 # Etykieta zdaniowa z blankietu („W miejscowości”) → rzeczownik w mianowniku.
 # Przyimek zdejmujemy tylko wtedy, gdy reszta to jedno słowo z tego słownika.
@@ -88,8 +97,10 @@ def normalize_draft(
     _remove_applicant_fields(data, warnings)
     _remove_computed_fields(data, warnings)
     _remove_example_fields(data, doc_text, warnings)
+    _remove_unlabeled_fields(data, warnings)
     _remove_duplicate_fields(data, warnings)
     _remove_unnamed_attachments(data, warnings)
+    _mark_optional_fields(data, warnings)
     _add_document_attachments(data, doc, warnings)
     data["statements"] = statements_from_document(doc)
     _remove_statement_fields(data, warnings)
@@ -152,8 +163,9 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
     for i, page in enumerate(data["subject_pages"]):
         for j, section in enumerate(page["sections"]):
             kept = []
+            titles = [section["title"], page["title"]]
             for k, field in enumerate(section["fields"]):
-                reason = applicant_field_reason(field["label"], [section["title"], page["title"]])
+                reason = applicant_field_reason(field["label"], titles)
                 if reason is None:
                     kept.append(field)
                     continue
@@ -164,6 +176,16 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
                         path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
                     )
                 )
+            if len(kept) == 1 and (reason := lone_date_reason(kept[0]["label"], titles)):
+                k = next(k for k, f in enumerate(section["fields"]) if f is kept[0])
+                warnings.append(
+                    ConversionWarning(
+                        code="W20_APPLICANT_FIELD_REMOVED",
+                        message=f"Usunięto pole „{kept[0]['label']}”: {reason}.",
+                        path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                    )
+                )
+                kept = []
             section["fields"] = kept
 
 
@@ -342,7 +364,11 @@ def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarn
 
     def is_statement_field(field: dict[str, Any]) -> bool:
         label: str = field["label"]
-        covered = covered_by(label, statements) >= STATEMENT_FIELD_COVERAGE
+        # Oświadczenie mogło dostać formę neutralną płciowo („Potwierdzam zapoznanie się”).
+        covered = (
+            max(covered_by(text, statements) for text in (label, neutral_statement(label)))
+            >= STATEMENT_FIELD_COVERAGE
+        )
         if field["kind"] == "info":
             return covered
         # Liczba, data czy plik to dane do wpisania, nawet gdy stoją w zdaniu oświadczenia
@@ -595,6 +621,52 @@ def _add_correction_choice(
             path=path,
         )
     )
+
+
+def _remove_unlabeled_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Pola bez etykiety („2)”, „-”, pusta) usuwamy: to numer pozycji albo kreska z blankietu.
+
+    Załącznik bez nazwy („2)”) zostawiamy dla `_remove_unnamed_attachments` (W26).
+    Warunki widoczności wskazujące usunięte pole usuwa później `repair_conditions`.
+    """
+    for i, page in enumerate(data["subject_pages"]):
+        for j, section in enumerate(page["sections"]):
+            kept = []
+            for k, field in enumerate(section["fields"]):
+                unnamed_file = field["kind"] == "file" and _UNNAMED_ATTACHMENT.match(field["label"])
+                if unnamed_file or _LETTER.search(clean_text(field["label"])):
+                    kept.append(field)
+                    continue
+                warnings.append(
+                    ConversionWarning(
+                        code="W39_UNLABELED_FIELD_REMOVED",
+                        message=f"Usunięto pole bez etykiety „{field['label']}”.",
+                        path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                    )
+                )
+            section["fields"] = kept
+
+
+def _mark_optional_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Pole opisane na blankiecie jako opcjonalne („(opcjonalnie)”, „jeśli dotyczy”) nie jest
+    wymagane - model prawie zawsze oddaje `required: true`.
+
+    Etykieta zostaje bez zmian: „(opcjonalnie)” w etykiecie to zapis z wizualizacji COI.
+    """
+    for path, field in iter_field_dicts(data):
+        if field["kind"] == "info" or not field.get("required"):
+            continue
+        if not _OPTIONAL_LABEL.search(field["label"]):
+            continue
+        field["required"] = False
+        warnings.append(
+            ConversionWarning(
+                code="W38_OPTIONAL_FIELD",
+                message=f"Pole „{field['label']}” oznaczono jako niewymagane: na blankiecie "
+                "jest opcjonalne.",
+                path=path,
+            )
+        )
 
 
 def _section_of(data: dict[str, Any], field: dict[str, Any]) -> dict[str, Any]:
