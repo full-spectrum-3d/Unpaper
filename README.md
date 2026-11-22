@@ -20,48 +20,31 @@ Szczegóły: `docs/specyfikacja-techniczna.md`, `docs/architecture/`.
 ## Wideo demonstracyjne
 https://youtu.be/ot5qAPIEubU
 
-## Budowanie obrazów Docker
-
-```bash
-docker build -t coi-cf-api:0.1.0 backend
-docker build -t coi-cf-frontend:0.1.0 frontend
-```
-
-Albo wszystkie naraz: `docker compose build`.
-
-Obrazy nie zawierają sekretów ani modelu.
-
 ## Uruchomienie aplikacji
 
-Domyślnie aplikacja korzysta z zewnętrznego serwera modelu (API Ollama, np. na GPU).
-Uruchomienie z modelem lokalnym: [niżej](#opcjonalnie-lokalny-model).
+Wymagany jest tylko Docker z pluginem Compose. Plik `.env` jest w repozytorium i jest
+skonfigurowany na **zewnętrzny serwer modelu** (API Ollama na Modal), więc nic nie trzeba
+konfigurować ani pobierać.
 
 ```bash
-docker compose build                 # obrazy api i frontend
-scripts/init-env.sh                  # tworzy .env i wypisuje hasło konta admin
+git clone https://github.com/full-spectrum-3d/def.git Unpaper && cd Unpaper
+docker compose up --build -d
 ```
 
-W `.env` ustaw adres serwera modelu i wyłącz lokalny kontener:
-
-```
-COMPOSE_PROFILES=
-LLM_BASE_URL=https://adres-serwera-modelu
-LLM_AUTH_KEY=...       # tylko gdy serwer wymaga autoryzacji
-LLM_AUTH_SECRET=...
-```
-
-```bash
-docker compose up -d
-```
-
-Własny login i hasło: `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`.
-Serwer modelu na tym samym hoście: `LLM_BASE_URL=http://host.docker.internal:11434`.
+Compose buduje i uruchamia `api` oraz `frontend` (kontener `llm` jest pominięty, bo
+`COMPOSE_PROFILES` w `.env` jest puste). Logowanie: użytkownik `API_USER` z `.env`
+(`admin`) i jego hasło; w `.env` jest tylko hash hasła.
 
 | Adres | Co |
 |---|---|
 | http://localhost:8080 | aplikacja webowa (logowanie lub rejestracja) |
 | http://localhost:8000/docs | Swagger UI (tylko `APP_ENV=development`) |
 | http://localhost:8000/api/v1/health/ready | gotowość: 200 = model dostępny |
+
+Serwer modelu na Modal po dłuższej bezczynności startuje „na zimno”: zaraz po uruchomieniu
+`health/ready` może zwrócić 503 (`LLM_UNAVAILABLE`). Odczekaj chwilę i ponów; kolejne
+żądania działają normalnie. Zewnętrzny serwer musi być osiągalny z hosta (api ma wyjście
+do internetu).
 
 ```bash
 docker compose ps            # stan usług
@@ -71,20 +54,46 @@ docker compose down          # zatrzymanie
 
 Konwersja wsadowa: `make convert-all` (`materials/*` → `out/*.json`).
 
-### Opcjonalnie: lokalny model
+### Inne sposoby uruchomienia
 
-Kontener `llm` (Ollama, qwen3:8b) wymaga ok. 16 GB RAM i ok. 7 GB dysku. Na samym CPU
-konwersja trwa 1,5–5 min.
+Sposób dostarczenia modelu wybierają dwie zmienne w `.env`: `COMPOSE_PROFILES` i `LLM_BASE_URL`.
+
+**1. Lokalny model (Ollama w kontenerze `llm`).** Bez zewnętrznego serwera, działa offline.
+Wymaga ok. 16 GB RAM i ok. 7 GB dysku; na samym CPU konwersja trwa 1,5–5 min.
 
 ```bash
-# w .env: COMPOSE_PROFILES=ollama  i  LLM_BASE_URL=http://llm:11434
-docker compose build                                # buduje też obraz llm
-docker compose --profile setup run --rm llm-pull    # model do wolumenu (jednorazowo)
-docker compose up -d
+# w .env: COMPOSE_PROFILES=ollama
+#         LLM_BASE_URL=http://llm:11434
+#         LLM_AUTH_KEY= i LLM_AUTH_SECRET= (puste)
+docker compose --profile setup run --rm llm-pull   # model do wolumenu (jednorazowo, ok. 7 GB)
+docker compose up --build -d
 ```
 
-GPU NVIDIA (wymaga NVIDIA Container Toolkit):
-`docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d`.
+Model ustawia `LLM_MODEL` (domyślnie `qwen3:8b`). Skrót: `make setup` (tworzy `.env`,
+buduje obrazy i pobiera model) – uwaga, `make env` nie nadpisuje istniejącego `.env`.
+
+**2. Lokalny model z GPU NVIDIA** (wymaga NVIDIA Container Toolkit): jak wyżej, ale
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build -d
+```
+
+**3. Własny serwer modelu** (Ollama na innym hoście lub na tym samym, poza Dockerem):
+w `.env` zostaw `COMPOSE_PROFILES=` puste i ustaw `LLM_BASE_URL` (np.
+`http://host.docker.internal:11434` dla serwera na tym samym hoście). `LLM_AUTH_KEY` i
+`LLM_AUTH_SECRET` podaj tylko wtedy, gdy serwer wymaga autoryzacji (nagłówki proxy Modal).
+
+**4. Nowy `.env` z własnymi sekretami** (np. na produkcję): usuń `.env` i uruchom
+`docker compose build && scripts/init-env.sh` – skrypt tworzy `.env` z losowym
+`JWT_SECRET`, kontem `admin` i wypisanym raz hasłem. Własny login i hasło:
+`API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`. Hash samego hasła: `make password-hash`.
+
+**5. Bez Dockera (rozwój):** backend `cd backend && uv run uvicorn app.main:create_app --factory` (czyta
+ten sam `.env`), frontend `cd frontend && npm ci && npm start`. Testy: `make test`,
+`make test-frontend`.
+
+Obrazy można też budować osobno: `docker build -t coi-cf-api:0.1.0 backend`,
+`docker build -t coi-cf-frontend:0.1.0 frontend`. Nie zawierają sekretów ani modelu.
 
 ## Konfiguracja
 
