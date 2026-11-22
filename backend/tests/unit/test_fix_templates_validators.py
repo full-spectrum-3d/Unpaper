@@ -14,7 +14,7 @@ from app.models.draft import (
     DraftSection,
     FormDraft,
 )
-from app.models.form import Validator
+from app.models.form import FieldType, Validator
 from app.pipeline.build import BuildOptions, BuildResult, build_form
 from app.pipeline.build.fields import label_semantic, map_draft_field
 from app.pipeline.build.ir import Semantic
@@ -294,3 +294,41 @@ def test_attachment_dedup_matches_longer_attachment_name() -> None:
     result, form = build(draft)
     assert "Kopia decyzji o pozwoleniu na budowę" not in _titles(form)
     assert IssueCode.W10_ATTACHMENT_DUPLICATE in [w.code for w in result.warnings]
+
+
+@pytest.mark.parametrize(
+    ("attachment", "field_label"),
+    [
+        ("Zaświadczenie o dochodach", "Zaświadczenie o niekaralności"),
+        ("Kopia umowy najmu", "Kopia dowodu osobistego"),
+        ("Mapa sytuacyjna", "Mapa zasadnicza"),
+    ],
+)
+def test_attachment_with_shared_prefix_is_not_duplicate(attachment: str, field_label: str) -> None:
+    draft = make_draft(page("Przedmiot", fld("f1", field_label, "file")), attachments=[attachment])
+    result, form = build(draft)
+    assert attachment in _titles(form)
+    assert IssueCode.W10_ATTACHMENT_DUPLICATE not in [w.code for w in result.warnings]
+
+
+@pytest.mark.parametrize(
+    ("attachment", "field_label"),
+    [
+        ("Kopia decyzji", "Kopia decyzji o pozwoleniu na budowę"),
+        ("Decyzja o pozwoleniu na budowę", "Kopia decyzji o pozwoleniu na budowę"),
+        ("Zaświadczenia o dochodach", "Zaświadczenie o dochodach (za ostatni rok)"),
+        ("kopia  UMOWY", "Kopia umowy"),
+    ],
+)
+def test_attachment_dedup_by_words(attachment: str, field_label: str) -> None:
+    draft = make_draft(page("Przedmiot", fld("f1", field_label, "file")), attachments=[attachment])
+    result, form = build(draft)
+    assert attachment not in _titles(form)
+    assert IssueCode.W10_ATTACHMENT_DUPLICATE in [w.code for w in result.warnings]
+
+
+@pytest.mark.parametrize("label", ["NIP/REGON", "PESEL lub NIP"])
+def test_shared_identifier_number_field_becomes_text(label: str) -> None:
+    node, _ = map_draft_field(fld("f1", label, "number", required=True), key="k")
+    assert node.type is FieldType.TEXT_FIELD
+    assert node.validation == [Validator.REQUIRED]

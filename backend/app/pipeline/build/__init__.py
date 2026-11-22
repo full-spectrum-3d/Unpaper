@@ -23,7 +23,6 @@ from app.pipeline.build.sections import (
 )
 from app.pipeline.build.serialize import to_form_definition
 from app.pipeline.build.states import build_states
-from app.pipeline.draft_normalize import LABEL_MATCH_THRESHOLD, matches_text
 from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
 from app.pipeline.issues import IssueCode
 
@@ -115,10 +114,35 @@ def _without_power_of_attorney(draft: FormDraft) -> tuple[FormDraft, list[Conver
     return FormDraft.model_validate(data), warnings
 
 
+_WORD = re.compile(r"\w+")
+_STOP_WORDS = frozenset(
+    {"o", "z", "ze", "i", "w", "we", "na", "do", "dla", "od", "oraz", "lub", "albo", "a"}
+)
+# Wspólny początek, od którego dwa słowa uznajemy za formy tego samego wyrazu
+# („decyzja” / „decyzji”, „zaświadczenie” / „zaświadczenia”).
+_STEM_PREFIX = 5
+
+
+def _label_words(label: str) -> set[str]:
+    return {w for w in _WORD.findall(label.casefold()) if w not in _STOP_WORDS}
+
+
+def _same_word(word: str, other: str) -> bool:
+    if word == other:
+        return True
+    stem = min(len(word), len(other)) >= _STEM_PREFIX
+    return stem and word[:_STEM_PREFIX] == other[:_STEM_PREFIX]
+
+
 def _is_duplicate_label(label: str, other: str) -> bool:
-    return matches_text(label, other, LABEL_MATCH_THRESHOLD) or matches_text(
-        other, label, LABEL_MATCH_THRESHOLD
-    )
+    """Słowa krótszej etykiety (bez spójników i przyimków) są wśród słów dłuższej:
+    „Kopia decyzji” to „Kopia decyzji o pozwoleniu na budowę”, ale „Zaświadczenie
+    o dochodach” to nie „Zaświadczenie o niekaralności”."""
+    words, other_words = _label_words(label), _label_words(other)
+    shorter, longer = sorted((words, other_words), key=len)
+    if not shorter:
+        return False
+    return all(any(_same_word(w, o) for o in longer) for w in shorter)
 
 
 def _make_links_accessible(pages: list[PageNode]) -> None:
