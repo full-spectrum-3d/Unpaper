@@ -26,6 +26,8 @@ RUN apk add --no-cache tesseract-ocr tesseract-ocr-data-pol libmagic \
 # Osobna warstwa, żeby nie unieważniać cache'u z LibreOffice powyżej: dane OSD do korekty
 # orientacji skanów (Tesseract).
 RUN apk add --no-cache tesseract-ocr-data-osd
+# Katalog na wolumen z bazą kont (USERS_DB_PATH); nowy wolumen dziedziczy właściciela.
+RUN mkdir /data && chown app:app /data
 WORKDIR /srv
 COPY --from=builder /srv/.venv /srv/.venv
 COPY app ./app
