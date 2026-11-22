@@ -15,9 +15,23 @@ _WHITESPACE = re.compile(r"\s+")
 _WORD = re.compile(r"[\w-]+")
 _NUMBERING = re.compile(r"^\s*(\d{1,2}[.)]|[a-z][.)/]|[-\u2013\u2022])\s*")
 
-_STATEMENT = re.compile(
-    r"(?i)\b(oświadczam|zobowiązuję się|przyjmuję do wiadomości|jestem świadom\w*)\b"
+_STATEMENT_WORDS = r"oświadczam|zobowiązuję się|przyjmuję do wiadomości|jestem świadom\w*"
+_STATEMENT = re.compile(rf"(?i)\b({_STATEMENT_WORDS})\b")
+# Numer bez kropki przed oświadczeniem („1 Oświadczam…”) - częsty po OCR.
+_BARE_NUMBER = re.compile(rf"^\s*\d{{1,2}}\s+(?=(?i:{_STATEMENT_WORDS})\b)")
+# Kolejne numerowane oświadczenie sklejone z poprzednim: „… — 3 Oświadczam, że …”.
+_NEXT_STATEMENT = re.compile(
+    rf"\s+(?:[\u2014\u2013-]\s*)?\d{{1,2}}[.)]?\s+(?=(?i:{_STATEMENT_WORDS})\b)"
 )
+# „Oświadczam, że zapoznałem/am się z …” → „Potwierdzam zapoznanie się z …” (standard:
+# forma neutralna płciowo). Tylko na początku oświadczenia: w środku zdania zmiana
+# formy czasownika zmieniłaby jego składnię.
+_GENDER_VARIANT = r"\s*(?:/|\(\s*-?)\s*(?:am|łam|em|łem)\s*\)?"
+_ACQUAINTED = re.compile(
+    r"(?i)^oświadczam,?\s+(?:że|iż),?\s+"
+    rf"zapozna(?:ł[ea]m(?:{_GENDER_VARIANT})?|ła{_GENDER_VARIANT})\s+się\s+(?=ze?\b)"
+)
+ACQUAINTED_STATEMENT = "Potwierdzam zapoznanie się "
 _DATA_CONSENT = re.compile(r"(?i)przetwarza\w*\W+(\w+\W+){0,8}?danych osobowych|\bRODO\b")
 STATEMENT_KINDS = frozenset({"paragraph", "label", "checkbox_option"})
 MAX_STATEMENT_ITEMS = 12
@@ -45,8 +59,16 @@ _SIGNATURE_WORDS = frozenset(
     {
         "miejscowość", "i", "data", "dnia", "podpis", "czytelny", "złożenia", "wniosku",
         "sporządzenia", "wnioskodawcy", "pieczątka", "pieczęć", "lub", "osoby", "upoważnionej",
+        "wypełnienia",
     }
 )  # fmt: skip
+_FILING_WORDS = frozenset({"miejscowość", "złożenia", "sporządzenia", "wypełnienia"})
+# Sama „Data” / „Dnia” to data podpisu, gdy stoi w sekcji podpisu albo sama w sekcji.
+_DATE_WORDS = frozenset({"data", "dnia"})
+_SIGNATURE_TITLE = re.compile(r"(?i)podpis")
+# ...ale nie w sekcji o terminie: „Termin wynajmu” → „Data” to dane sprawy.
+_DATE_TITLE = re.compile(r"(?i)\btermin|\bdat[aęy]\b|\bdzień\b|\bdni[au]\b|\bokres")
+SIGNATURE_REASON = "miejsce i data złożenia oraz podpis są w sekcjach systemowych"
 # Składowe adresu. Dublują sekcje predefiniowane tylko w sekcji o adresie lub danych
 # wnioskodawcy (np. „Miejscowość” w „Adres zamieszkania”), a nie w „Adres nieruchomości”.
 _ADDRESS_WORDS = frozenset(
@@ -131,7 +153,7 @@ def statements_from_document(doc: DocumentModel) -> list[str]:
             or (i >= 2 and _POSITION_NUMBER.match(blocks[i - 2].text))
         ):
             continue
-        parts = [_NUMBERING.sub("", text)]
+        parts = [_strip_number(text)]
         if text.endswith(":"):
             while i < len(blocks) and len(parts) <= MAX_STATEMENT_ITEMS:
                 item = blocks[i]
@@ -143,12 +165,35 @@ def statements_from_document(doc: DocumentModel) -> list[str]:
                     or len(item_text) > MAX_ITEM_CHARS
                 ):
                     break
-                parts.append(_NUMBERING.sub("", item_text))
+                parts.append(_strip_number(item_text))
                 i += 1
-        statement = " ".join(parts)
-        if statement not in statements:
-            statements.append(statement)
+        for piece in _split_statements(" ".join(parts)):
+            statement = neutral_statement(piece)
+            if statement and statement not in statements:
+                statements.append(statement)
     return statements
+
+
+def _split_statements(text: str) -> list[str]:
+    """Sklejone oświadczenia osobno; punkty po dwukropku („…, że: 1) zobowiązuję się”) razem."""
+    pieces: list[str] = []
+    listing = False
+    for piece in _NEXT_STATEMENT.split(text):
+        if listing:
+            pieces[-1] = f"{pieces[-1]} {piece}"
+        else:
+            pieces.append(piece)
+        listing = listing or piece.endswith(":")
+    return pieces
+
+
+def neutral_statement(text: str) -> str:
+    """Oświadczenie bez numeru, z formą neutralną płciowo, gdy da się ją bezpiecznie podać."""
+    return _ACQUAINTED.sub(ACQUAINTED_STATEMENT, _strip_number(clean_text(text)))
+
+
+def _strip_number(text: str) -> str:
+    return _BARE_NUMBER.sub("", _NUMBERING.sub("", text))
 
 
 def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
@@ -160,15 +205,16 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
     words = _words(label)
     if not words:
         return None
-    if _SIGNATURE_LABEL.match(label) or (
-        words <= _SIGNATURE_WORDS
-        and (
-            "podpis" in words
-            or ("data" in words and words & {"miejscowość", "złożenia", "sporządzenia"})
-        )
-    ):
-        return "miejsce i data złożenia oraz podpis są w sekcjach systemowych"
     titles = list(context)
+    if (
+        _SIGNATURE_LABEL.match(label)
+        or (
+            words <= _SIGNATURE_WORDS
+            and ("podpis" in words or ("data" in words and words & _FILING_WORDS))
+        )
+        or (words <= _DATE_WORDS and any(_SIGNATURE_TITLE.search(t) for t in titles))
+    ):
+        return SIGNATURE_REASON
     # „Osoba wnioskodawca” to nadal wnioskodawca, a nie inna osoba.
     other_person = any(
         _OTHER_PERSON.search(title) and not _APPLICANT_WORD.search(title) for title in titles
@@ -180,6 +226,18 @@ def applicant_field_reason(label: str, context: Iterable[str]) -> str | None:
     if words <= _ADDRESS_WORDS | _PERSONAL_WORDS and not other_person and _applicant_titled(titles):
         return "adres i dane kontaktowe wnioskodawcy są w sekcjach predefiniowanych"
     return None
+
+
+def lone_date_reason(label: str, context: Iterable[str]) -> str | None:
+    """Dlaczego sama „Data” jako jedyne pole sekcji to data podpisu, albo None.
+
+    Model zostawia ją z „Ulan-Majorat, dnia …” obok danych wnioskodawcy, które usuwamy.
+    W sekcji o terminie („Termin wynajmu”) to dane sprawy - zostaje.
+    """
+    words = _words(label)
+    if not words or not words <= _DATE_WORDS or any(_DATE_TITLE.search(t) for t in context):
+        return None
+    return SIGNATURE_REASON
 
 
 def computed_field_reason(label: str, section_labels: list[str]) -> str | None:
@@ -218,7 +276,7 @@ def _applicant_titled(titles: list[str]) -> bool:
 
 def is_statement(text: str) -> bool:
     """Czy tekst zaczyna się jak oświadczenie („Oświadczam, że…”, „2. Zobowiązuję się…”)."""
-    return bool(_STATEMENT.match(_NUMBERING.sub("", clean_text(text))))
+    return bool(_STATEMENT.match(_strip_number(clean_text(text))))
 
 
 _CONSENT_SENTENCE = re.compile(r"(?i)^wyrażam\s+zgodę\b")

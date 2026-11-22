@@ -90,9 +90,27 @@ _LABEL_SEMANTICS: tuple[tuple[re.Pattern[str], Semantic], ...] = tuple(
 )
 
 
+_IDENTIFIERS = frozenset({Semantic.PESEL, Semantic.NIP, Semantic.REGON})
+"""Identyfikatory o własnym walidatorze formatu: wspólne pole („NIP/REGON”) nie może mieć
+żadnego z nich, bo walidator jednego odrzuciłby poprawną wartość drugiego."""
+
+
+def _label_semantics(label: str) -> list[Semantic]:
+    return [sem for rx, sem in _LABEL_SEMANTICS if rx.search(label)]
+
+
+def is_identifier_label(label: str) -> bool:
+    """Etykieta pola na PESEL, NIP lub REGON (także wspólnego, np. „NIP/REGON”)."""
+    return bool(_IDENTIFIERS.intersection(_label_semantics(label)))
+
+
 def label_semantic(label: str) -> Semantic | None:
-    """Pierwsza semantyka, której wzorzec pasuje do etykiety."""
-    return next((sem for rx, sem in _LABEL_SEMANTICS if rx.search(label)), None)
+    """Pierwsza semantyka, której wzorzec pasuje do etykiety; `None` dla pola na kilka
+    identyfikatorów naraz („NIP/REGON”, „PESEL lub NIP”)."""
+    matched = _label_semantics(label)
+    if len(_IDENTIFIERS.intersection(matched)) > 1:
+        return None
+    return matched[0] if matched else None
 
 
 def slugify(text: str, *, max_length: int = 60) -> str:
@@ -245,7 +263,10 @@ def map_draft_field(field: DraftField, *, key: str) -> tuple[FieldNode, list[Con
         node.semantic = label_semantic(field.label)
     # Typ z etykiety wygrywa ze szkicem LLM: kod pocztowy/PESEL jako NUMBER traci walidator
     # formatu (NUMBER dopuszcza tylko REQUIRED), a kwota jako tekst przyjmuje dowolny napis.
-    if node.type is FieldType.NUMBER and node.semantic in _SEMANTIC_VALIDATORS:
+    # Identyfikator jest tekstem także bez walidatora („NIP/REGON”): wiodące zera, myślniki.
+    if node.type is FieldType.NUMBER and (
+        node.semantic in _SEMANTIC_VALIDATORS or is_identifier_label(field.label)
+    ):
         node.type = FieldType.TEXT_FIELD
     elif (
         node.type is FieldType.TEXT_FIELD

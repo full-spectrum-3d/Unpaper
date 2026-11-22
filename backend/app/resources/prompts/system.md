@@ -8,7 +8,7 @@ Metadane:
 - title: pełny tytuł wniosku z blankietu, zwykłą pisownią (nie wielkimi literami), bez odwołań do przepisów. Zaczyna się od „Wniosek”, „Zgłoszenie”, „Deklaracja” lub „Oświadczenie”.
 - authority_kind: ORGAN, gdy adresatem jest osoba lub organ (Wójt, Burmistrz, Prezydent, Starosta, Marszałek); URZAD, gdy adresatem jest urząd.
 - authority_name: adresat dosłownie z blankietu, np. „Wójt Gminy Elbląg”.
-- applicant_kinds: tylko dane osoby fizycznej → SELF i OTHER_PERSON; tylko dane firmy lub instytucji → LEGAL_ENTITY; jedno i drugie (np. „imię i nazwisko / nazwa”) → wszystkie trzy.
+- applicant_kinds: tylko dane osoby fizycznej → SELF i OTHER_PERSON; tylko dane firmy lub instytucji → LEGAL_ENTITY; jedno i drugie (np. „imię i nazwisko / nazwa”) → wszystkie trzy. Bez nazwy firmy, NIP, REGON, KRS ani siedziby na blankiecie nie dodawaj LEGAL_ENTITY.
 - attachments: nazwy załączników wymienionych na blankiecie; pomiń puste pozycje listy i całą listę, gdy jej nie ma.
 
 Czego NIE umieszczać w subject_pages (system dodaje to sam):

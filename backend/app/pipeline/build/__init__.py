@@ -1,9 +1,11 @@
 """[5] Deterministyczna budowa FormDefinition z FormDraft (spec §5.5, §8)."""
 
+import re
 from dataclasses import dataclass, field
+from typing import Any
 
 from app.models.dictionary import DictionaryProposal
-from app.models.draft import DraftField, DraftPage, DraftSection, FormDraft
+from app.models.draft import CHOICE_KINDS, DraftField, DraftPage, DraftSection, FormDraft
 from app.models.form import FieldType, FormDefinition, TabType
 from app.models.warning import ConversionWarning
 from app.pipeline.build.dictionaries import apply_dictionaries
@@ -21,6 +23,7 @@ from app.pipeline.build.sections import (
 )
 from app.pipeline.build.serialize import to_form_definition
 from app.pipeline.build.states import build_states
+from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
 from app.pipeline.issues import IssueCode
 
 _DEFAULT_OPTIONS = BuildOptions()
@@ -54,6 +57,94 @@ def _normalized(draft: FormDraft) -> FormDraft:
     )
 
 
+_POWER_OF_ATTORNEY = re.compile(r"(?i)pełnomocnictw")
+_YES_NO = frozenset({"tak", "nie"})
+# Rodzaje wnioskodawcy, dla których powstaje sekcja predefiniowana „Pełnomocnictwo”
+# (z opłatą skarbową): `applicant_page_sections`.
+_REPRESENTED_KINDS = frozenset({"OTHER_PERSON", "LEGAL_ENTITY"})
+
+
+def _is_power_of_attorney_field(field: dict[str, Any]) -> bool:
+    """Plik albo pytanie Tak/Nie o pełnomocnictwo; „Numer pełnomocnictwa” zostaje."""
+    if not _POWER_OF_ATTORNEY.search(field["label"]):
+        return False
+    if field["kind"] == "file":
+        return True
+    options = {option.strip().casefold() for option in field["options"]}
+    return field["kind"] in CHOICE_KINDS and bool(options) and options <= _YES_NO
+
+
+def _without_power_of_attorney(draft: FormDraft) -> tuple[FormDraft, list[ConversionWarning]]:
+    """Pełnomocnictwo i opłatę skarbową za nie zbiera sekcja predefiniowana (warunkowo);
+    te same pliki ze szkicu (załączniki, pola przedmiotu) byłyby wymagane zawsze."""
+    if not _REPRESENTED_KINDS.intersection(draft.applicant_kinds):
+        return draft, []
+    warnings: list[ConversionWarning] = []
+
+    def removed(label: str, path: str) -> None:
+        warnings.append(
+            ConversionWarning(
+                code=IssueCode.W41_POWER_OF_ATTORNEY_DUPLICATE_REMOVED,
+                message=f"Usunięto „{label}”: pełnomocnictwo i opłatę skarbową za nie "
+                "zbiera sekcja predefiniowana.",
+                path=path,
+            )
+        )
+
+    data = draft.model_dump()
+    attachments = []
+    for i, label in enumerate(data["attachments"]):
+        if _POWER_OF_ATTORNEY.search(label):
+            removed(label, f"attachments[{i}]")
+        else:
+            attachments.append(label)
+    dropped: set[int] = set()
+    for path, item in iter_field_dicts(data):
+        if _is_power_of_attorney_field(item):
+            dropped.add(id(item))
+            removed(item["label"], path)
+    if not warnings:
+        return draft, []
+    data["attachments"] = attachments
+    for page in data["subject_pages"]:
+        for section in page["sections"]:
+            section["fields"] = [f for f in section["fields"] if id(f) not in dropped]
+    repair_conditions(data, warnings)
+    remove_empty_containers(data, warnings)
+    return FormDraft.model_validate(data), warnings
+
+
+_WORD = re.compile(r"\w+")
+_STOP_WORDS = frozenset(
+    {"o", "z", "ze", "i", "w", "we", "na", "do", "dla", "od", "oraz", "lub", "albo", "a"}
+)
+# Wspólny początek, od którego dwa słowa uznajemy za formy tego samego wyrazu
+# („decyzja” / „decyzji”, „zaświadczenie” / „zaświadczenia”).
+_STEM_PREFIX = 5
+
+
+def _label_words(label: str) -> set[str]:
+    return {w for w in _WORD.findall(label.casefold()) if w not in _STOP_WORDS}
+
+
+def _same_word(word: str, other: str) -> bool:
+    if word == other:
+        return True
+    stem = min(len(word), len(other)) >= _STEM_PREFIX
+    return stem and word[:_STEM_PREFIX] == other[:_STEM_PREFIX]
+
+
+def _is_duplicate_label(label: str, other: str) -> bool:
+    """Słowa krótszej etykiety (bez spójników i przyimków) są wśród słów dłuższej:
+    „Kopia decyzji” to „Kopia decyzji o pozwoleniu na budowę”, ale „Zaświadczenie
+    o dochodach” to nie „Zaświadczenie o niekaralności”."""
+    words, other_words = _label_words(label), _label_words(other)
+    shorter, longer = sorted((words, other_words), key=len)
+    if not shorter:
+        return False
+    return all(any(_same_word(w, o) for o in longer) for w in shorter)
+
+
 def _make_links_accessible(pages: list[PageNode]) -> None:
     for page in pages:
         for section in page.sections:
@@ -65,8 +156,7 @@ def _make_links_accessible(pages: list[PageNode]) -> None:
 
 
 def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> BuildResult:
-    draft = _normalized(draft)
-    warnings: list[ConversionWarning] = []
+    draft, warnings = _without_power_of_attorney(_normalized(draft))
     title, issues = normalize_title(draft.title)
     warnings += issues
 
@@ -75,16 +165,16 @@ def build_form(draft: FormDraft, options: BuildOptions = _DEFAULT_OPTIONS) -> Bu
     pages += subject
     warnings += issues
 
-    existing = {
-        _label_key(node.title)
+    existing = [
+        node.title
         for page in subject
         for section in page.sections
         for node in section.fields
         if node.type is FieldType.FILE_UPLOADER
-    }
+    ]
     extra: list[str] = []
     for label in draft.attachments:
-        if _label_key(label) in existing:
+        if any(_is_duplicate_label(label, other) for other in existing):
             warnings.append(
                 ConversionWarning(
                     code=IssueCode.W10_ATTACHMENT_DUPLICATE,

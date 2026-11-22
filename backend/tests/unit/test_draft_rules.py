@@ -109,7 +109,7 @@ def test_statements_skip_fields_data_consents_and_duplicates() -> None:
         ("heading", "Oświadczam"),
         ("paragraph", "Do wniosku należy dołączyć oświadczenie."),
     )
-    assert statements_from_document(doc) == ["Oświadczam, że zapoznałem się z regulaminem."]
+    assert statements_from_document(doc) == ["Potwierdzam zapoznanie się z regulaminem."]
 
 
 def test_statements_ignore_rodo_clause() -> None:

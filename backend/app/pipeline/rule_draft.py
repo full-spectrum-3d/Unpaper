@@ -55,6 +55,8 @@ _GENITIVES = {"rachunek": "rachunku"}
 _COMPANY = re.compile(
     r"(?i)nazwa firmy|/\s*nazwa|nazwa wnioskodawcy|siedzib|\bNIP\b|\bREGON\b|\bKRS\b"
 )
+# Dane firmy w blankiecie: bez nich normalizacja usuwa ze szkicu modelu opcję osoby prawnej.
+COMPANY_PATTERN = _COMPANY
 _CONNECTORS = frozenset({"od", "do", "i", "oraz", "lub", "z", "w", "we", "na", "przy", "tj."})
 _UNITS = frozenset({"cm", "m", "m2", "m²", "zł", "dni", "ha", "szt", "szt.", "kg", "osób"})
 

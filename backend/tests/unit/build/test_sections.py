@@ -152,8 +152,9 @@ def test_address_fields_match_reference() -> None:
         Validator.REQUIRED,
         Validator.ZIP_CODE,
     ]
-    assert field_by_tech(home, "numer_lokalu").validation == []
+    assert field_by_tech(home, "numer_lokalu").validation == [Validator.REQUIRED]
     kraj = field_by_tech(home, "kraj")
+    assert field_by_tech(home, "kod_pocztowy").show_when == Eq(kraj.key, "Polska")
     assert kraj.dictionary_name == "Kraje"
     assert kraj.default_value == ["Polska"]
     assert kraj.multi_level_tree is False

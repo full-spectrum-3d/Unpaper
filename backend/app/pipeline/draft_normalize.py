@@ -7,6 +7,7 @@ Wynik zawsze przechodzi ponownie walidację `FormDraft`.
 
 import json
 import re
+from collections import Counter
 from difflib import SequenceMatcher
 from functools import cache
 from importlib.resources import files
@@ -18,16 +19,19 @@ from app.models.warning import ConversionWarning
 from app.pipeline.draft_repair import iter_field_dicts, remove_empty_containers, repair_conditions
 from app.pipeline.draft_rules import (
     applicant_field_reason,
+    clean_text,
     computed_field_reason,
     covered_by,
     is_data_consent,
     is_statement,
+    lone_date_reason,
+    neutral_statement,
     same_stem,
     separate_data_consent,
     statements_from_document,
     variant_choices,
 )
-from app.pipeline.rule_draft import find_attachments
+from app.pipeline.rule_draft import COMPANY_PATTERN, find_attachments
 
 STATEMENT_FIELD_COVERAGE = 0.8
 # Pole innego typu niż `info` uznajemy za oświadczenie tylko przy dłuższej etykiecie:
@@ -48,12 +52,24 @@ VARIANT_LABEL_WORDS = frozenset({"rodzaj", "lub", "albo", "wybór", "wniosku", "
 LABEL_MATCH_THRESHOLD = 0.6
 UPPERCASE_TITLE_RATIO = 0.8
 UPPERCASE_ACRONYMS = frozenset({"NIP", "PESEL", "REGON", "KRS", "RODO", "CEIDG", "VAT"})
+# Pola, które blankiet wymienia w „W załączeniu:”, a model zapisał jako tekst (W44).
+FILE_LIKE_KINDS = frozenset({"short_text", "long_text", "info"})
+# Etykieta z kontekstem grupy („Długość - Chodnik”) nie może przekroczyć limitu kreatora (W02).
+MAX_LABEL_CHARS = 80
+GROUP_CONTEXT_SEPARATOR = " - "
+PERSON_KINDS = ["SELF", "OTHER_PERSON"]
 
 # „Załącznik 2”, „Zał. nr 3”, „2)”: pozycja listy załączników bez nazwy.
 _UNNAMED_ATTACHMENT = re.compile(r"(?i)^\s*(załącznik|zał\.?)?\s*(nr\.?\s*)?\d*\s*[.)]?\s*$")
 _WHITESPACE = re.compile(r"\s+")
 _WORD = re.compile(r"\w+")
 _LABEL_EDGES = re.compile(r"^[\s.…_:;,]+|[\s:;,]+$")
+_LETTER = re.compile(r"[^\W\d_]")
+# Pole opcjonalne na blankiecie: „(opcjonalnie)”, „jeśli dotyczy”, „(w przypadku …)”.
+_OPTIONAL_LABEL = re.compile(
+    r"(?i)\bopcjonaln\w*|\bnieobowiązkow\w*|\bewentualn\w*|\b(jeśli|jeżeli|o ile)\s+dotyczy\b"
+    r"|\bdot(\.|yczy)\s+tylko\b|\(\s*w\s+przypadku\b[^)]*\)|\bo ile\s+(posiada|jest)\w*"
+)
 
 # Etykieta zdaniowa z blankietu („W miejscowości”) → rzeczownik w mianowniku.
 # Przyimek zdejmujemy tylko wtedy, gdy reszta to jedno słowo z tego słownika.
@@ -88,12 +104,15 @@ def normalize_draft(
     _remove_applicant_fields(data, warnings)
     _remove_computed_fields(data, warnings)
     _remove_example_fields(data, doc_text, warnings)
+    _remove_unlabeled_fields(data, warnings)
     _remove_duplicate_fields(data, warnings)
     _remove_unnamed_attachments(data, warnings)
+    _mark_optional_fields(data, warnings)
     _add_document_attachments(data, doc, warnings)
     data["statements"] = statements_from_document(doc)
     _remove_statement_fields(data, warnings)
     _move_data_consents(data, warnings)
+    _remove_data_consent_fields(data, warnings)
     _add_variant_choices(data, doc, warnings)
     _add_correction_choice(data, doc_text, warnings)
     repair_conditions(data, warnings)
@@ -101,6 +120,7 @@ def normalize_draft(
     _check_labels(data, doc_text, warnings)
     _normalize_labels(data, warnings)
     _check_authority(draft, doc_text, warnings)
+    _check_applicant_kinds(data, doc_text, warnings)
     remove_empty_containers(data, warnings)
 
     return FormDraft.model_validate(data), warnings
@@ -152,8 +172,9 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
     for i, page in enumerate(data["subject_pages"]):
         for j, section in enumerate(page["sections"]):
             kept = []
+            titles = [section["title"], page["title"]]
             for k, field in enumerate(section["fields"]):
-                reason = applicant_field_reason(field["label"], [section["title"], page["title"]])
+                reason = applicant_field_reason(field["label"], titles)
                 if reason is None:
                     kept.append(field)
                     continue
@@ -164,6 +185,16 @@ def _remove_applicant_fields(data: dict[str, Any], warnings: list[ConversionWarn
                         path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
                     )
                 )
+            if len(kept) == 1 and (reason := lone_date_reason(kept[0]["label"], titles)):
+                k = next(k for k, f in enumerate(section["fields"]) if f is kept[0])
+                warnings.append(
+                    ConversionWarning(
+                        code="W20_APPLICANT_FIELD_REMOVED",
+                        message=f"Usunięto pole „{kept[0]['label']}”: {reason}.",
+                        path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                    )
+                )
+                kept = []
             section["fields"] = kept
 
 
@@ -271,10 +302,15 @@ def _remove_example_fields(
 
 
 def _remove_duplicate_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
-    """Pole o tej samej etykiecie co wcześniejsze w tej samej sekcji to powtórzenie modelu."""
+    """Pole o tej samej etykiecie co wcześniejsze w tej samej sekcji to powtórzenie modelu.
+
+    Wyjątek to powtarzana grupa pól (`_number_repeated_groups`): wiersze tabeli blankietu
+    dostają rozróżnione etykiety i zostają.
+    """
     id_map: dict[str, str] = {}
     for i, page in enumerate(data["subject_pages"]):
         for j, section in enumerate(page["sections"]):
+            _number_repeated_groups(section, f"subject_pages[{i}].sections[{j}]", warnings)
             first: dict[str, str] = {}
             kept = []
             for k, field in enumerate(section["fields"]):
@@ -295,6 +331,74 @@ def _remove_duplicate_fields(data: dict[str, Any], warnings: list[ConversionWarn
     for _, field in iter_field_dicts(data):
         for cond in field["visible_when"]:
             cond["field_id"] = id_map.get(cond["field_id"], cond["field_id"])
+
+
+def _number_repeated_groups(
+    section: dict[str, Any], path: str, warnings: list[ConversionWarning]
+) -> None:
+    """Powtarzana grupa co najmniej dwóch etykiet to wiersze tabeli, a nie powtórzenie modelu.
+
+    „Długość”, „Szerokość” dla każdej kategorii powierzchni ([A, B, A, B], także z innymi
+    polami między grupami) zostają wszystkie. Etykieta dostaje kontekst: pole tuż przed
+    grupą spoza niej („Długość - Chodnik”), a gdy go nie ma - numer grupy („Długość (2)”).
+    Pojedyncza powtórzona etykieta ([A, B, A]) zostaje do usunięcia jako duplikat (W25).
+    """
+    fields: list[dict[str, Any]] = section["fields"]
+    keys = [_normalize(f["label"]) for f in fields]
+    counts = Counter(keys)
+    grouped: set[str] = set()
+    for key in dict.fromkeys(keys):
+        repeats = counts[key]
+        if repeats < 2 or key in grouped:
+            continue
+        starts = [k for k, other in enumerate(keys) if other == key]
+        group = [
+            k
+            for k in dict.fromkeys(keys[starts[0] : starts[1]])
+            if counts[k] == repeats and k not in grouped
+        ]
+        members = [k for k, other in enumerate(keys) if other in group]
+        if len(group) < 2 or [keys[k] for k in members] != group * repeats:
+            continue
+        grouped.update(group)
+        size = len(group)
+        blocks = [members[n : n + size] for n in range(0, len(members), size)]
+        names = ", ".join(f"„{fields[k]['label']}”" for k in blocks[0])
+        for block, suffix in zip(blocks, _group_suffixes(fields, keys, blocks), strict=True):
+            for k in block:
+                fields[k]["label"] = f"{fields[k]['label']}{suffix}"
+        warnings.append(
+            ConversionWarning(
+                code="W43_REPEATED_FIELDS_NUMBERED",
+                message=f"Pola {names} powtarzają się {repeats} razy - zostawiono wszystkie "
+                "z rozróżnionymi etykietami.",
+                path=path,
+            )
+        )
+
+
+def _group_suffixes(
+    fields: list[dict[str, Any]], keys: list[str], blocks: list[list[int]]
+) -> list[str]:
+    """Dopiski do etykiet każdej grupy: kontekst („ - Chodnik”) albo numer („ (2)”).
+
+    Kontekst tylko wtedy, gdy ma go każda grupa, konteksty są różne, a etykiety nie
+    przekroczą limitu długości; inaczej numerujemy wszystkie grupy.
+    """
+    members = {keys[k] for block in blocks for k in block}
+    contexts = []
+    for block in blocks:
+        before = block[0] - 1
+        has_context = before >= 0 and keys[before] not in members
+        contexts.append(normalize_label(fields[before]["label"]) if has_context else "")
+    longest = max(len(fields[k]["label"]) for block in blocks for k in block)
+    if (
+        all(contexts)
+        and len({_normalize(c) for c in contexts}) == len(contexts)
+        and longest + len(GROUP_CONTEXT_SEPARATOR) + max(map(len, contexts)) <= MAX_LABEL_CHARS
+    ):
+        return [f"{GROUP_CONTEXT_SEPARATOR}{c}" for c in contexts]
+    return [f" ({n})" for n in range(1, len(blocks) + 1)]
 
 
 def _remove_unnamed_attachments(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
@@ -342,7 +446,11 @@ def _remove_statement_fields(data: dict[str, Any], warnings: list[ConversionWarn
 
     def is_statement_field(field: dict[str, Any]) -> bool:
         label: str = field["label"]
-        covered = covered_by(label, statements) >= STATEMENT_FIELD_COVERAGE
+        # Oświadczenie mogło dostać formę neutralną płciowo („Potwierdzam zapoznanie się”).
+        covered = (
+            max(covered_by(text, statements) for text in (label, neutral_statement(label)))
+            >= STATEMENT_FIELD_COVERAGE
+        )
         if field["kind"] == "info":
             return covered
         # Liczba, data czy plik to dane do wpisania, nawet gdy stoją w zdaniu oświadczenia
@@ -431,6 +539,36 @@ def _move_data_consents(data: dict[str, Any], warnings: list[ConversionWarning])
         page["sections"] = sections
 
 
+def _remove_data_consent_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Blok tekstu ze zgodą na przetwarzanie danych (także sam nagłówek) usuwamy z każdej sekcji.
+
+    `_move_data_consents` usuwa tylko całe sekcje zgód; blok zgody w sekcji z danymi
+    („Dane kandydata nieletniego”) zostawał. Zgodę za inną osobę dopisujemy do oświadczeń,
+    które trafiają do sekcji zgód. Pola innych typów (np. checkbox) zostają. Sekcję, która
+    zostanie pusta, usuwa `remove_empty_containers`.
+    """
+    for path, field in iter_field_dicts(data):
+        if field["kind"] != "info" or not is_data_consent(field["label"]):
+            continue
+        text = separate_data_consent(field["label"])
+        if text and text not in data["statements"]:
+            data["statements"].append(text)
+        warnings.append(
+            ConversionWarning(
+                code="W40_DATA_CONSENT_FIELD_REMOVED",
+                message=f"Usunięto blok „{field['label'][:80]}”: zgody zbiera sekcja zgód.",
+                path=path,
+            )
+        )
+    for page in data["subject_pages"]:
+        for section in page["sections"]:
+            section["fields"] = [
+                f
+                for f in section["fields"]
+                if f["kind"] != "info" or not is_data_consent(f["label"])
+            ]
+
+
 def _add_variant_choices(
     data: dict[str, Any], doc: DocumentModel, warnings: list[ConversionWarning]
 ) -> None:
@@ -488,15 +626,21 @@ def _add_variant_choices(
 def _add_document_attachments(
     data: dict[str, Any], doc: DocumentModel, warnings: list[ConversionWarning]
 ) -> None:
-    """Lista „Załączniki:” z dokumentu uzupełnia załączniki modelu (model bywa je pomija)."""
+    """Lista „Załączniki:” z dokumentu uzupełnia załączniki modelu (model bywa je pomija).
+
+    Pozycje „W załączeniu:” to pliki do sprawy: należą do pola pliku w sekcji przedmiotu.
+    Gdy model zapisał taką pozycję jako tekst, pole zmienia typ na plik (W44); gdy nie ma
+    jej wcale, trafia do załączników jak pozycje listy „Załączniki:”.
+    """
     blocks = [block for _, block in doc.iter_content_blocks()]
+    attachments, files_in_document, _ = find_attachments(blocks)
     known: list[str] = data["attachments"]
-    for name in find_attachments(blocks)[0]:
-        if any(
-            matches_text(name, k, LABEL_MATCH_THRESHOLD)
-            or matches_text(k, name, LABEL_MATCH_THRESHOLD)
-            for k in known
-        ):
+    names = list(attachments)
+    for name in files_in_document:
+        if not _file_field_from_document(data, name, warnings):
+            names.append(name)
+    for name in names:
+        if any(_similar_label(name, k) for k in known):
             continue
         known.append(name)
         warnings.append(
@@ -506,6 +650,41 @@ def _add_document_attachments(
                 path="attachments",
             )
         )
+
+
+def _similar_label(a: str, b: str) -> bool:
+    return matches_text(a, b, LABEL_MATCH_THRESHOLD) or matches_text(b, a, LABEL_MATCH_THRESHOLD)
+
+
+def _file_field_from_document(
+    data: dict[str, Any], name: str, warnings: list[ConversionWarning]
+) -> bool:
+    """Czy plik „W załączeniu” ma pole pliku; pole tekstowe o tej nazwie zmienia typ na plik.
+
+    Pole pliku wystarczy podobne w jedną ze stron („Plik korekty deklaracji”). Zmiana typu
+    wymaga dopasowania w obie strony, żeby krótka etykieta („Data”) nie stała się plikiem.
+    """
+    fields = iter_field_dicts(data)
+    if any(f["kind"] == "file" and _similar_label(name, f["label"]) for _, f in fields):
+        return True
+    for path, field in fields:
+        label = field["label"]
+        if field["kind"] not in FILE_LIKE_KINDS or not (
+            matches_text(name, label, LABEL_MATCH_THRESHOLD)
+            and matches_text(label, name, LABEL_MATCH_THRESHOLD)
+        ):
+            continue
+        field.update(kind="file", options=[])
+        warnings.append(
+            ConversionWarning(
+                code="W44_FILE_FIELD_FROM_DOCUMENT",
+                message=f"Pole „{label}” zamieniono na pole pliku: blankiet wymienia je "
+                "w „W załączeniu”.",
+                path=path,
+            )
+        )
+        return True
+    return False
 
 
 _PURPOSE = re.compile(r"(?:cel\w*|okoliczności)\s+złożenia", re.IGNORECASE)
@@ -595,6 +774,52 @@ def _add_correction_choice(
             path=path,
         )
     )
+
+
+def _remove_unlabeled_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Pola bez etykiety („2)”, „-”, pusta) usuwamy: to numer pozycji albo kreska z blankietu.
+
+    Załącznik bez nazwy („2)”) zostawiamy dla `_remove_unnamed_attachments` (W26).
+    Warunki widoczności wskazujące usunięte pole usuwa później `repair_conditions`.
+    """
+    for i, page in enumerate(data["subject_pages"]):
+        for j, section in enumerate(page["sections"]):
+            kept = []
+            for k, field in enumerate(section["fields"]):
+                unnamed_file = field["kind"] == "file" and _UNNAMED_ATTACHMENT.match(field["label"])
+                if unnamed_file or _LETTER.search(clean_text(field["label"])):
+                    kept.append(field)
+                    continue
+                warnings.append(
+                    ConversionWarning(
+                        code="W39_UNLABELED_FIELD_REMOVED",
+                        message=f"Usunięto pole bez etykiety „{field['label']}”.",
+                        path=f"subject_pages[{i}].sections[{j}].fields[{k}]",
+                    )
+                )
+            section["fields"] = kept
+
+
+def _mark_optional_fields(data: dict[str, Any], warnings: list[ConversionWarning]) -> None:
+    """Pole opisane na blankiecie jako opcjonalne („(opcjonalnie)”, „jeśli dotyczy”) nie jest
+    wymagane - model prawie zawsze oddaje `required: true`.
+
+    Etykieta zostaje bez zmian: „(opcjonalnie)” w etykiecie to zapis z wizualizacji COI.
+    """
+    for path, field in iter_field_dicts(data):
+        if field["kind"] == "info" or not field.get("required"):
+            continue
+        if not _OPTIONAL_LABEL.search(field["label"]):
+            continue
+        field["required"] = False
+        warnings.append(
+            ConversionWarning(
+                code="W38_OPTIONAL_FIELD",
+                message=f"Pole „{field['label']}” oznaczono jako niewymagane: na blankiecie "
+                "jest opcjonalne.",
+                path=path,
+            )
+        )
 
 
 def _section_of(data: dict[str, Any], field: dict[str, Any]) -> dict[str, Any]:
@@ -706,7 +931,12 @@ def _normalize_labels(data: dict[str, Any], warnings: list[ConversionWarning]) -
 
 def _check_labels(data: dict[str, Any], doc_text: str, warnings: list[ConversionWarning]) -> None:
     for path, field in iter_field_dicts(data):
-        if not matches_text(field["label"], doc_text, LABEL_MATCH_THRESHOLD):
+        label: str = field["label"]
+        # Etykieta z kontekstem grupy („Długość - Chodnik”, W43) jest w blankiecie częściami.
+        parts = label.split(GROUP_CONTEXT_SEPARATOR)
+        if not matches_text(label, doc_text, LABEL_MATCH_THRESHOLD) and not (
+            len(parts) > 1 and all(matches_text(p, doc_text, LABEL_MATCH_THRESHOLD) for p in parts)
+        ):
             warnings.append(
                 ConversionWarning(
                     code="W13_FIELD_NOT_IN_DOCUMENT",
@@ -734,6 +964,30 @@ def _check_authority(draft: FormDraft, doc_text: str, warnings: list[ConversionW
                 path="authority_name",
             )
         )
+
+
+def _check_applicant_kinds(
+    data: dict[str, Any], doc_text: str, warnings: list[ConversionWarning]
+) -> None:
+    """Opcja osoby prawnej tylko wtedy, gdy blankiet ma dane firmy (nazwa, NIP, REGON, siedziba).
+
+    Model dodaje ją także do wniosków wyłącznie dla osób fizycznych, a każda opcja to kilka
+    zbędnych sekcji (dane podmiotu, adres siedziby, reprezentant). `doc_text` jest bez
+    klauzuli RODO, gdzie „z siedzibą w” dotyczy administratora danych.
+    """
+    kinds: list[str] = data["applicant_kinds"]
+    if "LEGAL_ENTITY" not in kinds or COMPANY_PATTERN.search(doc_text):
+        return
+    kinds = [k for k in kinds if k != "LEGAL_ENTITY"]
+    data["applicant_kinds"] = kinds if kinds and kinds != ["OTHER_PERSON"] else list(PERSON_KINDS)
+    warnings.append(
+        ConversionWarning(
+            code="W42_LEGAL_ENTITY_REMOVED",
+            message="Usunięto opcję „Osoby prawnej lub jednostki organizacyjnej”: blankiet nie "
+            "ma danych firmy (nazwa, NIP, REGON, KRS, siedziba).",
+            path="applicant_kinds",
+        )
+    )
 
 
 def _same_stem(word: str, other: str) -> bool:
