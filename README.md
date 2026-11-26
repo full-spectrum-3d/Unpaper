@@ -37,7 +37,7 @@ repozytorium).
 ## Uruchomienie aplikacji
 
 Wymagany jest Docker z pluginem Compose. Plik `.env` nie jest w repozytorium (sekrety) –
-tworzy go `make setup`: losowy `JWT_SECRET`, konto `admin` i jednorazowo wypisane hasło,
+tworzy go `make setup`: losowy `JWT_SECRET`; konto `admin` i jednorazowo wypisane hasło,
 potem buduje obrazy i pobiera lokalny model (profil `ollama`, ok. 7 GB).
 
 ```bash
