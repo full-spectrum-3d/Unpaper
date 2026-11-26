@@ -96,7 +96,7 @@ w `.env` zostaw `COMPOSE_PROFILES=` puste i ustaw `LLM_BASE_URL` (np.
 `LLM_AUTH_SECRET` podaj tylko wtedy, gdy serwer wymaga autoryzacji (nagłówki proxy Modal).
 
 **4. Własny login i hasło:** `scripts/init-env.sh` tworzy `.env` z losowym
-`JWT_SECRET`, kontem `admin` i wypisanym raz hasłem. Własny login i hasło:
+`JWT_SECRET`, kontem `admin` i wypisanym raz hasłem; Własny login i hasło:
 `API_PASSWORD='…' scripts/init-env.sh nazwa_uzytkownika`. Hash samego hasła: `make password-hash`.
 
 **5. Bez Dockera (rozwój):** backend `cd backend && uv run uvicorn app.main:create_app --factory` (czyta
